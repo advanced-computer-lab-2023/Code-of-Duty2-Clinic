@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // Set the ECMAScript target version (e.g., ES6)
-    "module": "commonjs", // Specify the module system (e.g., CommonJS)
-    "strict": true, // Enable strict type checking
-    "esModuleInterop": true, // Allow default imports from CommonJS modules
-    "skipLibCheck": true, // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
+    "module": "NodeNext", 
+    "strict": true, 
+    "esModuleInterop": true, 
+    "baseUrl": "src",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "forceConsistentCasingInFileNames": true, 
     "outDir": "./build"
   },
-  "include": ["src/**/*.ts"], // Specify the files to include for compilation
-  "exclude": ["node_modules"] // Exclude files from compilation (e.g., node_modules)
+  "include": ["src/**/*.ts"], 
+  "exclude": ["node_modules"] 
 }
