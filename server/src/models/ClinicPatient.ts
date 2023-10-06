@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import isEmail from 'validator/lib/isEmail'
 
 export interface IClinicPatient {
   username: string,
@@ -53,7 +54,7 @@ export interface IClinicPatientModel extends IClinicPatient, Document {}
 export const ClinicPatientSchema = new Schema<IClinicPatientModel>({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email:{type:String,validate: [ isEmail, 'invalid email' ],unique:true},
   name: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },

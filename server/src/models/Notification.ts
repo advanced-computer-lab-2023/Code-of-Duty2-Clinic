@@ -1,7 +1,8 @@
 
 //Import mongoose and Schema
 import mongoose,{Document, Schema} from 'mongoose'
-
+import validator from 'validator'
+import isEmail from 'validator/lib/isEmail'
 
 // Define the interface for ClinicNotifiaction
 export interface IClinicNotification {
@@ -15,7 +16,8 @@ export interface IClinicNotification {
 export interface IClinicNotificationModel extends IClinicNotification , Document{}
 
 export const NotificationSchema = new Schema<IClinicNotificationModel>({
-   email:{type:String,required:true},
+   
+   email:{type:String,validate: [ isEmail, 'invalid email' ],unique:true},
    title:{type:String,required:true},
    description:{type:String,required:true},
    dateTime:{type:Date,required:true},
