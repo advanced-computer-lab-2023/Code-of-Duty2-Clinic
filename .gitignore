@@ -128,3 +128,13 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# ingored client files/folders
+client/node_modules/
+client/.env
+
+# ignored server files/folders
+server/node_modules/
+server/.env
+server/build
