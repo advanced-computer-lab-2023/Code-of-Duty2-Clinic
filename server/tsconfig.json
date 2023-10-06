@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "module": "NodeNext", 
+    "module": "CommonJS",
     "strict": true, 
     "esModuleInterop": true, 
-    "baseUrl": "src",
     "sourceMap": true,
+    "baseUrl": "src",
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true, 
     "outDir": "./build"

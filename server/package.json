@@ -6,20 +6,24 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node build/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/index.js\""
+    "dev": "nodemon"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/config": "^3.3.1",
     "@types/express": "^4.17.18",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^20.8.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "mongoose": "^7.5.4",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.25",
     "concurrently": "^8.2.1",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1"
   }
 }
