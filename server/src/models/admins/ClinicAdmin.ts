@@ -1,9 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-
-export interface IClinicAdmin {
-  username: string,
-  password: string,
-}
+import { IClinicAdmin } from './IClinicAdmin';
 
 export interface IClinicAdminModel extends IClinicAdmin, Document {} 
 

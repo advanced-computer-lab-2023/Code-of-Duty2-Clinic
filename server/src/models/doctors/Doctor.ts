@@ -1,17 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
+import { IDoctorBaseInfo } from './IDoctorBaseInfo';
 
-export interface IDoctor {
-  username: string,
-  password: string,
-  email: string, 
-  name: string,
-  gender: 'male' | 'female',
-  mobileNumber: string,
-  dateOfBirth: Date,
-  hourlyRate: number,
-  affiliation: string,
-  educationalBackground: string,
+export interface IDoctor extends IDoctorBaseInfo{
   speciality?: string,
   availability?: Date,
   doctor_id?: string,

@@ -1,20 +1,8 @@
 //Import mongoose and Schema
 import mongoose, { Document, Schema } from 'mongoose';
+import { IHealthPackage } from './IHealthPackage';
  
   
-// Define the interface for HealthPackage
-export interface IHealthPackage {
-  name: string;
-  amountToPay: number;
-  discount:{
-    
-    gainedDoctorSessionDiscount: number;
-    gainedPharamcyMedicinesDiscount:number;
-    gainedFamilyMembersDiscount: number;
-  }
-  packageDurationInYears: number;
-}
-
 export interface IHealthPackageModel extends IHealthPackage, Document {} 
 
 export const HealthPackageSchema = new Schema<IHealthPackageModel>({

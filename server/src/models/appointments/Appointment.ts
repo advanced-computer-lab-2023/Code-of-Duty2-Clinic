@@ -1,18 +1,8 @@
 //Import mongoose and Schema
 import mongoose, { Document, Schema } from 'mongoose';
+import { IAppointment } from './IAppointment';
 
-
-
-// Define the interface for Appointment
-  export interface IAppointment {
-
-    date: Date;
-    status:'Upcoming' | 'Completed' | 'Canceled'|'Scheduled';
-    doctor_id:Schema.Types.ObjectId;
-    patient_id:Schema.Types.ObjectId;
-  }
-
-  export interface IAppointmentModel extends IAppointment, Document {}
+export interface IAppointmentModel extends IAppointment, Document {}
 
 export const  AppointmentSchema = new Schema<IAppointmentModel> ({
 
@@ -23,7 +13,7 @@ export const  AppointmentSchema = new Schema<IAppointmentModel> ({
     
 })
 
-export default mongoose.model<IAppointmentModel>('',AppointmentSchema)
+export default mongoose.model<IAppointmentModel>('Appointment',AppointmentSchema)
 
 
   

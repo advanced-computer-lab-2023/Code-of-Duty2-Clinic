@@ -1,14 +1,8 @@
+import { IUserBaseInfo } from 'models/IUserBaseInfo';
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
 
-export interface IClinicPatient {
-  username: string,
-  name: string,
-  email: string,
-  password: string,
-  dateOfBirth: Date,
-  gender: string,
-  mobileNumber: string,
+export interface IClinicPatient extends IUserBaseInfo{
   emergencyContact: {
     fullname: string,
     mobileNumber: string,
@@ -21,7 +15,7 @@ export interface IClinicPatient {
       packageId: Schema.Types.ObjectId,
       startDate: Date,
       endDate: Date,
-      status: 'Subscribed' | 'Unsubscribed' | 'Cancelled', 
+      status: 'subscribed' | 'unsubscribed' | 'cancelled', 
     }
   ],
   dependentFamilyMembers?: [ 
@@ -36,7 +30,7 @@ export interface IClinicPatient {
           packageId: Schema.Types.ObjectId,
           startDate: Date,
           endDate: Date, 
-          status: 'Subscribed' | 'Unsubscribed' | 'Cancelled' 
+          status: 'subscribed' | 'unsubscribed' | 'cancelled' 
         } 
       ]
     }
@@ -73,7 +67,7 @@ export const ClinicPatientSchema = new Schema<IClinicPatientModel>({
       packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
       startDate: {type: Date, required: true},
       endDate: {type: Date, required: true},
-      status: {type: String, enum:['Subscribed', 'Unsubscribed', 'Cancelled'], required:true}, 
+      status: {type: String, enum:['subscribed', 'unsubscribed', 'cancelled'], required:true}, 
     }
   ],
   dependentFamilyMembers: [ 
@@ -88,7 +82,7 @@ export const ClinicPatientSchema = new Schema<IClinicPatientModel>({
           packageId: {type: Schema.Types.ObjectId, required: true},
           startDate: {type: Date, required: true},
           endDate: {type: Date, required: true},
-          status: {type: ['Subscribed', 'Unsubscribed', 'Cancelled'], required: true}
+          status: {type: ['subscribed', 'unsubscribed', 'cancelled'], required: true}
         } 
       ]
     }
