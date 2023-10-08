@@ -4,7 +4,6 @@
     "strict": true, 
     "esModuleInterop": true, 
     "sourceMap": true,
-    "baseUrl": "src",
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true, 
     "outDir": "./build"
