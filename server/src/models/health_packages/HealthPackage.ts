@@ -6,14 +6,14 @@ import { IHealthPackage } from './IHealthPackage';
 export interface IHealthPackageModel extends IHealthPackage, Document {} 
 
 export const HealthPackageSchema = new Schema<IHealthPackageModel>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   amountToPay: { type: Number, required: true },
-  discount:{
+  discounts:{
     gainedDoctorSessionDiscount: {type:Number,required: true},
     gainedPharamcyMedicinesDiscount:{type:Number,required: true},
     gainedFamilyMembersDiscount: {type:Number,required: true}
   },
-  packageDurationInYears:{type:Number,required:true}
+  packageDurationInYears:{type:Number, required:true}
 });
 
 

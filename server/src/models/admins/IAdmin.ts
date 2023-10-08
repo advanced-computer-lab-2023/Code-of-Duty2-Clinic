@@ -1,4 +1,4 @@
-export interface IClinicAdmin {
+export interface IAdmin {
   username: string;
   password: string;
 }

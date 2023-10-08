@@ -4,7 +4,7 @@
 export interface IHealthPackage {
   name: string;
   amountToPay: number;
-  discount: {
+  discounts: {
     gainedDoctorSessionDiscount: number;
     gainedPharamcyMedicinesDiscount: number;
     gainedFamilyMembersDiscount: number;
