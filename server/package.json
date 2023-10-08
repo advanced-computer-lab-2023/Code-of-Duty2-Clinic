@@ -21,6 +21,7 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.14",
     "@types/react": "^18.2.25",
     "concurrently": "^8.2.1",
     "nodemon": "^3.0.1",

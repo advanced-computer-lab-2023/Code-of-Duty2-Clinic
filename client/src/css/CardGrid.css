@@ -1,0 +1,17 @@
+.container {
+    margin: 10vh;
+}
+
+.gridTitle {
+    font-size: 1.5rem;
+    color: white;
+    font-family: 'Roboto';
+    font-weight: bolder;
+    margin: 8vh 0 5vh 0;
+    background-color: #1769aa;
+    text-align: center;
+}
+
+.gridTitleText {
+    padding: 2vh;
+}

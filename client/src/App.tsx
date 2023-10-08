@@ -1,39 +1,17 @@
 import './App.css'
-import PatientRegisteredFamilyMembers from './components/PatientRegisteredFamilyMembers'
-export default function App() {
-  let Patient = {
-    name: 'John Doe',
-    familyMembers: [
-      {
-        name: 'Jane Doe',
-        relationship: 'Mother'
-      },
-      {
-        name: 'Jack Doe',
-        relationship: 'Father'
-      },
-      {
-        name: 'Jill Doe',
-        relationship: 'Sister'
-      },
-      {
-        name: 'Jake Doe',
-        relationship: 'Brother'
-      },
-      {
-        name: 'Jenny Doe',
-        relationship: 'Sister'
-      },
-      {
-        name: 'Jade Doe',
-        relationship: 'Sister'
-      }
-    ]
-  };
-  return (
-    <>
-    <PatientRegisteredFamilyMembers patient = {Patient}/>
-    </>
-  )
-}
+import PatientRegisteredFamilyMembers from './components/PatientRegisteredFamilyMembers';
+import {BrowserRouter, Routes, Route, Link, Router} from 'react-router-dom';
+
+
+
+   export default function App() {
+    return (
+     <BrowserRouter>
+     <Routes>
+      <Route index element={<h1>Index Route</h1>}/>
+      <Route path="/registeredFamilyMembers" element={<PatientRegisteredFamilyMembers/>}/>
+      </Routes>
+     </BrowserRouter>
+    )
+  }
 
