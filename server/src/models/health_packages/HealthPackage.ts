@@ -1,6 +1,6 @@
 //Import mongoose and Schema
 import mongoose, { Document, Schema } from 'mongoose';
-import { IHealthPackage } from './IHealthPackage';
+import { IHealthPackage } from './interfaces/IHealthPackage';
  
   
 export interface IHealthPackageModel extends IHealthPackage, Document {} 
