@@ -6,7 +6,7 @@ export interface IDoctor extends IDoctorBaseInfo {
   availableSlots: [
     {startTime: Date, endTime: Date}
   ],
-  identification?: string;
+  identification?: Buffer;
   medicalLicense?: Buffer;
   medicalDegree?: Buffer;
   wallet?: {
