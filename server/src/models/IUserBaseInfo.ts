@@ -5,6 +5,6 @@ export interface IUserBaseInfo {
     email: string;
     password: string;
     dateOfBirth: Date;
-    gender: string;
+    gender: 'male' | 'female';
     mobileNumber: string;
 }

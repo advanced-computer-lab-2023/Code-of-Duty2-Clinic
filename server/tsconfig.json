@@ -6,6 +6,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true, 
+    "useUnknownInCatchVariables": true,
     "outDir": "./build"
   },
   "include": ["src/**/*.ts"], 

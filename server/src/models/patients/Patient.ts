@@ -35,13 +35,15 @@ export const PatientSchema = new Schema<IPatientModel>({
       age: {type: Number, required: true},
       gender: {type: String, enum: ['male', 'female'], required: true}, 
       relation: {type: String, enum: ['wife', 'husband', 'children'], required: true}, 
-      subscribedPackage: 
-      {
-        packageId: {type: Schema.Types.ObjectId, required: true},
-        startDate: {type: Date, required: true},
-        endDate: {type: Date, required: true},
-        status: {type: ['subscribed', 'unsubscribed', 'cancelled'], required: true}
-      } 
+      subscribedPackage: { 
+        type: {
+          packageId: {type: Schema.Types.ObjectId, required: true},
+          startDate: {type: Date, required: true},
+          endDate: {type: Date, required: true},
+          status: {type: ['subscribed', 'unsubscribed', 'cancelled'], required: true}
+        },
+        required: false 
+      }
     }
   ],
   registeredFamilyMembers: [
