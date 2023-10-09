@@ -5,7 +5,7 @@ import {filterAppointments} from '../../controllers/appointments/filterAppointme
 
 const appointmentRouter = express.Router();
 
-appointmentRouter.route("/appointments/").get(filterAppointments).post(addAppointment);
+appointmentRouter.route("/").get(filterAppointments).post(addAppointment);
 
 
 export default appointmentRouter;

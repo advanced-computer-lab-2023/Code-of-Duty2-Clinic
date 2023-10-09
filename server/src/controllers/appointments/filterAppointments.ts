@@ -7,6 +7,7 @@ import Appointment from '../../models/appointments/Appointment';
 export const filterAppointments = async (req: Request, res: Response) => {
     try {
       const { patientId, doctorId, date , status } = req.query;
+      console.log(patientId);
       const filter: any = {};
       let fieldsNotProvided = []
       if (patientId) {
@@ -31,7 +32,17 @@ export const filterAppointments = async (req: Request, res: Response) => {
       if (status){
       filter.status = status as string;
       }
-      const appointments = await Appointment.find(filter);
+      const query = [
+        {
+            path:'doctorId', 
+            select:'name'
+        }, 
+        {
+            path:'patientId', 
+            select:'name gender dateOfBirth'
+        }
+    ];
+      let appointments = await Appointment.find(filter).populate(query).lean();
       res.status(StatusCodes.ACCEPTED).json(appointments);
     }
     } catch (error) {
