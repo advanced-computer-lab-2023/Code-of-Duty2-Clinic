@@ -1,15 +1,10 @@
 import connectToDB from './config/database';
 import config from './config/config';
-import express, { Request, NextFunction, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
-import Doctor from './models/doctors/Doctor';
-import Patient from './models/patients/Patient';
-import HealthPackage from './models/health_packages/HealthPackage';
-import Admin from './models/admins/Admin';
-import Prescription from './models/prescriptions/Prescription';
 
 const app = express();
 
@@ -32,10 +27,13 @@ app.listen(config.server.port, async () => {
 });
 
 function useAllAppRoutes() {
-    const routesPath = path.resolve(__dirname, 'Routes');
-
-    fs.readdirSync(routesPath).forEach((file) => {
-        const route = require(path.join(routesPath, file));
-        app.use(route.default);
+    const routesPath = path.resolve(__dirname, 'routes');
+    fs.readdirSync(routesPath).forEach((folderName) => {
+        const innerRouteFolder = path.join(routesPath, folderName);
+        const applicationEntities = folderName;
+        fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
+            const route = require(path.join(innerRouteFolder, routeFileName)).default;
+            app.use(`/api/${applicationEntities}`, route);
+        });
     });
 }

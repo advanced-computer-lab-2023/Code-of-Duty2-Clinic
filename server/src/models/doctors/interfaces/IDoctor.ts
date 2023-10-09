@@ -3,8 +3,10 @@ import { IDoctorBaseInfo } from './IDoctorBaseInfo';
 
 export interface IDoctor extends IDoctorBaseInfo {
   speciality?: string;
-  availability?: Date;
-  doctor_id?: string;
+  availableSlots: [
+    {startTime: Date, endTime: Date}
+  ],
+  identification?: Buffer;
   medicalLicense?: Buffer;
   medicalDegree?: Buffer;
   wallet?: {

@@ -1,4 +1,4 @@
-import { IUserBaseInfo } from "../IUserBaseInfo";
+import { IUserBaseInfo } from "../../users/interfaces/IUserBaseInfo";
 
 export interface IDoctorBaseInfo extends IUserBaseInfo {
     hourlyRate: number;
