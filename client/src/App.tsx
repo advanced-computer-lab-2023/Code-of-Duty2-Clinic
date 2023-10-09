@@ -1,4 +1,5 @@
 import './App.css'
+import PatientInfo from './components/PatientInfo';
 import PatientRegisteredFamilyMembers from './components/PatientRegisteredFamilyMembers';
 import {BrowserRouter, Routes, Route, Link, Router} from 'react-router-dom';
 
@@ -9,7 +10,8 @@ import {BrowserRouter, Routes, Route, Link, Router} from 'react-router-dom';
      <BrowserRouter>
      <Routes>
       <Route index element={<h1>Index Route</h1>}/>
-      <Route path="/registeredFamilyMembers" element={<PatientRegisteredFamilyMembers/>}/>
+      <Route path="/patientRegisteredFamilyMembers" element={<PatientRegisteredFamilyMembers/>}/>
+      <Route path="/patientInfo" element={<h1>Placeholder</h1>}/>
       </Routes>
      </BrowserRouter>
     )

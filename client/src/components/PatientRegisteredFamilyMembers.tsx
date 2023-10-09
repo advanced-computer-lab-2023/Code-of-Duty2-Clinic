@@ -1,21 +1,16 @@
 import { useState, useEffect } from "react";
 import CardGrid from "./CardGrid";
+import useGetPatientRegisteredFamilyMembers from "../hooks/useGetPatientRegisteredFamilyMembers";
 
 export default function PatientRegisteredFamilyMembers() {
-    const [patients, setPatients] = useState([]);
-
-    useEffect(() => {
-        fetch("http://localhost:3000/patientList")
-            .then((response) => response.json())
-            .then((data) => setPatients(data));
-    }, []);
+const patients = useGetPatientRegisteredFamilyMembers();
 
     return (
         <>
             <CardGrid
                 title="Registered Family Members"
                 primary="name"
-                secondary="relationship"
+                secondary="relation"
                 list={patients}
                 buttonText="View"
             />
