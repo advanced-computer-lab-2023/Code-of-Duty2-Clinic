@@ -1,7 +1,8 @@
-import Doctor from '../models/doctors/Doctor';
+import Doctor from '../../models/doctors/Doctor';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { entityIdDoesNotExistError } from '../utils/ErrorMessages';
+import { entityIdDoesNotExistError } from '../../utils/ErrorMessages';
+
 
 export const updateDoctor = async (req: Request, res: Response) => {
   const updates = Object.keys(req.body);
@@ -26,6 +27,3 @@ export const updateDoctor = async (req: Request, res: Response) => {
     res.status(StatusCodes.BAD_REQUEST).send(e);
   }
 };
-
-
-

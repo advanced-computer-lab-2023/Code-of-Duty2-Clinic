@@ -1,5 +1,8 @@
 import express from "express";
-import { getAllDoctors, getDoctorById, getMatchingDoctors, addFamilyMembers } from "../controllers/Patient";
+import { addFamilyMembers } from '../controllers/patients/addFamilyMembers';
+import { getDoctorById } from '../controllers/patients/getDoctorById';
+import { getMatchingDoctors } from '../controllers/patients/getMatchingDoctors';
+import { getAllDoctors } from '../controllers/patients/getAllDoctors';
 
 const patientRouter = express.Router();
 
