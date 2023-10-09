@@ -1,11 +1,11 @@
 import connectToDB from './config/database';
 import config from './config/config';
-import express, { Request, NextFunction, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
-import Patient from './models/patients/Patient';
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,7 +31,6 @@ function useAllAppRoutes() {
 
     fs.readdirSync(routesPath).forEach((file) => {
         const route = require(path.join(routesPath, file));
-        console.log(file);
         app.use('/', route.default);
     });
 }
