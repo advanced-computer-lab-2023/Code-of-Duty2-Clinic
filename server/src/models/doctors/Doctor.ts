@@ -19,7 +19,7 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   availableSlots: [
     {startTime: Date, endTime: Date}
   ],
-  doctorId: String,
+  identification: String,
   medicalLicense: Buffer,
   medicalDegree: Buffer,
   wallet: {amount: Number},

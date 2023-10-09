@@ -4,7 +4,7 @@ import { IDoctorBaseInfo } from './IDoctorBaseInfo';
 export interface IDoctor extends IDoctorBaseInfo {
   speciality?: string;
   availability?: Date;
-  doctor_id?: string;
+  identification?: string;
   medicalLicense?: Buffer;
   medicalDegree?: Buffer;
   wallet?: {
