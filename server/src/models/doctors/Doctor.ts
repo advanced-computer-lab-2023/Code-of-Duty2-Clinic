@@ -16,7 +16,9 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   affiliation: {type: String, required: true},
   educationalBackground: {type: String, required: true},
   speciality: {type: String, required: true},
-  availability: [Date],
+  availableSlots: [
+    {startTime: Date, endTime: Date}
+  ],
   doctorId: String,
   medicalLicense: Buffer,
   medicalDegree: Buffer,

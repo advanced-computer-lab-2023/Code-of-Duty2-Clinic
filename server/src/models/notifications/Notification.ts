@@ -1,15 +1,15 @@
 import mongoose,{Document, Schema} from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
-import { IClinicNotification } from './IClinicNotification'
+import { INotification } from './INotification'
 
-export interface IClinicNotificationModel extends IClinicNotification , Document{}
+export interface INotificationModel extends INotification , Document{}
 
-export const NotificationSchema = new Schema<IClinicNotificationModel>({   
-   email:{type:String, validate: [ isEmail, 'invalid email' ], unique:true},
+export const NotificationSchema = new Schema<INotificationModel>({   
+   email:{type:String, validate: [ isEmail, 'invalid email' ], unique:true, required: true},
    title:{type:String, required:true},
    description:{type:String, required:true},
    dateTime: {type:Date, required:true},
-   methods:[{type:String, enum:['SMS','email']}]
+   methods:[{type:String, enum:['SMS','email'], required: true}]
 })
 
-export default mongoose.model<IClinicNotificationModel>('ClinicNotification')
+export default mongoose.model<INotificationModel>('Notification')

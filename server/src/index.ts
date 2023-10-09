@@ -5,12 +5,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
-import Doctor from './models/doctors/Doctor';
 import Patient from './models/patients/Patient';
-import HealthPackage from './models/health_packages/HealthPackage';
-import Admin from './models/admins/Admin';
-import Prescription from './models/prescriptions/Prescription';
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,10 +27,11 @@ app.listen(config.server.port, async () => {
 });
 
 function useAllAppRoutes() {
-    const routesPath = path.resolve(__dirname, 'Routes');
+    const routesPath = path.resolve(__dirname, 'routes');
 
     fs.readdirSync(routesPath).forEach((file) => {
         const route = require(path.join(routesPath, file));
-        app.use(route.default);
+        console.log(file);
+        app.use('/', route.default);
     });
 }

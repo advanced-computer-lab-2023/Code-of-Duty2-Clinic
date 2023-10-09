@@ -7,5 +7,5 @@ export interface IPrescription {
     doctorId: Schema.Types.ObjectId;
     patientId: Schema.Types.ObjectId;
     status: 'filled' | 'unfilled';
-    medicines: [{ medicineName: string; dosage: string; }];
+    medicines: { medicineName: string; dosage: string; }[];
 }
