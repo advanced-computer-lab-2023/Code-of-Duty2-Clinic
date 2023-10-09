@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import { AppointmentsFilterQuery } from './interfaces/AppointmentsFilterQuery';
 import { StatusCodes } from 'http-status-codes';
-import Appointment from '../models/appointments/Appointment';
+import Appointment from '../../models/appointments/Appointment';
 
-export const getAppointments = async (req: Request, res: Response) => {
+export const filterAppointments = async (req: Request, res: Response) => {
     try {
       const { patientId, doctorId, date , status } = req.query;
       const filter: any = {};
@@ -39,14 +40,3 @@ export const getAppointments = async (req: Request, res: Response) => {
     }
 }
 
-export const addAppointment = async (req: Request, res: Response) => {
-    try {
-        const appointmentDetails = req.body;
-        const appointment = new Appointment(appointmentDetails)
-        await appointment.save()
-        res.status(StatusCodes.ACCEPTED).json(appointment);
-      } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'An error occurred while fetching appointments.' });
-      }
-}
