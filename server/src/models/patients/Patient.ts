@@ -18,9 +18,9 @@ export const PatientSchema = new Schema<IPatientModel>({
     relationToPatient: { type: String, required: true },
   },
 
-  deliveryAddresses: [{ type: String }],
+  deliveryAddresses: Array<{ type: String }>,
 
-  healthRecords: [{ type: Buffer }],
+  healthRecords: Array<{ type: Buffer }>,
   subscribedPackage: 
   {
     packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},

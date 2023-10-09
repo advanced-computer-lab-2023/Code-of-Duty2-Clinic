@@ -7,7 +7,7 @@ import { IEmergencyContact } from './IEmergencyContact';
 
 export interface IPatient extends IUserBaseInfo {
   emergencyContact: IEmergencyContact;
-  deliveryAddresses: string[];
+  deliveryAddresses?: string[];
   healthRecords?: Buffer[];
   subscribedPackage?: ISubscribedPackage;
   dependentFamilyMembers?: IDependentFamilyMember[];
