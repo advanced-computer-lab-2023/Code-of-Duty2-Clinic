@@ -5,13 +5,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
-import removeUser from './routes/admins/removeUser'
-import addAdmin from './routes/admins/addAdmin';
-import viewRequestdata from './routes/admins/viewRequestdata'
 
-
-const pathh = require('path');
-const fss = require('fs');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,9 +28,12 @@ app.listen(config.server.port, async () => {
 
 function useAllAppRoutes() {
     const routesPath = path.resolve(__dirname, 'routes');
-    fs.readdirSync(routesPath).forEach((file) => {
-        const route = require(path.join(routesPath, file));
-        app.use('/', route.default);
+    fs.readdirSync(routesPath).forEach((folderName) => {
+        const innerRouteFolder = path.join(routesPath, folderName);
+        const applicationEntities = folderName;
+        fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
+            const route = require(path.join(innerRouteFolder, routeFileName)).default;
+            app.use(`/api/${applicationEntities}`, route);
+        });
     });
 }
-

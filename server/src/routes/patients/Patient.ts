@@ -6,13 +6,13 @@ import { getAllDoctors } from '../../controllers/patients/getAllDoctors';
 
 const patientRouter = express.Router();
 
-patientRouter.get('/patients/:id/doctors', getAllDoctors);
+patientRouter.get('/:patientId/doctors', getAllDoctors);
 
-patientRouter.get('/patients/doctors', getMatchingDoctors);
+patientRouter.get('/doctors', getMatchingDoctors);
 
-patientRouter.get('/patients/doctors/:doctorId', getDoctorById);
+patientRouter.get('/doctors/:doctorId', getDoctorById);
 
-patientRouter.post('/patients/:patientId/family-members', addFamilyMembers);
+patientRouter.post('/:patientId/family-members', addFamilyMembers);
 
 
 export default patientRouter;

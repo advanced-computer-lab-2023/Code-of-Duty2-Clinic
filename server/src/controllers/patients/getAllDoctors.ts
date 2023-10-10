@@ -17,7 +17,7 @@ export const getAllDoctors = async (req: Request, res: Response) => {
 
     const subscribedPackage = patient?.subscribedPackage;
     const packageDetails = subscribedPackage ? await HealthPackage.findById(subscribedPackage?.packageId) : null;
-    const allDoctors = await Doctor.find({ contractStatus: 'accepted' }).select({ name: 1, email: 1, mobileNumber: 1, hourlyRate: 1, affiliation: 1, speciality: 1 });
+    const allDoctors = await Doctor.find({ contractStatus: 'accepted' }).select({ _id: 1, name: 1, email: 1, mobileNumber: 1, hourlyRate: 1, affiliation: 1, speciality: 1, educationalBackground: 1 });
 
     const doctorsRequiredInfo = getDoctorRequiredInfo(allDoctors, packageDetails);
 
