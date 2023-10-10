@@ -1,9 +1,11 @@
 import './App.css'
+//import AdminForm from './components/adminForm'
+import ViewDoctorRegistrationRequest from './components/ViewDoctorRegistrationRequest'
 export default function App() {
 
   return (
     <>
-    <h1>React App Running</h1>
+      <ViewDoctorRegistrationRequest/>
     </>
   )
 }

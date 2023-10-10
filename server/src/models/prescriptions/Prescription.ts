@@ -1,5 +1,5 @@
 import mongoose,{Document,Schema } from 'mongoose';
-import { IPrescription } from './IPrescription';
+import { IPrescription } from './interfaces/IPrescription';
 
 export interface IPrescriptionModel extends IPrescription , Document{}
 

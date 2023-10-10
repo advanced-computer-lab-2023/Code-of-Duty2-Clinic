@@ -1,9 +1,0 @@
-import express from 'express';
-import getPatientsByDoctorId from '../controllers/viewDoctorPatientsController'; // Import your controller
-
-const router = express.Router();
-
-// Define the route for fetching patients by doctor ID
-router.get('/doctors/:doctorId/patients', getPatientsByDoctorId);
-
-export default router;

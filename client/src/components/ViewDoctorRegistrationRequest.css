@@ -1,0 +1,24 @@
+/* DoctorRequestView.css */
+
+.doctor-request-view {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .doctor-request-view h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .doctor-request-view p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* You can add more styles as needed */
+  

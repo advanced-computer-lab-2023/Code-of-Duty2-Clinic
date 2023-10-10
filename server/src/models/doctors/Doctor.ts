@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
-import { IDoctor } from './IDoctor';
+import { IDoctor } from './interfaces/IDoctor';
 
 export interface IDoctorModel extends IDoctor, Document {} 
 
@@ -16,8 +16,10 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   affiliation: {type: String, required: true},
   educationalBackground: {type: String, required: true},
   speciality: {type: String, required: true},
-  availability: [Date],
-  doctorId: String,
+  availableSlots: [
+    {startTime: Date, endTime: Date}
+  ],
+  identification: Buffer,
   medicalLicense: Buffer,
   medicalDegree: Buffer,
   wallet: {amount: Number},
