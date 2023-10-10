@@ -10,17 +10,26 @@ export const filterAppointments = async (req: Request, res: Response) => {
       console.log(patientId);
       const filter: any = {};
       let fieldsNotProvided = []
-      if (patientId) {
+      if (patientId && !doctorId) {
         filter.patientId = new mongoose.Types.ObjectId(patientId as string);
       }
-      else{
+      else if(!doctorId){
         fieldsNotProvided.push("patientId");
-      }
-      if (doctorId) {
-        filter.doctorId = new mongoose.Types.ObjectId(doctorId as string);
       }
       else{
         fieldsNotProvided.push("doctorId")
+        fieldsNotProvided.push("patientId");
+
+      }
+      if (!patientId && doctorId) {
+        filter.doctorId = new mongoose.Types.ObjectId(doctorId as string);
+      }
+      else if(!patientId){
+        fieldsNotProvided.push("doctorId");
+      }
+      else{
+        fieldsNotProvided.push("patientId")
+        fieldsNotProvided.push("doctorId");
       }
       if(fieldsNotProvided.length ===2){
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "One of doctorId or patientId needs to be provided at least" });
