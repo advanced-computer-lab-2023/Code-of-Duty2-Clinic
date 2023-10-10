@@ -1,15 +1,24 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ViewAppointmentsPatients from './pages/Doctor/ViewAppointmentsPatients'
-export default function App() {
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
+import Layout from './layouts/Layout';
+import routes from './data/routes';
 
+export default function App() {
   return (
-    <Router>
-        <Routes >
-          <Route path="/" element={< ViewAppointmentsPatients/>}></Route>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          {routes.map((route, index: number) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={route.component}
+            />
+          ))}
         </Routes>
-    </Router>
-          
+      </Layout>
+    </BrowserRouter>
   );
 }
 
