@@ -4,6 +4,7 @@ import Footer from './Footer';
 import Sidebar from './Sidebar';
 import { useLocation } from 'react-router-dom';
 import { doctorSidebarItems, guestSidebarItems, patientSidebarItems } from '../data/sidebarItems';
+import { adminSidebarItems } from '../data/sidebarItems/adminSidebarItems';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -31,7 +32,7 @@ function getRequiredSidebarItems() {
         case 'doctor':
             return doctorSidebarItems;
         case 'admin':
-            return [];
+            return adminSidebarItems;
         default:
         return guestSidebarItems;
     }
