@@ -1,18 +1,18 @@
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import Navbar from './Navbar';
 
 const Header = () => {
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
             <AppBar position="static">
                 <Toolbar>
-                    <Navbar />
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h5" sx={{
+                        flexGrow: 1 ,
+                        marginRight: 'auto',
+                    }}>
                         Clinic
                     </Typography>
-                    <Button color="inherit" href="/">
-                        <img src="/logo.png" alt="App Logo" style={{ height: '50px', marginRight: 16 }} />
-                    </Button>
+                    <Navbar />
                 </Toolbar>
             </AppBar>
         </Box>
