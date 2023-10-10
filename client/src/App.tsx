@@ -1,6 +1,5 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css';
 import Layout from './layouts/Layout';
 import routes from './data/routes';
 
@@ -9,7 +8,7 @@ export default function App() {
     <BrowserRouter>
       <Layout>
         <Routes>
-          {routes.map((route, index: number) => (
+          {routes.map((route, index) => (
             <Route
               key={index}
               path={route.path}
