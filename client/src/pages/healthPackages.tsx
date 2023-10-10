@@ -33,7 +33,7 @@ interface IHealthPackage {
     _id?:string,
     name: string;
     amountToPay: number;
-    discount: {
+    discounts: {
         gainedDoctorSessionDiscount: number;
         gainedPharamcyMedicinesDiscount: number;
         gainedFamilyMembersDiscount: number;
@@ -45,7 +45,7 @@ const HealthPackageResetter = {
     _id:"",
     name: "",
     amountToPay: 0,
-    discount: {
+    discounts: {
         gainedDoctorSessionDiscount: 0,
         gainedPharamcyMedicinesDiscount: 0,
         gainedFamilyMembersDiscount: 0,
@@ -90,10 +90,10 @@ export default function HealthPackages (){
         const data = {  
             name: selectedHealthPackage.name,
             amountToPay: selectedHealthPackage.amountToPay,
-            discount: {
-                gainedDoctorSessionDiscount: selectedHealthPackage.discount.gainedDoctorSessionDiscount,
-                gainedPharamcyMedicinesDiscount: selectedHealthPackage.discount.gainedPharamcyMedicinesDiscount,
-                gainedFamilyMembersDiscount: selectedHealthPackage.discount.gainedFamilyMembersDiscount,
+            discounts: {
+                gainedDoctorSessionDiscount: selectedHealthPackage.discounts.gainedDoctorSessionDiscount,
+                gainedPharamcyMedicinesDiscount: selectedHealthPackage.discounts.gainedPharamcyMedicinesDiscount,
+                gainedFamilyMembersDiscount: selectedHealthPackage.discounts.gainedFamilyMembersDiscount,
             },
             packageDurationInYears: selectedHealthPackage.packageDurationInYears
         }
@@ -108,10 +108,10 @@ export default function HealthPackages (){
         const data = {  
             name: selectedHealthPackage.name,
             amountToPay: selectedHealthPackage.amountToPay,
-            discount: {
-                gainedDoctorSessionDiscount: selectedHealthPackage.discount.gainedDoctorSessionDiscount,
-                gainedPharamcyMedicinesDiscount: selectedHealthPackage.discount.gainedPharamcyMedicinesDiscount,
-                gainedFamilyMembersDiscount: selectedHealthPackage.discount.gainedFamilyMembersDiscount,
+            discounts: {
+                gainedDoctorSessionDiscount: selectedHealthPackage.discounts.gainedDoctorSessionDiscount,
+                gainedPharamcyMedicinesDiscount: selectedHealthPackage.discounts.gainedPharamcyMedicinesDiscount,
+                gainedFamilyMembersDiscount: selectedHealthPackage.discounts.gainedFamilyMembersDiscount,
             },
             packageDurationInYears: selectedHealthPackage.packageDurationInYears
         }
@@ -156,9 +156,9 @@ export default function HealthPackages (){
                         </TableCell>
                         <TableCell align="center">{healthpackage.amountToPay}</TableCell>
                         <TableCell align="center">{healthpackage.packageDurationInYears}</TableCell>
-                        <TableCell align="center">{healthpackage.discount.gainedDoctorSessionDiscount}</TableCell>
-                        <TableCell align="center">{healthpackage.discount.gainedFamilyMembersDiscount}</TableCell>
-                        <TableCell align="center">{healthpackage.discount.gainedDoctorSessionDiscount}</TableCell>
+                        <TableCell align="center">{healthpackage.discounts.gainedDoctorSessionDiscount}</TableCell>
+                        <TableCell align="center">{healthpackage.discounts.gainedFamilyMembersDiscount}</TableCell>
+                        <TableCell align="center">{healthpackage.discounts.gainedDoctorSessionDiscount}</TableCell>
                         <TableCell align="center">
                             <IconButton onClick={()=>editModal(index)} aria-label="delete">
                                 
@@ -220,21 +220,21 @@ export default function HealthPackages (){
                         <TextField 
                             type="number" 
                             size='small'
-                            onChange={ ev =>selectedHealthPackage.discount.gainedDoctorSessionDiscount=Number(ev.target.value)}
-                            defaultValue={selectedHealthPackage?.discount.gainedDoctorSessionDiscount}  />
+                            onChange={ ev =>selectedHealthPackage.discounts.gainedDoctorSessionDiscount=Number(ev.target.value)}
+                            defaultValue={selectedHealthPackage?.discounts.gainedDoctorSessionDiscount}  />
 
                         <FormLabel>Family Members Discount</FormLabel>
                         <TextField type="number"
                          size='small' 
-                         onChange={ ev =>selectedHealthPackage.discount.gainedFamilyMembersDiscount=Number(ev.target.value)}
-                         defaultValue={selectedHealthPackage?.discount.gainedFamilyMembersDiscount} />
+                         onChange={ ev =>selectedHealthPackage.discounts.gainedFamilyMembersDiscount=Number(ev.target.value)}
+                         defaultValue={selectedHealthPackage?.discounts.gainedFamilyMembersDiscount} />
 
                         <FormLabel>Pharmacy Medicines Discount</FormLabel>
                         <TextField 
                             type="number" 
                             size='small' 
-                            onChange={ ev =>selectedHealthPackage.discount.gainedPharamcyMedicinesDiscount=Number(ev.target.value)}
-                            defaultValue={selectedHealthPackage?.discount.gainedPharamcyMedicinesDiscount}  />
+                            onChange={ ev =>selectedHealthPackage.discounts.gainedPharamcyMedicinesDiscount=Number(ev.target.value)}
+                            defaultValue={selectedHealthPackage?.discounts.gainedPharamcyMedicinesDiscount}  />
 
                         {create&& (<Button variant="contained" onClick={createHealthPackage}>Create</Button>)}
                         {!create &&(<Button variant="contained" onClick={saveHealthPackage}>Save</Button>)}

@@ -1,10 +1,7 @@
-import mongoose, { CastError, Error} from "mongoose";
-import HealthPackage, { IHealthPackageModel } from "../models/health_packages/HealthPackage";
+import mongoose from "mongoose";
+import HealthPackage from "../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
-import { ErrorCallback } from "typescript";
-import { IHealthPackage } from "models/health_packages/IHealthPackage";
-
-const  HealthPackageAttributes = ['name','amountToPay','discount','packageDurationInYears']
+const  HealthPackageAttributes = ['name','amountToPay','discounts','packageDurationInYears']
 const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 
 
@@ -43,12 +40,14 @@ export const addHealthPackage = async (req:Request,res:Response)=>{
     //Validate attributes existance
 
     const requestAttributes = Object.keys(req.body)
-    const requestDiscountAttributes :string[]= req.body.discount?Object.keys(req.body.discount):[]
+    const requestDiscountAttributes :string[]= req.body.discounts?Object.keys(req.body.discounts):[]
 
     let allAttributesExist = checkIfIncludes(HealthPackageAttributes,requestAttributes)
      allAttributesExist =  allAttributesExist && checkIfIncludes(discountAttributes,requestDiscountAttributes)
 
     //Prevent additional attributes
+  
+
     if(allAttributesExist && requestAttributes.length === 4 && requestDiscountAttributes.length === 3){
             //Add package
             try{
@@ -78,7 +77,7 @@ export const deleteHealthPackage = async (req:Request,res:Response)=>{
     }catch(err){
         if(err instanceof mongoose.Error.CastError)
             return res.send("Health Package Not found")
-        
+
         return res.send(err)
     }
    
@@ -88,12 +87,12 @@ export const deleteHealthPackage = async (req:Request,res:Response)=>{
 export const updateHealthPackage = async (req:Request,res:Response)=>{
     
     const requestAttributes = Object.keys(req.body)
-    const requestDiscountAttributes :string[]= req.body.discount?Object.keys(req.body.discount):[]
+    const requestDiscountAttributes :string[]= req.body.discounts?Object.keys(req.body.discounts):[]
 
     let validAttributes = checkIfIncludes(requestAttributes,HealthPackageAttributes)
     validAttributes= validAttributes && checkIfIncludes(requestDiscountAttributes,discountAttributes) &&  requestAttributes.length <= 4 && requestDiscountAttributes.length <= 3
 
-    //Prevent attributes not exceeding HealthPAckage attributes
+    //Prevent attributes not exceeding HealthPAckage 
     if(validAttributes ){
         try{
 
@@ -105,17 +104,17 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
             
             }
            
-            const prevDiscount  = prevPackage.discount
+            const prevDiscount  = prevPackage.discounts
 
             //update health Package attributes except discount 
             requestAttributes.forEach((attribute) =>{
-                if(attribute !='discount')
+                if(attribute !='discounts')
                 prevPackage[attribute] = req.body[attribute]
             })
             
             //Update discount attributes
-            requestDiscountAttributes.forEach(attribute =>  prevDiscount[attribute]= req.body.discount[attribute])
-            prevPackage.discount = prevDiscount
+            requestDiscountAttributes.forEach(attribute =>  prevDiscount[attribute]= req.body.discounts[attribute])
+            prevPackage.discounts = prevDiscount
            
             //save document
             await prevPackage.save(); 

@@ -1,8 +1,8 @@
 
-export interface IClinicNotification {
+export interface INotification {
     email: string;
     title: string;
     description: string;
     dateTime: Date;
-    methods: [{ method: 'SMS' | 'email'; }];
+    methods: { method: 'SMS' | 'email'; }[];
 }

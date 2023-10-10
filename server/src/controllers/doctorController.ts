@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import Doctor from "../models/doctors/Doctor";
 import mongoose from "mongoose";
-
-
-
 //Get doctor by ID 
 export const getDoctor = async (req:Request,res:Response)=>{
     try{

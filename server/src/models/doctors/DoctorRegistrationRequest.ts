@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
-import { IDoctorBaseInfo } from './IDoctorBaseInfo';
+import { IDoctorBaseInfo } from './interfaces/IDoctorBaseInfo';
 
 export interface IDoctorRegistrationRequestModel extends IDoctorBaseInfo, Document {} 
 

@@ -1,6 +1,7 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HealthPackages from './pages/HealthPackages';
+import HealthPackages from './pages/healthPackages';
+import PatientPrescriptions from './pages/patientPrescriptions';
 
 
 export default function App() {
@@ -9,7 +10,8 @@ export default function App() {
       <Routes>
          
         <Route path="healthPackages" element={<HealthPackages />} />
-        
+        <Route path="patientPrescriptions" element={<PatientPrescriptions />} />
+
       </Routes>
     </BrowserRouter>
   );

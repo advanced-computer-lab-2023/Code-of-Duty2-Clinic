@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import { addHealthPackage,deleteHealthPackage, getHealthPackages, updateHealthPackage,getHealthPackage } from '../controllers/healthPackageController';
 const router  = express.Router();
 
