@@ -2,9 +2,9 @@ import connectToDB from './config/database';
 import config from './config/config';
 import express from 'express';
 import cors from 'cors';
-import healthPackageRouter from './routes/healthPackageRouter'
-import doctorRouter from './routes/doctorRouter'
-import prescriptionRouter from './routes/prescriptionRouter'
+import fs from 'fs';
+import path from 'path';
+import bodyParser from 'body-parser';
 // import fs from 'fs';
 // import path from 'path';
 // import bodyParser from 'body-parser';
@@ -12,8 +12,16 @@ import prescriptionRouter from './routes/prescriptionRouter'
 const app = express();
 
 app.use(cors(config.server.corsOptions));
-app.use(express.json())
 
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json());
+
+app.use(cors(config.server.corsOptions));
+
+
+useAllAppRoutes();
 
 connectToDB();
 
@@ -21,12 +29,19 @@ app.get('/', (req, res) => {
     res.send('Server Online!');
 });
 
-app.use('/prescription',prescriptionRouter)
-app.use('/healthPackage',healthPackageRouter)
-app.use('/doctor',doctorRouter)
-
-
 app.listen(config.server.port, async () => {
     console.log(`Server listening on port ${config.server.port}`);
 });
+
+function useAllAppRoutes() {
+    const routesPath = path.resolve(__dirname, 'routes');
+    fs.readdirSync(routesPath).forEach((folderName) => {
+        const innerRouteFolder = path.join(routesPath, folderName);
+        const applicationEntities = folderName;
+        fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
+            const route = require(path.join(innerRouteFolder, routeFileName)).default;
+            app.use(`/api/${applicationEntities}`, route);
+        });
+    });
+}
 

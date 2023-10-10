@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import Patient from '../../models/patients/Patient';
 import HealthPackage, { IHealthPackageModel } from '../../models/health_packages/HealthPackage';
 import { entityIdDoesNotExistError } from '../../utils/ErrorMessages';
+import { getClinicCommission } from '../../models/clinic/Clinic';
 
 
 export const getAllDoctors = async (req: Request, res: Response) => {
@@ -17,7 +18,7 @@ export const getAllDoctors = async (req: Request, res: Response) => {
 
     const subscribedPackage = patient?.subscribedPackage;
     const packageDetails = subscribedPackage ? await HealthPackage.findById(subscribedPackage?.packageId) : null;
-    const allDoctors = await Doctor.find({ contractStatus: 'accepted' }).select({ name: 1, email: 1, mobileNumber: 1, hourlyRate: 1, affiliation: 1, speciality: 1 });
+    const allDoctors = await Doctor.find({ contractStatus: 'accepted' }).select({ _id: 1, name: 1, email: 1, mobileNumber: 1, hourlyRate: 1, affiliation: 1, speciality: 1, educationalBackground: 1 });
 
     const doctorsRequiredInfo = getDoctorRequiredInfo(allDoctors, packageDetails);
 
@@ -27,10 +28,12 @@ export const getAllDoctors = async (req: Request, res: Response) => {
     res.status(StatusCodes.BAD_REQUEST).send(err);
   }
 };
-function getRequiredSessionPrice(doctorHourlyRate: number, healthPackageDetails: IHealthPackageModel | null): number {
+
+async function getRequiredSessionPrice(doctorHourlyRate: number, healthPackageDetails: IHealthPackageModel | null) {
   let discountAmount = healthPackageDetails?.discounts.gainedDoctorSessionDiscount || 0;
-  console.log(discountAmount);
-  return doctorHourlyRate - doctorHourlyRate * discountAmount;
+  let clinicCommission = await getClinicCommission() || 1;
+  let originalAmountToPay = doctorHourlyRate +  doctorHourlyRate * clinicCommission;
+  return originalAmountToPay - originalAmountToPay * discountAmount;
 }
 function getDoctorRequiredInfo(allDoctors: IDoctorModel[], packageDetails: IHealthPackageModel | null) {
   return allDoctors.map((doctor) => ({
