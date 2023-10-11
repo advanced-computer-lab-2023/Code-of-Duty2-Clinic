@@ -17,11 +17,10 @@ export const getPatientRegisteredFamilyMembers = async (req: Request, res: Respo
     const registeredFamilyMembers: IRegisteredFamilyMember[] = patient.registeredFamilyMembers || [];
     const members = [];
 
-    console.log(registeredFamilyMembers);
 
     for (const familyMember of registeredFamilyMembers) {
       const memberId = familyMember.id;
-      const registeredFamilyMember: IPatient | null = await PatientModel.findById(memberId);
+      const registeredFamilyMember = await PatientModel.findById(memberId);
       if (registeredFamilyMember) {
         console.log(registeredFamilyMember.name);
         members.push(

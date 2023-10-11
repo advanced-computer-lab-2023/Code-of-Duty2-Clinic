@@ -7,8 +7,6 @@ import { Button } from '@mui/material';
 import '../css/CardGrid.css';
 
 
-
-
 export default function CardGrid ({title, list, primary, secondary, buttonText}: {title: string, primary: string, secondary: string, list: any, buttonText: string}) {
     return (
         <>
@@ -19,7 +17,7 @@ export default function CardGrid ({title, list, primary, secondary, buttonText}:
             <Grid container spacing={3}>
                 {list.map((listItem: { [key: string]: string }) => (
                     <Grid item xs={3}>
-                        <CardGridCard primary={listItem[primary]} secondary={listItem[secondary]} buttonText={buttonText} />
+                        <CardGridCard primary={listItem[primary]} secondary={listItem[secondary]} buttonText={buttonText}  buttonLink={`/patient-info/${listItem._id}`} />
                     </Grid>
                 ))}
             </Grid>
@@ -29,7 +27,8 @@ export default function CardGrid ({title, list, primary, secondary, buttonText}:
 }
 
 
-function CardGridCard ({ primary, secondary, buttonText }: { primary: string, secondary: string, buttonText: string }) {
+function CardGridCard ({primary, secondary, buttonText, buttonLink}: { primary: string, secondary: string, buttonText: string, buttonLink: string}) {
+
     return (
         <Card>
             <CardContent>
@@ -39,7 +38,7 @@ function CardGridCard ({ primary, secondary, buttonText }: { primary: string, se
                 <Typography sx={{ mb: 1.5}} color="text.secondary">
                     {secondary}
                 </Typography>
-                <Button variant = "contained">{buttonText}</Button>
+                <Button variant = "contained" href={buttonLink}>{buttonText}</Button>
             </CardContent>
         </Card>
     );
