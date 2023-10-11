@@ -3,7 +3,7 @@ import { updateDoctor } from '../../controllers/doctors/updateDoctor';
 
 const doctorRouter = express.Router();
 
-doctorRouter.patch('/:doctorId', updateDoctor);
+doctorRouter.patch('/:doctorId/account', updateDoctor);
 
 
 export default doctorRouter;

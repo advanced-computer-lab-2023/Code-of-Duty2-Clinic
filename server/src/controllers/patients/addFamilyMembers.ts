@@ -16,6 +16,9 @@ export const addFamilyMembers = async (req: Request, res: Response) => {
     if (!patient.dependentFamilyMembers) {
       patient.dependentFamilyMembers = [];
     }
+    if(patient.dependentFamilyMembers.find((dependentFamilyMember) => dependentFamilyMember.nationalId === req.body.nationalId)){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: 'nationalId already exists'});
+    }
     patient.dependentFamilyMembers?.push(req.body);
     patient = await patient.save();
 
