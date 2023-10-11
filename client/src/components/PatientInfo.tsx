@@ -2,13 +2,13 @@ import { Paper} from '@mui/material';
 import '../css/PatientInfo.css';
 import axios from 'axios';
 import { useEffect, useState} from 'react';
-import { IPatient } from '../types/IPatient';
 import { useLocation} from 'react-router-dom';
+import { Patient } from '../types';
 
 
 export default function PatientInfo() {
     const patientId = useLocation().pathname.split('/')[2];
-    const [patient, setPatient] = useState<IPatient>();
+    const [patient, setPatient] = useState<Patient>();
 
     useEffect(() => {
         console.log(patientId);
