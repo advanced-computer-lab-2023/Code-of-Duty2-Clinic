@@ -1,6 +1,6 @@
 import mongoose,{Document, Schema} from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
-import { INotification } from './INotification'
+import { INotification } from './interfaces/INotification'
 
 export interface INotificationModel extends INotification , Document{}
 

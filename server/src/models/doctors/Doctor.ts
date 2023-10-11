@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
-import { IDoctor } from './IDoctor';
+import { IDoctor } from './interfaces/IDoctor';
 
 export interface IDoctorModel extends IDoctor, Document {} 
 

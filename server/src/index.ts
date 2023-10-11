@@ -5,8 +5,23 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
+import bodyParser from 'body-parser';
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json());
+
+app.use(cors(config.server.corsOptions));
+
+useAllAppRoutes();
+
+connectToDB();
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,14 +38,18 @@ app.get('/', (req, res) => {
 });
 
 app.listen(config.server.port, async () => {
+app.listen(config.server.port, async () => {
     console.log(`Server listening on port ${config.server.port}`);
 });
 
 function useAllAppRoutes() {
     const routesPath = path.resolve(__dirname, 'routes');
-
-    fs.readdirSync(routesPath).forEach((file) => {
-        const route = require(path.join(routesPath, file));
-        app.use('/', route.default);
+    fs.readdirSync(routesPath).forEach((folderName) => {
+        const innerRouteFolder = path.join(routesPath, folderName);
+        const applicationEntities = folderName;
+        fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
+            const route = require(path.join(innerRouteFolder, routeFileName)).default;
+            app.use(`/api/${applicationEntities}`, route);
+        });
     });
 }

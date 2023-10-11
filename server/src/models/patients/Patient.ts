@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
-import { IPatient } from './IPatient';
+import { IPatient } from './interfaces/IPatient';
 
 export interface IPatientModel extends IPatient, Document {} 
 
@@ -18,9 +18,9 @@ export const PatientSchema = new Schema<IPatientModel>({
     relationToPatient: { type: String, required: true },
   },
 
-  deliveryAddresses: [{ type: String }],
+  deliveryAddresses: Array<{ type: String }>,
 
-  healthRecords: [{ type: Buffer }],
+  healthRecords: Array<{ type: Buffer }>,
   subscribedPackage: 
   {
     packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
