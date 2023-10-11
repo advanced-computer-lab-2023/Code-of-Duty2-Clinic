@@ -9,7 +9,7 @@ export const doctorHomeRoute: Route = {
 }
 
 export const updateAccountInfoRoute: Route = {
-    path: '/doctor/account/update',
+    path: '/doctor/:doctorId/account/update',
     component: <UpdateAccountInfo />
 }
 

@@ -12,6 +12,7 @@ import { Prescription } from "./Prescription";
 import { RegisteredFamilyMember } from "./RegisteredFamilyMember";
 import { SubscribedPackage } from "./SubscribedPackage";
 import { UserBaseInfo } from "./UserBaseInfo";
+import { DoctorDetails } from "./ViewedDoctorDetails";
 
 export type {
     Admin,
@@ -28,4 +29,5 @@ export type {
     RegisteredFamilyMember,
     SubscribedPackage,
     UserBaseInfo,
+    DoctorDetails,
 };
