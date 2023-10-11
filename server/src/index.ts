@@ -5,6 +5,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import patientRouter from './routes/patients/Patient';
 
 const app = express();
 
@@ -13,6 +14,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(cors(config.server.corsOptions));
+
+connectToDB();
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json());
+
+app.use(cors(config.server.corsOptions));
+
 
 useAllAppRoutes();
 
