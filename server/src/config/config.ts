@@ -3,9 +3,11 @@ import cors from 'cors';
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || "";
+const MONGO_URI = process.env.MONGO_URI || "" ;
 
 const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 4000;
+console.log(MONGO_URI);
+
 const FRONT_END_URL = process.env.FRONT_END_URL || "http://localhost:5173";
 const corsOptions: cors.CorsOptions = {
     origin: FRONT_END_URL

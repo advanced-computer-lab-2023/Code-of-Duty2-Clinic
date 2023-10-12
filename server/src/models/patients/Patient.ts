@@ -21,15 +21,19 @@ export const PatientSchema = new Schema<IPatientModel>({
   deliveryAddresses: Array<{ type: String }>,
 
   healthRecords: Array<{ type: Buffer }>,
+  
   subscribedPackage: 
   {
-    packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
-    startDate: {type: Date, required: true},
-    endDate: {type: Date, required: true},
-    status: {type: String, enum:['subscribed', 'unsubscribed', 'cancelled'], required:true}, 
+    type:{
+      packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
+      startDate: {type: Date, required: true},
+      endDate: {type: Date, required: true},
+      status: {type: String, enum:['subscribed', 'unsubscribed', 'cancelled'], required:true}, 
+    },
+    required: false,
   },
-  dependentFamilyMembers: [ 
-    {
+  dependentFamilyMembers: {
+    type:[{
       name: {type: String, required: true}, 
       nationalId: {type: String, required: true}, 
       age: {type: Number, required: true},
@@ -44,17 +48,19 @@ export const PatientSchema = new Schema<IPatientModel>({
         },
         required: false 
       }
+    }],
+    required: false
+  },
+  registeredFamilyMembers: {
+    type: [
+      {
+        id: {type: Schema.Types.ObjectId, ref:'Patient', required: true},
+        relation: {type: String, enum:['wife', 'husband', 'children'], required: true}
+      }
+    ],
+    required: false,
     }
-  ],
-  registeredFamilyMembers: [
-    {
-      id: {type: Schema.Types.ObjectId, ref:'Patient', required: true},
-      relation: {type: String, enum:['wife', 'husband', 'children'], required: true}
-    }
-  ]
-}, 
-{timestamps: true}
-);
-
-
-export default mongoose.model<IPatientModel>('Patient', PatientSchema);
+    }, 
+    {timestamps: true}
+    );
+  export default mongoose.model<IPatientModel>('Patient', PatientSchema);

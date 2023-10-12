@@ -10,18 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^1.5.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
+    "axios": "^1.5.1",
     "mongoose": "^7.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.25",
+    "@types/react": "^18.2.27",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
