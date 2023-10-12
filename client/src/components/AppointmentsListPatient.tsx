@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 interface Appointment {
   _id: string;
@@ -8,7 +8,7 @@ interface Appointment {
     _id: string;
     name: string;
   };
-  patientId: {
+  patient: {
     _id: string;
     name: string;
     dateOfBirth: string;
@@ -29,7 +29,7 @@ class AppointmentsList extends Component<AppointmentsListProps> {
         <h2> List</h2>
         <ul>
           {appointments.map((appointment, index) => (
-            <li key={index} onClick={() => onAppointmentClick?.(patient)}>
+            <li key={index} onClick={() => onAppointmentClick?.(appointment)}>
               <div className="appointment-item">
                 <h3>{appointment.date}</h3>
                 <p>Status: {appointment.status}</p>
