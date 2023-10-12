@@ -4,6 +4,6 @@ import viewPatientHealthRecords from '../../controllers/doctors/viewDoctorPatien
 const router = express.Router();
 
 // Define the route for fetching patients by doctor ID
-router.get('/:doctorId/patients', viewPatientHealthRecords);
+router.get('/patients/:patientId', viewPatientHealthRecords);
 
 export default router;

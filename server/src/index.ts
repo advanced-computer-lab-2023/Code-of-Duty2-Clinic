@@ -5,6 +5,8 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import DoctorRegistrationRequest, { DoctorRegistrationRequestSchema } from './models/doctors/DoctorRegistrationRequest';
+import Patient, { PatientSchema } from './models/patients/Patient';
 
 const app = express();
 
@@ -26,7 +28,7 @@ app.listen(config.server.port, async () => {
     console.log(`Server listening on port ${config.server.port}`);
 });
 
-function useAllAppRoutes() {
+async function useAllAppRoutes() {
     const routesPath = path.resolve(__dirname, 'routes');
     fs.readdirSync(routesPath).forEach((folderName) => {
         const innerRouteFolder = path.join(routesPath, folderName);
@@ -36,4 +38,6 @@ function useAllAppRoutes() {
             app.use(`/api/${applicationEntities}`, route);
         });
     });
+    // const user=await DoctorRegistrationRequest.find();
+    // console.log(user)
 }

@@ -27,17 +27,15 @@ const AdminForm: React.FC = () => {
 
     try {
       // Send the admin creation data to the backend API
-      const response = await fetch('/admins', {
+      const response = await fetch('http://localhost:4000/api/admins/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
-        // Admin creation successful, handle the response accordingly
-        // For example, show a success message or update the UI
+        console.log('nailed it')
       } else {
         // Handle admin creation failure, show an error message, etc.
       }

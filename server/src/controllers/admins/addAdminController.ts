@@ -12,17 +12,17 @@ async function registerAdmin(req: Request, res: Response) {
       return res.status(400).json({ message: 'Admin with this username already exists' });
     }
 
-    const saltRound=10;
-    const hashedPassword= await bcrypt.hash(password,saltRound)
+     const saltRound=10;
+     const hashedPassword= await bcrypt.hash(password,saltRound)
 
     // Create a new admin
-    const newAdmin = new ClinicAdmin({ username, hashedPassword });
+    const newAdmin = new ClinicAdmin({ username,password: hashedPassword });
     await newAdmin.save();
 
     return res.status(201).json({ message: 'Admin registered successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json(error);
   }
 }
 

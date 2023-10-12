@@ -8,16 +8,16 @@ import AdminModel from '../../models/admins/Admin';
 async function removeUser(req: Request, res: Response) {
   try {
     const { userName } = req.params;
-
     
     const user =
       (await PatientModel.findOne({ username: userName })) ||
       (await DoctorModel.findOne({ username: userName })) ||
       (await AdminModel.findOne({ username: userName }));
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+      if (!user) {
+        return res.status(404).json({ message: 'User not found', username: userName });
+      }
+    
 
     if (user instanceof PatientModel) {
       await PatientModel.findByIdAndDelete(user._id);

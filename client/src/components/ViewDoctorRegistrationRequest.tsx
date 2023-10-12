@@ -10,7 +10,7 @@ const ViewDoctorRegistrationRequest: React.FC = () => {
 
   const fetchDoctorRequest = async () => {
     try {
-      const response = await fetch(`/api/doctor-registration-requests/${email}`);
+      const response = await fetch(`http://localhost:4000/api/admins/doctor-registration-requests/${email}`);
       if (response.ok) {
         const data = await response.json();
         setDoctorRequest(data);

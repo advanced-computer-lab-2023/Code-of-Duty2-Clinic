@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import PatientModel, { IPatientModel } from '../../models/patients/Patient';
 import PrescriptionModel, { IPrescriptionModel } from '../../models/prescriptions/Prescription';
+import Appointment, { IAppointmentModel } from '../../models/appointments/Appointment';
 
 export default async function viewPatientHealthRecords(req: Request, res: Response) {
   try {
@@ -11,6 +12,10 @@ export default async function viewPatientHealthRecords(req: Request, res: Respon
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
+    const appointments : IAppointmentModel | null = await Appointment.findOne({patientId:patientId})
+     if(!appointments){
+      res.status(404).json({message:'not authorized to view this patient info'})
+     }
 
     // Find prescriptions associated with this patient
     const prescriptions: IPrescriptionModel[] = await PrescriptionModel.find({
