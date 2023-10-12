@@ -30,6 +30,7 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.14",
     "@types/react": "^18.2.25",
     "@types/validator": "^13.11.2",
     "concurrently": "^8.2.1",

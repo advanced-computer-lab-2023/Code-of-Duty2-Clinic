@@ -4,7 +4,7 @@ import { getDoctor } from '../../controllers/doctors/getDoctor'
 
 const doctorRouter = express.Router();
 
-doctorRouter.patch('/:doctorId', updateDoctor);
+doctorRouter.patch('/:doctorId/account', updateDoctor);
 
 doctorRouter.get('/:id',getDoctor)
 

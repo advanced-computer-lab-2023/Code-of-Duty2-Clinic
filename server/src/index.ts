@@ -5,9 +5,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
-// import fs from 'fs';
-// import path from 'path';
-// import bodyParser from 'body-parser';
+import patientRouter from './routes/patients/Patient';
 
 const app = express();
 

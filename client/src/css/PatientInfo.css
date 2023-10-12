@@ -1,0 +1,31 @@
+.patientInfo {
+    font-family: Roboto;
+    padding: 2vh 10vh 2vh 10vh;
+}
+
+.patientInfoPageTitle {
+    background-color: #1782da;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    padding: 1vh;
+    margin: 10vh 0vh 5vh 0vh;
+}
+
+.patientInfoCard {
+    padding-top: 0vh;
+    padding: 1vh;
+}
+
+.patientInfoTitle {
+    font-size: 1.5rem;
+    color: black;
+    font-weight: 500;
+    font-family: 'Roboto';
+    font-weight: bolder;
+    background-color: white;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 2vh;
+    padding: 0.5vh;
+}

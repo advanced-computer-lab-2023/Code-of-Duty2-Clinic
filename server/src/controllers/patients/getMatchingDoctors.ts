@@ -5,8 +5,10 @@ import { StatusCodes } from 'http-status-codes';
 
 export const getMatchingDoctors = async (req: Request, res: Response) => {
 
-  if (Object.keys(req.query).length == 0) {
-    res.status(StatusCodes.BAD_REQUEST).json("doctor name or speciality must be provided");
+  const allowedQueryParameters = ['name', 'speciality', 'date', 'time'];
+
+  if(Object.keys(req.query).length > 4 || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
+    res.status(StatusCodes.BAD_REQUEST).json("only doctor name, speciality or time slot must be provided");
     return;
   }
   const { name, speciality, date, time } = req.query;
@@ -14,14 +16,14 @@ export const getMatchingDoctors = async (req: Request, res: Response) => {
   try {
     let query: any = {};
 
-    if (name) {
+    if (name && name !== '') {
       query.name = new RegExp('^' + name, 'i');
     }
-    if (speciality) {
+    if (speciality && speciality !== '') {
       query.speciality = speciality;
     }
-    if (date) {
-      const requestedDateTime = new Date(`${date}${time && `T${time}`}`);
+    if (date && date !== '') {
+      const requestedDateTime = new Date(`${date}${(time && time !== '' ) && `T${time}`}`);
       query['availableSlots'] = {
         $elemMatch: {
           startTime: { $lte: requestedDateTime },
@@ -29,7 +31,6 @@ export const getMatchingDoctors = async (req: Request, res: Response) => {
         }
       };
     }
-
     const matchingDoctors = await Doctor.find({
       $or: Object.keys(query).map(key => (
         { [key]: query[key] }
