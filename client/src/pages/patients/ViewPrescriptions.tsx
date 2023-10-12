@@ -22,6 +22,15 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { FormControl, FormLabel } from '@mui/material';
 import axios from "axios";
 
+const searchstyle = {
+
+    display:'flex',
+    flexDirection:'column',
+    justify:'center',
+    gap:'20px',
+    margin:'20px'
+}
+
 interface IPrescription {
     _id: string
     patientName:string,
@@ -29,28 +38,28 @@ interface IPrescription {
     status:string, 
     medicines: [
         {
-            medicineId: string,
+            name: string,
             dosage: string,
+            price:number,
             _id: string
         }
     ],
     updatedAt:Date
 }
-enum stat{
-    filled,unfilled
-}
+
 
 interface IMedicine {
         
-    medicineId: string,
+    name: string,
     dosage: string,
-    _id: string
+    _id: string,
+    price:number
         
 }
 interface ISearch{
-    doctorName:string,
-    updatedAt:string,
-    status:stat
+    doctorName?:string,
+    updatedAt?:string,
+    status?:string
 }
 const deleteModalStyle = {
     position: 'absolute' as 'absolute',
@@ -63,93 +72,125 @@ const deleteModalStyle = {
     p: 4,
   };
 
-export default function PatientPrescriptions(){
+
+  const PrescriptionsPage: React.FC = () => {
     const [modal,setModal] = useState(true)
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
     const [id,setId] = useState("")
     const [searchOptions,setSearchOptions] = useState<ISearch>()
-    const [preState, setPreState] =  useState('1');
-
     const [prescriptions,setPrescriptions] = useState([])
    
 
     const getPrescriptions=async ()=>{
-       const fetchedPrescription:[] =  await (await axios.get(`http://localhost:8080/prescription/patient/${id}`)).data.prescriptionsWithNames
-       console.log(fetchedPrescription)
+       const fetchedPrescription:[] =  await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`)).data
         setPrescriptions(fetchedPrescription)
       
         setModal(false)
     }
+
     function printDate(date :string ) :string{
         const dateObj:Date  = new Date(date);
-        return `${dateObj.getDate()} - ${dateObj.getMonth()} - ${dateObj.getFullYear()}`
+        return `${dateObj.getDate()} - ${dateObj.getMonth()+1} - ${dateObj.getFullYear()}`
     }
 
     function viewSelectedPrescription(index:number){
         setSelectedPrescription(prescriptions[index])
         setviewModal(true)
     }
-    function handleStatus(event:SelectChangeEvent){
-        
-       setPreState(event.target.value)
+
+    function handleStatusChange(event: SelectChangeEvent){
+       
+        if(event.target.value==='none')
+            setSearchOptions(old=>{
+                let nn:ISearch|undefined = {};
+                if(old){
+                    nn=old
+                }
+                delete nn['status'] 
+                
+                return nn
+            })
+        else
+            setSearchOptions(old=>{
+                let nn:ISearch|undefined = {};
+                if(old){
+                    nn=old
+                }
+                nn.status = event.target.value
+                
+                return nn
+            })
+    }
+
+    function handleDateChange(event:React.ChangeEvent<HTMLInputElement>){
+        console.log("current value"+event.currentTarget.value)
        setSearchOptions(old=>{
-        if(old)
-            if(preState==='1')
-                old.status=stat.filled
-            else
-                old.status=stat.unfilled
-
-
-           return old
+            let nn:ISearch|undefined = {};
+            if(old){
+                nn=old
+            }
+            nn.updatedAt =event.currentTarget.value
+            return nn
        })
     }
-    return (
-       <div>
-        <h1>Prescriptions</h1>
-            {/* {prescriptions.map(prescription=>(
-                
-                    <div>
-                       <h1> {prescription}</h1>
-                    </div>
-                
-            ))} */}
 
-            
-    <FormControl style={{width:'100%'}}>
+
+    async function search(){
+        const data:any={}
+        if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
+        if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
+        if(searchOptions?.status&&searchOptions?.status!='NA')data.status = searchOptions.status
+        console.log(data)
+        const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`,{params:data})).data
+        console.log(searchResults)
+        setPrescriptions(searchResults)
+    }
+    return (
+       <div className="px-12 my-10 flex-col gap-11 align-center">
+        <h1 className="text-xl mb-11 mx-auto">Prescriptions</h1>
+                    {/* Search Feature */}
+                    <FormControl sx={searchstyle}>
                         <FormLabel>Doctor Name</FormLabel>
                         <TextField type="text" size='small' onChange={ ev =>setSearchOptions((old)=>{
+                            let nn :ISearch|undefined;
                             if(old)
-                               old.doctorName=ev.target.value;
-                            return old;
+                                nn = {
+                                    ...old,
+                                    doctorName:ev.target.value
+                                }
+                            else
+                                nn={
+                                    doctorName: ev.target.value
+                                }
+                            return nn;
                         })} />
                         <FormLabel>status</FormLabel>
+                        
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={preState}
-                                label="Age"
-                                onChange={handleStatus}
+                                value={searchOptions?.status}
+                                label="status"
+                                onChange={handleStatusChange}
                                 >
-                                <MenuItem value={'1'}>Filled</MenuItem>
-                                <MenuItem value={'2'}>Unfilled</MenuItem>
+                                 <MenuItem value={'none'}>None</MenuItem>
+                                <MenuItem value={'unfilled'}>unfilled</MenuItem>
+                                <MenuItem value={'filled'}>filled</MenuItem>
+                                
                             </Select>
                         <FormLabel>Date</FormLabel>
                         <TextField 
                             type="date" 
                             size='small' 
-                            onChange={ ev =>setSearchOptions(old=>{
-                                if(old)
-                                    old.updatedAt=ev.target.value
-                                return old
-                               })}
+                            onChange={handleDateChange}
                         />
                        
-                        <Button variant="contained" >Search</Button>
+                        <Button variant="contained" sx={{width:'100px'}} onClick={search} >Search</Button>
                     </FormControl>
                    
                    <TableContainer component={Paper}>
-                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                   <Table sx={{ minWidth: 650,minHeight:100,width:'100%',margin:'auto'}} aria-label="simple table">
                    <TableHead>
                        <TableRow>
                        <TableCell>Doctor Name</TableCell>
@@ -191,8 +232,8 @@ export default function PatientPrescriptions(){
                 <Box sx={deleteModalStyle}>
                     <FormControl style={{width:'100%'}}>
                         <FormLabel>Patient Id</FormLabel>
-                        <TextField onChange={(ev)=>setId(ev.target.value)} type="text" size='small'/>
-                        <Button variant="contained" onClick={getPrescriptions}>Create</Button>
+                        <TextField  onChange={(ev)=>setId(ev.target.value)} type="text" size='small'/>
+                        <Button variant="contained" onClick={getPrescriptions}>GET Prescriptions</Button>
                     </FormControl>
                 </Box>
             </Modal>
@@ -210,12 +251,13 @@ export default function PatientPrescriptions(){
                                 
                                 <CloseIcon />
                             </IconButton>
-                    <TableContainer component={Paper}>
+                <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                <TableCell>Medicine</TableCell>
+                                <TableCell align="center">Medicine</TableCell>
                                 <TableCell align="center">Dosage</TableCell>
+                                <TableCell align="center">price</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -224,8 +266,10 @@ export default function PatientPrescriptions(){
                                 key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell align="center">{medicine._id}</TableCell>
+                                    <TableCell align="center">{medicine.name}</TableCell>
                                     <TableCell align="center">{medicine.dosage}</TableCell>
+                                    <TableCell align="center">{medicine.price}</TableCell>
+
                                 </TableRow>
                                 ))}
                             </TableBody>
@@ -233,7 +277,10 @@ export default function PatientPrescriptions(){
                     </TableContainer>
                 </Box>
             </Modal>
+            
        </div>
        
     )
 }
+
+export default PrescriptionsPage

@@ -63,7 +63,7 @@ export default function HealthPackages (){
 
 // inefficient cause on every change we get all packages from databse (solution: push and pop from list)
    function fetchHealthPackages(){
-        axios.get('http://localhost:8080/healthPackage').then(response =>{setHealthPackages(response.data) })
+        axios.get('http://localhost:8080/api/healthPackages').then(response =>{setHealthPackages(response.data) })
 
     }
     useEffect(()=>{fetchHealthPackages()},[]);
@@ -97,7 +97,7 @@ export default function HealthPackages (){
             },
             packageDurationInYears: selectedHealthPackage.packageDurationInYears
         }
-        await axios.post('http://localhost:8080/healthPackage',data).then(response =>{console.log(response.status) })
+        await axios.post('http://localhost:8080/api/healthPackages',data).then(response =>{console.log(response.status) })
         //inefficient
          fetchHealthPackages()
         setOpenEditingModal(false);
@@ -115,7 +115,7 @@ export default function HealthPackages (){
             },
             packageDurationInYears: selectedHealthPackage.packageDurationInYears
         }
-        await axios.put(`http://localhost:8080/healthPackage/${selectedHealthPackage._id}`,data).then(response =>{console.log(response.status) })
+        await axios.put(`http://localhost:8080/api/healthPackages/${selectedHealthPackage._id}`,data).then(response =>{console.log(response.status) })
         //inefficient
         fetchHealthPackages()
         setOpenEditingModal(false);
@@ -123,7 +123,7 @@ export default function HealthPackages (){
 
     const deleteHealthPackage =async ()=>{
         
-        await axios.delete(`http://localhost:8080/healthPackage/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
+        await axios.delete(`http://localhost:8080/api/healthPackages/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
         //inefficient
         fetchHealthPackages()
         setOpenDeletingModal(false);

@@ -8,7 +8,7 @@ export const getDoctor = async (req:Request,res:Response)=>{
         res.json(doctor)
     }catch(err){
         if(err instanceof mongoose.Error.CastError)
-            return res.status(404).send("Doctor Not found")
+            return res.status(200).send("Doctor Not found")
         return res.send(err)
     }
 }

@@ -8,21 +8,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import Modal  from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { FormControl, FormLabel } from '@mui/material';
+// import IconButton from '@mui/material/IconButton';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
+// import Modal  from "@mui/material/Modal";
+// import Box from "@mui/material/Box";
+// import TextField from '@mui/material/TextField';
+// import Button from '@mui/material/Button';
+// import { FormControl, FormLabel } from '@mui/material';
 
 export default function(){
 
     const [doctors,setDoctors] = useState([])
 
     useEffect(()=>{
-        const fetchedDoctors = axios.get('http://localhost:8080/doctor').then((response)=>{setDoctors(response.data)})
+    axios.get('http://localhost:8080/doctor').then((response)=>{setDoctors(response.data)})
+      
     })
 
     return (
@@ -50,7 +51,7 @@ export default function(){
                            <TableCell component="th" scope="row">
                             
                            </TableCell>
-                           <TableCell align="center">{}</TableCell>
+                           <TableCell align="center">{doctor}</TableCell>
                            <TableCell align="center">{}</TableCell>
                            <TableCell align="center">{}</TableCell>
                            <TableCell align="center">{}</TableCell>

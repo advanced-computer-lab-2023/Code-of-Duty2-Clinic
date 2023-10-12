@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
 import Home from "../pages/general/Home";
+import HealthPackagesPage from "../pages/admins/HealthPackages";
+import PrescriptionsPage from "../pages/patients/ViewPrescriptions";
 import SignUp from "../pages/patients/SignUp";
 import PageNotFound from "../pages/errors/PageNotFound";
 import LogIn from "../pages/patients/LogIn";
@@ -24,6 +26,14 @@ const routes: Route[] =
     {
         path: '/signup',
         component: <SignUp />
+    },
+    {
+        path: '/healthpackages',
+        component: <HealthPackagesPage />
+    },
+    {
+        path: '/prescriptions',
+        component: <PrescriptionsPage />
     },
     {
         path: '/about',

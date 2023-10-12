@@ -19,16 +19,18 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
 
     let validAttributes = checkIfIncludes(requestAttributes,HealthPackageAttributes)
     validAttributes= validAttributes && checkIfIncludes(requestDiscountAttributes,discountAttributes) &&  requestAttributes.length <= 4 && requestDiscountAttributes.length <= 3
-
+    console.log(validAttributes)
     //Prevent attributes not exceeding HealthPAckage 
     if(validAttributes ){
         try{
 
             const prevPackage:any= await HealthPackage.findById(req.params.id)
+            console.log(req.body)
+            console.log(prevPackage)
 
             //if the id is not found 
             if(!prevPackage){
-                return res.status(404).send("Health Package not found")
+                return res.status(200).send("Health Package not found")
             
             }
            
@@ -46,12 +48,13 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
            
             //save document
             await prevPackage.save(); 
+            console.log(prevPackage)
             return res.json(prevPackage)
 
         }catch(err){
             if(err instanceof mongoose.Error.CastError)
                 return res.send("Health Package not found")
-            return res.send(err)
+            return res.status(400).send(err)
         }
         
     }

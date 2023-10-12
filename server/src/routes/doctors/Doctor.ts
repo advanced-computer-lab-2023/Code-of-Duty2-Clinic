@@ -1,9 +1,11 @@
 import express from 'express';
 import { updateDoctor } from '../../controllers/doctors/updateDoctor';
+import { getDoctor } from '../../controllers/doctors/getDoctor'
 
 const doctorRouter = express.Router();
 
 doctorRouter.patch('/:doctorId', updateDoctor);
 
+doctorRouter.get('/:id',getDoctor)
 
 export default doctorRouter;

@@ -3,12 +3,10 @@ import HealthPackage from "../../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
 const  HealthPackageAttributes = ['name','amountToPay','discounts','packageDurationInYears']
 const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
+import checkIfIncludes from '../../utils/attributeExistanceChecker'
 
 
 //helps checking for attributes existance 
-function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
-    return  superSet.every((attribute)=> subSet.includes(attribute))        
-}
 
 //Get Health Package by ID
 
