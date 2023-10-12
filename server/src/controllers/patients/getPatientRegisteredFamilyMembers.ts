@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 import {StatusCodes} from 'http-status-codes';
 import PatientModel from '../../models/patients/Patient';
-import { IRegisteredFamilyMember } from '../../models/patients/IRegisteredFamilyMember';
-import { IPatient } from '../../models/patients/IPatient';
-import { isPromise } from 'util/types';
-import Patient from '../../models/patients/Patient';
+import { IRegisteredFamilyMember } from '../../models/patients/interfaces/IRegisteredFamilyMember';
 
 export const getPatientRegisteredFamilyMembers = async (req: Request, res: Response) => {
   const id = req.params.patientId;

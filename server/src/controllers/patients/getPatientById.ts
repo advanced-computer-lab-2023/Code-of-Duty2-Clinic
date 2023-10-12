@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import Patient from '../../models/patients/Patient';
-import { IPatient } from '../../models/patients/IPatient';
 import StatusCodes from 'http-status-codes';
 
 export const getPatientById = async (req: Request, res: Response) => {

@@ -20,7 +20,7 @@ export default function App() {
             />
           ))}
           <Route path="/patient-info/:id" element={<PatientInfo />} />
-          <Route path="/patient-family-members/:id" element={<PatientRegisteredFamilyMembers />} />
+          <Route path="/patient/:patientId/family-members" element={<PatientRegisteredFamilyMembers />} />
           <Route path="patients" element={<PatientList />} />
 
         </Routes>

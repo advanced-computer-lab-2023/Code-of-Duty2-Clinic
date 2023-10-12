@@ -1,3 +1,5 @@
+import PatientInfo from "../../components/PatientInfo";
+import PatientRegisteredFamilyMembers from "../../components/PatientRegisteredFamilyMembers";
 import AddFamilyMember from "../../pages/patients/AddFamilyMember";
 import Home from "../../pages/patients/Home";
 import SearchForDoctors from "../../pages/patients/SearchForDoctors";
@@ -26,6 +28,14 @@ export const addFamilyMemberRoute: Route = {
     path: '/patient/:patientId/family-members/add',
     component: <AddFamilyMember />
 }
+export const patientInfoRoute: Route = {
+    path: '/patient/:patientId/info',
+    component: <PatientInfo />
+}
+export const patientFamilyMembersRoute: Route = {
+    path: '/patient/:patientId/family-members',
+    component: <PatientRegisteredFamilyMembers />
+}
 
 const routes: Route[] = [
     homeRoute,
@@ -33,6 +43,8 @@ const routes: Route[] = [
     viewDoctorDetailsRoute,
     searchForDoctorsRoute,
     addFamilyMemberRoute,
+    patientInfoRoute,
+    patientFamilyMembersRoute,
 ];
 
 export default routes;

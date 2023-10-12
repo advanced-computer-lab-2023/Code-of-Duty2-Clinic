@@ -41,7 +41,7 @@ export const PatientSchema = new Schema<IPatientModel>({
       relation: {type: String, enum: ['wife', 'husband', 'children'], required: true}, 
       subscribedPackage: { 
         type: {
-          packageId: {type: Schema.Types.ObjectId, required: true},
+          packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
           startDate: {type: Date, required: true},
           endDate: {type: Date, required: true},
           status: {type: ['subscribed', 'unsubscribed', 'cancelled'], required: true}

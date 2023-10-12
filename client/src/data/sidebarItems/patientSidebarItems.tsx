@@ -2,7 +2,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MedicineIcon from '@mui/icons-material/Medication';
 import SearchIcon from '@mui/icons-material/Search';
 import PeopleIcon from '@mui/icons-material/People';
-import { addFamilyMemberRoute, homeRoute, searchForDoctorsRoute, viewAllDoctorsRoute } from '../routes/patientRoutes';
+import { addFamilyMemberRoute, homeRoute, patientFamilyMembersRoute, searchForDoctorsRoute, viewAllDoctorsRoute } from '../routes/patientRoutes';
 
 
 export const patientSidebarItems = [
@@ -34,6 +34,11 @@ export const patientSidebarItems = [
     {
         title: "My Account",
         items: [
+            {
+                title: "View my family member",
+                href: patientFamilyMembersRoute.path,
+                icon: <PeopleIcon />
+            },
             {
                 title: "Add a family member",
                 href: addFamilyMemberRoute.path,

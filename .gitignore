@@ -137,4 +137,7 @@ client/.env
 # ignored server files/folders
 server/node_modules/
 server/.env
-server/build
+server/build/
+
+
+.vscode/

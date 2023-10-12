@@ -9,11 +9,11 @@ export const getPatientInfo = async (req: Request, res: Response) => {
         const patient = await Patient.findById(patientId);
 
         const patientInfo = {
-            "name": patient?.name,
-            "dateOfBirth": patient?.dateOfBirth,
-            "email": patient?.email,
-            "gender": patient?.gender,
-            "mobileNumber": patient?.mobileNumber,
+            name: patient?.name,
+            dateOfBirth: patient?.dateOfBirth,
+            email: patient?.email,
+            gender: patient?.gender,
+            mobileNumber: patient?.mobileNumber,
         }
 
         res.status(200).json(patientInfo);
