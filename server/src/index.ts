@@ -5,6 +5,9 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import Patient, { PatientSchema } from './models/patients/Patient';
+import Doctor from './models/doctors/Doctor';
+import Admin from './models/admins/Admin';
 
 const app = express();
 
@@ -46,4 +49,5 @@ async function useAllAppRoutes() {
             app.use(`/api/${applicationEntities}`, route);
         });
     });
+
 }
