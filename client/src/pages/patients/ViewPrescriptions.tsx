@@ -142,7 +142,7 @@ const deleteModalStyle = {
         const data:any={}
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
-        if(searchOptions?.status&&searchOptions?.status!='NA')data.status = searchOptions.status
+        if(searchOptions?.status&&searchOptions?.status!='none')data.status = searchOptions.status
         const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`,{params:data})).data
         setPrescriptions(searchResults)
     }
