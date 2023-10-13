@@ -16,24 +16,14 @@ interface FormData {
   };
   deliveryAddresses: string[];
   healthRecords: Buffer[];
-  subscribedPackage: {
-    packageId: string;
-    startDate: string;
-    endDate: string;
-    status: string;
-  };
+  
   dependentFamilyMembers: {
     name: string;
     nationalId: string;
     age: number;
     gender: string;
     relation: string;
-    subscribedPackage: {
-      packageId: string;
-      startDate: string;
-      endDate: string;
-      status: string;
-    };
+
   }[];
   registeredFamilyMembers: {
     id: string;
@@ -60,12 +50,7 @@ const PatientRegistrationForm: React.FC = () => {
     },
     deliveryAddresses: [],
     healthRecords: [],
-    subscribedPackage: {
-      packageId: '',
-      startDate: '',
-      endDate: '',
-      status: '',
-    },
+
     dependentFamilyMembers: [],
     registeredFamilyMembers: []
     // ... (other attributes)
@@ -164,15 +149,18 @@ const PatientRegistrationForm: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
-      let data = await response.json();
+      // let data = await response.json();
       console.log(response);
       
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         console.log('Patient registered successfully!');
       } else {
-        
-        console.error('Patient registration failed', data);
+        if(response.status === 400 ){
+          console.log(await response.json());
+
+        }
+        console.error('Patient registration failed');
       }
     } catch (error) {
       console.error('An error occurred during registration:', error);

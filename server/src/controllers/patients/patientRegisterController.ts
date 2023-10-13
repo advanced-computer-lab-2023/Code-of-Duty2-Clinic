@@ -17,11 +17,11 @@ const registerAsPatient = async (req: Request, res: Response) => {
         if (existingPatientByEmail) {
             console.log('probhere');
             
-            return res.status(400).send('Email already exists. Please use a different email.');
+            return res.status(400).send({error: 'Email already exists. Please use a different email.'});
         }
         if (existingPatientByUsername) {
             console.log('probhere not');
-            return res.status(400).send('Username already exists. Please choose a different username.');
+            return res.status(400).send({error: 'Username already exists. Please choose a different username.'});
         }
 
         const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -29,7 +29,7 @@ const registerAsPatient = async (req: Request, res: Response) => {
         // Validate the password against the regex
         if (!strongPasswordRegex.test(password)) {
             console.log('probhere not 2');
-            return res.status(400).send('Password must be strong (min 8 characters, uppercase, lowercase, number, special character).');
+            return res.status(400).send({error: 'Password must be strong (min 8 characters, uppercase, lowercase, number, special character).'});
         }
 
         const saltRounds = 10; // Complexity of a single bycrypt hash
