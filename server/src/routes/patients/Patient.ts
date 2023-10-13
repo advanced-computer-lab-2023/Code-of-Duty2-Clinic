@@ -12,7 +12,7 @@ const patientRouter = express.Router();
 
 patientRouter.get('/:patientId/doctors', getAllDoctors);
 
-patientRouter.get('/doctors/:doctorId', getDoctorById);
+patientRouter.get('/:patientId/doctors/:doctorId', getDoctorById);
 
 patientRouter.get('/patient-info/:patientId', getPatientInfo);
 
@@ -25,6 +25,8 @@ patientRouter.get('/:patientId/prescriptions', getPatientPrescriptions);
 patientRouter.get('/:patientId/family-members', getPatientRegisteredFamilyMembers);
 
 patientRouter.get('/:patientId/appointments', getAppointmentsWithAllDoctors);
+
+
 
 
 export default patientRouter;

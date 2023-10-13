@@ -7,6 +7,6 @@ export interface DoctorDetails {
     educationalBackground: string;
     sessionPrice: number;
     speciality: string;
-    availableSlots: Date[];
+    availableSlots: {startTime:string,endTime:string}[];
     image: Buffer;
 }
