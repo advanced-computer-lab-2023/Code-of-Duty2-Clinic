@@ -7,12 +7,11 @@ import { Mongoose } from 'mongoose';
 const registerAsDoctor = async (req: Request, res: Response) => {
     const {username, password, email, name, gender, mobileNumber, dateOfBirth, hourlyRate, affiliation, educationalBackground} = req.body;
     try{
-        console.log('hereee');
         
         // Check if the email & username already mwgoodeen
         const existingDoctorRequestByEmail = await DoctorRegistrationRequest.findOne({ email });
         const existingDoctorRequestByUsername = await DoctorRegistrationRequest.findOne({ username });
-        console.log(existingDoctorRequestByEmail, existingDoctorRequestByUsername);
+        // console.log(existingDoctorRequestByEmail, existingDoctorRequestByUsername);
         
         if (existingDoctorRequestByEmail) {
             return res.status(400).send('Email already exists. Please use a different email.');
@@ -44,10 +43,9 @@ const registerAsDoctor = async (req: Request, res: Response) => {
             affiliation: affiliation,
             educationalBackground: educationalBackground,
         });
-        console.log('reacg here');
         
         await newDoctorRegistrationRequest.save();
-        console.log('reacg here');
+
         res.status(201).send('Doctor Registration Request Sent Successfully!' );
 
 

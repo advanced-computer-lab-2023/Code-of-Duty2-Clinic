@@ -43,17 +43,13 @@ app.listen(config.server.port, async () => {
 function useAllAppRoutes() {
     const routesPath = path.resolve(__dirname, 'routes');
     fs.readdirSync(routesPath).forEach((folderName) => {
-        // console.log(`Loading routes from ${folderName}`);
         const innerRouteFolder = path.join(routesPath, folderName);
         const applicationEntities = folderName;
         fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
-            // console.log(`Loading route ${routeFileName}`);
-            // console.log(path.join(innerRouteFolder, routeFileName), '\n' ,innerRouteFolder, '\n' ,routeFileName );
-            // console.log('\n\n\n');
+
             
             
             const route = require(path.join(innerRouteFolder, routeFileName)).default;
-            // console.log(`/api/${applicationEntities}`);
             
             app.use(`/api/${applicationEntities}`, route);
         });

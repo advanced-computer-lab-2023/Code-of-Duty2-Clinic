@@ -48,17 +48,22 @@ const DoctorRegistrationRequestForm: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         console.log('Doctor registration request submitted successfully!');
         setMessage('Doctor registration request submitted successfully!');
+        // setMessage(await response.json());
       } else {
+        const data = await response.json();
         console.error('Doctor registration request submission failed');
-        setMessage('Doctor registration request submission failed!');
+        setMessage(data.error || 'Doctor registration request submission failed!');
+        // setMessage(await response.json());
       }
     } catch (error) {
       console.error('An error occurred during submission', error);
-      setMessage('An error occurred during submission');
+      setMessage('An error occurred during submission:');
+      // setMessage(await error.json());
     }
+
   };
 
   return (

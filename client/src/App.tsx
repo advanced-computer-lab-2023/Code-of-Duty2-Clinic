@@ -4,9 +4,9 @@ import './App.css';
 //import Layout from './layouts/Layout';
 //import routes from './data/routes';
 
-import RegistrationForm from './components/PatientRegistrationForm';
+// import RegistrationForm from './components/PatientRegistrationForm';
 // import PatientSearch from './components/PatientSearch';
-// import RegistrationForm from './components/DoctorRegistrationRequestForm';
+import RegistrationForm from './components/DoctorRegistrationRequestForm';
 
 export default function App() {
   return (
