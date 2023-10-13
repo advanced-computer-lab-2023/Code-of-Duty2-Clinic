@@ -83,7 +83,6 @@ const HealthPackagesPage:React.FC=()=>{
 
         setCreate(false)
         setSelectedHealthPackage(healthpackages[index])
-        console.log(selectedHealthPackage)
         setOpenEditingModal(true);
         
     }

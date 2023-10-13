@@ -124,7 +124,6 @@ const deleteModalStyle = {
     }
 
     function handleDateChange(event:React.ChangeEvent<HTMLInputElement>){
-        console.log("current value"+event.currentTarget.value)
        setSearchOptions(old=>{
             let nn:ISearch|undefined = {};
             if(old){
@@ -141,9 +140,7 @@ const deleteModalStyle = {
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
         if(searchOptions?.status&&searchOptions?.status!='NA')data.status = searchOptions.status
-        console.log(data)
         const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`,{params:data})).data
-        console.log(searchResults)
         setPrescriptions(searchResults)
     }
     return (
@@ -170,7 +167,7 @@ const deleteModalStyle = {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={searchOptions?.status}
+                                value={'none'}
                                 label="status"
                                 onChange={handleStatusChange}
                                 >

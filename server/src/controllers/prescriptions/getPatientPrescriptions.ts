@@ -21,7 +21,6 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
     
         //check params
         let updateParams:any= {...req.query}
-        console.log(updateParams)
         if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(400).json({error:"Invalid Params"})
         delete updateParams['doctorName']
     

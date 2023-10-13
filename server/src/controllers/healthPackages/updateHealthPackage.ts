@@ -19,14 +19,12 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
 
     let validAttributes = checkIfIncludes(requestAttributes,HealthPackageAttributes)
     validAttributes= validAttributes && checkIfIncludes(requestDiscountAttributes,discountAttributes) &&  requestAttributes.length <= 4 && requestDiscountAttributes.length <= 3
-    console.log(validAttributes)
     //Prevent attributes not exceeding HealthPAckage 
     if(validAttributes ){
         try{
 
             const prevPackage:any= await HealthPackage.findById(req.params.id)
-            console.log(req.body)
-            console.log(prevPackage)
+           
 
             //if the id is not found 
             if(!prevPackage){
@@ -48,7 +46,7 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
            
             //save document
             await prevPackage.save(); 
-            console.log(prevPackage)
+            
             return res.json(prevPackage)
 
         }catch(err){
