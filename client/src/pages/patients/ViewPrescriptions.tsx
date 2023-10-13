@@ -78,7 +78,9 @@ const deleteModalStyle = {
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
     const [id,setId] = useState("")
-    const [searchOptions,setSearchOptions] = useState<ISearch>()
+    const [searchOptions,setSearchOptions] = useState<ISearch>({status:"none"})
+    const [status,setStatus] = useState<string>("none")
+
     const [prescriptions,setPrescriptions] = useState([])
    
 
@@ -121,6 +123,7 @@ const deleteModalStyle = {
                 
                 return nn
             })
+        setStatus(event.target.value)
     }
 
     function handleDateChange(event:React.ChangeEvent<HTMLInputElement>){
@@ -167,7 +170,7 @@ const deleteModalStyle = {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={'none'}
+                                value={status}
                                 label="status"
                                 onChange={handleStatusChange}
                                 >
