@@ -32,7 +32,7 @@ export const filterAppointments = async (req: Request, res: Response) => {
         fieldsNotProvided.push("doctorId");
       }
       if(fieldsNotProvided.length ===2){
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "One of doctorId or patientId needs to be provided at least" });
+        res.status(StatusCodes.BAD_REQUEST).json({ error: "One of doctorId or patientId needs to be provided at least" });
       }
       else{
       if(date){
