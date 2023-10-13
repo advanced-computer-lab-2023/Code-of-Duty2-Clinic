@@ -6,6 +6,6 @@ const doctorRouter = express.Router();
 
 doctorRouter.patch('/:doctorId/account', updateDoctor);
 
-doctorRouter.get('/:id',getDoctor)
+doctorRouter.get('/:id/allDetails',getDoctor)
 
 export default doctorRouter;

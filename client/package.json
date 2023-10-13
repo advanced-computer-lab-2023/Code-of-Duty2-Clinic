@@ -16,13 +16,9 @@
     "@mui/icons-material": "^5.14.12",
     "@mui/lab": "^5.0.0-alpha.148",
     "@mui/material": "^5.14.12",
-<<<<<<< HEAD
-    "axios": "^1.5.1",
-=======
     "@mui/x-date-pickers": "^6.16.1",
     "axios": "^1.5.1",
     "dayjs": "^1.11.10",
->>>>>>> 5cd7f91b6fae22c140c41dc60b53dcb2bb463111
     "mongoose": "^7.5.4",
     "react": "^18.2.0",
     "react-datetime-picker": "^5.5.2",
