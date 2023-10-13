@@ -6,7 +6,7 @@ const Footer = () => {
             backgroundColor: (theme) => theme.palette.background.paper,
             padding: (theme) => theme.spacing(6, 0),
             borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-            position: 'absolute',
+            position: 'static',
             bottom: 0,
             width: '100%',
         }}>

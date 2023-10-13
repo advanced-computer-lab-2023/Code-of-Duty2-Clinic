@@ -8,6 +8,9 @@ import bodyParser from 'body-parser';
 
 const app = express();
 
+app.use(cors(config.server.corsOptions));
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
@@ -38,3 +41,4 @@ function useAllAppRoutes() {
         });
     });
 }
+
