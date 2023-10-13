@@ -86,7 +86,7 @@ const ViewDoctors = () => {
     setFilterOptions({ ...filterOptions, [event.target.name]: event.target.value });
   };
 
-  const handleDateTimeChange = (value: any) => {
+  const handleDateTimeChange = (value: Dayjs | null) => {
     setDateTime(value);
   }
 

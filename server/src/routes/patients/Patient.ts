@@ -7,6 +7,7 @@ import { getPatientPrescriptions } from '../../controllers/patients/getPatientPr
 import { getPatientRegisteredFamilyMembers } from '../../controllers/patients/getPatientRegisteredFamilyMembers';
 import { getAllPatients } from '../../controllers/patients/getAllPatients';
 import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
+import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 const patientRouter = express.Router();
 
 patientRouter.get('/:patientId/doctors', getAllDoctors);
@@ -15,8 +16,6 @@ patientRouter.get('/doctors/:doctorId', getDoctorById);
 
 patientRouter.get('/patient-info/:patientId', getPatientInfo);
 
-patientRouter.get('/', getAllPatients);
-
 patientRouter.post('/:patientId/family-members', addFamilyMembers);
 
 patientRouter.get('/:patientId', getPatientById);
@@ -24,6 +23,8 @@ patientRouter.get('/:patientId', getPatientById);
 patientRouter.get('/:patientId/prescriptions', getPatientPrescriptions);
 
 patientRouter.get('/:patientId/family-members', getPatientRegisteredFamilyMembers);
+
+patientRouter.get('/:patientId/appointments', getAppointmentsWithAllDoctors);
 
 
 export default patientRouter;

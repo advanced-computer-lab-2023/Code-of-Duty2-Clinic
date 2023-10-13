@@ -40,7 +40,7 @@ export const getAllDoctors = async (req: Request, res: Response) => {
       Doctor.find({
         contractStatus: 'accepted'
       })
-      ).select({ _id: 1, name: 1, email: 1, mobileNumber: 1, hourlyRate: 1, affiliation: 1, speciality: 1, educationalBackground: 1 });
+      ).select({ _id: 1, name: 1, hourlyRate: 1, speciality: 1});
 
     const doctorsRequiredInfo = await getDoctorRequiredInfo(allDoctors, packageDetails);
 
@@ -86,10 +86,10 @@ function getMetchingDoctorsQueryFields(urlQuery: any) {
     }
     if (date && date !== '') {
       const requestedDateTime = new Date(`${date}${(time && time !== '' ) && `T${time}`}`);
-      searchQuery['availableSlots'] = {
+      searchQuery.availableSlots = {
         $elemMatch: {
-          startTime: { $lte: requestedDateTime },
-          endTime: { $gte: requestedDateTime }
+          startTime: { $gte: requestedDateTime },
+          endTime: { $lte: requestedDateTime }
         }
       };
     }

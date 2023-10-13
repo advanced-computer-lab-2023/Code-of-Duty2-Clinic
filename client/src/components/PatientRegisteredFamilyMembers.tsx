@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { Grid, Card, CardContent, Typography} from "@mui/material";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { config } from "../utils/config";
 
 export default function PatientRegisteredFamilyMembers() {
 
-    const patientId = useLocation().pathname.split('/')[2];    
+    const {patientId} = useParams();
     const [patientFamilyMembers, setPatientFamilyMembers] = useState([]);
 
     
 
     useEffect(() => {
         const fetchFamilyMembers = async () => {
-              await axios.get(`${import.meta.env.VITE_SERVER_URI}/patients/${patientId}/family-members`)
-            // await axios.get(`http://localhost:3000/api/patients/${patientId}/family-members`)
+              await axios.get(`${config.serverUri}/patients/${patientId}/family-members`)
             .then (response => {
                setPatientFamilyMembers(response.data.members);
             })
