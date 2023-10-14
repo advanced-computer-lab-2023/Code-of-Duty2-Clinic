@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react"
-import { Link, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,7 +14,6 @@ import Modal  from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
@@ -76,7 +75,6 @@ const deleteModalStyle = {
   const PrescriptionsPage: React.FC = () => {
 
     //const {patientId} = useParams();
-    const [modal,setModal] = useState(true)
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
     const [searchOptions,setSearchOptions] = useState<ISearch>({status:"none"})
@@ -244,7 +242,7 @@ const deleteModalStyle = {
 
             <Modal
                 open={viewModal}
-                onClose={()=>setModal(false)}
+                onClose={()=>setviewModal(false)}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 >
@@ -263,7 +261,7 @@ const deleteModalStyle = {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                { !modal && selectedPrescription?.medicines.map((medicine:IMedicine,index:number)=>(         
+                                { selectedPrescription?.medicines.map((medicine:IMedicine,index:number)=>(         
                                 <TableRow
                                 key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
