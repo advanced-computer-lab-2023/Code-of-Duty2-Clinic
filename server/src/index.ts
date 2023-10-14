@@ -15,6 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 app.use(cors(config.server.corsOptions));
 
 
@@ -30,13 +34,17 @@ app.listen(config.server.port, async () => {
     console.log(`Server listening on port ${config.server.port}`);
 });
 
-function useAllAppRoutes() {
+async function useAllAppRoutes() {
     const routesPath = path.resolve(__dirname, 'routes');
     fs.readdirSync(routesPath).forEach((folderName) => {
         const innerRouteFolder = path.join(routesPath, folderName);
         const applicationEntities = folderName;
         fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
+
+            
+            
             const route = require(path.join(innerRouteFolder, routeFileName)).default;
+            
             app.use(`/api/${applicationEntities}`, route);
         });
     });

@@ -37,7 +37,13 @@ export const doctorSidebarItems = [
                 title: "View my appointments",
                 href: "/doctor/:doctorId/appointments",
                 icon: <PeopleIcon />
-            }
+            },
+            {
+                title: "Search for Patient",
+                href: "/doctor/:doctorId/patient/search",
+                icon: <PeopleIcon />
+            },
+
         ]
     }
 ];

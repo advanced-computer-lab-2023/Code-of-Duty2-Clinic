@@ -1,0 +1,68 @@
+/* Style for the outer container */
+.user-container {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Style for the main heading */
+  .user-heading {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  /* Style for the subheadings (Patients, Doctors, Admins) */
+  .user-subheading {
+    font-size: 18px;
+    margin: 20px 0 10px;
+  }
+  
+  /* Style for the unordered lists */
+  .user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Style for list items (individual user items) */
+  .user-item {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Style for buttons */
+  .user-button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  /* Hover effect for buttons */
+  .user-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style for the selected user section */
+  .selected-user {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+  }
+  
+  /* Style for the Selected User heading */
+  .selected-user-heading {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  /* Style for user details (Username, User Type) in the Selected User section */
+  .selected-user-details {
+    margin: 5px 0;
+  }
+  
