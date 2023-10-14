@@ -21,7 +21,6 @@ export const PatientSchema = new Schema<IPatientModel>({
   deliveryAddresses: Array<{ type: String }>,
 
   healthRecords: Array<{ type: Buffer }>,
-
   subscribedPackage: 
   {
     type:{
