@@ -1,0 +1,23 @@
+GET http://localhost:8080/
+###
+
+POST http://localhost:8080/healthPackage/add
+Content-Type: application/json
+
+{
+  "name": "Health Package 1",
+  "amountToPay": "100",
+  "discount": {
+    "gainedDoctorSessionDiscount": "10",
+    "gainedPharamcyMedicinesDiscount": "5",
+    "gainedFamilyMembersDiscount": "15"
+  },
+  "packageDurationInYears": "1"
+}
+###
+POST http://localhost:4000/login
+Content-Type: application/json
+
+{
+    "username":"lal"
+}

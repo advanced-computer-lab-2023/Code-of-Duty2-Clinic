@@ -64,5 +64,16 @@ export const PatientSchema = new Schema<IPatientModel>({
 {timestamps: true}
 );
 
+PatientSchema.virtual('age').get(function() {
+  let today = new Date();
+  let birthDate: Date = this.dateOfBirth;
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let monthDifference = today.getMonth() - birthDate.getMonth();
+  
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+});
 
 export default mongoose.model<IPatientModel>('Patient', PatientSchema);
