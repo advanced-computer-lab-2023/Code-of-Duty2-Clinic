@@ -48,7 +48,7 @@ export const patientDoctorAppointmentDetailsRoute: Route = {
 }
 
 export const patientPrescriptions: Route = {
-    path: 'patient/:patientId/prescriptions',
+    path: '/patient/6526b059a07a9290657369c8/prescriptions',
     component: <PrescriptionsPage/>
 }
 
