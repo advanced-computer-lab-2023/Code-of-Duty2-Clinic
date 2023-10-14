@@ -1,6 +1,4 @@
-import { useState } from "react"
-
-
+import { useState,useEffect } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -20,7 +18,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { FormControl, FormLabel } from '@mui/material';
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { useParams } from "react-router-dom";
 
 const searchstyle = {
 
@@ -74,6 +73,8 @@ const deleteModalStyle = {
 
 
   const PrescriptionsPage: React.FC = () => {
+
+    const {patientId} = useParams();
     const [modal,setModal] = useState(true)
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
@@ -84,12 +85,12 @@ const deleteModalStyle = {
     const [prescriptions,setPrescriptions] = useState([])
    
 
-    const getPrescriptions=async ()=>{
-       const fetchedPrescription:[] =  await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`)).data
-        setPrescriptions(fetchedPrescription)
-      
-        setModal(false)
-    }
+    useEffect(()=>{
+        axios.get(`http://localhost:8080/api/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{
+            setPrescriptions(response.data)
+        })
+        console.log(prescriptions)
+    },[])
 
     function printDate(date :string ) :string{
         const dateObj:Date  = new Date(date);
@@ -143,7 +144,7 @@ const deleteModalStyle = {
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
         if(searchOptions?.status&&searchOptions?.status!='none')data.status = searchOptions.status
-        const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`,{params:data})).data
+        const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${patientId}`,{params:data})).data
         setPrescriptions(searchResults)
     }
     return (
@@ -200,7 +201,7 @@ const deleteModalStyle = {
                        </TableRow>
                    </TableHead>
                    <TableBody>
-                   { !modal && prescriptions.map((prescription:IPrescription,index:number)=>(         
+                   {prescriptions.map((prescription:IPrescription,index:number)=>(         
                        <TableRow
                            key={index}
                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -223,7 +224,7 @@ const deleteModalStyle = {
    
                    
                 
-            <Modal
+            {/* <Modal
                 open={modal}
                 onClose={()=>setModal(false)}
                 aria-labelledby="modal-modal-title"
@@ -236,7 +237,7 @@ const deleteModalStyle = {
                         <Button variant="contained" onClick={getPrescriptions}>GET Prescriptions</Button>
                     </FormControl>
                 </Box>
-            </Modal>
+            </Modal> */}
 
 
 
