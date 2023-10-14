@@ -40,7 +40,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
 
     try {
 
-      const response = await fetch('http://localhost:4000/api/doctors', {
+      const response = await fetch('http://localhost:8080/api/doctors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

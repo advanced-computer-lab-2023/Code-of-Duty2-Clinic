@@ -142,7 +142,7 @@ const PatientRegistrationForm: React.FC = () => {
     try {
       console.log(formData);
       
-      const response = await fetch('http://localhost:4000/api/patients/register', {
+      const response = await fetch('http://localhost:8080/api/patients/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
