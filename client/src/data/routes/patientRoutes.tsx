@@ -6,6 +6,7 @@ import SearchForDoctors from "../../pages/patients/SearchForDoctors";
 import ViewAppointments from "../../pages/patients/ViewAppointments";
 import ViewDoctorDetails from "../../pages/patients/ViewDoctorDetails";
 import ViewDoctors from "../../pages/patients/ViewDoctors";
+import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "./Route";
 
 
@@ -45,6 +46,10 @@ export const patientDoctorAppointmentDetailsRoute: Route = {
     path: 'patient/:patientId/appointment/:appointmentId',
     component: <ViewAppointments />
 }
+export const patientRegistrationRoute: Route = {
+    path: '/patient/register',
+    component: <PatientRegistrationForm />
+}
 
 const routes: Route[] = [
     homeRoute,
@@ -55,6 +60,8 @@ const routes: Route[] = [
     patientInfoRoute,
     patientFamilyMembersRoute,
     patientAppointmentsRoute,
+    patientDoctorAppointmentDetailsRoute,
+    patientRegistrationRoute
 ];
 
 export default routes;

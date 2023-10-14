@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import './DoctorRegistrationRequestFormStyle.css';
+import '../../css/DoctorRegistrationRequestFormStyle.css';
 
 interface FormData {
   username: string;

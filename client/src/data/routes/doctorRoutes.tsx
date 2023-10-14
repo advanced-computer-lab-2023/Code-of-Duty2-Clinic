@@ -2,6 +2,8 @@ import Home from "../../pages/doctors/Home";
 import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
+import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
+import PatientSearch from "../../pages/doctors/PatientSearch";
 import { Route } from "./Route";
 
 
@@ -35,12 +37,24 @@ export const doctorRegisteredPatientDetailsRoute: Route = {
     component: <ViewRegisteredPatients />
 }
 
+export const doctorRegistrationRequestRoute: Route = {
+    path: '/doctor/register',
+    component: <DoctorRegistrationRequestForm />
+}
+
+export const patientSearchRoute: Route = {
+    path: '/doctor/:doctorId/patient/search',
+    component: <PatientSearch />
+}
+
 const routes: Route[] = [
     doctorHomeRoute,
     updateAccountInfoRoute,
     doctorAppointmentsRoute,
     doctorAppointmentDetailsRoute,
     doctorRegisteredPatientsRoute,
+    doctorRegistrationRequestRoute,
+    patientSearchRoute
 ];
 
 export default routes;
