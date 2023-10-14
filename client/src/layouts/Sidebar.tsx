@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactElement } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, Collapse, Drawer, IconButton } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -6,7 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 type SidebarItem = {
   title: string;
   href: string;
-  icon: React.ElementType;
+  icon: ReactElement;
 };
 
 type SidebarProps = {
@@ -27,24 +27,27 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
 
   return (
     <>
-      <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setOpen(!open)}>
+      <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setOpen(!open)} sx={
+        {
+          marginLeft: '3px',
+        }
+      }>
         <MenuIcon />
       </IconButton>
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
         <List>
-          {items.map((section) => (
-            <React.Fragment key={section.title}>
+          {items.map((section, index) => (
+            <React.Fragment key={index}>
               <ListItem button onClick={() => handleExpandClick(section.title)}>
                 <ListItemText primary={section.title} />
               </ListItem>
               <Collapse in={expanded === section.title} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
+                  {section.items.map((item, index) => {
                     return (
-                      <ListItem button component={Link} to={item.href} selected={item.href === location.pathname} key={item.title}>
+                      <ListItem button component={Link} to={item.href} selected={item.href === location.pathname} key={index} onClick={() => setOpen(false)}>
                         <ListItemIcon>
-                          <Icon />
+                          {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={item.title} />
                       </ListItem>

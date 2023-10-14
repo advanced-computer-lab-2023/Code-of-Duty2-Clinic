@@ -21,7 +21,6 @@ export const PatientSchema = new Schema<IPatientModel>({
   deliveryAddresses: Array<{ type: String }>,
 
   healthRecords: Array<{ type: Buffer }>,
-  
   subscribedPackage: 
   {
     type:{
@@ -35,13 +34,13 @@ export const PatientSchema = new Schema<IPatientModel>({
   dependentFamilyMembers: {
     type:[{
       name: {type: String, required: true}, 
-      nationalId: {type: String, required: true}, 
-      age: {type: Number, required: true},
+      nationalId: {type: String, required: true, unique : true}, 
+      birthdate: {type: Date, required: true},
       gender: {type: String, enum: ['male', 'female'], required: true}, 
       relation: {type: String, enum: ['wife', 'husband', 'children'], required: true}, 
       subscribedPackage: { 
         type: {
-          packageId: {type: Schema.Types.ObjectId, required: true},
+          packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
           startDate: {type: Date, required: true},
           endDate: {type: Date, required: true},
           status: {type: ['subscribed', 'unsubscribed', 'cancelled'], required: true}
@@ -54,13 +53,26 @@ export const PatientSchema = new Schema<IPatientModel>({
   registeredFamilyMembers: {
     type: [
       {
-        id: {type: Schema.Types.ObjectId, ref:'Patient', required: true},
+        id: {type: Schema.Types.ObjectId, ref:'Patient', required: true, unique: true},
         relation: {type: String, enum:['wife', 'husband', 'children'], required: true}
       }
     ],
     required: false,
-    }
-    }, 
-    {timestamps: true}
-    );
-  export default mongoose.model<IPatientModel>('Patient', PatientSchema);
+  }
+}, 
+{timestamps: true}
+);
+
+PatientSchema.virtual('age').get(function() {
+  let today = new Date();
+  let birthDate: Date = this.dateOfBirth;
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let monthDifference = today.getMonth() - birthDate.getMonth();
+  
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+});
+
+export default mongoose.model<IPatientModel>('Patient', PatientSchema);

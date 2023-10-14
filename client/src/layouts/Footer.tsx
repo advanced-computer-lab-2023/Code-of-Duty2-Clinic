@@ -5,20 +5,18 @@ const Footer = () => {
         <Box component="footer" sx={{
             backgroundColor: (theme) => theme.palette.background.paper,
             padding: (theme) => theme.spacing(6, 0),
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            position: 'static',
+            bottom: 0,
+            width: '100%',
         }}>
             <Container maxWidth="lg">
-                <Box sx={{
+                <Typography variant="body2" sx={{
+                    color: (theme) => theme.palette.text.secondary,
                     display: 'flex',
-                    alignItems: 'center',
                     justifyContent: 'center',
-                    marginBottom: (theme) => theme.spacing(2),
+                    alignItems: 'center',
                 }}>
-                    <img src="/logo.png" alt="Logo" style={{height: 50, marginRight: 16}} />
-                    <Typography variant="h6" component="span">
-                        My Company
-                    </Typography>
-                </Box>
-                <Typography variant="body2" sx={{color: (theme) => theme.palette.text.secondary}}>
                     © {new Date().getFullYear()} My Company. All rights reserved.
                 </Typography>
             </Container>
