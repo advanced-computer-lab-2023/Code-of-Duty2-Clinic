@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react"
+import { Link, useLocation } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -74,16 +75,16 @@ const deleteModalStyle = {
 
   const PrescriptionsPage: React.FC = () => {
 
-    const {patientId} = useParams();
+    //const {patientId} = useParams();
     const [modal,setModal] = useState(true)
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
-    const [id,setId] = useState("")
     const [searchOptions,setSearchOptions] = useState<ISearch>({status:"none"})
     const [status,setStatus] = useState<string>("none")
 
     const [prescriptions,setPrescriptions] = useState([])
    
+    const patientId = useLocation().pathname.split('/')[2];
 
     useEffect(()=>{
         axios.get(`http://localhost:8080/api/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{

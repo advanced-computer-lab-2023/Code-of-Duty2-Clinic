@@ -15,6 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 app.use(cors(config.server.corsOptions));
 
 
@@ -36,10 +40,13 @@ async function useAllAppRoutes() {
         const innerRouteFolder = path.join(routesPath, folderName);
         const applicationEntities = folderName;
         fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
+
+            
+            
             const route = require(path.join(innerRouteFolder, routeFileName)).default;
+            
             app.use(`/api/${applicationEntities}`, route);
         });
     });
-
 }
 

@@ -1,8 +1,6 @@
-import Patient, { IPatientModel } from '../../models/patients/Patient';
-const bcrypt = require('bcrypt');
-const express = require('express');
+import Patient from '../../models/patients/Patient';
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { Mongoose } from 'mongoose';
 
 const registerAsPatient = async (req: Request, res: Response) => {
 
@@ -54,8 +52,6 @@ const registerAsPatient = async (req: Request, res: Response) => {
         console.log(err);
         res.status(500).send('An error occurred during registration');
     }
-
-
 };
 
 
