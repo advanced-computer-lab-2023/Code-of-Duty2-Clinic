@@ -34,6 +34,7 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.14",
     "@types/react": "^18.2.25",
     "@types/validator": "^13.11.2",
