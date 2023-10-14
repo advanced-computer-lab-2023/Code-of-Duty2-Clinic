@@ -13,13 +13,13 @@ const searchPatientByName = async (req: Request, res: Response) => {
 
         if (!patientData) {
             // If no patient with the specified name is found, return a 404 response.
-            return res.status(404).send({ error: 'Patient not found' });
+            return res.status(404).send('Patient not found' );
         }
 
         res.status(200).send(patientData);
     } catch (error) {
         console.error(error);
-        res.status(500).send({ error: 'Internal Server Error' });
+        res.status(500).send('Internal Server Error' );
     }
 };
 

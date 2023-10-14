@@ -16,7 +16,7 @@ const PatientSearch = () => {
         // body: JSON.stringify({ name }),
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const data = await response.json();
         setPatientData(data);
         setError(null); // Clear any previous error messages
