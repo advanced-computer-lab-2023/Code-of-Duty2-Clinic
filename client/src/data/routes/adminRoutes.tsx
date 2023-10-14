@@ -2,7 +2,7 @@ import AdminForm from "../../components/adminForm";
 import UserList from "../../components/userList";
 import { Route } from "./Route";
 import DoctorRegistrationRequests from"../../components/viewDoctorRequests"
-
+import HealthPackagesPage from "../../pages/admins/HealthPackages";
 
 
 export const adminAddRoute: Route = {
@@ -20,10 +20,15 @@ export const viewDoctorRequestsRoute: Route = {
     component: <DoctorRegistrationRequests />
 }
 
+export const HealthPackagesRoute :Route ={
+    path:"/admin/healthPackages" ,
+    component:<HealthPackagesPage/>
+}
 const routes: Route[] = [
     adminAddRoute,
     userlistRoute,
-    viewDoctorRequestsRoute
+    viewDoctorRequestsRoute,
+    HealthPackagesRoute,
 ];
 
 export default routes;
