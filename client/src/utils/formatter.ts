@@ -18,4 +18,17 @@ export const getFormattedTime = (dateTime: string) => {
     return formattedTime;
 }
 
+export const getFormattedDateTime = (dateTime: string) => {
+    const date = new Date(dateTime);
+    const formattedDateTime = date.toLocaleString('en-US', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+    return formattedDateTime;
+}
+
 

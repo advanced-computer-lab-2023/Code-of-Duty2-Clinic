@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { config } from '../utils/config';
 
 const PatientRegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -87,7 +88,7 @@ const handlePackageStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
     try {
       // Send the patient registration data to the backend API
-      const response = await fetch('http://localhost:4000/api/patients/register', {
+      const response = await fetch(`${config.serverUri}/patients/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,17 +107,6 @@ const handlePackageStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       console.error('Error:', error);
     }
   };
-
-  // const handleSubscribedPackageChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     subscribedPackage: {
-  //       ...formData.subscribedPackage,
-  //       [name]: value,
-  //     },
-  //   });
-  // };
 
   return (
     <div>

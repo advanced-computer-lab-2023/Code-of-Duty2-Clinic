@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,6 +11,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { doctorId, patientId } from '../../data/dummyUsers';
 
 function Copyright(props: any) {
   return (
@@ -30,19 +31,33 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function LogIn() {
+
+  const [error, setError] = React.useState('');
+  const emailRef = React.useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+   const email: any = data.get('email');
+    if(email.toLowerCase() === "patient") {
+        navigate(`/patient/${patientId}`);
+    }
+    else if(email.toLowerCase() === "doctor") {
+      navigate(`/doctor/${doctorId}`);
+    }
+    else if(email.toLowerCase() === "admin") {
+      navigate(`/admin`);
+    }
+    else {
+      setError('Invalid use type !');
+    }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        {/* <CssBaseline /> */}
         <Box
           sx={{
             marginTop: 8,
@@ -66,7 +81,7 @@ export default function LogIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
+              ref={emailRef}
             />
             <TextField
               margin="normal"
@@ -78,6 +93,7 @@ export default function LogIn() {
               id="password"
               autoComplete="current-password"
             />
+            <p style={{color: 'red'}}>{error}</p>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"

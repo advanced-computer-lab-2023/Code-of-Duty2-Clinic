@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import '../../css/PatientRegistrationFormStyle.css';
+import { config } from '../../utils/config';
 
 interface FormData {
   username: string;
@@ -110,60 +111,21 @@ const PatientRegistrationForm: React.FC = () => {
     });
   };
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  // const handleHealthPackageChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     subscribedPackage: { ...formData.subscribedPackage, [name]: value },
-  //   });
-  // };
-
-  // const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     subscribedPackage: { ...formData.subscribedPackage, [name]: value },
-  //   });
-  // };
-
+  const [error, setError] = useState('');
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      console.log(formData);
-      
-      const response = await fetch('http://localhost:8080/api/patients/register', {
+    try {      
+      await fetch(`${config.serverUri}/patients/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-      // let data = await response.json();
-      console.log(response);
-      
-
-      if (response.status === 201 || response.status === 200) {
-        console.log('Patient registered successfully!');
-      } else {
-        if(response.status === 400 ){
-          console.log(await response.json());
-
-        }
-        console.error('Patient registration failed');
-      }
-    } catch (error) {
-      console.error('An error occurred during registration:', error);
+    } catch (error: any) {
+      setError(error.message);
+      console.error(error.message);
     }
   };
 
@@ -252,40 +214,36 @@ const PatientRegistrationForm: React.FC = () => {
         </div>
         <div>
           <label>Emergency Contact*: </label>
-          <input
-  type="text"
-  name="emergencyContact.fullname"
-  value={formData.emergencyContact.fullname}
-  onChange={handleEmergencyContactChange}
-  placeholder="Full Name"
-  required
-/>
-<input
-  type="number"
-  name="emergencyContact.mobileNumber"
-  value={formData.emergencyContact.mobileNumber}
-  onChange={handleEmergencyContactChange}
-  placeholder="Mobile Number"
-  required
-/>
-<input
-  type="text"
-  name="emergencyContact.relationToPatient"
-  value={formData.emergencyContact.relationToPatient}
-  onChange={handleEmergencyContactChange}
-  placeholder="Relation to Patient"
-  required
-/>
-
-
-
+            <input
+              type="text"
+              name="emergencyContact.fullname"
+              value={formData.emergencyContact.fullname}
+              onChange={handleEmergencyContactChange}
+              placeholder="Full Name"
+              required
+            />
+            <input
+              type="number"
+              name="emergencyContact.mobileNumber"
+              value={formData.emergencyContact.mobileNumber}
+              onChange={handleEmergencyContactChange}
+              placeholder="Mobile Number"
+              required
+            />
+            <input
+              type="text"
+              name="emergencyContact.relationToPatient"
+              value={formData.emergencyContact.relationToPatient}
+              onChange={handleEmergencyContactChange}
+              placeholder="Relation to Patient"
+              required
+            />
         </div>
-        
-        {/* ... (other form fields) */}
         <div>
           <button type="submit">Register</button>
         </div>
       </form>
+      <p style={{color: 'red'}}>{error}</p>
     </div>
   );
 };

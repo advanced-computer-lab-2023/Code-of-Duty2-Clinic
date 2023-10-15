@@ -21,13 +21,17 @@ export const getAppointmentsWithAllPatients = async (req: Request, res: Response
 
     try {
         
-        const appointmentsToFind = getMetchingAppointmentsFields(req.query); 
+        const appointmentsToFind = getMatchingAppointmentsFields(req.query); 
 
         const appointments: IAppointment[] = (await Appointment.find({doctorId, ...appointmentsToFind})
         .populate({
                 path: 'patientId',
                 select: {_id: 1, patientId: 1, timePeriod: 1, status: 1, name: 1},
-        })).map((appointment: any) => ({
+        }))
+        .filter((appointment: any) => appointment.patientId.name
+            .toLowerCase()
+            .startsWith((req.query.patientName as string).toLowerCase()))
+        .map((appointment: any) => ({
             appointmentId: appointment._id,
             patient: {
                 id: appointment.patientId._id,
@@ -44,15 +48,12 @@ export const getAppointmentsWithAllPatients = async (req: Request, res: Response
 }
 
 
-function getMetchingAppointmentsFields(urlQuery: any) {
+function getMatchingAppointmentsFields(urlQuery: any) {
 
     const { appointmentTime, status, patientName } = urlQuery;
 
     let searchQuery: any = {};
-
-    if(patientName && patientName !== '') {
-        searchQuery.patientName = patientName;
-    }
+    
     if (status && status !== '') {
         searchQuery.status = status;
     }

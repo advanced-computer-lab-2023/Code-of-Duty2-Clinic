@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './removeForm.css'; // Import the CSS file
+import { config } from '../utils/config';
 
 const UserRemovalForm: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -10,7 +11,7 @@ const UserRemovalForm: React.FC = () => {
 
   const handleRemoveUser = () => {
     // Send a DELETE request to the backend to remove the user
-    fetch(`http://localhost:4000/api/admins/users/${username}`, {
+    fetch(`${config.serverUri}/admins/users/${username}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

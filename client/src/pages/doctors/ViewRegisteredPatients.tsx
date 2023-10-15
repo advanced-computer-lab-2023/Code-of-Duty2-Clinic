@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardContent, CardMedia, Grid, TextField, Typography, styled } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { config } from "../../utils/config";
 import axios from "axios";
 
@@ -36,7 +36,7 @@ const ViewRegisteredPatients = () => {
     const [patientName, setPatientName] = useState('');
     const [error, setError] = useState('');
 
-    const {doctorId} = useParams();
+    const doctorId = useLocation().pathname.split('/')[2];
 
     const handleChangePatientName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPatientName(event.target.value);

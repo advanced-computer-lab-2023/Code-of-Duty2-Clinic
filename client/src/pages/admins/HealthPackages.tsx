@@ -13,13 +13,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal  from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import MedicalInformationOutlinedIcon from '@mui/icons-material/MedicalInformationOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 //import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 // import { FormControl, FormLabel } from '@mui/material';
 // import HealthPackages from "../healthPackages";
 import HealthPackagesModal from "../../components/HealthPackagesModal";
+import { config } from "../../utils/config";
 
 const deleteModalStyle = {
     position: 'absolute' as 'absolute',
@@ -70,7 +70,7 @@ const HealthPackagesPage:React.FC=()=>{
 
 // inefficient cause on every change we get all packages from databse (solution: push and pop from list)
    function fetchHealthPackages(){
-        axios.get('http://localhost:8080/api/healthPackages').then(response =>{setHealthPackages(response.data) })
+        axios.get(`${config.serverUri}/healthPackages`).then(response =>{setHealthPackages(response.data) })
 
     }
    const handleCallback = (fetch:boolean):void =>{
@@ -101,7 +101,7 @@ const HealthPackagesPage:React.FC=()=>{
 
     const deleteHealthPackage =async ()=>{
         
-        await axios.delete(`http://localhost:8080/api/healthPackages/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
+        await axios.delete(`${config.serverUri}/healthPackages/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
         //inefficient
         fetchHealthPackages()
         setOpenDeletingModal(false);

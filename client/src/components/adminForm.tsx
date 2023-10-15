@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import './adminform.css';
+import { config } from '../utils/config';
 
 interface FormData {
   username: string;
@@ -27,7 +28,7 @@ const AdminForm: React.FC = () => {
 
     try {
       // Send the admin creation data to the backend API
-      const response = await fetch('http://localhost:4000/api/admins/admin', {
+      const response = await fetch(`${config.serverUri}/admins/admin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

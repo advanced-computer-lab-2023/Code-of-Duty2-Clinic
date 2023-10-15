@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import ViewDoctorRegistrationRequest from './viewDetailsofRequest';
+import { useState, useEffect } from 'react';
+import ViewDoctorRegistrationRequest, { DoctorRequest } from './viewDetailsofRequest';
 import'./viewDoctorRequest.css'
+import { config } from '../../utils/config';
 
-interface DoctorRequest {
-  _id: string;
-  username: string;
-  email: string;
-  name:string;
-  gender:string;
-  mobileNumber:number;
-}
 
 function DoctorRegistrationRequests() {
   const [requests, setRequests] = useState<DoctorRequest[]>([]);
@@ -21,7 +14,7 @@ function DoctorRegistrationRequests() {
     // Replace this with your actual API endpoint.
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/admins/doctor-registration-requests');
+        const response = await fetch(`${config.serverUri}/admins/doctor-registration-requests`);
         if (response.ok) {
           const data = await response.json() as DoctorRequest[];
           setRequests(data);
@@ -42,8 +35,8 @@ function DoctorRegistrationRequests() {
     <div className="registration-container">
   <h2 className="registration-heading">Doctor Registration Requests</h2>
   <ul className="registration-list">
-    {requests.map((request) => (
-      <li key={request._id} className="registration-item">
+    {requests.map((request, index) => (
+      <li key={index} className="registration-item">
         <span className="registration-username">{request.username}</span>
         <button className="registration-button" onClick={() => handleViewRequest(request)}>View Request</button>
       </li>

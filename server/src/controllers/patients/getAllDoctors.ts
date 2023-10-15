@@ -9,9 +9,9 @@ import { getClinicCommission } from '../../models/clinic/Clinic';
 
 export const getAllDoctors = async (req: Request, res: Response) => {
 
-  const allowedQueryParameters = ['name', 'speciality', 'date', 'time'];
+  const allowedQueryParameters = ['name', 'speciality', 'availabilityTime'];
 
-  if(Object.keys(req.query).length > 4 || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
+  if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
     res.status(StatusCodes.BAD_REQUEST).json("only doctor name, speciality or time slot must be provided");
     return;
   }
@@ -74,7 +74,7 @@ async function getRequiredSessionPrice(doctorHourlyRate: number, healthPackageDe
 
 function getMetchingDoctorsQueryFields(urlQuery: any) {
   
-  const { name, speciality, date, time } = urlQuery;
+  const { name, speciality, availabilityTime } = urlQuery;
 
     let searchQuery: any = {};
    
@@ -84,12 +84,16 @@ function getMetchingDoctorsQueryFields(urlQuery: any) {
     if (speciality && speciality !== '') {
       searchQuery.speciality = speciality;
     }
-    if (date && date !== '') {
-      const requestedDateTime = new Date(`${date}${(time && time !== '' ) && `T${time}`}`);
+
+  
+    if (availabilityTime && availabilityTime !== '') {
+      const requestedStartDate = new Date(availabilityTime).setSeconds(59, 999);
+      const requestedEndDate = new Date(availabilityTime).setSeconds(0, 0);
+
       searchQuery.availableSlots = {
         $elemMatch: {
-          startTime: { $gte: requestedDateTime },
-          endTime: { $lte: requestedDateTime }
+          startTime: { $lte: requestedStartDate },
+          endTime: { $gte: requestedEndDate }
         }
       };
     }

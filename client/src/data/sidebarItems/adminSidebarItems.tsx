@@ -25,7 +25,7 @@ export const adminSidebarItems = [
         items: [
             {
                 title: "View Doctor Requests",
-                href:viewDoctorRequestsRoute
+                href: viewDoctorRequestsRoute.path,
             }
         ]
     },

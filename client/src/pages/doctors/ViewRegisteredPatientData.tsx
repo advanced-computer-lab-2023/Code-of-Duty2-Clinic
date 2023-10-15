@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { config } from '../../utils/config';
+import { useLocation } from 'react-router-dom';
 
-const ViewPatientData: React.FC = () => {
-  const [patientId, setPatientId] = useState('');
+const ViewRegisteredPatientData: React.FC = () => {
   const [patientData, setPatientData] = useState<any>(null);
 
+  const patientId = useLocation().pathname.split('/')[4];
   const fetchPatientData = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/doctors/patients/${patientId}`);
+      const response = await fetch(`${config.serverUri}/doctors/patients/${patientId}`);
       if (response.ok) {
         const data = await response.json();
         setPatientData(data);
@@ -19,25 +21,13 @@ const ViewPatientData: React.FC = () => {
   };
 
   useEffect(() => {
-    if (patientId) {
       fetchPatientData();
-    }
-  }, [patientId]);
+  }, []);
 
   return (
     <div className="view-patient-data">
       <h2>View Patient Data and Health Records</h2>
-      <div>
-        <label htmlFor="patientId">Enter Patient ID:</label>
-        <input
-          type="text"
-          id="patientId"
-          value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-        />
-        <button onClick={fetchPatientData}>View Patient Data</button>
-      </div>
-
+     
       {patientData && (
         <div className="display-patient-data">
           <p><strong>Username:</strong> {patientData.patientInfo.username}</p>
@@ -66,4 +56,4 @@ const ViewPatientData: React.FC = () => {
   );
 };
 
-export default ViewPatientData;
+export default ViewRegisteredPatientData;

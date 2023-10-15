@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { config } from '../../utils/config';
 import { Dayjs } from 'dayjs';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -55,7 +55,7 @@ const ViewAppointments: React.FC = () => {
 
   const [error, setError] = useState('');
 
-  const {doctorId} = useParams();
+  const doctorId = useLocation().pathname.split('/')[2];
 
   const getAppointments = async()=>{
     // Fetch the initial list of patients from the API

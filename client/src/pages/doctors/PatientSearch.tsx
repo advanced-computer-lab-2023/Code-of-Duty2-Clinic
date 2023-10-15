@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../../css/PatientSearchStyle.css';
+import { config } from '../../utils/config';
 
 const PatientSearch = () => {
   const [name, setName] = useState('');
@@ -8,7 +9,7 @@ const PatientSearch = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/patients/search/${name}`, {
+      const response = await fetch(`${config.serverUri}/patients/search/${name}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -1,14 +1,15 @@
 import axios from "axios";
 import { DoctorDetails } from "../../types";
 import {useEffect, useState} from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { config } from "../../utils/config";
-import { getFormattedDate } from "../../utils/formatter";
+import { getFormattedDate, getFormattedDateTime } from "../../utils/formatter";
 
 
 const ViewDoctorDetails:React.FC = () => {
     const [doctor, setDoctor] = useState<DoctorDetails>({} as DoctorDetails);
-    const { patientId,doctorId } = useParams();
+    const patientId = useLocation().pathname.split('/')[2];
+    const doctorId  = useLocation().pathname.split('/')[4];
     const fetchDoctor = async () => {
         try {
           const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors/${doctorId}`);
@@ -52,12 +53,12 @@ const ViewDoctorDetails:React.FC = () => {
                     Educational Background: {doctor?.educationalBackground}
                </li>
                <li>
+                    Available time slots:
                     <ul>
-                        Available time slots:
                         {
                             doctor?.availableSlots&&
                             doctor?.availableSlots.map((slot:{startTime:string,endTime:string}, index) => (
-                                <li key={index}>{getFormattedDate(slot.startTime)} to {getFormattedDate(slot.endTime)}</li>
+                                <li key={index}>{getFormattedDateTime(slot.startTime)} to {getFormattedDateTime(slot.endTime)}</li>
                             ))
                         }
                     </ul>

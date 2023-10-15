@@ -1,14 +1,30 @@
-// import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import Layout from './layouts/Layout';
-// import routes from './data/routes';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from './layouts/Layout';
+import routes from './data/routes';
 // import PatientRegisteredFamilyMembers from './components/PatientRegisteredFamilyMembers';
 // import PatientInfo from './components/PatientInfo';
 // import PatientList from './components/PatientList';
-import UserList from './components/userList';
-//import DoctorRegistrationRequests from './components/viewDoctorRequests'
+
+
 export default function App() {
 
   return (
-    <UserList />
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={route.component}
+            />
+          ))}
+          {/* <Route path="/patient-info/:id" element={<PatientInfo />} />
+          <Route path="/patient/:patientId/family-members" element={<PatientRegisteredFamilyMembers />} />
+          <Route path="patients" element={<PatientList />} /> */}
+
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 }

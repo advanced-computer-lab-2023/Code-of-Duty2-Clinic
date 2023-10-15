@@ -1,10 +1,11 @@
-import React, { useEffect,useState,Component,FC } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import Modal  from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { FormControl, FormLabel } from '@mui/material';
+import { config } from '../utils/config';
 
 const deleteModalStyle = {
     position: 'absolute' as 'absolute',
@@ -56,7 +57,7 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
                 },
                 packageDurationInYears: healthPackage.packageDurationInYears
             }
-            await axios.post('http://localhost:8080/api/healthPackages',data)
+            await axios.post(`${config.serverUri}/healthPackages`,data)
             //inefficient
              //fetchHealthPackages()  request fetching from parent
              onSubmit?.(true);
@@ -77,19 +78,12 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
                 packageDurationInYears: healthPackage.packageDurationInYears
             }
             console.log(data)
-           console.log(await axios.put(`http://localhost:8080/api/healthPackages/${healthPackage._id}`,data).then(response =>{console.log(response.status) }))
-            //inefficient
-           // fetchHealthPackages() 
+           console.log(await axios.put(`${config.serverUri}/healthPackages/${healthPackage._id}`,data).then(response =>{console.log(response.status) }))
+           
            onSubmit?.(true); 
             setOpenEditingModal(false);
             onClos?.(false)
         }
-
-        // function createModal(){
-        //     setCreate(true)
-        //     setSelectedHealthPackage(HealthPackageResetter)
-        //     setOpenEditingModal(true);
-        // }
         
         return (
             <div>

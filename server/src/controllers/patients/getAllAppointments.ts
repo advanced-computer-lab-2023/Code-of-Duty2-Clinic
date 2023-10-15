@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import Patient from "../../models/patients/Patient";
 import { DoctorAppointment } from "./interfaces/DoctorAppointment";
+import Doctor from "../../models/doctors/Doctor";
 
 export const getAppointmentsWithAllDoctors = async (req: Request, res: Response) => {
     const { patientId } = req.params;
@@ -20,13 +21,18 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
     if(!patient) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Patient', patientId)});
 
     try {
-        const appointmentsToFind = getMetchingAppointmentsFields(req.query);
-       
-        const appointments: DoctorAppointment[] = (await Appointment.find({patientId, ...appointmentsToFind})
+        const appointmentsToFind = getMatchingAppointmentsFields(req.query);
+
+        console.log(JSON.stringify(appointmentsToFind));
+        const appointments = (await Appointment.find({patientId, ...appointmentsToFind})
         .populate({
             path: 'doctorId',
             select: {_id: 1, doctorId: 1, timePeriod: 1, status: 1, name: 1, speciality: 1},
-        })).map((appointment: any) => {
+        }))
+        .filter((appointment: any) => appointment.doctorId.name
+            .toLowerCase()
+            .startsWith((req.query.doctorName as string).toLowerCase()))
+        .map((appointment: any) => {
             return {
                 appointmentId: appointment._id,
                 doctor: {
@@ -38,6 +44,23 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
                 status: appointment.status
             }
         });
+        // const result: any = await Promise.all(appointments.map(async (appointment: any) => {
+        //     const doctor: any = await Doctor.find({
+        //         _id: appointment.doctorId,
+        //         name: new RegExp('^' + req.query.doctorName, 'i'),
+        //     }).select({ _id: 1, name: 1});
+        //     return {
+        //         appointmentId: appointment._id,
+        //         doctor: {
+        //             id: doctor._id,
+        //             name: doctor.name,
+        //         },
+        //         timePeriod: appointment.timePeriod,
+        //         status: appointment.status
+        //     }
+        // }));
+
+       
 
         res.status(StatusCodes.OK).json(appointments);
     } catch(error) {
@@ -45,18 +68,10 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
     }    
 }
 
-function getMetchingAppointmentsFields(urlQuery: any) {
+function getMatchingAppointmentsFields(urlQuery: any) {
 
     const { appointmentTime, status, doctorName } = urlQuery;
 
-    let searchQuery: any = {};
-
-    if(doctorName && doctorName !== '') {
-        searchQuery.doctorName = doctorName;
-    }
-    if (status && status !== '') {
-        searchQuery.status = status;
-    }
     const appointmentsToFind: any = {};
 
     if (appointmentTime && appointmentTime !== '') {
@@ -67,10 +82,17 @@ function getMetchingAppointmentsFields(urlQuery: any) {
         ];
     }
 
+    let searchQuery: any = {};
+
+  
+    if (status && status !== '') {
+        searchQuery.status = status;
+    }
+   
     const queries = Object.keys(searchQuery).map(key => 
         ({ [key]: searchQuery[key] })
     );
-
+   
     if(queries.length > 0) {
         if(appointmentsToFind['$or']) {
             appointmentsToFind['$or'].push({$or: queries});

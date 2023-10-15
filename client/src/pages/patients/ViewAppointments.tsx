@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { config } from '../../utils/config';
 import { Dayjs } from 'dayjs';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -17,6 +17,7 @@ import CardContent from '@mui/material/CardContent';
 import { Card, FormControl, InputLabel, MenuItem } from '@mui/material';
 import { styled } from "@mui/material";
 import { getFormattedDate, getFormattedTime } from '../../utils/formatter';
+import { filterParams } from '../../utils/filterer';
 
 
 interface Appointment {
@@ -55,7 +56,7 @@ const ViewAppointments: React.FC = () => {
 
   const [error, setError] = useState('');
 
-  const {patientId} = useParams();
+  const patientId = useLocation().pathname.split('/')[2];
 
   const getAppointments = async()=>{
     // Fetch the initial list of patients from the API
@@ -88,13 +89,12 @@ const ViewAppointments: React.FC = () => {
   const handleFilterChange = async() => {
     try {
       setFilteredAppointments(undefined);
-      const response = await axios.get(`${config.serverUri}/patients/${patientId}/appointments`, {
-        params: {
+        const params = filterParams({
           doctorName,
           status,
           appointmentTime: date && new Date(`${date?.format('YYYY-MM-DD')}${time && `T${time?.format('HH:mm')}`}`).toISOString(),
-        }
-      });
+        });
+        const response = await axios.get(`${config.serverUri}/patients/${patientId}/appointments`, { params });
       setFilteredAppointments(response.data);
       setError('');
     } catch (error: any) {

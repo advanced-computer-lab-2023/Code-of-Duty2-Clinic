@@ -1,7 +1,7 @@
 import AdminForm from "../../components/adminForm";
-import UserList from "../../components/userList";
+import UserList from "../../pages/admins/userList";
 import { Route } from "./Route";
-import DoctorRegistrationRequests from"../../components/viewDoctorRequests"
+import DoctorRegistrationRequests from"../../pages/admins/viewDoctorRequests"
 import HealthPackagesPage from "../../pages/admins/HealthPackages";
 
 

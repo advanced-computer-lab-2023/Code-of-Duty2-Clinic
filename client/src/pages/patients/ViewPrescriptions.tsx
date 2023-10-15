@@ -9,17 +9,16 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
 import Modal  from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
+import InfoIcon from '@mui/icons-material/Info';
 import { FormControl, FormLabel } from '@mui/material';
 import axios, { AxiosResponse } from "axios";
-import { useParams } from "react-router-dom";
+import { config } from "../../utils/config";
 
 const searchstyle = {
 
@@ -74,7 +73,6 @@ const deleteModalStyle = {
 
   const PrescriptionsPage: React.FC = () => {
 
-    //const {patientId} = useParams();
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
     const [searchOptions,setSearchOptions] = useState<ISearch>({status:"none"})
@@ -85,7 +83,7 @@ const deleteModalStyle = {
     const patientId = useLocation().pathname.split('/')[2];
 
     useEffect(()=>{
-        axios.get(`http://localhost:8080/api/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{
+        axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{
             setPrescriptions(response.data)
         })
         console.log(prescriptions)
@@ -143,7 +141,7 @@ const deleteModalStyle = {
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
         if(searchOptions?.status&&searchOptions?.status!='none')data.status = searchOptions.status
-        const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${patientId}`,{params:data})).data
+        const searchResults:[]=await (await axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`,{params:data})).data
         setPrescriptions(searchResults)
     }
     return (
@@ -212,7 +210,7 @@ const deleteModalStyle = {
                            <TableCell align="center">{printDate(prescription.updatedAt.toString())}</TableCell>
                            <TableCell align="center">
                                 <IconButton onClick={()=>viewSelectedPrescription(index)} aria-label="delete">
-                                    <EditIcon />
+                                    <InfoIcon />
                                 </IconButton>
                            </TableCell>
                        </TableRow>
@@ -220,25 +218,6 @@ const deleteModalStyle = {
                    </TableBody>
                    </Table>
                </TableContainer>
-   
-                   
-                
-            {/* <Modal
-                open={modal}
-                onClose={()=>setModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                <Box sx={deleteModalStyle}>
-                    <FormControl style={{width:'100%'}}>
-                        <FormLabel>Patient Id</FormLabel>
-                        <TextField  onChange={(ev)=>setId(ev.target.value)} type="text" size='small'/>
-                        <Button variant="contained" onClick={getPrescriptions}>GET Prescriptions</Button>
-                    </FormControl>
-                </Box>
-            </Modal> */}
-
-
 
             <Modal
                 open={viewModal}

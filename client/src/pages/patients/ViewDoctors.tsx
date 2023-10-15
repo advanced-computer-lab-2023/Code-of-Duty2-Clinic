@@ -11,7 +11,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import {Dayjs} from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { config } from '../../utils/config';
@@ -48,7 +48,9 @@ const ViewDoctors = () => {
     speciality: '',
   });
 
-  const [dateTime, setDateTime] = useState<Dayjs | null>(null);
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [time, setTime] = useState<Dayjs | null>(null);
+
   const [error, setError] = useState('');
 
   const patientId = useLocation().pathname.split('/')[2];
@@ -70,11 +72,11 @@ const ViewDoctors = () => {
       const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors`, {
         params: {
           ...filterOptions,
-          date: dateTime?.format('YYYY-MM-DD'),
-          time: dateTime?.format('HH:mm'),
+          availabilityTime: date && new Date(`${date?.format('YYYY-MM-DD')}${time && `T${time?.format('HH:mm')}`}`).toISOString(),
         }
       });
       setFilteredDoctors(doctors?.filter((doctor) => response.data.map((d: Doctor) => d._id).includes(doctor._id)));
+      setError('');
       console.log(filteredDoctors);
     } catch (error: any) {
       setError(error.message);
@@ -86,8 +88,12 @@ const ViewDoctors = () => {
     setFilterOptions({ ...filterOptions, [event.target.name]: event.target.value });
   };
 
-  const handleDateTimeChange = (value: Dayjs | null) => {
-    setDateTime(value);
+  const handleDateChange = (value: Dayjs | null) => {
+    setDate(value);
+  }
+
+  const handleTimeChange = (value: Dayjs | null) => {
+    setTime(value);
   }
 
   const handleSearchClick = () => {
@@ -99,7 +105,7 @@ const ViewDoctors = () => {
   };
 
   function areFilterOptionsEmpty() {
-    return Object.values(filterOptions).every((option) => option === '') && dateTime == null; 
+    return Object.values(filterOptions).every((option) => option === '') && !date && !time; 
   }
   function resetFilters() {
     setFilteredDoctors(doctors);
@@ -119,10 +125,15 @@ const ViewDoctors = () => {
           <TextField label="Name" value={filterOptions.name} name='name' onChange={handleFilterOptionsChange} sx={{ marginRight: 2 }} />
           <TextField label="Speciality" value={filterOptions.speciality} name='speciality' onChange={handleFilterOptionsChange} sx={{ marginRight: 2 }} />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Enter Date and Time"
-              value={dateTime}
-              onChange={handleDateTimeChange}
+            <DatePicker
+              label="Enter Date"
+              value={date}
+              onChange={handleDateChange}
+            />
+            <TimePicker 
+              label="Enter Time"
+              value={time}
+              onChange={handleTimeChange}
             />
           </LocalizationProvider>
           <Button variant="contained" color="primary" onClick={handleSearchClick} sx={{marginLeft: '30px'}}>
@@ -138,7 +149,6 @@ const ViewDoctors = () => {
               filteredDoctors.map((doctor) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={doctor._id}>
                   <DoctorItem component={Link} to={`/patient/${patientId}/doctors/${doctor._id}`}>
-                    {/* <DoctorImage image={doctor.image} /> */}
                     <CardContent>
                       <DoctorInfo variant="subtitle1">Name: {doctor.name}</DoctorInfo>
                       <DoctorInfo variant="subtitle2">Speciality: {doctor.speciality}</DoctorInfo>

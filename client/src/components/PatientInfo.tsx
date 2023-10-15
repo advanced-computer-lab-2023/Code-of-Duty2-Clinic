@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState} from 'react';
 import { useLocation} from 'react-router-dom';
 import { Patient } from '../types';
+import { config } from '../utils/config';
 
 
 export default function PatientInfo() {
@@ -11,11 +12,8 @@ export default function PatientInfo() {
     const [patient, setPatient] = useState<Patient>();
 
     useEffect(() => {
-        console.log(patientId);
-        console.log(import.meta.env.VITE_SERVER_URI)
         const fetchPatient = async () => {
-             await axios.get(`${import.meta.env.VITE_SERVER_URI}/patients/patient-info/${patientId}`)
-            // await axios.get(`http://localhost:3000/api/patients/patient-info/${patientId}`)
+             await axios.get(`${config.serverUri}/patients/patient-info/${patientId}`)
             .then (response => {
                setPatient(response.data);
             })
@@ -26,13 +24,13 @@ export default function PatientInfo() {
     return (
         <div className="patientInfo">
             <h1 className="patientInfoPageTitle">Patient Info</h1>
-                <PatientInfoCard
-                    name={patient?.name ?? ''}
-                    dob={patient?.dateOfBirth.toString() ?? ''}
-                    email={patient?.email ?? ''}
-                    gender={patient?.gender ?? ''}
-                    mobile={patient?.mobileNumber ?? ''}
-                />
+            <PatientInfoCard
+                name={patient?.name ?? ''}
+                dob={patient?.dateOfBirth.toString() ?? ''}
+                email={patient?.email ?? ''}
+                gender={patient?.gender ?? ''}
+                mobile={patient?.mobileNumber ?? ''}
+            />
         </div>
     );
 }

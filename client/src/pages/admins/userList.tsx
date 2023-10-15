@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './userList.css'
 import axios from 'axios';
-import { prepareCssVars } from '@mui/system';
+import { config } from '../../utils/config';
 
 interface User {
   username: string;
@@ -29,7 +29,7 @@ const UserList: React.FC = () => {
 
   const fetchUsersByType = async (userType: string): Promise<User[]> => {
     try {
-      const response = await fetch(`http://localhost:4000/api/admins/users/${userType}`, {
+      const response = await fetch(`${config.serverUri}/admins/users/${userType}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const UserList: React.FC = () => {
       Type: Type,
     };
     try {
-     await axios.delete(`http://localhost:4000/api/admins/users`,{data})   
+     await axios.delete(`${config.serverUri}/admins/users`,{data})   
       switch(Type){
         case 'Admin':setAdmins(previous => previous.filter(user=> user.username != username));break;
         case 'Doctor':setDoctors(previous => previous.filter(user=> user.username != username));break;
@@ -75,7 +75,7 @@ const UserList: React.FC = () => {
     <ul className="user-list">
       {patients.map((patient) => (
         <li key={patient.username} className="user-item">
-          {patient.name} (Patient){' '}
+          {patient.name}
           <button className="user-button" onClick={() => setSelectedUser(patient)}>View</button>
           <button className="user-button" onClick={() => handleRemoveUser(patient.username, 'Patient')}>Remove</button>
         </li>
@@ -86,7 +86,7 @@ const UserList: React.FC = () => {
     <ul className="user-list">
       {doctors.map((doctor) => (
         <li key={doctor.username} className="user-item">
-          {doctor.name} (Doctor){' '}
+          {doctor.name}
           <button className="user-button" onClick={() => setSelectedUser(doctor)}>View</button>
           <button className="user-button" onClick={() => handleRemoveUser(doctor.username, 'Doctor')}>Remove</button>
         </li>
@@ -97,7 +97,7 @@ const UserList: React.FC = () => {
     <ul className="user-list">
       {admins.map((admin) => (
         <li key={admin.username} className="user-item">
-          {admin.name} (Admin){' '}
+          {admin.name}
           <button className="user-button" onClick={() => setSelectedUser(admin)}>View</button>
           <button className="user-button" onClick={() => handleRemoveUser(admin.username, 'Admin')}>Remove</button>
         </li>
@@ -108,7 +108,6 @@ const UserList: React.FC = () => {
       <div className="selected-user">
         <h3 className="selected-user-heading">Selected User</h3>
         <p className="selected-user-details">Username: {selectedUser.username}</p>
-        <p className="selected-user-details">User Type: {selectedUser.userType}</p>
       </div>
     )}
     {deletedAlert&& <p>Username ${selectedUser?.username} has been removed</p>}
