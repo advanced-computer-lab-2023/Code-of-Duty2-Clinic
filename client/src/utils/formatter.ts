@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export const getFormattedDate = (dateTime: string) => {
     const formattedDate = new Date(dateTime).toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -32,3 +34,8 @@ export const getFormattedDateTime = (dateTime: string) => {
 }
 
 
+export const getQueredDateTime = (date: Dayjs | null | undefined, time: Dayjs | null | undefined) => {
+  const dateStr = date ? date.format('YYYY-MM-DD') : '';
+  const timeStr = time ? `T${time.format('HH:mm')}` : '';
+  return`${dateStr}${timeStr}`;
+}

@@ -9,15 +9,19 @@ import { getClinicCommission } from '../../models/clinic/Clinic';
 
 export const getAllDoctors = async (req: Request, res: Response) => {
 
-  const allowedQueryParameters = ['name', 'speciality', 'availabilityTime'];
+  const allowedQueryParameters = ['name', 'speciality', 'availabilityTime', 'isTimeSet'];
 
   if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
     res.status(StatusCodes.BAD_REQUEST).json("only doctor name, speciality or time slot must be provided");
     return;
   }
 
-  const patientId = req.params.patientId;
+  if(req.query.availabilityTime && !req.query.isTimeSet || req.query.isTimeSet && !req.query.availabilityTime) {
+    res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and availabilityTime must be provided together");
+    return;
+  }
 
+  const patientId = req.params.patientId;
   try {
     const patient = await Patient.findById(patientId);
     if (!patient) {
@@ -28,19 +32,13 @@ export const getAllDoctors = async (req: Request, res: Response) => {
     const packageDetails = subscribedPackage ? await HealthPackage.findById(subscribedPackage?.packageId) : null;
 
     const searchQuery = getMetchingDoctorsQueryFields(req.query);
-    const queries = Object.keys(searchQuery).map(key => (
-      { [key]: searchQuery[key] }
-    ));
-
-    const allDoctors =  await (queries.length > 0 ? 
+   
+    const allDoctors =  await 
       Doctor.find({
         contractStatus: 'accepted', 
-        $or: queries,
-      }) : 
-      Doctor.find({
-        contractStatus: 'accepted'
+        ...searchQuery,
       })
-      ).select({ _id: 1, name: 1, hourlyRate: 1, speciality: 1});
+      .select({ _id: 1, name: 1, hourlyRate: 1, speciality: 1});
 
     const doctorsRequiredInfo = await getDoctorRequiredInfo(allDoctors, packageDetails);
 
@@ -56,12 +54,8 @@ async function getDoctorRequiredInfo(allDoctors: IDoctorModel[], packageDetails:
   return await Promise.all(allDoctors.map(async (doctor) => ({
     _id: doctor._id,
     name: doctor.name,
-    email: doctor.email,
-    mobileNumber: doctor.mobileNumber,
-    affiliation: doctor.affiliation,
     speciality: doctor.speciality,
     sessionPrice: await getRequiredSessionPrice(doctor.hourlyRate, packageDetails),
-    educationalBackground: doctor.educationalBackground,
   })));
 }
 
@@ -74,22 +68,33 @@ async function getRequiredSessionPrice(doctorHourlyRate: number, healthPackageDe
 
 function getMetchingDoctorsQueryFields(urlQuery: any) {
   
-  const { name, speciality, availabilityTime } = urlQuery;
+  const { name, speciality, availabilityTime, isTimeSet } = urlQuery;
 
-    let searchQuery: any = {};
+    let searchQuery: {
+      name?: { $regex: string; $options: string };
+      speciality?: { $regex: string; $options: string };
+      availableSlots?: { $elemMatch: { startTime: any; endTime: any } };
+    } = {};
    
     if (name && name !== '') {
-      searchQuery.name = new RegExp('^' + name, 'i');
+      searchQuery.name = { $regex: `^${name}`, $options: 'i' };
     }
     if (speciality && speciality !== '') {
-      searchQuery.speciality = speciality;
+      searchQuery.speciality = { $regex: `^${speciality}`, $options: 'i' };
     }
 
   
     if (availabilityTime && availabilityTime !== '') {
-      const requestedStartDate = new Date(availabilityTime).setSeconds(59, 999);
-      const requestedEndDate = new Date(availabilityTime).setSeconds(0, 0);
-
+      const requestedStartDate = new Date(availabilityTime);
+      const requestedEndDate = new Date(availabilityTime);
+      if(isTimeSet === true) {
+        requestedStartDate.setSeconds(59, 999)
+        requestedEndDate.setSeconds(0, 0);
+      }
+      else {
+          requestedStartDate.setHours(23, 59, 59, 999);
+          requestedEndDate.setHours(0, 0, 0, 0);  
+      }
       searchQuery.availableSlots = {
         $elemMatch: {
           startTime: { $lte: requestedStartDate },

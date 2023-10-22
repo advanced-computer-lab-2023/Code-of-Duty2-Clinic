@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
-import { Doctor, DoctorDetails } from '../../types';
+import { DoctorDetails } from '../../types';
 import { Link, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -15,6 +15,8 @@ import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-picker
 import {Dayjs} from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { config } from '../../utils/config';
+import { getQueredDateTime } from '../../utils/formatter';
+import { filterParams } from '../../utils/filterer';
 
 const DoctorItem = styled(Card)({
   display: 'flex',
@@ -41,7 +43,6 @@ const DoctorPrice = styled(Typography)({
 }) as typeof Typography;
 
 const ViewDoctors = () => {
-  const [doctors, setDoctors] = useState<DoctorDetails[] | undefined>();
   const [filteredDoctors, setFilteredDoctors] = useState<DoctorDetails[] | undefined>();
   const [filterOptions, setFilterOptions] = useState({
     name: '',
@@ -58,7 +59,6 @@ const ViewDoctors = () => {
   const fetchDoctors = async () => {
     try {
       const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors`);
-      setDoctors(response.data);
       setFilteredDoctors(response.data);
     } catch (error: any) {
       setError(error.message);
@@ -69,15 +69,16 @@ const ViewDoctors = () => {
   const fetchFilteredDoctors = async () => {
     try {
       setFilteredDoctors(undefined);
-      const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors`, {
-        params: {
-          ...filterOptions,
-          availabilityTime: date && new Date(`${date?.format('YYYY-MM-DD')}${time && `T${time?.format('HH:mm')}`}`).toISOString(),
-        }
-      });
-      setFilteredDoctors(doctors?.filter((doctor) => response.data.map((d: Doctor) => d._id).includes(doctor._id)));
+      const dateTimeStr = getQueredDateTime(date, time);
+      const isTimeSet = dateTimeStr !== '' ? !!time :undefined; 
+      const params = filterParams({
+        ...filterOptions,
+        availabilityTime: dateTimeStr && new Date(dateTimeStr).toISOString(),
+        isTimeSet,
+      })
+      const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors`, { params });
+      setFilteredDoctors(response.data);
       setError('');
-      console.log(filteredDoctors);
     } catch (error: any) {
       setError(error.message);
       console.error(error);
@@ -97,24 +98,17 @@ const ViewDoctors = () => {
   }
 
   const handleSearchClick = () => {
-    if(areFilterOptionsEmpty()) {
-      resetFilters();
-      return;
-    }
     fetchFilteredDoctors();
   };
-
-  function areFilterOptionsEmpty() {
-    return Object.values(filterOptions).every((option) => option === '') && !date && !time; 
-  }
-  function resetFilters() {
-    setFilteredDoctors(doctors);
-  }
-
+ 
   useEffect(() => {
     fetchDoctors();
   }, []);
 
+
+  useEffect(() => {
+    fetchFilteredDoctors();
+  }, [filterOptions, date, time]);
 
   return (
       <Box sx={{ padding: 4 }}>

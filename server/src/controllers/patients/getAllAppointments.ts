@@ -3,64 +3,54 @@ import Appointment from "../../models/appointments/Appointment";
 import { StatusCodes } from "http-status-codes";
 import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import Patient from "../../models/patients/Patient";
-import { DoctorAppointment } from "./interfaces/DoctorAppointment";
-import Doctor from "../../models/doctors/Doctor";
+import mongoose from "mongoose";
 
 export const getAppointmentsWithAllDoctors = async (req: Request, res: Response) => {
     const { patientId } = req.params;
     if(!patientId) return res.status(StatusCodes.BAD_REQUEST).json({message: 'patientId is required'});
 
-    const allowedQueryParameters = ['status', 'appointmentTime', 'doctorName'];
+    const allowedQueryParameters = ['status', 'appointmentTime', 'isTimeSet', 'doctorName'];
 
     if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
         res.status(StatusCodes.BAD_REQUEST).json("only doctorName, appointment status or time slot must be provided");
         return;
     }
 
+    if(req.query.appointmentTime && !req.query.isTimeSet || req.query.isTimeSet && !req.query.appointmentTime) {
+        res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and appointmentTime must be provided together");
+        return;
+    }
+
     const patient = await Patient.findById(patientId);
     if(!patient) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Patient', patientId)});
 
+    const searchQuery = getMatchingAppointmentsFields(req.query);
     try {
-        const appointmentsToFind = getMatchingAppointmentsFields(req.query);
-
-        console.log(JSON.stringify(appointmentsToFind));
-        const appointments = (await Appointment.find({patientId, ...appointmentsToFind})
-        .populate({
-            path: 'doctorId',
-            select: {_id: 1, doctorId: 1, timePeriod: 1, status: 1, name: 1, speciality: 1},
-        }))
-        .filter((appointment: any) => appointment.doctorId.name
-            .toLowerCase()
-            .startsWith((req.query.doctorName as string).toLowerCase()))
-        .map((appointment: any) => {
-            return {
-                appointmentId: appointment._id,
-                doctor: {
-                    id: appointment.doctorId._id,
-                    name: appointment.doctorId.name,
-                    speciality: appointment.doctorId.speciality,
-                },
-                timePeriod: appointment.timePeriod, 
-                status: appointment.status
+        const appointments = await Appointment.aggregate([
+            { $match: { patientId: new mongoose.Types.ObjectId(patientId) } },
+            {
+                $lookup: {
+                    from: 'doctors',
+                    localField: 'doctorId',
+                    foreignField: '_id',
+                    as: 'doctor'
+                }
+            },
+            { $match: { ...searchQuery } },
+            { $unwind: '$doctor' },
+            {
+                $project: {
+                    appointmentId: '$_id',
+                    _id: 0,
+                    status: 1,
+                    timePeriod: 1,
+                    doctor: {
+                        id: '$doctor._id',
+                        name: '$doctor.name',
+                    }
+                }
             }
-        });
-        // const result: any = await Promise.all(appointments.map(async (appointment: any) => {
-        //     const doctor: any = await Doctor.find({
-        //         _id: appointment.doctorId,
-        //         name: new RegExp('^' + req.query.doctorName, 'i'),
-        //     }).select({ _id: 1, name: 1});
-        //     return {
-        //         appointmentId: appointment._id,
-        //         doctor: {
-        //             id: doctor._id,
-        //             name: doctor.name,
-        //         },
-        //         timePeriod: appointment.timePeriod,
-        //         status: appointment.status
-        //     }
-        // }));
-
-       
+        ]);
 
         res.status(StatusCodes.OK).json(appointments);
     } catch(error) {
@@ -69,40 +59,36 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
 }
 
 function getMatchingAppointmentsFields(urlQuery: any) {
-
-    const { appointmentTime, status, doctorName } = urlQuery;
-
-    const appointmentsToFind: any = {};
-
-    if (appointmentTime && appointmentTime !== '') {
-        const requestedStartDate = new Date(appointmentTime).setSeconds(59, 999);
-        const requestedEndDate = new Date(appointmentTime).setSeconds(0, 0);
-        appointmentsToFind['$or'] = [
-            { $and: [{'timePeriod.startTime':  { $lte: requestedStartDate }}, {'timePeriod.endTime': { $gte: requestedEndDate }}] }
-        ];
-    }
-
-    let searchQuery: any = {};
-
-  
+    const { appointmentTime, isTimeSet, status, doctorName } = urlQuery;
+    let searchQuery: {
+        status?: string;
+        'doctor.name'?: { $regex: string; $options: string};
+        'timePeriod.startTime'?: any;
+        'timePeriod.endTime'?: any;
+    } = {};
+    
     if (status && status !== '') {
         searchQuery.status = status;
     }
-   
-    const queries = Object.keys(searchQuery).map(key => 
-        ({ [key]: searchQuery[key] })
-    );
-   
-    if(queries.length > 0) {
-        if(appointmentsToFind['$or']) {
-            appointmentsToFind['$or'].push({$or: queries});
+    if(doctorName && doctorName != '') {
+        searchQuery['doctor.name'] = { $regex: `^${doctorName}`, $options: 'i' };
+    }
+    if (appointmentTime && appointmentTime !== '') {
+        const requestedStartDate = new Date(appointmentTime);
+        const requestedEndDate = new Date(appointmentTime);
+
+        if(isTimeSet === true) {
+            requestedStartDate.setSeconds(59, 999)
+            requestedEndDate.setSeconds(0, 0);
         }
         else {
-            appointmentsToFind['$or'] = queries;
+            requestedStartDate.setHours(23, 59, 59, 999);
+            requestedEndDate.setHours(0, 0, 0, 0);  
         }
+        searchQuery['timePeriod.startTime'] = { $lte: requestedStartDate };
+        searchQuery['timePeriod.endTime'] = { $gte: requestedEndDate };
     }
-
-    return appointmentsToFind;
+    return searchQuery;
 }
 
 

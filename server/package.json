@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node build/index.js",
-    "dev": "nodemon"
+    "dev": "ts-node-dev ./src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -40,6 +40,7 @@
     "@types/validator": "^13.11.2",
     "concurrently": "^8.2.1",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0"
   }
 }
