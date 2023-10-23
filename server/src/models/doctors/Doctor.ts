@@ -1,11 +1,17 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
+import { IDoctor } from './interfaces/IDoctor';
+import isMobileNumber from 'validator/lib/isMobilePhone'
 
-export const DoctorSchema = new Schema({
-  userId: {type: Schema.Types.ObjectId, ref:'User', required: true, unique: true},
+export interface IDoctorModel extends IDoctor, Document {} 
+
+export const DoctorSchema = new Schema<IDoctorModel>({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true, select: false },
+  email:{type:String,validate: [ isEmail, 'invalid email' ], unique: true},
   name: { type: String, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
-  mobileNumber: { type: String, required: true },
+  mobileNumber: { type: String, required: true, validate: [isMobileNumber, 'invalid mobile number'] },
   dateOfBirth: { type: Date, required: true },
   hourlyRate: {type: Number, required: true},
   affiliation: {type: String, required: true},
@@ -25,4 +31,4 @@ export const DoctorSchema = new Schema({
 );
 
 
-export default mongoose.model('Doctor', DoctorSchema);
+export default mongoose.model<IDoctorModel>('Doctor', DoctorSchema);
