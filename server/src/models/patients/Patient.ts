@@ -1,20 +1,16 @@
-import mongoose, { Document, Schema } from 'mongoose';
-import isEmail from 'validator/lib/isEmail'
-import { IPatient } from './interfaces/IPatient';
+import mongoose, { Schema } from 'mongoose';
+import isMobileNumber from 'validator/lib/isMobilePhone'
 
-export interface IPatientModel extends IPatient, Document {} 
 
-export const PatientSchema = new Schema<IPatientModel>({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  email:{type:String,validate: [ isEmail, 'invalid email' ], unique: true},
+export const PatientSchema = new Schema({
+  userId: {type: Schema.Types.ObjectId, ref:'User', required: true, unique: true},
   name: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
-  mobileNumber: { type: String, required: true },
+  mobileNumber: { type: String, required: true, validate: [isMobileNumber, 'invalid mobile number'] },
   emergencyContact: {
     fullname: { type: String, required: true },
-    mobileNumber: { type: String, required: true },
+    mobileNumber: { type: String, required: true, validate: [isMobileNumber, 'invalid mobile number'] },
     relationToPatient: { type: String, required: true },
   },
 
@@ -75,4 +71,4 @@ PatientSchema.virtual('age').get(function() {
   return age;
 });
 
-export default mongoose.model<IPatientModel>('Patient', PatientSchema);
+export default mongoose.model('Patient', PatientSchema);

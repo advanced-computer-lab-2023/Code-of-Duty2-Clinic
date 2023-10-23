@@ -1,13 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
-import { IDoctor } from './interfaces/IDoctor';
 
-export interface IDoctorModel extends IDoctor, Document {} 
-
-export const DoctorSchema = new Schema<IDoctorModel>({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  email:{type:String,validate: [ isEmail, 'invalid email' ], unique: true},
+export const DoctorSchema = new Schema({
+  userId: {type: Schema.Types.ObjectId, ref:'User', required: true, unique: true},
   name: { type: String, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
   mobileNumber: { type: String, required: true },
@@ -30,4 +25,4 @@ export const DoctorSchema = new Schema<IDoctorModel>({
 );
 
 
-export default mongoose.model<IDoctorModel>('Doctor', DoctorSchema);
+export default mongoose.model('Doctor', DoctorSchema);
