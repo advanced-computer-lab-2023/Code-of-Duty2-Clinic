@@ -18,6 +18,7 @@
     "@types/express": "^4.17.18",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.8.2",
+    "@types/react-query": "^1.2.9",
     "axios": "^1.5.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -30,6 +31,7 @@
     "moment": "^2.29.4",
     "mongoose": "^7.5.4",
     "path": "^0.12.7",
+    "react-query": "^3.39.3",
     "typescript": "^5.2.2",
     "validator": "^13.11.0"
   },

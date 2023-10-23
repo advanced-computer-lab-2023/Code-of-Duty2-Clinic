@@ -1,14 +1,17 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import routes from './data/routes';
+import { QueryClient, QueryClientProvider } from 'react-query';
 // import PatientRegisteredFamilyMembers from './components/PatientRegisteredFamilyMembers';
 // import PatientInfo from './components/PatientInfo';
 // import PatientList from './components/PatientList';
 
+const queryClient = new QueryClient();
 
 export default function App() {
 
   return (
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Layout>
         <Routes>
@@ -26,5 +29,6 @@ export default function App() {
         </Routes>
       </Layout>
     </BrowserRouter>
+    </QueryClientProvider>
   );
 }

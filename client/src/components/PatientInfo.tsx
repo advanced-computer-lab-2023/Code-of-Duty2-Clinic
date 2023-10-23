@@ -19,7 +19,7 @@ export default function PatientInfo() {
             })
         };
         fetchPatient();
-    }, []);
+    });
 
     return (
         <div className="patientInfo">
