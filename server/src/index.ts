@@ -1,5 +1,5 @@
-import connectToDB from './config/database';
-import config from './config/config';
+import connectToDB from './configurations/database';
+import config from './configurations/config';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';

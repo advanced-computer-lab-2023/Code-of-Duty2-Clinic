@@ -3,7 +3,7 @@ import { IAdmin } from './interfaces/IAdmin';
 
 export interface IAdminModel extends IAdmin, Document {} 
 
-export const ClinicAdminSchema = new Schema<IAdminModel>({
+export const AdminSchema = new Schema<IAdminModel>({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
 }, 
@@ -11,4 +11,4 @@ export const ClinicAdminSchema = new Schema<IAdminModel>({
 );
 
 
-export default mongoose.model<IAdminModel>('Admin', ClinicAdminSchema);
+export default mongoose.model<IAdminModel>('Admin', AdminSchema);

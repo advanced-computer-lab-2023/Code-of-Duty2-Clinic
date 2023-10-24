@@ -59,7 +59,8 @@ export const PatientSchema = new Schema<IPatientModel>({
       }
     ],
     required: false,
-  }
+  },
+  wallet: {amount: Number},
 }, 
 {timestamps: true}
 );
