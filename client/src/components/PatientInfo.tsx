@@ -1,28 +1,45 @@
-import { Paper} from '@mui/material';
+import { Paper, Button } from '@mui/material';
 import '../css/PatientInfo.css';
-import { useLocation} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useGetPatient from '../hooks/useGetPatient';
+import { Typography } from '@mui/material';
+import { Person, Cake, Wc, Email, Phone } from '@mui/icons-material';
+
+
+
 
 
 export default function PatientInfo() {
     const patientId = useLocation().pathname.split('/')[2];
-    const { data: patient } = useGetPatient(patientId);
+    const patient = useGetPatient(patientId).data;
+    const history = useNavigate();
 
-    if (!patient) return (<div>Loading...</div>);
+   // Only load when the patient info is fetched
+    if (!patient) {
+        return <div>Loading...</div>;
+    }
+    
 
     return (
         <div className="patientInfo">
             <h1 className="patientInfoPageTitle">Patient Info</h1>
             <PatientInfoCard
-                name={patient?.name ?? ''}
-                dob={patient?.dateOfBirth?.toString() ?? ''}
-                email={patient?.email ?? ''}
-                gender={patient?.gender ?? ''}
-                mobile={patient?.mobileNumber ?? ''}
+                name={patient.name}
+                dob={patient.dateOfBirth.toString()}
+                email={patient.email}
+                gender={patient.gender}
+                mobile={patient.mobileNumber}
             />
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="contained" onClick={() => history('/patients')} style={{ marginTop: '1rem' }}>
+                    Back to Patient List
+                </Button>
+            </div>
         </div>
     );
 }
+
 
 function PatientInfoCard({
     name,
@@ -39,12 +56,35 @@ function PatientInfoCard({
 }) {
     return (
         <Paper elevation={2} className="patientInfoCard">
-            <h1 className="patientInfoTitle"> Personal Information </h1>
-            <h3>Name: {name}</h3>
-            <h3>Date of Birth: {dob}</h3>
-            <h3> Email: {email}</h3>
-            <h3>Gender: {gender}</h3>
-            <h3>Mobile Number: {mobile}</h3>
+            <Typography variant="h5" className="patientInfoTitle" style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+                <Person fontSize="large" /> Personal Information
+            </Typography>
+
+            <Typography variant="h6" component="span" style={{ fontSize: '1.5rem', lineHeight: '2rem' }}>
+                <Person fontSize="small" /> <Typography variant="body2" component="span" color="textSecondary">Name:</Typography> {name}
+            </Typography>
+            <div className="patientInfoDetails">
+                <div className="patientInfoDetail">
+                    <Typography variant="h6" component="span" style={{ fontSize: '1.2rem', lineHeight: '2rem' }}>
+                        <Cake fontSize="small" /> <Typography variant="body2" component="span" color="textSecondary">Date of Birth:</Typography> {dob}
+                    </Typography>
+                </div>
+                <div>
+                    <Typography variant="h6" component="span" style={{ fontSize: '1.2rem', lineHeight: '2rem' }}>
+                        <Wc fontSize="small" /> <Typography variant="body2" component="span" color="textSecondary">Gender:</Typography> {gender}
+                    </Typography>
+                </div>
+                <div className="patientInfoDetail">
+                    <Typography variant="h6" component="span" style={{ fontSize: '1.2rem', lineHeight: '2rem' }}>
+                        <Email fontSize="small" /> <Typography variant="body2" component="span" color="textSecondary">Email:</Typography> {email}
+                    </Typography>
+                </div>
+                <div className="patientInfoDetail">
+                    <Typography variant="h6" component="span" style={{ fontSize: '1.2rem', lineHeight: '2rem' }}>
+                        <Phone fontSize="small" /> <Typography variant="body2" component="span" color="textSecondary">Mobile Number:</Typography> {mobile}
+                    </Typography>
+                </div>
+            </div>
         </Paper>
     );
 }

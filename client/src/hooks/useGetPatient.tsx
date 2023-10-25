@@ -10,7 +10,7 @@ const getPatient = async (patientId: string) => {
 };
 
 const useGetPatient = (patientId: string): UseQueryResult<Patient> => {
-    return useQuery(['patient', patientId], () => getPatient(patientId)).data;
+    return useQuery<Patient>(['patient', patientId], () => getPatient(patientId));
 };
 
 export default useGetPatient;

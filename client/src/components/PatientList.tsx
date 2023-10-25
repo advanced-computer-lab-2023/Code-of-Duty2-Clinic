@@ -52,7 +52,7 @@ import { Typography } from '@mui/material';
                                         key={patient.username}
                                         sx={{ '&:hover': { backgroundColor: 'lightgray', cursor: 'pointer' } }}
                                         onClick={() => {
-                                            window.location.href = `/patient-info/${patient._id}`;
+                                            window.location.href = `/patient/${patient._id}/info`;
                                         }}
                                     >
                                         <TableCell align="center">{patient.username}</TableCell>
