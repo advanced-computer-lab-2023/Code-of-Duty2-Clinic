@@ -24,11 +24,6 @@ import { Typography } from '@mui/material';
             setSearchTerm(event.target.value);
         };
 
-
-        const displayPatientInfo = (username: string) => {
-            window.location.href = `/patient-info/${username}`;
-        };
-
         return (
             <>
                 {filteredPatients && (
@@ -57,7 +52,7 @@ import { Typography } from '@mui/material';
                                         key={patient.username}
                                         sx={{ '&:hover': { backgroundColor: 'lightgray', cursor: 'pointer' } }}
                                         onClick={() => {
-                                            displayPatientInfo(patient.username);
+                                            window.location.href = `/patient-info/${patient._id}`;
                                         }}
                                     >
                                         <TableCell align="center">{patient.username}</TableCell>
