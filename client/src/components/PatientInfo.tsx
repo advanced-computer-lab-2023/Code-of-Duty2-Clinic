@@ -1,32 +1,21 @@
 import { Paper} from '@mui/material';
 import '../css/PatientInfo.css';
-import axios from 'axios';
-import { useEffect, useState} from 'react';
 import { useLocation} from 'react-router-dom';
-import { Patient } from '../types';
-import { config } from '../utils/config';
+import useGetPatient from '../hooks/useGetPatient';
 
 
 export default function PatientInfo() {
     const patientId = useLocation().pathname.split('/')[2];
-    const [patient, setPatient] = useState<Patient>();
+    const { data: patient } = useGetPatient(patientId);
 
-    useEffect(() => {
-        const fetchPatient = async () => {
-             await axios.get(`${config.serverUri}/patients/patient-info/${patientId}`)
-            .then (response => {
-               setPatient(response.data);
-            })
-        };
-        fetchPatient();
-    });
+    if (!patient) return (<div>Loading...</div>);
 
     return (
         <div className="patientInfo">
             <h1 className="patientInfoPageTitle">Patient Info</h1>
             <PatientInfoCard
                 name={patient?.name ?? ''}
-                dob={patient?.dateOfBirth.toString() ?? ''}
+                dob={patient?.dateOfBirth?.toString() ?? ''}
                 email={patient?.email ?? ''}
                 gender={patient?.gender ?? ''}
                 mobile={patient?.mobileNumber ?? ''}

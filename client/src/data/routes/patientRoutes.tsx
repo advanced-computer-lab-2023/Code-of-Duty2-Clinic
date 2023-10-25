@@ -10,8 +10,12 @@ import ViewDoctors from "../../pages/patients/ViewDoctors";
 import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "./Route";
 import { patientId } from "../dummyUsers";
+import PatientList from "../../components/PatientList";
 
-
+export const allPatientsRoute: Route = {
+    path: '/patients',
+    component: <PatientList />
+}
 export const homeRoute: Route = {
     path: `/patient/${patientId}/home`,
     component: <Home />   
@@ -59,6 +63,7 @@ export const patientPrescriptions: Route = {
 }
 
 const routes: Route[] = [
+    allPatientsRoute,
     homeRoute,
     viewAllDoctorsRoute,
     viewDoctorDetailsRoute,

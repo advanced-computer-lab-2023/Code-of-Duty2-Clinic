@@ -8,7 +8,7 @@ import { FormControl, FormLabel } from '@mui/material';
 import { config } from '../utils/config';
 
 const deleteModalStyle = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',

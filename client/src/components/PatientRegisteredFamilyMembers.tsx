@@ -19,7 +19,7 @@ export default function PatientRegisteredFamilyMembers() {
             })
         };
         fetchFamilyMembers();
-    }, []);
+    });
 
     return (
         <>
@@ -34,7 +34,7 @@ export default function PatientRegisteredFamilyMembers() {
     );
 }
 
- function CardGrid ({title, list, primary, secondary, buttonText}: {title: string, primary: string, secondary: string, list: any, buttonText: string}) {
+ function CardGrid ({title, list, primary, secondary, buttonText}: {title: string, primary: string, secondary: string, list: never[], buttonText: string}) {
     return (
         <>
         <div className='gridTitle'>

@@ -10,6 +10,8 @@ import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 const patientRouter = express.Router();
 
+patientRouter.get('/', getAllPatients);
+
 patientRouter.get('/:patientId/doctors', getAllDoctors);
 
 patientRouter.get('/:patientId/doctors/:doctorId', getDoctorById);
