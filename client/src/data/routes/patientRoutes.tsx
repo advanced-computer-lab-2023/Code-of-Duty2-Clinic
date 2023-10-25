@@ -1,4 +1,5 @@
 import PatientInfo from "../../components/PatientInfo";
+import PatientList from "../../components/PatientList";
 import PatientRegisteredFamilyMembers from "../../components/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/AddFamilyMember";
@@ -10,7 +11,7 @@ import ViewDoctors from "../../pages/patients/ViewDoctors";
 import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "./Route";
 import { patientId } from "../dummyUsers";
-import PatientList from "../../components/PatientList";
+
 
 export const allPatientsRoute: Route = {
     path: '/patients',
