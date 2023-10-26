@@ -5,7 +5,7 @@ import Appointment, { IAppointmentModel } from '../../models/appointments/Appoin
 import Doctor from '../../models/doctors/Doctor';
 import { StatusCodes } from 'http-status-codes';
 
-export default async function viewRegisteredPatientDetails(req: Request, res: Response) {
+export default async function getRegisteredPatientDetails(req: Request, res: Response) {
   try {
     const { doctorId, patientId } = req.params; // Extract patientId from request parameters
 

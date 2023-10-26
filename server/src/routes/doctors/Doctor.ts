@@ -5,7 +5,7 @@ import { getAppointmentsWithAllPatients } from '../../controllers/doctors/getAll
 import { getRegisteredPatients } from '../../controllers/doctors/getRegisteredPatients';
 import { getAppointmentDetails } from '../../controllers/doctors/getAppointmentDetails';
 import { getDoctorById } from '../../controllers/patients/getDoctorById';
-import viewRegisteredPatientDetails from '../../controllers/doctors/viewRegisteredPatientDetails';
+import getRegisteredPatientDetails from '../../controllers/doctors/getRegisteredPatientDetails';
 
 const doctorRouter = express.Router();
 
@@ -16,7 +16,7 @@ doctorRouter
 
 .get('/:doctorId/patients', getRegisteredPatients)
 
-.get('/:doctorId/patients/:patientId', viewRegisteredPatientDetails)
+.get('/:doctorId/patients/:patientId', getRegisteredPatientDetails)
 
 .get('/:doctorId/appointments', getAppointmentsWithAllPatients)
 

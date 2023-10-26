@@ -22,28 +22,36 @@ export const getRegisteredPatients = async(req: Request, res: Response) => {
     const patientName  = req.query.patientName || "";
 
     const registeredPatients = await Appointment.aggregate([
-        { $match: { doctorId: new mongoose.Types.ObjectId(doctorId), status: 'completed' } },
-        {
-            $lookup: {
-                from: 'patients',
-                localField: 'patientId',
-                foreignField: '_id',
-                as: 'patient',
-            }
-        },
-        { $match: { ['patient.name']: { $regex: `^${patientName}`, $options: 'i' } } },
-        { $unwind: '$patient' },
-        { 
-            $project: { 
-              _id: 0,
-              id: '$patient._id' ,
-              name: '$patient.name',
-              gender: '$patient.gender',
-              imageUrl: '$patient.imageUrl',
-            } 
-        }
+      { $match: { doctorId: new mongoose.Types.ObjectId(doctorId), status: 'completed' } },
+      {
+          $lookup: {
+              from: 'patients',
+              localField: 'patientId',
+              foreignField: '_id',
+              as: 'patient',
+          }
+      },
+      { $match: { ['patient.name']: { $regex: `^${patientName}`, $options: 'i' } } },
+      { $unwind: '$patient' },
+      { 
+          $group: {
+              _id: '$patient._id',
+              name: { $first: '$patient.name' },
+              gender: { $first: '$patient.gender' },
+              imageUrl: { $first: '$patient.imageUrl' },
+          }
+      },
+      { 
+        $project: { 
+          _id: 0,
+          id: '$_id',
+          name: 1,
+          gender: 1,
+          imageUrl: 1,
+        } 
+      }
     ]);
-
+  
     res.status(StatusCodes.OK).json(registeredPatients);
 
   } catch(error: any) {
