@@ -21,7 +21,7 @@ export default async function getRegisteredPatientDetails(req: Request, res: Res
     }
     const appointment : IAppointmentModel | null = await Appointment.findOne({ patientId, status: 'completed' })
      if(!appointment){
-      res.status(StatusCodes.NOT_FOUND).json({message:'not authorized to view this patient info'})
+      return res.status(StatusCodes.FORBIDDEN).json({message:'not authorized to view this patient info'})
      }
 
     // Find prescriptions associated with this patient
