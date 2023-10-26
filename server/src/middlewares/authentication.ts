@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 
 type AuthenticatedRequest = Request & { userId: string };
 
-export const verifyAccessToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticateUser = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authorization header is missing' });
@@ -17,7 +17,7 @@ export const verifyAccessToken = (req: AuthenticatedRequest, res: Response, next
   }
 
   try {
-    const decodedToken = jwt.verify(accessToken, config.server.accessTokenSecret) as unknown as { userId: string };
+    const decodedToken = jwt.verify(accessToken, config.server.auth.accessTokenSecret) as unknown as { userId: string };
     req.userId = decodedToken.userId;
     next();
   } catch (error: any) {
@@ -27,3 +27,4 @@ export const verifyAccessToken = (req: AuthenticatedRequest, res: Response, next
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token is invalid' });
   }
 };
+

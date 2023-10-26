@@ -6,6 +6,7 @@ import Patient from "../../models/patients/Patient";
 import jwt from 'jsonwebtoken';
 import config from "../../configurations/config";
 import { ROLE } from "../../utils/userRoles";
+import { emailOrPasswordIncorrectErrorMessage } from "../../utils/ErrorMessages";
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -16,13 +17,16 @@ export const login = async (req: Request, res: Response) => {
     try {
         let user = await getAdmin(email, password);
         if(user) {
-            const accessToken = jwt.sign({ userId: user._id, role: ROLE.ADMIN }, config.server.accessTokenSecret, { expiresIn: '15m' });
-            const refreshToken = jwt.sign({ userId: user._id, role: ROLE.ADMIN }, config.server.refreshTokenSecret, { expiresIn: '7d' });
+            const accessToken = jwt.sign({ userId: user._id, role: ROLE.ADMIN }, config.server.auth.accessTokenSecret, { expiresIn: config.server.auth.accessTokenExpirationTime });
+            const refreshToken = jwt.sign({ userId: user._id, role: ROLE.ADMIN }, config.server.auth.refreshTokenSecret, { expiresIn: config.server.auth.refreshTokenExpirationTime });
             return res.status(StatusCodes.OK).json({ accessToken, refreshToken });   
         }
         user = await getPatient(email, password);
-        const accessToken = jwt.sign({ userId: user._id, role: ROLE.PATIENT }, config.server.accessTokenSecret, { expiresIn: '15m' });
-        const refreshToken = jwt.sign({ userId: user._id, role: ROLE.PATIENT }, config.server.refreshTokenSecret, { expiresIn: '7d' });
+        if(! user) {
+            throw new Error(emailOrPasswordIncorrectErrorMessage);
+        }
+        const accessToken = jwt.sign({ userId: user._id, role: ROLE.PATIENT }, config.server.auth.accessTokenSecret, { expiresIn: config.server.auth.accessTokenExpirationTime });
+        const refreshToken = jwt.sign({ userId: user._id, role: ROLE.PATIENT }, config.server.auth.refreshTokenSecret, { expiresIn: config.server.auth.refreshTokenExpirationTime });
         return res.status(StatusCodes.OK).json({ accessToken, refreshToken });   
     } catch(error: any) {
         res.status(StatusCodes.BAD_REQUEST).json(error.message);
@@ -32,11 +36,11 @@ export const login = async (req: Request, res: Response) => {
 const getAdmin = async (email: string, password: string) => {
     const user = await Admin.findOne({ email }).select({ _id: 1, password: 1 }).lean();
     if(! user) {
-        throw new Error('User or password is incorrect');
+        return null;
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if(! isPasswordCorrect) {
-        throw new Error('User or password is incorrect');
+        throw new Error(emailOrPasswordIncorrectErrorMessage);
     }
     return user;
 }
@@ -44,11 +48,11 @@ const getAdmin = async (email: string, password: string) => {
 const getPatient = async (email: string, password: string) => {
     const user = await Patient.findOne({ email }).select({ _id: 1, password: 1 }).lean(); 
     if(! user) {
-        throw new Error('User or password is incorrect');
+        return null;
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if(! isPasswordCorrect) {
-        throw new Error('User or password is incorrect');
+        throw new Error(emailOrPasswordIncorrectErrorMessage);
     }
     return user;   
 }

@@ -13,9 +13,11 @@ export const DoctorRegistrationRequestSchema = new Schema<IDoctorRegistrationReq
     gender: { type: String, required: true, enum: ['male', 'female'] },
     mobileNumber: { type: String, required: true, validate: [isMobileNumber, 'invalid mobile number'] },
     dateOfBirth: { type: Date, required: true },
-    hourlyRate: {type: Number, required: true},
-    affiliation: {type: String, required: true},
-    educationalBackground: {type: String, required: true},
+    hourlyRate: { type: Number, required: true },
+    affiliation: { type: String, required: true },
+    educationalBackground: { type: String, required: true },
+    status: { type: String, enum: ['accepted', 'pending', 'rejected'], default: 'pending', required: true },
+    speciality: { type: String, required: true },
 }, 
 {timestamps: true}
 );

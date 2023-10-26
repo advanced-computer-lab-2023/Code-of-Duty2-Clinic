@@ -57,7 +57,7 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
                 },
                 packageDurationInYears: healthPackage.packageDurationInYears
             }
-            await axios.post(`${config.serverUri}/healthPackages`,data)
+            await axios.post(`${config.serverUri}/admins/health-packages`,data)
             //inefficient
              //fetchHealthPackages()  request fetching from parent
              onSubmit?.(true);
@@ -78,7 +78,7 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
                 packageDurationInYears: healthPackage.packageDurationInYears
             }
             console.log(data)
-           console.log(await axios.put(`${config.serverUri}/healthPackages/${healthPackage._id}`,data).then(response =>{console.log(response.status) }))
+           console.log(await axios.put(`${config.serverUri}/admins/health-packages/${healthPackage._id}`,data).then(response =>{console.log(response.status) }))
            
            onSubmit?.(true); 
             setOpenEditingModal(false);

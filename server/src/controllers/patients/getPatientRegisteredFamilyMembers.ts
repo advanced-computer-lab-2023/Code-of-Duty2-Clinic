@@ -6,7 +6,7 @@ import { IRegisteredFamilyMember } from '../../models/patients/interfaces/IRegis
 export const getPatientRegisteredFamilyMembers = async (req: Request, res: Response) => {
   const id = req.params.patientId;
   try {
-    const patient = await PatientModel.findById(id);
+    const patient = await PatientModel.findById(id).select('registeredFamilyMembers');
     if (!patient) {
       return res.status(StatusCodes.NOT_FOUND).json({ error: 'Patient not found' });
     }
@@ -14,7 +14,7 @@ export const getPatientRegisteredFamilyMembers = async (req: Request, res: Respo
     const registeredFamilyMembers: IRegisteredFamilyMember[] = patient.registeredFamilyMembers || [];
     const members = [];
 
-
+    console.log(registeredFamilyMembers)
     for (const familyMember of registeredFamilyMembers) {
       const memberId = familyMember.id;
       const registeredFamilyMember = await PatientModel.findById(memberId);

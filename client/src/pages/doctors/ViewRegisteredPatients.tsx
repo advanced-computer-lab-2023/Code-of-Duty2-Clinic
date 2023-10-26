@@ -25,9 +25,10 @@ const PatientInfo = styled(Typography)({
 
 
 interface PatientInfo {
-    patientId: string;
+    id: string;
     name: string;
     gender: string;
+    imageUrl: string;
 }
 
 const ViewRegisteredPatients = () => {
@@ -61,7 +62,7 @@ const ViewRegisteredPatients = () => {
             setFilteredPatients(undefined);
             const response = await axios.get(`${config.serverUri}/doctors/${doctorId}/patients`, {
               params: {
-                name: patientName,
+                patientName,
               }
             });
             setFilteredPatients(response.data);
@@ -73,7 +74,7 @@ const ViewRegisteredPatients = () => {
     return (
         <Box sx={{ padding: 4 }}>
             <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: 2 }}>
-              View Doctors
+              View My Patients
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
               <TextField label="Patient Name" value={patientName} name='name' onChange={handleChangePatientName} sx={{ marginRight: 2 }} />
@@ -90,9 +91,9 @@ const ViewRegisteredPatients = () => {
                     ) : 
                     (
                     filteredPatients.map((patient) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={patient.patientId}>
-                            <PatientItem component={Link} to={`/doctor/${doctorId}/patient/${patient.patientId}`}>
-                                {/* <DoctorImage image={doctor.image} /> */}
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={patient.id}>
+                            <PatientItem component={Link} to={`/doctor/${doctorId}/patient/${patient.id}`}>
+                                <PatientImage image={patient.imageUrl || ""} />
                                 <CardContent>
                                     <PatientInfo variant="subtitle1">Name: {patient.name}</PatientInfo>
                                     <PatientInfo variant="subtitle2">Gender: {patient.gender}</PatientInfo>

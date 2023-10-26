@@ -2,19 +2,26 @@ import { Request, Response } from 'express';
 import PatientModel, { IPatientModel } from '../../models/patients/Patient';
 import PrescriptionModel, { IPrescriptionModel } from '../../models/prescriptions/Prescription';
 import Appointment, { IAppointmentModel } from '../../models/appointments/Appointment';
+import Doctor from '../../models/doctors/Doctor';
+import { StatusCodes } from 'http-status-codes';
 
-export default async function viewPatientHealthRecords(req: Request, res: Response) {
+export default async function viewRegisteredPatientDetails(req: Request, res: Response) {
   try {
-    const patientId = req.params.patientId; // Extract patientId from request parameters
+    const { doctorId, patientId } = req.params; // Extract patientId from request parameters
 
-    // Find the patient by ID
-    const patient: IPatientModel | null = await PatientModel.findById(patientId);
-    if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: 'Doctor not found' });
     }
-    const appointments : IAppointmentModel | null = await Appointment.findOne({patientId:patientId})
-     if(!appointments){
-      res.status(404).json({message:'not authorized to view this patient info'})
+
+    const patient: IPatientModel | null = await PatientModel.findById(patientId);
+
+    if (!patient) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: 'Patient not found' });
+    }
+    const appointment : IAppointmentModel | null = await Appointment.findOne({ patientId, status: 'completed' })
+     if(!appointment){
+      res.status(StatusCodes.NOT_FOUND).json({message:'not authorized to view this patient info'})
      }
 
     // Find prescriptions associated with this patient

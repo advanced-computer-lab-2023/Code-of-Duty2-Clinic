@@ -5,10 +5,11 @@ import { useLocation } from 'react-router-dom';
 const ViewRegisteredPatientData: React.FC = () => {
   const [patientData, setPatientData] = useState<any>(null);
 
+  const doctorId = useLocation().pathname.split('/')[2];
   const patientId = useLocation().pathname.split('/')[4];
   const fetchPatientData = async () => {
     try {
-      const response = await fetch(`${config.serverUri}/doctors/patients/${patientId}`);
+      const response = await fetch(`${config.serverUri}/doctors/${doctorId}/patients/${patientId}`);
       if (response.ok) {
         const data = await response.json();
         setPatientData(data);

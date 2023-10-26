@@ -12,13 +12,11 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
     const allowedQueryParameters = ['status', 'appointmentTime', 'isTimeSet', 'doctorName'];
 
     if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
-        res.status(StatusCodes.BAD_REQUEST).json("only doctorName, appointment status or time slot must be provided");
-        return;
+        return res.status(StatusCodes.BAD_REQUEST).json("only doctorName, appointment status or time slot must be provided");
     }
 
     if(req.query.appointmentTime && !req.query.isTimeSet || req.query.isTimeSet && !req.query.appointmentTime) {
-        res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and appointmentTime must be provided together");
-        return;
+        return res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and appointmentTime must be provided together");
     }
 
     const patient = await Patient.findById(patientId);
@@ -47,6 +45,8 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
                     doctor: {
                         id: '$doctor._id',
                         name: '$doctor.name',
+                        imageUrl: '$doctor.imageUrl',
+                        speciality: '$doctor.speciality',
                     }
                 }
             }
@@ -59,7 +59,9 @@ export const getAppointmentsWithAllDoctors = async (req: Request, res: Response)
 }
 
 function getMatchingAppointmentsFields(urlQuery: any) {
-    const { appointmentTime, isTimeSet, status, doctorName } = urlQuery;
+    const { appointmentTime, status, doctorName } = urlQuery;
+    const isTimeSet = urlQuery.isTimeSet === 'true';
+
     let searchQuery: {
         status?: string;
         'doctor.name'?: { $regex: string; $options: string};
@@ -77,7 +79,7 @@ function getMatchingAppointmentsFields(urlQuery: any) {
         const requestedStartDate = new Date(appointmentTime);
         const requestedEndDate = new Date(appointmentTime);
 
-        if(isTimeSet === true) {
+        if(isTimeSet) {
             requestedStartDate.setSeconds(59, 999)
             requestedEndDate.setSeconds(0, 0);
         }

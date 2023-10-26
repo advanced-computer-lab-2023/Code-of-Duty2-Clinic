@@ -4,7 +4,7 @@ import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
 
 import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
-import PatientSearch from "../../pages/doctors/PatientSearch";
+import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "./Route";
 import { doctorId } from "../dummyUsers";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";

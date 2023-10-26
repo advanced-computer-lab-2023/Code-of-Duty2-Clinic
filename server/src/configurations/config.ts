@@ -6,8 +6,12 @@ dotenv.config();
 const MONGO_URI = process.env.MONGO_URI || "" ;
 
 const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 8080;
+
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "";
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "";
+const ACCESS_TOKEN_EXPIRATION_TIME = process.env.ACCESS_TOKEN_EXPIRATION_TIME || "30s";
+const REFRESH_TOKEN_EXPIRATION_TIME = process.env.REFRESH_TOKEN_EXPIRATION_TIME || "1m";
+
 const FRONT_END_URL = process.env.FRONT_END_URL || "http://localhost:5173";
 const corsOptions: cors.CorsOptions = {};
 
@@ -19,8 +23,12 @@ const config = {
     server: {
         port: SERVER_PORT,
         corsOptions,
-        accessTokenSecret: ACCESS_TOKEN_SECRET,
-        refreshTokenSecret: REFRESH_TOKEN_SECRET,
+        auth: {
+            accessTokenSecret: ACCESS_TOKEN_SECRET,
+            accessTokenExpirationTime: ACCESS_TOKEN_EXPIRATION_TIME,
+            refreshTokenSecret: REFRESH_TOKEN_SECRET,
+            refreshTokenExpirationTime: REFRESH_TOKEN_EXPIRATION_TIME
+        }
     },
     FRONT_END_URL: FRONT_END_URL
 };

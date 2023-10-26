@@ -40,7 +40,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      await fetch(`${config.serverUri}/doctors`, {
+      await fetch(`${config.serverUri}/users/doctor-registration`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

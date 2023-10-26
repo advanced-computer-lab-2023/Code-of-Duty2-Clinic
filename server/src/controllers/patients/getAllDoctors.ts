@@ -12,13 +12,11 @@ export const getAllDoctors = async (req: Request, res: Response) => {
   const allowedQueryParameters = ['name', 'speciality', 'availabilityTime', 'isTimeSet'];
 
   if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
-    res.status(StatusCodes.BAD_REQUEST).json("only doctor name, speciality or time slot must be provided");
-    return;
+    return res.status(StatusCodes.BAD_REQUEST).json("only doctor name, speciality or time slot must be provided");
   }
 
   if(req.query.availabilityTime && !req.query.isTimeSet || req.query.isTimeSet && !req.query.availabilityTime) {
-    res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and availabilityTime must be provided together");
-    return;
+    return res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and availabilityTime must be provided together");
   }
 
   const patientId = req.params.patientId;
@@ -38,7 +36,7 @@ export const getAllDoctors = async (req: Request, res: Response) => {
         contractStatus: 'accepted', 
         ...searchQuery,
       })
-      .select({ _id: 1, name: 1, hourlyRate: 1, speciality: 1});
+      .select({ _id: 1, name: 1, hourlyRate: 1, speciality: 1, imageUrl: 1});
 
     const doctorsRequiredInfo = await getDoctorRequiredInfo(allDoctors, packageDetails);
 

@@ -3,3 +3,5 @@ export enum ROLE {
     DOCTOR,
     ADMIN,
 }
+
+export const applicationRoles = ['admins', 'doctors', 'patients']

@@ -70,7 +70,7 @@ const HealthPackagesPage:React.FC=()=>{
 
 // inefficient cause on every change we get all packages from databse (solution: push and pop from list)
    function fetchHealthPackages(){
-        axios.get(`${config.serverUri}/healthPackages`).then(response =>{setHealthPackages(response.data) })
+        axios.get(`${config.serverUri}/admins/health-packages`).then(response =>{setHealthPackages(response.data) })
 
     }
    const handleCallback = (fetch:boolean):void =>{
@@ -101,7 +101,7 @@ const HealthPackagesPage:React.FC=()=>{
 
     const deleteHealthPackage =async ()=>{
         
-        await axios.delete(`${config.serverUri}/healthPackages/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
+        await axios.delete(`${config.serverUri}/admins/health-packages/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
         //inefficient
         fetchHealthPackages()
         setOpenDeletingModal(false);

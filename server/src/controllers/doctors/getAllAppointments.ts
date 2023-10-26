@@ -12,20 +12,17 @@ export const getAppointmentsWithAllPatients = async (req: Request, res: Response
     const allowedQueryParameters = ['status', 'appointmentTime', 'isTimeSet', 'patientName'];
 
     if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
-        res.status(StatusCodes.BAD_REQUEST).json("only patient name, appointment status or time slot must be provided");
-        return;
+        return res.status(StatusCodes.BAD_REQUEST).json("only patient name, appointment status or time slot must be provided");
     }
 
     if(req.query.appointmentTime && !req.query.isTimeSet || req.query.isTimeSet && !req.query.appointmentTime) {
-        res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and appointmentTime must be provided together");
-        return;
+        return res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and appointmentTime must be provided together");
     }
     
-    const doctor = await Doctor.findById(doctorId);
-    if(!doctor) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Doctor', doctorId)});
+    try {        
+        const doctor = await Doctor.findById(doctorId);
+        if(!doctor) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Doctor', doctorId)});
 
-    try {
-        
         const searchQuery = getMatchingAppointmentsFields(req.query); 
 
         const appointments = await Appointment.aggregate([
@@ -49,6 +46,7 @@ export const getAppointmentsWithAllPatients = async (req: Request, res: Response
                     patient: {
                         id: '$patient._id' ,
                         name: '$patient.name',
+                        imageUrl: '$patient.imageUrl',
                     },
                 } 
             }
@@ -64,7 +62,8 @@ export const getAppointmentsWithAllPatients = async (req: Request, res: Response
 
 function getMatchingAppointmentsFields(urlQuery: any) {
 
-    const { appointmentTime, isTimeSet, status, patientName } = urlQuery;
+    const { appointmentTime, status, patientName } = urlQuery;
+    const isTimeSet = urlQuery.isTimeSet === 'true';
 
     let searchQuery: {
         status?: string;
@@ -84,7 +83,7 @@ function getMatchingAppointmentsFields(urlQuery: any) {
         const requestedStartDate = new Date(appointmentTime);
         const requestedEndDate = new Date(appointmentTime);
 
-        if(isTimeSet === true) {
+        if(isTimeSet) {
             requestedStartDate.setSeconds(59, 999)
             requestedEndDate.setSeconds(0, 0);
         }

@@ -88,7 +88,7 @@ const handlePackageStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
     try {
       // Send the patient registration data to the backend API
-      const response = await fetch(`${config.serverUri}/patients/register`, {
+      const response = await fetch(`${config.serverUri}/users/registration`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

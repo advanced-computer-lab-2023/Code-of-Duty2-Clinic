@@ -82,8 +82,10 @@ const deleteModalStyle = {
    
     const patientId = useLocation().pathname.split('/')[2];
 
+    console.log(prescriptions)
+
     useEffect(()=>{
-        axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{
+        axios.get(`${config.serverUri}/patients/${patientId}/prescriptions`).then((response:AxiosResponse)=>{
             setPrescriptions(response.data)
         })
         console.log(prescriptions)
@@ -141,7 +143,7 @@ const deleteModalStyle = {
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
         if(searchOptions?.status&&searchOptions?.status!='none')data.status = searchOptions.status
-        const searchResults:[]=await (await axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`,{params:data})).data
+        const searchResults:[]=await (await axios.get(`${config.serverUri}/patients/${patientId}/prescriptions`,{params:data})).data
         setPrescriptions(searchResults)
     }
     return (

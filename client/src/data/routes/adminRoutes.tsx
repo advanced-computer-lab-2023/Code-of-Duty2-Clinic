@@ -16,7 +16,7 @@ export const userlistRoute: Route = {
 }
 
 export const viewDoctorRequestsRoute: Route = {
-    path: '/admins/doctor-requests',
+    path: '/admin/doctor-requests',
     component: <DoctorRegistrationRequests />
 }
 

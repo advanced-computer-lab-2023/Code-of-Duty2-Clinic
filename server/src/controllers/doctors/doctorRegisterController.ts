@@ -1,17 +1,13 @@
-import DoctorRegistrationRequest, { IDoctorRegistrationRequestModel } from '../../models/doctors/DoctorRegistrationRequest';
-const bcrypt = require('bcrypt');
-const express = require('express');
+import DoctorRegistrationRequest from '../../models/doctors/DoctorRegistrationRequest';
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { Mongoose } from 'mongoose';
 
 const registerAsDoctor = async (req: Request, res: Response) => {
     const {username, password, email, name, gender, mobileNumber, dateOfBirth, hourlyRate, affiliation, educationalBackground} = req.body;
     try{
         
-        // Check if the email & username already mwgoodeen
         const existingDoctorRequestByEmail = await DoctorRegistrationRequest.findOne({ email });
         const existingDoctorRequestByUsername = await DoctorRegistrationRequest.findOne({ username });
-        // console.log(existingDoctorRequestByEmail, existingDoctorRequestByUsername);
         
         if (existingDoctorRequestByEmail) {
             return res.status(400).send({message: 'Email already exists. Please use a different email.'});
@@ -47,9 +43,7 @@ const registerAsDoctor = async (req: Request, res: Response) => {
         await newDoctorRegistrationRequest.save();
 
         res.status(201).send('Doctor Registration Request Sent Successfully!' );
-
-
-    }catch(err){
+    } catch(err){
         console.log(err);
         
         res.status(500).send('An error occurred during registration');
@@ -58,5 +52,4 @@ const registerAsDoctor = async (req: Request, res: Response) => {
 
 }
 
-// module.exports = {registerAsDoctor};
 export {registerAsDoctor};

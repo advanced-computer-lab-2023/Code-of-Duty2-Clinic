@@ -11,7 +11,7 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   email:{type:String,validate: [ isEmail, 'invalid email' ], unique: true},
   name: { type: String, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
-  mobileNumber: { type: String, required: true, validate: [isMobileNumber, 'invalid mobile number'] },
+  mobileNumber: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   hourlyRate: {type: Number, required: true},
   affiliation: {type: String, required: true},
@@ -20,12 +20,20 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   availableSlots: [
     {startTime: Date, endTime: Date}
   ],
-  identification: Buffer,
-  medicalLicense: Buffer,
-  medicalDegree: Buffer,
-  wallet: {amount: Number},
-  contract: Buffer,
-  contractStatus: {type: String, enum: ['pending', 'accepted', 'rejected'], required: true}
+  imageUrl: String,
+  identificationUrl: String,
+  medicalLicenseUrl: String,
+  medicalDegreeUrl: String,
+  wallet: {
+    type: {
+      amount: Number,
+      currency: String,
+      pin: String,
+    },
+    select: false,  
+  },
+  contractUrl: String,
+  contractStatus: { type: String, enum: ['pending', 'accepted', 'rejected'], required: true, default: 'accepted', select: false },
 }, 
 {timestamps: true}
 );
