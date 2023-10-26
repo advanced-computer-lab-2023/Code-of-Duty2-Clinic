@@ -30,13 +30,13 @@ export default async function getRegisteredPatientDetails(req: Request, res: Res
     });
 
     // You can extract and return specific health records or patient information here
-    return res.status(200).json({
+    return res.status(StatusCodes.OK).json({
       patientInfo: patient,
       prescriptions: prescriptions,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Server error' });
   }
 }
 

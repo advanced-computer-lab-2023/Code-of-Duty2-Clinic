@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import Patient from '../../models/patients/Patient';
 import Doctor from '../../models/doctors/Doctor';
 import Admin from '../../models/admins/Admin';
+import { StatusCodes } from 'http-status-codes';
 
 async function viewUsersByType(req: Request, res: Response) {
   try {
@@ -17,14 +17,14 @@ async function viewUsersByType(req: Request, res: Response) {
     } else if (Type === 'Admin') {
       users = await Admin.find(); // Fetch all admins
     } else {
-      return res.status(400).json({ message: 'Invalid user type' });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid user type' });
     }
 
     // Return the list of users based on their type
-    res.status(200).json(users);
+    res.status(StatusCodes.OK).json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Server error' });
   }
 }
 

@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import PatientModel from '../../models/patients/Patient';
 import DoctorModel from '../../models/doctors/Doctor';
 import AdminModel from '../../models/admins/Admin';
+import { StatusCodes } from 'http-status-codes';
 
 async function removeUser(req: Request, res: Response) {
   try {
@@ -16,7 +17,7 @@ async function removeUser(req: Request, res: Response) {
     else{
        user = (await AdminModel.findOne({ username: username }));}
       if (!user) {
-        return res.status(404).json({ message: 'User not found', username: username });
+        return res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found', username: username });
       }
 
     if (user instanceof PatientModel) {
@@ -27,10 +28,10 @@ async function removeUser(req: Request, res: Response) {
       await AdminModel.findByIdAndDelete(user._id);
     }
 
-    res.status(200).json({ message: 'User removed successfully' });
+    res.status(StatusCodes.OK).json({ message: 'User removed successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Server error' });
   }
 }
 

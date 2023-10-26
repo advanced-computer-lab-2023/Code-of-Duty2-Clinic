@@ -5,6 +5,7 @@ import Doctor from '../../models/doctors/Doctor';
 import Medicine from '../../models/medicines/Medicine';
 import { ObjectId } from 'mongoose';
 import checkUpdateParams from '../../utils/attributeExistanceChecker'
+import { StatusCodes } from 'http-status-codes';
 
 export const getPatientPrescriptions= async (req:Request, res:Response)=>{
     try{
@@ -13,7 +14,7 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
         const patientId = req.params.patientId;
         const patient = await Patient.findById(patientId);
         if(!patient) {
-            return res.status(400).json({error:'No such patient'});
+            return res.status(StatusCodes.BAD_REQUEST).json({error:'No such patient'});
         }
     
         const patientName = patient?.name;
@@ -21,7 +22,7 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
     
         //check params
         let updateParams:any= {...req.query}
-        if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(400).json({error:"Invalid Params"})
+        if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(StatusCodes.BAD_REQUEST).json({error:"Invalid Params"})
         delete updateParams['doctorName']
     
         //Date search range 
@@ -37,7 +38,7 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
 
         //return if empty
         if(!prescriptions || prescriptions.length === 0) {
-            return res.status(200).json([]);
+            return res.status(StatusCodes.OK).json([]);
         }
     
          //Join doctor and medicines
@@ -47,7 +48,7 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
         for (let prescription of prescriptions) {
             const doctor = await Doctor.findById(prescription.doctorId);
             if(!doctor){
-               return res.status(200).json([]);
+               return res.status(StatusCodes.OK).json([]);
             }
             const name= req.query?.doctorName as string
             //check doctor name
@@ -81,10 +82,10 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
             prescriptionsWithNames.push(prescriptionWithName);
         }
     
-        return res.status(200).json(prescriptionsWithNames);
+        return res.status(StatusCodes.OK).json(prescriptionsWithNames);
     
     }catch(err){
-        res.status(400).send(err)
+        res.status(StatusCodes.BAD_REQUEST).send(err)
     }
 
 }

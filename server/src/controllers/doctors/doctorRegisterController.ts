@@ -1,6 +1,7 @@
 import DoctorRegistrationRequest from '../../models/doctors/DoctorRegistrationRequest';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 const registerAsDoctor = async (req: Request, res: Response) => {
     const {username, password, email, name, gender, mobileNumber, dateOfBirth, hourlyRate, affiliation, educationalBackground} = req.body;
@@ -10,18 +11,18 @@ const registerAsDoctor = async (req: Request, res: Response) => {
         const existingDoctorRequestByUsername = await DoctorRegistrationRequest.findOne({ username });
         
         if (existingDoctorRequestByEmail) {
-            return res.status(400).send({message: 'Email already exists. Please use a different email.'});
+            return res.status(StatusCodes.BAD_REQUEST).send({message: 'Email already exists. Please use a different email.'});
         }
         
         if (existingDoctorRequestByUsername) {
-            return res.status(400).send({message: 'Username already exists. Please choose a different username.'});
+            return res.status(StatusCodes.BAD_REQUEST).send({message: 'Username already exists. Please choose a different username.'});
         }
 
         const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         // Validate the password against the regex
         if (!strongPasswordRegex.test(password)) {
-            return res.status(400).send({message: 'Password must be strong (min 8 characters, uppercase, lowercase, number, special character).'});
+            return res.status(StatusCodes.BAD_REQUEST).send({message: 'Password must be strong (min 8 characters, uppercase, lowercase, number, special character).'});
         }
 
         const saltRounds = 10; // Complexity of a single bycrypt hash
@@ -42,14 +43,12 @@ const registerAsDoctor = async (req: Request, res: Response) => {
         
         await newDoctorRegistrationRequest.save();
 
-        res.status(201).send('Doctor Registration Request Sent Successfully!' );
+        res.status(StatusCodes.CREATED).send('Doctor Registration Request Sent Successfully!' );
     } catch(err){
         console.log(err);
         
-        res.status(500).send('An error occurred during registration');
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('An error occurred during registration');
     }
-
-
 }
 
 export {registerAsDoctor};

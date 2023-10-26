@@ -19,7 +19,7 @@ const PatientSearch = () => {
         },
       });
 
-      if (response.status === 200) {
+      if (response.ok) {
         const data = await response.json();
         setPatientData(data);
         setError(null); // Clear any previous error messages

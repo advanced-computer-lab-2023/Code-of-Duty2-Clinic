@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import HealthPackage from "../../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
+import { StatusCodes } from "http-status-codes";
 const  HealthPackageAttributes = ['name','amountToPay','discounts','packageDurationInYears']
 const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 
@@ -28,7 +29,7 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
 
             //if the id is not found 
             if(!prevPackage){
-                return res.status(200).send("Health Package not found")
+                return res.status(StatusCodes.OK).send("Health Package not found")
             
             }
            
@@ -52,13 +53,13 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
         }catch(err){
             if(err instanceof mongoose.Error.CastError)
                 return res.send("Health Package not found")
-            return res.status(400).send(err)
+            return res.status(StatusCodes.BAD_REQUEST).send(err)
         }
         
     }
         
     else{
-        res.sendStatus(400)
+        res.sendStatus(StatusCodes.BAD_REQUEST)
     }
     
 }
