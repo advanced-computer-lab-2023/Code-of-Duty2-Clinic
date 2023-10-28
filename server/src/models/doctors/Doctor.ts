@@ -24,10 +24,9 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   medicalDegree: Buffer,
   wallet: {amount: Number},
   contract: Buffer,
-  contractStatus: {type: String, enum: ['pending', 'accepted', 'rejected'], required: true}
-}, 
+  contractStatus: {type: String, enum: ['pending', 'accepted', 'rejected'], required: true,default: 'accepted'}
+},
 {timestamps: true}
 );
-
 
 export default mongoose.model<IDoctorModel>('Doctor', DoctorSchema);

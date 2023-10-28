@@ -15,6 +15,9 @@ export const DoctorRegistrationRequestSchema = new Schema<IDoctorRegistrationReq
     hourlyRate: {type: Number, required: true},
     affiliation: {type: String, required: true},
     educationalBackground: {type: String, required: true},
+    status: { type: String, required: true, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+    speciality: {type: String, required: true}
+    
 }, 
 {timestamps: true}
 );
