@@ -1,95 +1,42 @@
-import { Request, Response } from 'express';
-import Prescription from '../../models/prescriptions/Prescription';
-import Patient from '../../models/patients/Patient';
-import Doctor from '../../models/doctors/Doctor';
-import Medicine from '../../models/medicines/Medicine';
-import { ObjectId } from 'mongoose';
-import checkUpdateParams from '../../utils/attributeExistanceChecker'
-import { StatusCodes } from 'http-status-codes';
+import mongoose from "mongoose";
+import HealthPackage from "../../models/health_packages/HealthPackage";
+import { Request,Response } from "express";
+const  HEALTH_PACKAGE_ATTRIBUTES = ['name','amountToPay','discounts','packageDurationInYears']
+const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 
-export const getPatientPrescriptions= async (req:Request, res:Response)=>{
-    try{
-        const allowedUpdateParams =['updatedAt','doctorName','date','status']
-        //join patient
-        const patientId = req.params.patientId;
-        const patient = await Patient.findById(patientId);
-        if(!patient) {
-            return res.status(StatusCodes.BAD_REQUEST).json({error:'No such patient'});
-        }
-    
-        const patientName = patient?.name;
-    
-    
-        //check params
-        let updateParams:any= {...req.query}
-        if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(StatusCodes.BAD_REQUEST).json({error:"Invalid Params"})
-        delete updateParams['doctorName']
-    
-        //Date search range 
-        if(req.query.updatedAt){
-            const startDate = new Date(updateParams.updatedAt);
-            const endDate = new Date(updateParams.updatedAt);
-            endDate.setDate(endDate.getDate() + 1); // add one day to get the end of the day
-            updateParams.updatedAt = { $gte: startDate, $lt: endDate} 
-        }
-        
-        //find prescriptions
-        let prescriptions = await Prescription.find({patientId:patientId,...updateParams});
 
-        //return if empty
-        if(!prescriptions || prescriptions.length === 0) {
-            return res.status(StatusCodes.OK).json([]);
-        }
-    
-         //Join doctor and medicines
-        const prescriptionsWithNames: any[]= [];
-        const prescriptionsRes = [];
-       
-        for (let prescription of prescriptions) {
-            const doctor = await Doctor.findById(prescription.doctorId);
-            if(!doctor){
-               return res.status(StatusCodes.OK).json([]);
-            }
-            const name= req.query?.doctorName as string
-            //check doctor name
-            if(req.query?.doctorName&&req.query.doctorName&&(!doctor.name.toLowerCase().includes(name.toLowerCase())))continue;
-            
-           
-            const doctorName = doctor.name; 
-
-            //Join medicines
-            const medicines:{name?:string,price?:number,_id?:ObjectId,dosage?:string}[] =[]
-            for(let medicine of prescription.medicines){
-                let fetchedMedicine  = await Medicine.findById(medicine.medicineId).select({ name: 1, price: 1,_id:1})
-
-                const responseMedicine:{name?:string,price?:number,_id:ObjectId,dosage?:string}={
-                    _id:fetchedMedicine?._id,
-                    name:fetchedMedicine?.name,
-                    dosage:medicine.dosage,
-                    price:fetchedMedicine?.price
-                }
-               
-                if(fetchedMedicine)
-                    medicines.push(responseMedicine)
-            }
-            //Generate prescription    
-            const prescriptionWithName = {
-                ...prescription.toJSON(),
-                ...{doctorName: doctorName, patientName: patientName},
-                medicines
-            }
-
-            prescriptionsWithNames.push(prescriptionWithName);
-        }
-    
-        return res.status(StatusCodes.OK).json(prescriptionsWithNames);
-    
-    }catch(err){
-        res.status(StatusCodes.BAD_REQUEST).send(err)
-    }
-
+//helps checking for attributes existance 
+function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
+    return  superSet.every((attribute)=> subSet.includes(attribute))        
 }
 
 
+export const updateHealthPackage = async (req:Request,res:Response)=>{
 
+    //Get attributes for validation
+    const requestAttributes = Object.keys(req.body)
+    const requestDiscountAttributes :string[]= req.body.discounts?Object.keys(req.body.discounts):[]
 
+    //Check if valid
+    let validAttributes = checkIfIncludes(requestAttributes,HEALTH_PACKAGE_ATTRIBUTES) && checkIfIncludes(requestDiscountAttributes,DISCOUNT_ATTRIBUTES)
+    validAttributes= validAttributes && requestAttributes.length <= HEALTH_PACKAGE_ATTRIBUTES.length && requestDiscountAttributes.length <= DISCOUNT_ATTRIBUTES.length 
+
+    if(!validAttributes )   
+        res.sendStatus(400)
+    
+    try{
+        const _id = req.params.id;
+
+        await HealthPackage.updateOne({_id},{$set:req.body},{runValidators: true})
+
+        res.status(200).send("Updated Successfuly")
+    
+    }catch(err:any){
+
+        if(err instanceof mongoose.Error.CastError)
+            return res.send("Health Package not found")
+
+        return res.status(400).send(err.message)
+    }          
+
+}
