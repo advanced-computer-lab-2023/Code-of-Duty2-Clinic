@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import Admin from "../../models/admins/Admin";
+import Admin, { IAdminModel } from "../../models/admins/Admin";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from 'bcrypt';
-import Patient from "../../models/patients/Patient";
+import Patient, { IPatientModel } from "../../models/patients/Patient";
 import jwt from 'jsonwebtoken';
 import config from "../../configurations/config";
 import { ROLE } from "../../utils/userRoles";
 import { emailOrPasswordIncorrectErrorMessage } from "../../utils/ErrorMessages";
+import { findAdminByUsername } from "../../services/admins";
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -15,8 +16,11 @@ export const login = async (req: Request, res: Response) => {
     }
 
     try {
-        let user = await getAdmin(email, password);
+        let user: IAdminModel | IPatientModel | null;
+        
+        user = await findAdminByUsername(email);
         if(user) {
+            const isPasswordCorrect = await user.verifyPassword(password);
             const accessToken = jwt.sign({ userId: user._id, role: ROLE.ADMIN }, config.server.auth.accessTokenSecret, { expiresIn: config.server.auth.accessTokenExpirationTime });
             const refreshToken = jwt.sign({ userId: user._id, role: ROLE.ADMIN }, config.server.auth.refreshTokenSecret, { expiresIn: config.server.auth.refreshTokenExpirationTime });
             return res.status(StatusCodes.OK).json({ accessToken, refreshToken });   

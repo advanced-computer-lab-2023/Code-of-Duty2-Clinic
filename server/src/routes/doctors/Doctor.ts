@@ -6,8 +6,14 @@ import { getRegisteredPatients } from '../../controllers/doctors/getRegisteredPa
 import { getAppointmentDetails } from '../../controllers/doctors/getAppointmentDetails';
 import { getDoctorById } from '../../controllers/patients/getDoctorById';
 import getRegisteredPatientDetails from '../../controllers/doctors/getRegisteredPatientDetails';
+import { ROLE } from '../../utils/userRoles';
+import { authorizeUser } from '../../middlewares/authorization';
+import { authenticateUser } from '../../middlewares/authentication';
 
 const doctorRouter = express.Router();
+
+doctorRouter.use(authenticateUser);
+doctorRouter.use(authorizeUser(ROLE.DOCTOR));
 
 doctorRouter
 .patch('/:doctorId/account', updateDoctor)

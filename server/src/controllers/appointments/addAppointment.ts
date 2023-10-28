@@ -1,5 +1,4 @@
-import express, { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Appointment from '../../models/appointments/Appointment';
 export const addAppointment = async (req: Request, res: Response) => {

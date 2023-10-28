@@ -9,9 +9,9 @@ export const HealthPackageSchema = new Schema<IHealthPackageModel>({
   name: { type: String, required: true, unique: true },
   amountToPay: { type: Number, required: true },
   discounts:{
-    gainedDoctorSessionDiscount: {type:Number,min: 0, max: 1,required: true},
-    gainedPharamcyMedicinesDiscount:{type:Number,min: 0, max: 1,required: true},
-    gainedFamilyMembersDiscount: {type:Number,min: 0, max: 1,required: true}
+    gainedDoctorSessionDiscount: { type: Number, min: 0, max: 1, required: true },
+    gainedPharamcyMedicinesDiscount: { type: Number, min: 0, max: 1, required: true },
+    gainedFamilyMembersDiscount: { type: Number, min: 0, max: 1, required: true }
   },
   packageDurationInYears:{type:Number, required:true}
 });

@@ -8,7 +8,13 @@ import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { authenticateUser } from "../../middlewares/authentication";
+import { authorizeUser } from "../../middlewares/authorization";
+import { ROLE } from "../../utils/userRoles";
 const patientRouter = express.Router();
+
+patientRouter.use(authenticateUser);
+patientRouter.use(authorizeUser(ROLE.PATIENT));
 
 patientRouter
 .get('/:patientId/doctors', getAllDoctors)

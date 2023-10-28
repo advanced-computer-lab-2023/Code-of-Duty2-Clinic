@@ -5,10 +5,12 @@ import { ROLE } from '../utils/userRoles';
 type AuthorizedRequest = Request & { userId: string, userRole: ROLE }
 
 export const authorizeUser = (role: ROLE) => {
-  return (req: AuthorizedRequest, res: Response, next: NextFunction) => {
+  return (req: any, res: Response, next: NextFunction): void => {
     if (!req.userRole || role !== req.userRole) {
-      return res.status(StatusCodes.FORBIDDEN).json({ message: 'You are not authorized to access this resource' });
+      res.status(StatusCodes.FORBIDDEN).json({ message: 'You are not authorized to access this resource' });
+      return;
     }
+    console.log('Authorized')
     next();
   };
 };

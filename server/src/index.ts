@@ -8,6 +8,8 @@ import bodyParser from 'body-parser';
 import { authorizeUser } from './middlewares/authorization';
 import { ROLE, applicationRoles } from './utils/userRoles';
 import { authenticateUser } from './middlewares/authentication';
+import patientRouter from './routes/patients/Patient';
+import adminRouter from './routes/admins/Admin';
 
 const app = express();
 
@@ -43,29 +45,6 @@ function useAllAppRoutes() {
 
 function useFileRouter(innerRouteFolder: string, routeFileName: string, applicationEntities: string) {
     const router = require(path.join(innerRouteFolder, routeFileName)).default;
-    const isRouterProtected = applicationRoles.includes(applicationEntities);
-    if (isRouterProtected) {
-        // protectRoute(applicationEntities, router);
-    }
     app.use(`/api/${applicationEntities}`, router);
-}
-
-function protectRoute(applicationEntities: string, router: any) {
-    console.log(applicationEntities);
-    const authorizeUser = getRequiredAuthorizationMiddlewareType(applicationEntities);
-    router.use(authenticateUser, authorizeUser);
-}
-
-function getRequiredAuthorizationMiddlewareType(applicationEntities: string): any {
-    switch(applicationEntities) {
-        case 'admins': 
-            return authorizeUser(ROLE.ADMIN);
-        case 'doctors': 
-            return authorizeUser(ROLE.DOCTOR);
-        case 'patients':
-            return authorizeUser(ROLE.PATIENT);
-        default:
-            return null;
-    }
 }
 
