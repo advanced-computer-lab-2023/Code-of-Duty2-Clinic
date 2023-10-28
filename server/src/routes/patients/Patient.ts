@@ -8,6 +8,8 @@ import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
+
 const patientRouter = express.Router();
 
 patientRouter
@@ -27,7 +29,13 @@ patientRouter
 
 .get('/:patientId/appointments', getAppointmentsWithAllDoctors)
 
-.get('', getAllPrescriptions)
+.get('prescriptions', getAllPrescriptions)
+
+.get('/:patientId/health-records', getPatientHealthRecords)
+
+.put('/:patientId/health-records', addPatientHealthRecord)
+
+.delete('/:patientId/health-records', deletePatientHealthRecord)
 
 
 export default patientRouter;
