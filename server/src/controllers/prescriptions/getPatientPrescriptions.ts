@@ -1,42 +1,47 @@
-import mongoose from "mongoose";
-import HealthPackage from "../../models/health_packages/HealthPackage";
-import { Request,Response } from "express";
-const  HEALTH_PACKAGE_ATTRIBUTES = ['name','amountToPay','discounts','packageDurationInYears']
-const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
-
-
-//helps checking for attributes existance 
-function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
-    return  superSet.every((attribute)=> subSet.includes(attribute))        
-}
-
-
-export const updateHealthPackage = async (req:Request,res:Response)=>{
-
-    //Get attributes for validation
-    const requestAttributes = Object.keys(req.body)
-    const requestDiscountAttributes :string[]= req.body.discounts?Object.keys(req.body.discounts):[]
-
-    //Check if valid
-    let validAttributes = checkIfIncludes(requestAttributes,HEALTH_PACKAGE_ATTRIBUTES) && checkIfIncludes(requestDiscountAttributes,DISCOUNT_ATTRIBUTES)
-    validAttributes= validAttributes && requestAttributes.length <= HEALTH_PACKAGE_ATTRIBUTES.length && requestDiscountAttributes.length <= DISCOUNT_ATTRIBUTES.length 
-
-    if(!validAttributes )   
-        res.sendStatus(400)
-    
+import Medicine from '../../models/medicines/Medicine';
+import { Request, Response } from 'express';
+import Prescription from '../../models/prescriptions/Prescription';
+import checkUpdateParams from '../../utils/attributeExistanceChecker'
+export const getPatientPrescriptions= async (req:Request, res:Response)=>{
     try{
-        const _id = req.params.id;
+        const allowedUpdateParams =['updatedAt','doctorName','date','status']
+        const patientId= req.params.patientId
 
-        await HealthPackage.updateOne({_id},{$set:req.body},{runValidators: true})
-
-        res.status(200).send("Updated Successfuly")
+        //check params
+        let updateParams:any= {...req.query}
+        if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(400).json({error:"Invalid Params"})
+        delete updateParams['doctorName']
     
-    }catch(err:any){
+        //Date search range 
+        if(req.query.updatedAt){
+            const startDate = new Date(updateParams.updatedAt);
+            const endDate = new Date(updateParams.updatedAt);
+            endDate.setDate(endDate.getDate() + 1); // add one day to get the end of the day
+            updateParams.updatedAt = { $gte: startDate, $lt: endDate} 
+        }
+        
+        //filter prescriptions
+        let prescriptions = await (Prescription.find({patientId:patientId,...updateParams})
+            .populate({
+                path: 'doctorId',
+                match:{name: new RegExp(req.query.doctorName as string, 'i') },
+                select: 'name -_id'
+            }).populate({ 
+                path: 'medicines.medicineId', 
+                model: Medicine,
+                select:'name price'
+            })
+            .exec())
 
-        if(err instanceof mongoose.Error.CastError)
-            return res.send("Health Package not found")
+        var result:any = [];
+        prescriptions.forEach(doc => {if(doc.doctorId!==null)result.push(doc)})
 
-        return res.status(400).send(err.message)
-    }          
+
+        res.json(result); 
+           
+    }catch(err){
+        console.log(err)
+        res.status(400).send(err)
+    }
 
 }
