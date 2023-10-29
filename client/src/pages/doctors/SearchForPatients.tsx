@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../../css/PatientSearchStyle.css';
+import { config } from '../../utils/config';
+import { useLocation } from 'react-router-dom';
 
 const PatientSearch = () => {
   const [name, setName] = useState('');
   const [patientData, setPatientData] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  const doctorId = useLocation().pathname.split('/')[2];
+
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/patients/search/${name}`, {
+      const response = await fetch(`${config.serverUri}/doctors/${doctorId}/patients?patientName=${name}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify({ name }),
       });
 
-      if (response.status === 200 || response.status === 201) {
+      if (response.ok) {
         const data = await response.json();
         setPatientData(data);
         setError(null); // Clear any previous error messages

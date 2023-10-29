@@ -14,7 +14,7 @@ function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
 export const getHealthPackages = async (req:Request,res:Response)=>{
 
     try{
-        res.json(await HealthPackage.find())
+        res.json(await HealthPackage.find({},{name:1,amountToPay:1,discounts:1, packageDurationInYears:1}))
     }catch(err){
         res.send(err)
     }

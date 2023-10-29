@@ -1,7 +1,7 @@
 /* PatientSearch.css */
 
 /* Style for the container */
-div {
+/* div {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
@@ -10,14 +10,12 @@ div {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
   }
   
-  /* Style for the search form */
   h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
   }
   
-  /* Style for input field and button */
   input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -43,7 +41,6 @@ div {
     background-color: #0056b3;
   }
   
-  /* Style for search results */
   h3 {
     margin-top: 20px;
     font-size: 20px;
@@ -56,4 +53,4 @@ div {
     border-radius: 5px;
     white-space: pre-wrap;
   }
-  
+   */

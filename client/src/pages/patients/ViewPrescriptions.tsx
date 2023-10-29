@@ -1,6 +1,5 @@
-import { useState } from "react"
-
-
+import { useState,useEffect } from "react"
+import {  useLocation } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,17 +9,16 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
 import Modal  from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
+import InfoIcon from '@mui/icons-material/Info';
 import { FormControl, FormLabel } from '@mui/material';
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { config } from "../../utils/config";
 
 const searchstyle = {
 
@@ -31,31 +29,30 @@ const searchstyle = {
     margin:'20px'
 }
 
+interface IMedicine {
+        
+    medicineId: {
+        _id: string,
+        name: string,
+        price: number
+    }
+    dosage: string,
+        
+}
+
 interface IPrescription {
     _id: string
     patientName:string,
-    doctorName:string,
+    doctorId:{
+        _id:string
+        name:string
+    },
     status:string, 
-    medicines: [
-        {
-            name: string,
-            dosage: string,
-            price:number,
-            _id: string
-        }
-    ],
+    medicines: [IMedicine],
     updatedAt:Date
 }
 
 
-interface IMedicine {
-        
-    name: string,
-    dosage: string,
-    _id: string,
-    price:number
-        
-}
 interface ISearch{
     doctorName?:string,
     updatedAt?:string,
@@ -74,22 +71,22 @@ const deleteModalStyle = {
 
 
   const PrescriptionsPage: React.FC = () => {
-    const [modal,setModal] = useState(true)
+
     const [viewModal,setviewModal] = useState(false)
     const [selectedPrescription,setSelectedPrescription] = useState<IPrescription>()
-    const [id,setId] = useState("")
     const [searchOptions,setSearchOptions] = useState<ISearch>({status:"none"})
     const [status,setStatus] = useState<string>("none")
 
     const [prescriptions,setPrescriptions] = useState([])
    
+    const patientId = useLocation().pathname.split('/')[2];
 
-    const getPrescriptions=async ()=>{
-       const fetchedPrescription:[] =  await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`)).data
-        setPrescriptions(fetchedPrescription)
-      
-        setModal(false)
-    }
+    useEffect(()=>{
+        axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{
+            setPrescriptions(response.data)
+        })
+        console.log(prescriptions)
+    },[])
 
     function printDate(date :string ) :string{
         const dateObj:Date  = new Date(date);
@@ -143,7 +140,7 @@ const deleteModalStyle = {
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
         if(searchOptions?.status&&searchOptions?.status!='none')data.status = searchOptions.status
-        const searchResults:[]=await (await axios.get(`http://localhost:8080/api/prescriptions/patient/${id}`,{params:data})).data
+        const searchResults:[]=await (await axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`,{params:data})).data
         setPrescriptions(searchResults)
     }
     return (
@@ -200,19 +197,19 @@ const deleteModalStyle = {
                        </TableRow>
                    </TableHead>
                    <TableBody>
-                   { !modal && prescriptions.map((prescription:IPrescription,index:number)=>(         
+                   {prescriptions.map((prescription:IPrescription,index:number)=>(         
                        <TableRow
                            key={index}
                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                        >
                            <TableCell component="th" scope="row">
-                            {prescription.doctorName}
+                            {prescription.doctorId.name}
                            </TableCell>
                            <TableCell align="center">{prescription.status}</TableCell>
                            <TableCell align="center">{printDate(prescription.updatedAt.toString())}</TableCell>
                            <TableCell align="center">
                                 <IconButton onClick={()=>viewSelectedPrescription(index)} aria-label="delete">
-                                    <EditIcon />
+                                    <InfoIcon />
                                 </IconButton>
                            </TableCell>
                        </TableRow>
@@ -220,29 +217,10 @@ const deleteModalStyle = {
                    </TableBody>
                    </Table>
                </TableContainer>
-   
-                   
-                
-            <Modal
-                open={modal}
-                onClose={()=>setModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                <Box sx={deleteModalStyle}>
-                    <FormControl style={{width:'100%'}}>
-                        <FormLabel>Patient Id</FormLabel>
-                        <TextField  onChange={(ev)=>setId(ev.target.value)} type="text" size='small'/>
-                        <Button variant="contained" onClick={getPrescriptions}>GET Prescriptions</Button>
-                    </FormControl>
-                </Box>
-            </Modal>
-
-
 
             <Modal
                 open={viewModal}
-                onClose={()=>setModal(false)}
+                onClose={()=>setviewModal(false)}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 >
@@ -261,14 +239,14 @@ const deleteModalStyle = {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                { !modal && selectedPrescription?.medicines.map((medicine:IMedicine,index:number)=>(         
+                                { selectedPrescription?.medicines.map((medicine:IMedicine,index:number)=>(         
                                 <TableRow
                                 key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell align="center">{medicine.name}</TableCell>
+                                    <TableCell align="center">{medicine.medicineId.name}</TableCell>
                                     <TableCell align="center">{medicine.dosage}</TableCell>
-                                    <TableCell align="center">{medicine.price}</TableCell>
+                                    <TableCell align="center">{medicine.medicineId.price}</TableCell>
 
                                 </TableRow>
                                 ))}

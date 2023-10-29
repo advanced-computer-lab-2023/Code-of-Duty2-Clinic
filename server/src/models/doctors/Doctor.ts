@@ -1,12 +1,13 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
 import { IDoctor } from './interfaces/IDoctor';
+import isMobileNumber from 'validator/lib/isMobilePhone'
 
 export interface IDoctorModel extends IDoctor, Document {} 
 
 export const DoctorSchema = new Schema<IDoctorModel>({
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true, select: false },
   email:{type:String,validate: [ isEmail, 'invalid email' ], unique: true},
   name: { type: String, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
@@ -19,12 +20,20 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   availableSlots: [
     {startTime: Date, endTime: Date}
   ],
-  identification: Buffer,
-  medicalLicense: Buffer,
-  medicalDegree: Buffer,
-  wallet: {amount: Number},
-  contract: Buffer,
-  contractStatus: {type: String, enum: ['pending', 'accepted', 'rejected'], required: true}
+  imageUrl: String,
+  identificationUrl: String,
+  medicalLicenseUrl: String,
+  medicalDegreeUrl: String,
+  wallet: {
+    type: {
+      amount: Number,
+      currency: String,
+      pin: String,
+    },
+    select: false,  
+  },
+  contractUrl: String,
+  contractStatus: { type: String, enum: ['pending', 'accepted', 'rejected'], required: true, default: 'accepted', select: false },
 }, 
 {timestamps: true}
 );

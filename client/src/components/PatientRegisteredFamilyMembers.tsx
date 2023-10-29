@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Grid, Card, CardContent, Typography} from "@mui/material";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { config } from "../utils/config";
+import { useLocation } from "react-router-dom";
 
 export default function PatientRegisteredFamilyMembers() {
 
-    const {patientId} = useParams();
+    const patientId = useLocation().pathname.split('/')[2];
     const [patientFamilyMembers, setPatientFamilyMembers] = useState([]);
 
     

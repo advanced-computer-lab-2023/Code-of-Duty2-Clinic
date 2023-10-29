@@ -24,3 +24,4 @@ const searchPatientByName = async (req: Request, res: Response) => {
 };
 
 export { searchPatientByName };
+

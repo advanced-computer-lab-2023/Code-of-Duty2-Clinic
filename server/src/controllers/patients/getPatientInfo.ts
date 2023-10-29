@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Patient from '../../models/patients/Patient';
+import { StatusCodes } from 'http-status-codes';
 
 
 export const getPatientInfo = async (req: Request, res: Response) => {
@@ -16,8 +17,8 @@ export const getPatientInfo = async (req: Request, res: Response) => {
             mobileNumber: patient?.mobileNumber,
         }
 
-        res.status(200).json(patientInfo);
+        res.status(StatusCodes.OK).json(patientInfo);
     } catch (error) {
-        res.status(500).json({ message: 'Error getting patient by ID' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error getting patient by ID' });
     }
 }

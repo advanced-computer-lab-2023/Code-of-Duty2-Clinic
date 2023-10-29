@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
 import HealthPackage from "../../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
 const  HealthPackageAttributes = ['name','amountToPay','discounts','packageDurationInYears']
 const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 import checkIfIncludes from '../../utils/attributeExistanceChecker'
+import { StatusCodes } from "http-status-codes";
 
 
 //helps checking for attributes existance 
@@ -26,17 +26,16 @@ export const addHealthPackage = async (req:Request,res:Response)=>{
   
 
     if(allAttributesExist && requestAttributes.length === 4 && requestDiscountAttributes.length === 3){
-            //Add package
-            try{
-                const healthPackage = await HealthPackage.create(req.body)
-                res.sendStatus(200)
-            }catch(err){
-                res.send(err)
-            }
-           
+        //Add package
+        try {
+            const healthPackage = await HealthPackage.create(req.body)
+            res.sendStatus(StatusCodes.OK)
+        } catch(err) {
+            res.send(err)
+        }  
     }
-    else{
-             res.sendStatus(400)
+    else {
+        res.sendStatus(StatusCodes.BAD_REQUEST)
     }
 
 }

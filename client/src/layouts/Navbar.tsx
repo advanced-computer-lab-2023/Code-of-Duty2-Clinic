@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
     return (
         <>
-            <Button color="inherit" component={Link} to="/">
+            <Button color="inherit" component={Link} to="/login">
                 Log in
             </Button>
-            <Button color="inherit" component={Link} to="/">
+            <Button color="inherit" component={Link} to="/doctor-login">
                 For doctors
             </Button>
             <Button color="inherit" component={Link} to="/">

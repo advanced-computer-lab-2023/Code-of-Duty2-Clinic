@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { config } from '../../utils/config';
 import { Dayjs } from 'dayjs';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -16,7 +16,8 @@ import Grid from '@mui/material/Grid';
 import CardContent from '@mui/material/CardContent';
 import { Card, FormControl, InputLabel, MenuItem } from '@mui/material';
 import { styled } from "@mui/material";
-import { getFormattedDate, getFormattedTime } from '../../utils/formatter';
+import { getFormattedDate, getFormattedTime, getQueredDateTime } from '../../utils/formatter';
+import { filterParams } from '../../utils/filterer';
 
 
 interface Appointment {
@@ -55,22 +56,12 @@ const ViewAppointments: React.FC = () => {
 
   const [error, setError] = useState('');
 
-  const {patientId} = useParams();
+  const patientId = useLocation().pathname.split('/')[2];
 
-  const getAppointments = async()=>{
-    // Fetch the initial list of patients from the API
-    await axios.get(`${config.serverUri}/patients/${patientId}/appointments`)
-      .then((response) => {
-        setFilteredAppointments(response.data);
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.error('Error fetching patients:', error);
-      });
-  }
-   useEffect( ()=> {
-    getAppointments();
-  }, []);
+  
+  useEffect(() => {
+    fetchFilteredAppointments();  
+  }, [doctorName, status, date, time]);
 
   const handleChangeDoctorName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDoctorName(event.target.value);
@@ -85,16 +76,18 @@ const ViewAppointments: React.FC = () => {
     setTime(time);
   }
 
-  const handleFilterChange = async() => {
+  const fetchFilteredAppointments = async() => {
     try {
       setFilteredAppointments(undefined);
-      const response = await axios.get(`${config.serverUri}/patients/${patientId}/appointments`, {
-        params: {
-          doctorName,
-          status,
-          appointmentTime: date && new Date(`${date?.format('YYYY-MM-DD')}${time && `T${time?.format('HH:mm')}`}`).toISOString(),
-        }
+      const dateTimeStr = getQueredDateTime(date, time);
+      const isTimeSet = dateTimeStr !== '' ? !!time :undefined;
+      const params = filterParams({
+        doctorName,
+        status,
+        appointmentTime: dateTimeStr && new Date(dateTimeStr).toISOString(),
+        isTimeSet,
       });
+      const response = await axios.get(`${config.serverUri}/patients/${patientId}/appointments`, { params });
       setFilteredAppointments(response.data);
       setError('');
     } catch (error: any) {
@@ -106,19 +99,20 @@ const ViewAppointments: React.FC = () => {
   return (
     <Box sx={{ padding: 4 }}>
         <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: 2 }}>
-          View Doctors
+          View Appointments
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
           <TextField label="Doctor Name" value={doctorName} name='name' onChange={handleChangeDoctorName} sx={{ marginRight: 2 }} />
           <FormControl>
               <InputLabel id="gender-label">Appointment Status</InputLabel>
               <Select labelId="appointment-status-label" name="status" value={status} onChange={handleAppointmentStatusChange} 
               sx={{width: '180px'}}
               >
-                  <MenuItem value={'upcoming'}>Upcoming</MenuItem>
-                  <MenuItem value={'completed'}>Completed</MenuItem>
-                  <MenuItem value={'cancelled'}>Cancelled</MenuItem>
-                  <MenuItem value={'rescheduled'}>Rescheduled</MenuItem>
+                  <MenuItem value=''>---Not selected</MenuItem>
+                  <MenuItem value='upcoming'>Upcoming</MenuItem>
+                  <MenuItem value='completed'>Completed</MenuItem>
+                  <MenuItem value='cancelled'>Cancelled</MenuItem>
+                  <MenuItem value='rescheduled'>Rescheduled</MenuItem>
               </Select>
           </FormControl>       
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -133,7 +127,7 @@ const ViewAppointments: React.FC = () => {
               onChange={handleTimeChange}
             />
           </LocalizationProvider>
-          <Button variant="contained" color="primary" onClick={handleFilterChange} sx={{marginLeft: '30px'}}>
+          <Button variant="contained" color="primary" onClick={fetchFilteredAppointments} sx={{marginLeft: '30px'}}>
             Search
           </Button>
         </Box>
@@ -166,3 +160,5 @@ const ViewAppointments: React.FC = () => {
 };
 
 export default ViewAppointments;
+
+

@@ -4,7 +4,7 @@
 /* DoctorRegistrationRequestFromStyle.css */
 
 /* Style for the container */
-div {
+/* div {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
@@ -13,21 +13,18 @@ div {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
   }
   
-  /* Style for the form header */
   h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
   }
   
-  /* Style for form labels */
   label {
     display: block;
     margin-bottom: 5px;
     color: #333;
   }
   
-  /* Style for input fields */
   input[type="text"],
   input[type="password"],
   input[type="email"],
@@ -42,7 +39,7 @@ div {
     font-size: 16px;
   }
   
-  /* Style for the submit button */
+
   button[type="submit"] {
     width: 100%;
     padding: 10px;
@@ -59,4 +56,4 @@ div {
     background-color: #0056b3;
   }
   
-    
+     */

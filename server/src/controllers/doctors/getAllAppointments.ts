@@ -2,40 +2,56 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import Doctor from "../../models/doctors/Doctor";
 import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
-import { IAppointment } from "./interfaces/Appointment";
 import Appointment from "../../models/appointments/Appointment";
+import mongoose from "mongoose";
 
 export const getAppointmentsWithAllPatients = async (req: Request, res: Response) => {
     const { doctorId } = req.params;
     if(!doctorId) return res.status(StatusCodes.BAD_REQUEST).json({message: 'doctorId is required'});
 
-    const allowedQueryParameters = ['status', 'appointmentTime', 'patientName'];
+    const allowedQueryParameters = ['status', 'appointmentTime', 'isTimeSet', 'patientName'];
 
     if(Object.keys(req.query).length > allowedQueryParameters.length || Object.keys(req.query).some(key => !allowedQueryParameters.includes(key))) {
-        res.status(StatusCodes.BAD_REQUEST).json("only patient name, appointment status or time slot must be provided");
-        return;
+        return res.status(StatusCodes.BAD_REQUEST).json("only patient name, appointment status or time slot must be provided");
+    }
+
+    if(req.query.appointmentTime && !req.query.isTimeSet || req.query.isTimeSet && !req.query.appointmentTime) {
+        return res.status(StatusCodes.BAD_REQUEST).json("isTimeSet and appointmentTime must be provided together");
     }
     
-    const doctor = await Doctor.findById(doctorId);
-    if(!doctor) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Doctor', doctorId)});
+    try {        
+        const doctor = await Doctor.findById(doctorId);
+        if(!doctor) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Doctor', doctorId)});
 
-    try {
-        
-        const appointmentsToFind = getMetchingAppointmentsFields(req.query); 
+        const searchQuery = getMatchingAppointmentsFields(req.query); 
 
-        const appointments: IAppointment[] = (await Appointment.find({doctorId, ...appointmentsToFind})
-        .populate({
-                path: 'patientId',
-                select: {_id: 1, patientId: 1, timePeriod: 1, status: 1, name: 1},
-        })).map((appointment: any) => ({
-            appointmentId: appointment._id,
-            patient: {
-                id: appointment.patientId._id,
-                name: appointment.patientId.name, 
+        const appointments = await Appointment.aggregate([
+            { $match: { doctorId: new mongoose.Types.ObjectId(doctorId) } },
+            {
+                $lookup: {
+                    from: 'patients',
+                    localField: 'patientId',
+                    foreignField: '_id',
+                    as: 'patient',
+                }
             },
-            timePeriod: appointment.timePeriod, 
-            status: appointment.status
-        }));;
+            { $match: { ...searchQuery } },
+            { $unwind: '$patient' },
+            { 
+                $project: { 
+                    appointmentId: '$_id',
+                    _id: 0,
+                    status: 1,
+                    timePeriod: 1,
+                    patient: {
+                        id: '$patient._id' ,
+                        name: '$patient.name',
+                        imageUrl: '$patient.imageUrl',
+                    },
+                } 
+            }
+        ]);
+
         
         res.status(StatusCodes.OK).json(appointments);
     } catch(error) {
@@ -44,42 +60,42 @@ export const getAppointmentsWithAllPatients = async (req: Request, res: Response
 }
 
 
-function getMetchingAppointmentsFields(urlQuery: any) {
+function getMatchingAppointmentsFields(urlQuery: any) {
 
     const { appointmentTime, status, patientName } = urlQuery;
+    const isTimeSet = urlQuery.isTimeSet === 'true';
 
-    let searchQuery: any = {};
-
-    if(patientName && patientName !== '') {
-        searchQuery.patientName = patientName;
-    }
+    let searchQuery: {
+        status?: string;
+        'patient.name'?: { $regex: string; $options: string};
+        'timePeriod.startTime'?: any;
+        'timePeriod.endTime'?: any;
+    } = {};
+    
     if (status && status !== '') {
         searchQuery.status = status;
     }
-    const appointmentsToFind: any = {};
-
-    if (appointmentTime && appointmentTime !== '') {
-        const requestedStartDate = new Date(appointmentTime).setSeconds(59, 999);
-        const requestedEndDate = new Date(appointmentTime).setSeconds(0, 0);
-        appointmentsToFind['$or'] = [
-            { $and: [{'timePeriod.startTime':  { $lte: requestedStartDate }}, {'timePeriod.endTime': { $gte: requestedEndDate }}] }
-        ];
+    if(patientName && patientName != '') {
+        searchQuery['patient.name'] = { $regex: `^${patientName}`, $options: 'i' };
     }
+  
+    if (appointmentTime && appointmentTime !== '') {
+        const requestedStartDate = new Date(appointmentTime);
+        const requestedEndDate = new Date(appointmentTime);
 
-    const queries = Object.keys(searchQuery).map(key => 
-        ({ [key]: searchQuery[key] })
-    );
-
-    if(queries.length > 0) {
-        if(appointmentsToFind['$or']) {
-            appointmentsToFind['$or'].push({$or: queries});
+        if(isTimeSet) {
+            requestedStartDate.setSeconds(59, 999)
+            requestedEndDate.setSeconds(0, 0);
         }
         else {
-            appointmentsToFind['$or'] = queries;
+            requestedStartDate.setHours(23, 59, 59, 999);
+            requestedEndDate.setHours(0, 0, 0, 0);  
         }
+        searchQuery['timePeriod.startTime'] = { $lte: requestedStartDate };
+        searchQuery['timePeriod.endTime'] = { $gte: requestedEndDate };
     }
 
-    return appointmentsToFind;
+    return searchQuery;
 }
 
 
