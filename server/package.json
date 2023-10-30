@@ -33,6 +33,7 @@
     "mongoose": "^7.5.4",
     "mongoose-bcrypt": "^1.11.0",
     "path": "^0.12.7",
+    "remove": "^0.1.5",
     "typescript": "^5.2.2",
     "validator": "^13.11.0"
   },

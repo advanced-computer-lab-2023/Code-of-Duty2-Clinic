@@ -11,8 +11,6 @@ export const AdminSchema = new Schema<IAdminModel>({
 {timestamps: true}
 );
 
-
-
 AdminSchema.plugin(bcrypt);
 
 export default mongoose.model<IAdminModel>('Admin', AdminSchema);

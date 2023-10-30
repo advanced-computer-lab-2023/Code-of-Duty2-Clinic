@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import Prescription from '../../models/prescriptions/Prescription';
 import Patient from '../../models/patients/Patient';
 import Doctor from '../../models/doctors/Doctor';
@@ -6,12 +6,13 @@ import Medicine from '../../models/medicines/Medicine';
 import { ObjectId } from 'mongoose';
 import checkUpdateParams from '../../utils/attributeExistanceChecker'
 import { StatusCodes } from 'http-status-codes';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
 
-export const getPatientPrescriptions= async (req:Request, res:Response)=>{
+export const getPatientPrescriptions= async (req: AuthorizedRequest, res: Response)=>{
     try{
         const allowedUpdateParams =['updatedAt','doctorName','date','status']
         //join patient
-        const patientId = req.params.patientId;
+        const patientId = req.user?.id;
         const patient = await Patient.findById(patientId);
         if(!patient) {
             return res.status(StatusCodes.BAD_REQUEST).json({error:'No such patient'});

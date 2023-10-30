@@ -1,19 +1,18 @@
 import mongoose from "mongoose";
-import HealthPackage from "../../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
-const  HealthPackageAttributes = ['name','amountToPay','discounts','packageDurationInYears']
+import { deleteHealthPackage } from "../../services/health-packages";
 
 
-export const deleteHealthPackage = async (req:Request,res:Response)=>{
-    try{
-        const deleteResponse = await HealthPackage.deleteOne({_id:req.params.id})
+export const deleteHealthPackageHandler = async (req: Request, res: Response)=>{
+    try {
+        const deleteResponse = await deleteHealthPackage(req.params.id);
 
-        if(deleteResponse.deletedCount==0){
+        if(deleteResponse.deletedCount == 0){
             res.send('This package does not exist')
         }else{
             res.send('Package Deleted Succesfully')
         }
-    }catch(err){
+    } catch(err) {
         if(err instanceof mongoose.Error.CastError)
             return res.send("Health Package Not found")
 

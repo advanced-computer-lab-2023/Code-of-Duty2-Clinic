@@ -1,13 +1,15 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import PatientModel, { IPatientModel } from '../../models/patients/Patient';
 import PrescriptionModel, { IPrescriptionModel } from '../../models/prescriptions/Prescription';
 import Appointment, { IAppointmentModel } from '../../models/appointments/Appointment';
 import Doctor from '../../models/doctors/Doctor';
 import { StatusCodes } from 'http-status-codes';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
 
-export default async function getRegisteredPatientDetails(req: Request, res: Response) {
+export default async function getRegisteredPatientDetails(req: AuthorizedRequest, res: Response) {
   try {
-    const { doctorId, patientId } = req.params; // Extract patientId from request parameters
+    const doctorId  = req.user?.id; 
+    const { patientId } = req.params; // Extract patientId from request parameters
 
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
@@ -24,12 +26,10 @@ export default async function getRegisteredPatientDetails(req: Request, res: Res
       return res.status(StatusCodes.FORBIDDEN).json({message:'not authorized to view this patient info'})
      }
 
-    // Find prescriptions associated with this patient
     const prescriptions: IPrescriptionModel[] = await PrescriptionModel.find({
       patientId: patient._id,
     });
 
-    // You can extract and return specific health records or patient information here
     return res.status(StatusCodes.OK).json({
       patientInfo: patient,
       prescriptions: prescriptions,

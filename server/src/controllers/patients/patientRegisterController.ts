@@ -8,13 +8,13 @@ const registerAsPatient = async (req: Request, res: Response) => {
     const {username, password, email, name, dateOfBirth, gender, mobileNumber, emergencyContact, deliveryAddresses, healthRecords, subscribedPackage, dependentFamilyMembers, registeredFamilyMembers} = req.body;
     try{
         // Check if the email & username already mwgoodeen
-        const existingPatientByEmail = await Patient.findOne({ email });
-        const existingPatientByUsername = await Patient.findOne({ username });
+        const existingSimilarEmails = await Patient.countDocuments({ email });
+        const existingSimilarUsernames = await Patient.countDocuments({ username });
 
-        if (existingPatientByEmail) {
+        if (existingSimilarEmails > 0) {
             return res.status(StatusCodes.BAD_REQUEST).send('Email already exists. Please use a different email.');
         }
-        if (existingPatientByUsername) {
+        if (existingSimilarUsernames > 0) {
             return res.status(StatusCodes.BAD_REQUEST).send('Username already exists. Please choose a different username.');
         }
 

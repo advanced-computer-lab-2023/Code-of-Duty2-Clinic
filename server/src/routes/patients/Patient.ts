@@ -10,30 +10,27 @@ import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescrip
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
-import { ROLE } from "../../utils/userRoles";
+import { ROLE } from "../../types/Role";
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
 patientRouter.use(authorizeUser(ROLE.PATIENT));
 
 patientRouter
-.get('/:patientId/doctors', getAllDoctors)
+.get('/doctors', getAllDoctors)
 
-.get('/:patientId/doctors/:doctorId', getDoctorById)
+.get('/doctors/:doctorId', getDoctorById)
 
-.get('/patient-info/:patientId', getPatientInfo)
+.get('/patient-info', getPatientInfo)
 
-.post('/:patientId/family-members', addFamilyMembers)
+.post('/family-members', addFamilyMembers)
 
-.get('/:patientId', getPatientById)
+.get('', getPatientById)
 
-.get('/:patientId/prescriptions', getPatientPrescriptions)
+.get('/prescriptions', getPatientPrescriptions)
 
-.get('/:patientId/family-members', getPatientRegisteredFamilyMembers)
+.get('/family-members', getPatientRegisteredFamilyMembers)
 
-.get('/:patientId/appointments', getAppointmentsWithAllDoctors)
-
-.get('', getAllPrescriptions)
-
+.get('/appointments', getAppointmentsWithAllDoctors)
 
 export default patientRouter;

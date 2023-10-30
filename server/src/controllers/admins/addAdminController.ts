@@ -4,9 +4,8 @@ import { createNewAdmin, findAdminByUsername } from '../../services/admins';
 
 async function registerAdmin(req: Request, res: Response) {
   try {
-    const { username, password } = req.body; // Assuming username and password are sent in the request body
+    const { username, password } = req.body;
 
-    // Check if an admin with the same username already exists
     const existingAdmin = await findAdminByUsername(username);
     if (existingAdmin) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Admin with this username already exists' });

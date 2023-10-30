@@ -10,7 +10,7 @@ const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "";
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "";
 const ACCESS_TOKEN_EXPIRATION_TIME = process.env.ACCESS_TOKEN_EXPIRATION_TIME || "30s";
-const REFRESH_TOKEN_EXPIRATION_TIME = process.env.REFRESH_TOKEN_EXPIRATION_TIME || "1m";
+const REFRESH_TOKEN_EXPIRATION_TIME = process.env.REFRESH_TOKEN_EXPIRATION_TIME || "40s";
 
 const FRONT_END_URL = process.env.FRONT_END_URL || "http://localhost:5173";
 const corsOptions: cors.CorsOptions = {};

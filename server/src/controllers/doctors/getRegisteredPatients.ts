@@ -1,13 +1,14 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import Doctor from "../../models/doctors/Doctor";
 import Appointment from "../../models/appointments/Appointment";
 import mongoose from "mongoose";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 
-export const getRegisteredPatients = async(req: Request, res: Response) => {
+export const getRegisteredPatients = async(req: AuthorizedRequest, res: Response) => {
 
-  const { doctorId } = req.params;
+  const doctorId  = req.user?.id;
   if(!doctorId) return res.status(StatusCodes.BAD_REQUEST).json({message: 'doctorId is required'});
   
   const allowedQueryParameters = ['patientName'];

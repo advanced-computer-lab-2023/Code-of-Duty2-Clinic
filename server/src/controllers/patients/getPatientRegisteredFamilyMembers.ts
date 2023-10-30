@@ -1,12 +1,13 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import {StatusCodes} from 'http-status-codes';
 import PatientModel from '../../models/patients/Patient';
 import { IRegisteredFamilyMember } from '../../models/patients/interfaces/IRegisteredFamilyMember';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
 
-export const getPatientRegisteredFamilyMembers = async (req: Request, res: Response) => {
-  const id = req.params.patientId;
+export const getPatientRegisteredFamilyMembers = async (req: AuthorizedRequest, res: Response) => {
+  const patientId = req.user?.id;
   try {
-    const patient = await PatientModel.findById(id).select('registeredFamilyMembers');
+    const patient = await PatientModel.findById(patientId).select('registeredFamilyMembers');
     if (!patient) {
       return res.status(StatusCodes.NOT_FOUND).json({ error: 'Patient not found' });
     }

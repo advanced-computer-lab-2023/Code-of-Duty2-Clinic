@@ -8,9 +8,9 @@ import { addHealthPackage } from "../../controllers/healthPackages/createHealthP
 import { getHealthPackages } from "../../controllers/healthPackages/getHealthPackages";
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 import { updateHealthPackage } from "../../controllers/healthPackages/updateHealthPackage";
-import { deleteHealthPackage } from "../../controllers/healthPackages/deleteHealthPackage";
+import { deleteHealthPackageHandler } from "../../controllers/healthPackages/deleteHealthPackage";
 import { authenticateUser } from "../../middlewares/authentication";
-import { ROLE } from "../../utils/userRoles";
+import { ROLE } from "../../types/Role";
 import { authorizeUser } from "../../middlewares/authorization";
 
 const router = express.Router();
@@ -27,7 +27,7 @@ router.route('/health-packages/:id')
 
         .put(updateHealthPackage)
 
-        .delete(deleteHealthPackage);
+        .delete(deleteHealthPackageHandler);
 
 router
 .post('/admin', registerAdmin)
