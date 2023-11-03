@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,28 +10,11 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Modal  from "@mui/material/Modal";
-import Box from "@mui/material/Box";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-//import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-// import { FormControl, FormLabel } from '@mui/material';
-// import HealthPackages from "../healthPackages";
-import HealthPackagesModal from "../../components/HealthPackagesModal";
-import { config } from "../../utils/config";
-
-const deleteModalStyle = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
+import HealthPackagesModal from "./components/HealthPackagesModal";
+import { config } from "../../../utils/config";
+import DeletePackageModal from "./components/DeletePackagesModal";
 
 
 interface IHealthPackage {
@@ -62,61 +44,65 @@ const HealthPackagesPage:React.FC=()=>{
 
     
     const [selectedHealthPackage,setSelectedHealthPackage] = useState<IHealthPackage>(HealthPackageResetter)
-    const [healthpackages,setHealthPackages] = useState([])
+    const [selectedHealthPackageIndex,setSelectedHealthPackageIndex] = useState<number>(0)
+    const [healthpackages,setHealthPackages] = useState<[]>([])
     const [openEditingModal, setOpenEditingModal] = useState(false);
     const [openDeletingModal, setOpenDeletingModal] = useState(false);
     const [create, setCreate] = useState(false);
     
+    useEffect(()=>{fetchHealthPackages()},[]);
 
-// inefficient cause on every change we get all packages from databse (solution: push and pop from list)
    function fetchHealthPackages(){
-        axios.get(`${config.serverUri}/admins/health-packages`).then(response =>{setHealthPackages(response.data) })
-
+        axios.get(`${config.serverUri}/healthPackages`).then(response =>{setHealthPackages(response.data) })
     }
-   const handleCallback = (fetch:boolean):void =>{
-       
-       if(fetch)fetchHealthPackages()
-    }
-    useEffect(()=>{fetchHealthPackages()},[openEditingModal]);
    
-    function editModal(index:number) {
-
+   
+    function openEditModal(index:number) {
         setCreate(false)
         setSelectedHealthPackage(healthpackages[index])
+        setSelectedHealthPackageIndex(index)
         setOpenEditingModal(true);
-        
     }
 
-    function deleteModal(index:number) {
-        setSelectedHealthPackage(healthpackages[index])
-        setOpenDeletingModal(true);
-    }
-
-    function createModal(){
+    function openCreateModal(){
         setCreate(true)
         setSelectedHealthPackage(HealthPackageResetter)
         setOpenEditingModal(true);
     }
+    const handleCreateOrEdit = (closed:boolean,create?:boolean,healthPackage?:IHealthPackage):void =>{
+        if(create){
+         setHealthPackages((prev:any)=>{
+              prev.push(healthPackage);
+              return prev;
+         })
+        }
+        else if(create===false){
+         setHealthPackages((prev:any)=>{ 
+             prev[selectedHealthPackageIndex] = healthPackage; 
+             return prev
+         })
+        }
+     }
 
-
-    const deleteHealthPackage =async ()=>{
-        
-        await axios.delete(`${config.serverUri}/admins/health-packages/${selectedHealthPackage._id}`).then(response =>{console.log(response.status) })
-        //inefficient
-        fetchHealthPackages()
-        setOpenDeletingModal(false);
+    function openDeleteModal(index:number) {
+        setSelectedHealthPackage(healthpackages[index])
+        setOpenDeletingModal(true);
+    }
+    const handleDelete = ():void =>{
+        setHealthPackages((prev:[])=>{
+            prev.splice(selectedHealthPackageIndex,1)
+            return prev
+        })
     }
     return (
         <div className="px-12 !felx !flex-col justify-center align-middle my-10">
             <h1 className="mx-auto px-auto">
                 Health Packages
             </h1>
-            <Button sx={{backgroundColor: '#1976d2'}} onClick={createModal} variant="contained"><AddCircleOutlineOutlinedIcon/></Button>
+            <Button sx={{backgroundColor: '#1976d2'}} onClick={openCreateModal} variant="contained"><AddCircleOutlineOutlinedIcon/></Button>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead sx={{
-    background: 'linear-gradient(to right, #1976d2, #00d4ff)',color:'width',
-  }}>
+                <TableHead sx={{background: 'linear-gradient(to right, #1976d2, #00d4ff)',color:'width',}}>
                     <TableRow>
                     <TableCell sx={{color:"white"}}>Name</TableCell>
                     <TableCell sx={{color:"white"}}>Price</TableCell>
@@ -144,10 +130,10 @@ const HealthPackagesPage:React.FC=()=>{
                         <TableCell align="center">
                             <IconButton  aria-label="edit">
                                 
-                                <EditIcon onClick={()=>editModal(index)} />
+                                <EditIcon onClick={()=>openEditModal(index)} />
                             </IconButton>
                             <IconButton aria-label="delete">
-                            <DeleteIcon onClick={()=>deleteModal(index)} color="error" />
+                            <DeleteIcon onClick={()=>openDeleteModal(index)} color="error" />
                             </IconButton>
                         </TableCell>
                     </TableRow>
@@ -157,23 +143,11 @@ const HealthPackagesPage:React.FC=()=>{
             </TableContainer>
 
 
-            {/* Modal for deleting Health Package */}
-            {openEditingModal &&  <HealthPackagesModal onClos={(closed)=>{setOpenEditingModal(false)}} onSubmit={handleCallback} healthPackage={selectedHealthPackage} create={create} open={openEditingModal}/>}
-           
-            <Modal 
-                open={openDeletingModal}
-                onClose={()=>setOpenDeletingModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                <Box sx={deleteModalStyle}>
-                    
-                    <Button onClick={deleteHealthPackage} variant="contained" color="error" startIcon={<DeleteIcon />}>
-                        Delete
-                    </Button>
-                </Box>
-            </Modal>
+            {/* Modal for Creating or editing health Package */}
+            {openEditingModal &&  <HealthPackagesModal onClose={()=>{setOpenEditingModal(false)}} onSubmit={handleCreateOrEdit} healthPackage={selectedHealthPackage} create={create} open={openEditingModal}/>}
 
+            {/* Modal for Deleteing health Package */}
+            {openDeletingModal &&  <DeletePackageModal close={()=>{setOpenDeletingModal(false)}} onSubmit={handleDelete} open={openDeletingModal} id={selectedHealthPackage._id}/>}
         </div>
     )
 }

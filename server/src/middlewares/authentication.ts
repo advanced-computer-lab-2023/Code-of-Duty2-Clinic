@@ -15,10 +15,10 @@ export const authenticateUser = (req: AuthorizedRequest, res: Response, next: Ne
   }
 
   try {
-    const decodedToken = verifyAndDecodeAccessToken(accessToken);
-    req.user = decodedToken;
-    next();
+    const decodedUserData = verifyAndDecodeAccessToken(accessToken);
+    req.user = decodedUserData;
     console.log('Authenticated')
+    next();
   } catch (error: any) {
     if (error.name === 'TokenExpiredError') {
       return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token has expired', accessTokenExpired: true });

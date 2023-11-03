@@ -1,9 +1,6 @@
 import { Request } from "express";
-import { ROLE } from "./Role";
+import { User } from "./User";
 
 export interface AuthorizedRequest extends Request {
-    user?: {
-      id: string;
-      role: ROLE;
-    };
+    user?: User
 }

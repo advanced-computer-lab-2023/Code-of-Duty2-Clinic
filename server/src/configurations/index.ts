@@ -30,7 +30,7 @@ const config = {
             refreshTokenExpirationTime: REFRESH_TOKEN_EXPIRATION_TIME
         }
     },
-    FRONT_END_URL: FRONT_END_URL
+    frontEndUri: FRONT_END_URL
 };
 
 export default config;

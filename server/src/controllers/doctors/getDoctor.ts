@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 
-export const getDoctor = async (req: AuthorizedRequest, res:Response)=>{
+export const getDoctor = async (req: AuthorizedRequest, res: Response)=>{
     try{
         const doctor = await Doctor.findOne({_id: req.user?.id, contractStatus: "accepted"})
         res.json(doctor)

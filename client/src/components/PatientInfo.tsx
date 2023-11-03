@@ -2,18 +2,16 @@ import { Paper} from '@mui/material';
 import '../css/PatientInfo.css';
 import axios from 'axios';
 import { useEffect, useState} from 'react';
-import { useLocation} from 'react-router-dom';
 import { Patient } from '../types';
 import { config } from '../utils/config';
 
 
 export default function PatientInfo() {
-    const patientId = useLocation().pathname.split('/')[2];
     const [patient, setPatient] = useState<Patient>();
 
     useEffect(() => {
         const fetchPatient = async () => {
-             await axios.get(`${config.serverUri}/patients/patient-info/${patientId}`)
+             await axios.get(`${config.serverUri}/patients/patient-info`)
             .then (response => {
                setPatient(response.data);
             })

@@ -11,7 +11,8 @@ export const login = async (req: Request, res: Response) => {
         const { accessToken, refreshToken } = await authenticatePatientOrAdmin(email, password);
         res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' });
         res.status(StatusCodes.OK).json(accessToken);   
-    } catch(error: any) {
-        res.status(StatusCodes.BAD_REQUEST).json(error.message);
+    } catch(error) {
+        console.log(error);
+        res.status(StatusCodes.BAD_REQUEST).json(error);
     }
 }

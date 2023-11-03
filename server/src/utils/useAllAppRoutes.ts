@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { app } from '..';
 
-export function useAllAppRoutes() {
-    const routesPath = path.resolve(__dirname, 'routes');
+export function useAllAppRoutes(routesPath: string) {
     fs.readdirSync(routesPath).forEach((folderName) => {
         const innerRouteFolder = path.join(routesPath, folderName);
         const applicationEntities = folderName;

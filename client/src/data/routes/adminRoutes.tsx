@@ -2,7 +2,7 @@ import AdminForm from "../../components/adminForm";
 import UserList from "../../pages/admins/userList";
 import { Route } from "./Route";
 import DoctorRegistrationRequests from"../../pages/admins/viewDoctorRequests"
-import HealthPackagesPage from "../../pages/admins/HealthPackages";
+import HealthPackagesPage from "../../pages/admins/HealthPackages/HealthPackages";
 
 
 export const adminAddRoute: Route = {

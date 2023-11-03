@@ -4,6 +4,7 @@ import { ROLE } from "../../types/Role";
 import { findAdminByEmail } from "../admins";
 import { findDoctorByEmail } from "../doctors";
 import { findPatientByEmail } from "../patients";
+import { User } from "../../types/User";
 
 export const authenticatePatientOrAdmin = async (email: string, password: string) => {
     const adminAuthenticationTokens = await authenticateUserIfAdmin(email, password);
@@ -18,35 +19,38 @@ export const authenticatePatientOrAdmin = async (email: string, password: string
 }
 
 const authenticateUserIfAdmin = async (email: string, password: string) => {
-    const user: any = await findAdminByEmail(email);
-    if(! user) {
+    const admin = await findAdminByEmail(email);
+    if(! admin) {
        return null;
     }
-    await validateUserPassword(user, password);
-    const accessToken = signAndGetAccessToken(user._id, ROLE.ADMIN);
-    const refreshToken = signAndGetRefreshToken(user._id, ROLE.ADMIN);
+    await validateUserPassword(admin, password);
+    const user: User = { id: admin._id, role: ROLE.ADMIN };
+    const accessToken = signAndGetAccessToken(user);
+    const refreshToken = signAndGetRefreshToken(user);
     return { accessToken, refreshToken };   
 }
 
 const authenticateUserIfPatient = async (email: string, password: string) => {
-    const user: any = await findPatientByEmail(email);
-    if(! user) {
+    const patient: any = await findPatientByEmail(email);
+    if(! patient) {
         return null;
     }
-    await validateUserPassword(user, password);
-    const accessToken = signAndGetAccessToken(user._id, ROLE.PATIENT);
-    const refreshToken = signAndGetRefreshToken(user._id, ROLE.PATIENT);
+    await validateUserPassword(patient, password);
+    const user = { id: patient._id, role: ROLE.PATIENT };
+    const accessToken = signAndGetAccessToken(user);
+    const refreshToken = signAndGetRefreshToken(user);
     return {accessToken, refreshToken};
 }
 
 export const authenticateDoctor = async (email: string, password: string) => {
-    const user = await findDoctorByEmail(email);
-    if (!user) {
+    const doctor = await findDoctorByEmail(email);
+    if (!doctor) {
         throw new Error(emailOrPasswordIncorrectErrorMessage);
     }
-    await validateUserPassword(user, password);
-    const accessToken = signAndGetAccessToken(user._id, ROLE.DOCTOR);
-    const refreshToken = signAndGetRefreshToken(user._id, ROLE.DOCTOR);
+    await validateUserPassword(doctor, password);
+    const user = { id: doctor._id, role: ROLE.DOCTOR };
+    const accessToken = signAndGetAccessToken(user);
+    const refreshToken = signAndGetRefreshToken(user);
 
     return { accessToken, refreshToken };
 }
