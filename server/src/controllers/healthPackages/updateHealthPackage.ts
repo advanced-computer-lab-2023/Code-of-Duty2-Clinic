@@ -6,8 +6,9 @@ const  HEALTH_PACKAGE_ATTRIBUTES = ['name','amountToPay','discounts','packageDur
 const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 
 
-function checkIfIncludes(superSet: string[], subSet: string[]): boolean {
-    return superSet.every((attribute)=> subSet.includes(attribute));        
+//helps checking for attributes existance 
+function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
+    return  superSet.every((attribute)=> subSet.includes(attribute))        
 }
 
 
@@ -24,19 +25,18 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
     if(!validAttributes )   
         res.sendStatus(StatusCodes.BAD_REQUEST)
     
-    try{
+    try {
         const _id = req.params.id;
 
-        await HealthPackage.findByIdAndUpdate(_id, {$set: req.body}, {runValidators: true});
+        await HealthPackage.updateOne({_id},{$set:req.body},{runValidators: true})
 
-        res.status(StatusCodes.OK).send("Updated Successfuly");
+        res.status(StatusCodes.OK).send("Updated Successfuly")
     
-    }catch(err:any){
+    } catch(err:any){
 
         if(err instanceof mongoose.Error.CastError)
             return res.send("Health Package not found")
 
-        return res.status(400).send(err.message)
-    }          
-
+        return res.status(StatusCodes.BAD_REQUEST).send(err.message)
+    }
 }
