@@ -1,11 +1,12 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import Doctor from "../../models/doctors/Doctor";
 import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
-//Get a doctor with accpeted contract by ID  
-export const getDoctor = async (req:Request, res:Response)=>{
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
+
+export const getDoctor = async (req: AuthorizedRequest, res: Response)=>{
     try{
-        const doctor = await Doctor.find({_id:req.params.id, contractStatus:"accepted"})
+        const doctor = await Doctor.findOne({_id: req.user?.id, contractStatus: "accepted"})
         res.json(doctor)
     }catch(err){
         if(err instanceof mongoose.Error.CastError)

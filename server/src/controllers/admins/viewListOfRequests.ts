@@ -1,19 +1,15 @@
 import { Request, Response } from 'express';
-import DoctorRegistrationRequestModel from '../../models/doctors/DoctorRegistrationRequest';
+import { findAllDoctorRegistrationRequests } from '../../services/doctors/registration_requests';
+import { StatusCodes } from 'http-status-codes';
 
 
  const getDoctorRegistrationRequests = async (req: Request, res: Response) => {
   try {
-    const request = await DoctorRegistrationRequestModel.find();
-
-    if (!request) {
-      return res.status(404).json({ message: 'Doctor registration request not found' });
-    }
-
-    res.json(request);
-  } catch (error) {
+    const requests = await findAllDoctorRegistrationRequests();
+    res.status(StatusCodes.OK).json(requests);
+  } catch (error: any) {
     console.error('Error fetching doctor registration request:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
   }
 };
 export default getDoctorRegistrationRequests;

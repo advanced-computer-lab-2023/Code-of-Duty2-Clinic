@@ -1,4 +1,3 @@
-//Import mongoose and Schema
 import mongoose, { Document, Schema } from 'mongoose';
 import { IHealthPackage } from './interfaces/IHealthPackage';
  
@@ -6,7 +5,8 @@ import { IHealthPackage } from './interfaces/IHealthPackage';
 export interface IHealthPackageModel extends IHealthPackage, Document {} 
 
 export const HealthPackageSchema = new Schema<IHealthPackageModel>({
-  name: { type: String,
+  name: { 
+    type: String,
     required: true,
     unique: true 
   },

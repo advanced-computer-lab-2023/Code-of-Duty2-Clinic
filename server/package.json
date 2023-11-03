@@ -30,14 +30,15 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
     "mongoose": "^7.5.4",
+    "mongoose-bcrypt": "^1.11.0",
     "path": "^0.12.7",
+    "remove": "^0.1.5",
     "typescript": "^5.2.2",
     "validator": "^13.11.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.14",
-    "@types/mongoose": "^5.11.97",
     "@types/react": "^18.2.25",
     "@types/validator": "^13.11.2",
     "concurrently": "^8.2.1",

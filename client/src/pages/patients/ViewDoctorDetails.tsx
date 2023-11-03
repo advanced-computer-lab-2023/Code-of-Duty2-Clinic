@@ -3,16 +3,15 @@ import { DoctorDetails } from "../../types";
 import {useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
 import { config } from "../../utils/config";
-import { getFormattedDate, getFormattedDateTime } from "../../utils/formatter";
+import { getFormattedDateTime } from "../../utils/formatter";
 
 
 const ViewDoctorDetails:React.FC = () => {
     const [doctor, setDoctor] = useState<DoctorDetails>({} as DoctorDetails);
-    const patientId = useLocation().pathname.split('/')[2];
     const doctorId  = useLocation().pathname.split('/')[4];
     const fetchDoctor = async () => {
         try {
-          const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors/${doctorId}`);
+          const response = await axios.get(`${config.serverUri}/patients/doctors/${doctorId}`);
           console.log(response)
           setDoctor(response.data);
         } catch (error) {

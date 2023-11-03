@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import { config } from '../../utils/config';
 
 const UpdateAccountInfo = () => {
@@ -21,12 +20,11 @@ const UpdateAccountInfo = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
-    const doctorId = useLocation().pathname.split('/')[2];
 
     useEffect(() => {
         const fetchDoctorData = async () => {
             try {
-                const response = await axios.get(`${config.serverUri}/doctors/${doctorId}`);
+                const response = await axios.get(`${config.serverUri}/doctors`);
                 const requiredDate = {
                     email: response.data.email,
                     hourlyRate: response.data.hourlyRate,
@@ -57,7 +55,7 @@ const UpdateAccountInfo = () => {
             }
         }
         try {
-            await axios.patch(`${config.serverUri}/doctors/${doctorId}/account`, form);
+            await axios.patch(`${config.serverUri}/doctors/account`, form);
             setSuccess(true);
         } catch (error: any) {
             setError(error.message);

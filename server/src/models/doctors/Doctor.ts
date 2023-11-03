@@ -1,14 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
 import { IDoctor } from './interfaces/IDoctor';
-import isMobileNumber from 'validator/lib/isMobilePhone'
+import bcrypt from 'mongoose-bcrypt'
 
 export interface IDoctorModel extends IDoctor, Document {} 
 
 export const DoctorSchema = new Schema<IDoctorModel>({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false },
-  email:{type:String,validate: [ isEmail, 'invalid email' ], unique: true},
+  username: { type: String, required: true, unique: true, index: true },
+  password: { type: String, required: true, select: false, bcrypt: true },
+  email:{ type: String, validate: [ isEmail, 'invalid email' ], unique: true, index: true },
   name: { type: String, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
   mobileNumber: { type: String, required: true },
@@ -27,8 +27,8 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   wallet: {
     type: {
       amount: Number,
-      currency: String,
-      pin: String,
+      currency: { type: String, default: 'EGP' },
+      pinCode: { type: String, bcrypt: true },
     },
     select: false,  
   },
@@ -37,6 +37,9 @@ export const DoctorSchema = new Schema<IDoctorModel>({
 }, 
 {timestamps: true}
 );
+
+
+DoctorSchema.plugin(bcrypt);
 
 
 export default mongoose.model<IDoctorModel>('Doctor', DoctorSchema);

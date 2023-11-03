@@ -28,7 +28,7 @@ const DeletePackageModal : React.FC<IDeletePackageModalProps> = ({close,onSubmit
 
     const deleteHealthPackage =async ()=>{
         
-        await axios.delete(`${config.serverUri}/healthPackages/${id}`).then(response =>{console.log(response.status) })
+        await axios.delete(`${config.serverUri}/health-packages/${id}`).then(response =>{console.log(response.status) })
         setOpenDeletingModal(false);
         onSubmit();
         close();

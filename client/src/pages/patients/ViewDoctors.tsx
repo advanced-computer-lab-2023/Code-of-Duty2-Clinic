@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import { DoctorDetails } from '../../types';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -54,11 +54,9 @@ const ViewDoctors = () => {
 
   const [error, setError] = useState('');
 
-  const patientId = useLocation().pathname.split('/')[2];
-
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors`);
+      const response = await axios.get(`${config.serverUri}/patients/doctors`);
       setFilteredDoctors(response.data);
     } catch (error: any) {
       setError(error.message);
@@ -76,7 +74,7 @@ const ViewDoctors = () => {
         availabilityTime: dateTimeStr && new Date(dateTimeStr).toISOString(),
         isTimeSet,
       })
-      const response = await axios.get(`${config.serverUri}/patients/${patientId}/doctors`, { params });
+      const response = await axios.get(`${config.serverUri}/patients/doctors`, { params });
       setFilteredDoctors(response.data);
       setError('');
     } catch (error: any) {
@@ -142,7 +140,7 @@ const ViewDoctors = () => {
             ) : (
               filteredDoctors.map((doctor) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={doctor._id}>
-                  <DoctorItem component={Link} to={`/patient/${patientId}/doctors/${doctor._id}`}>
+                  <DoctorItem component={Link} to={`/patient/doctors/${doctor._id}`}>
                     <CardContent>
                       <DoctorInfo variant="subtitle1">Name: {doctor.name}</DoctorInfo>
                       <DoctorInfo variant="subtitle2">Speciality: {doctor.speciality}</DoctorInfo>

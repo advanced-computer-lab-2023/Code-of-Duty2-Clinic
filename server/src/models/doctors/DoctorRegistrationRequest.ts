@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import isMobileNumber from 'validator/lib/isMobilePhone'
 import { IDoctorBaseInfo } from './interfaces/IDoctorBaseInfo';
 import isEmail from 'validator/lib/isEmail';
+import bcrypt from 'mongoose-bcrypt'
 
 export interface IDoctorRegistrationRequestModel extends IDoctorBaseInfo, Document {} 
 
@@ -22,5 +23,6 @@ export const DoctorRegistrationRequestSchema = new Schema<IDoctorRegistrationReq
 {timestamps: true}
 );
 
+DoctorRegistrationRequestSchema.plugin(bcrypt);
 
 export default mongoose.model<IDoctorRegistrationRequestModel>('DoctorRegistrationRequest', DoctorRegistrationRequestSchema);

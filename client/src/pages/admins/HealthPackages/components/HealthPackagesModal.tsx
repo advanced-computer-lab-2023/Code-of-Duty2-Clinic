@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 import Modal  from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -58,7 +58,7 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
         } 
         const createHealthPackage = async()=>{
             const data = perpareNewData()
-            await axios.post(`${config.serverUri}/healthPackages`,data)
+            await axios.post(`${config.serverUri}/health-packages`,data)
 
             onSubmit?.(false,true,healthPackage)
             setOpenEditingModal(false);
@@ -68,7 +68,7 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
 
         const saveHealthPackage = async ()=>{
             const data = perpareNewData()  
-            await axios.put(`${config.serverUri}/healthPackages/${healthPackage._id}`,data).then(response =>{console.log(response.status) })
+            await axios.put(`${config.serverUri}/health-packages/${healthPackage._id}`,data).then(response =>{console.log(response.status) })
            
             onSubmit?.(false,false,healthPackage)
             setOpenEditingModal(false);

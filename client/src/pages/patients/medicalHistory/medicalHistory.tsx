@@ -29,7 +29,6 @@ import image from '../../../assets/medicalDoc2.png'
 
 const MedicalHistory:React.FC=()=> {
 
-    const patientId = useLocation().pathname.split('/')[2];
     const [files,setFiles] = useState<[string]>()
     const comment =useRef<HTMLInputElement>(null)
     const [file,setFile] = useState<File>()
@@ -46,7 +45,7 @@ const MedicalHistory:React.FC=()=> {
         getAllFiles()
         },[])
     const getAllFiles=()=>{
-        axios.get(`${config.serverUri}/patients/${patientId}/health-records`).then(res=>{setFiles(res.data);setTableLoading(false)})
+        axios.get(`${config.serverUri}/patients/health-records`).then(res=>{setFiles(res.data);setTableLoading(false)})
     }
     const SaveImage =async (e:any) => {
         setSaveLoading(true)
