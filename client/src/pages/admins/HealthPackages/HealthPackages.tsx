@@ -53,7 +53,7 @@ const HealthPackagesPage:React.FC=()=>{
     useEffect(()=>{fetchHealthPackages()},[]);
 
    function fetchHealthPackages(){
-        axios.get(`${config.serverUri}/healthPackages`).then(response =>{setHealthPackages(response.data) })
+        axios.get(`${config.serverUri}/admins/health-packages`).then(response =>{setHealthPackages(response.data) })
     }
    
    

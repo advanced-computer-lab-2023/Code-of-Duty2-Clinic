@@ -39,7 +39,6 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.14",
-    "@types/mongoose": "^5.11.97",
     "@types/react": "^18.2.25",
     "@types/validator": "^13.11.2",
     "concurrently": "^8.2.1",
