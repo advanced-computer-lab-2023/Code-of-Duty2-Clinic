@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { Request,Response } from "express";
 import { deleteHealthPackage } from "../../services/health-packages";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 
-
-export const deleteHealthPackageHandler = async (req: Request, res: Response)=>{
+export const deleteHealthPackageHandler = async (req:AuthorizedRequest, res: Response)=>{
     try {
         const deleteResponse = await deleteHealthPackage(req.params.id);
 

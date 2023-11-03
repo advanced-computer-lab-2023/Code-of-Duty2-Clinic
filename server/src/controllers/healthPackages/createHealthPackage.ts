@@ -4,9 +4,9 @@ const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharamcyMedici
 import checkIfIncludes from '../../utils/attributeExistanceChecker'
 import { StatusCodes } from "http-status-codes";
 import { createHealthPackage } from "../../services/health-packages";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 
- 
-export const addHealthPackage = async (req: Request, res: Response)=>{
+export const addHealthPackage = async (req:AuthorizedRequest, res: Response)=>{
 
 
     const requestAttributes = Object.keys(req.body)

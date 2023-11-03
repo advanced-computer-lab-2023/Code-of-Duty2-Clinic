@@ -8,6 +8,8 @@ import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
+
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { ROLE } from "../../types/Role";
@@ -29,6 +31,17 @@ patientRouter
 
 .get('/prescriptions', getPatientPrescriptions)
 
+.get('/family-members', getPatientRegisteredFamilyMembers)
+
+.get('/appointments', getAppointmentsWithAllDoctors)
+
+.get('prescriptions', getAllPrescriptions)
+
+.get('/health-records', getPatientHealthRecords)
+
+.put('/health-records', addPatientHealthRecord)
+
+.delete('/health-records', deletePatientHealthRecord)
 .get('/family-members', getPatientRegisteredFamilyMembers)
 
 .get('/appointments', getAppointmentsWithAllDoctors)

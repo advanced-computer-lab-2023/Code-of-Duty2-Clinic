@@ -10,6 +10,7 @@ import ViewDoctors from "../../pages/patients/ViewDoctors";
 import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "./Route";
 import { patientId } from "../dummyUsers";
+import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 
 
 export const homeRoute: Route = {
@@ -58,6 +59,10 @@ export const patientPrescriptions: Route = {
     component: <PrescriptionsPage/>
 }
 
+export const patientMedicalHistoryRoute:Route = {
+    path: `/patient/${patientId}/medical-history`,
+    component:<MedicalHistory/>
+}
 const routes: Route[] = [
     homeRoute,
     viewAllDoctorsRoute,
@@ -70,6 +75,7 @@ const routes: Route[] = [
     patientDoctorAppointmentDetailsRoute,
     patientRegistrationRoute,
     patientPrescriptions,
+    patientMedicalHistoryRoute
 ];
 
 export default routes;

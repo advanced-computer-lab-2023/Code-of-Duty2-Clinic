@@ -26,4 +26,3 @@ export const authenticateUser = (req: AuthorizedRequest, res: Response, next: Ne
     res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token is invalid' });
   }
 };
-

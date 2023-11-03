@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import HealthPackage from "../../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 const  HEALTH_PACKAGE_ATTRIBUTES = ['name','amountToPay','discounts','packageDurationInYears']
 const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 
@@ -12,7 +13,7 @@ function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
 }
 
 
-export const updateHealthPackage = async (req:Request,res:Response)=>{
+export const updateHealthPackage = async (req:AuthorizedRequest,res:Response)=>{
 
     //Get attributes for validation
     const requestAttributes = Object.keys(req.body)
