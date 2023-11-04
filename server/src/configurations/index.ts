@@ -28,6 +28,13 @@ const config = {
             accessTokenExpirationTime: ACCESS_TOKEN_EXPIRATION_TIME,
             refreshTokenSecret: REFRESH_TOKEN_SECRET,
             refreshTokenExpirationTime: REFRESH_TOKEN_EXPIRATION_TIME
+        },
+        emailServiceCredentials: {
+            user: process.env.GOOGLE_EMAIL_API_USER || "",
+            clientId: process.env.GOOGLE_EMAIL_API_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_EMAIL_API_CLIENT_SECRET || "",
+            redirectUri: process.env.GOOGLE_EMAIL_API_REDIRECT_URI || "",
+            refreshToken: process.env.GOOGLE_EMAIL_API_REFRESH_TOKEN || ""
         }
     },
     frontEndUri: FRONT_END_URL

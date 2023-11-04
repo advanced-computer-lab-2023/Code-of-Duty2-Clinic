@@ -1,4 +1,4 @@
-import connectToDB from './utils/database';
+import connectToDB from './utils/database'; 
 import config from './configurations';
 import express from 'express';
 import cors from 'cors';
@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
-// app.use(cookieParser());
+app.use(cookieParser());
 
 useAllAppRoutes(path.resolve(__dirname, 'routes'));
 

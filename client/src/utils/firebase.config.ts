@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBAAISqN4H3R88rqkzvpZ5WVBUu2iy5Uzo",
-    authDomain: "clinic-pharmacy-21dea.firebaseapp.com",
-    projectId: "clinic-pharmacy-21dea",
-    storageBucket: "clinic-pharmacy-21dea.appspot.com",
-    messagingSenderId: "949064476195",
-    appId: "1:949064476195:web:31cc2cc4364c0646abb396"
-  };
+    apiKey: import.meta.env.FIREBASE_API_KEY,
+    authDomain: import.meta.env.FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.FIREBASE_APP_ID,
+};
 
 const app = initializeApp(firebaseConfig)
 const storage = getStorage(app)
