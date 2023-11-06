@@ -11,6 +11,7 @@ import ViewDoctors from "../../pages/patients/ViewDoctors";
 import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "./Route";
 import { patientId } from "../dummyUsers";
+import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
 
 
 export const allPatientsRoute: Route = {
@@ -37,6 +38,12 @@ export const addFamilyMemberRoute: Route = {
     path: `/patient/${patientId}/family-members/add`,
     component: <AddFamilyMember />
 }
+
+export const addRegisteredFamilyMemberRoute: Route = {
+    path: `/patient/${patientId}/family-members/add-registered`,
+    component: <AddRegisteredFamilyMember />
+}
+
 export const patientInfoRoute: Route = {
     path: `/patient/${patientId}/info`,
     component: <PatientInfo />
@@ -70,6 +77,7 @@ const routes: Route[] = [
     viewDoctorDetailsRoute,
     searchForDoctorsRoute,
     addFamilyMemberRoute,
+    addRegisteredFamilyMemberRoute,
     patientInfoRoute,
     patientFamilyMembersRoute,
     patientAppointmentsRoute,
