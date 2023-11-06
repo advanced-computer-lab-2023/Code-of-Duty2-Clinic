@@ -22,7 +22,16 @@ export const PatientSchema = new Schema<IPatientModel>({
  
   deliveryAddresses: { type: Array<{ type: String }>, select: false },
   imageUrl: String,
-  healthRecords: {type: Array<{ type: String }>, select: false },
+  healthRecords: {
+    type:Array<{type:{ 
+      name: {type: String, required: true},
+      url: {type: String, required: true},
+      recordType:{type:String,required:true},
+      fileType:{type:String,required:true},
+      createdAt: {type: Date,immutable: true}
+    }}>,
+    required: false
+  },
   subscribedPackage: 
   {
     type:{

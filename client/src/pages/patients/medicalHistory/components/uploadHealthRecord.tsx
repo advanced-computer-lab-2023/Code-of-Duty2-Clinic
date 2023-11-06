@@ -1,62 +1,121 @@
-import * as React from 'react';
+import React, { useState,useRef } from 'react';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import Typography from '@mui/joy/Typography';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import LoadingButton from '@mui/lab/LoadingButton';
+import axios from 'axios';
+import {  Stack, Typography } from '@mui/material';
 
-const UploadHealthRecordModal:React.FC= () => {
-  const [open, setOpen] = React.useState(false);
+import { IHealthRecord } from '../medicalHistory';
+import {uploadImage} from '../../../../services/fileUploader'
+import { config } from '../../../../configuration';
+import {uploadHealthRecordModalStyle,textFieldStyle,VisuallyHiddenInput} from '../medicalHistoryCSS'
+
+interface UploadHealthRecordModalProps {
+  openUpload:boolean
+  close:(healthrecord?:IHealthRecord)=>void 
+}
+const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUpload,close}) => {
+  const [open, setOpen] = useState(openUpload);
+  const fileName =useRef<string>(null!)
+  const file = useRef<File>()
+  const imgUrl = useRef<string>(null!);
+  const recordType = useRef<string>(null!);
+  const [saveLoading, setSaveLoading] = useState(false);
+
+  const SaveImage =async (e:any) => {
+    e.preventDefault()
+    setSaveLoading(true)
+    if (!file||fileName.current==="") return;
+    if(file.current)
+    imgUrl.current= await uploadImage(file.current,fileName.current||"")
+    const healthrecord:IHealthRecord = {
+      name:fileName.current,
+      url:imgUrl.current,
+      recordType:recordType.current,
+      fileType:file.current?.type,
+      createdAt:new Date(),
+    }
+    try{    
+      await axios.put(`${config.serverUri}/patients/health-records`,healthrecord)
+      setSaveLoading(false)
+      close(healthrecord)
+    }catch(error){
+      setSaveLoading(false)
+      close(healthrecord)
+    }
+   
+   
+  }
+  const fileChange=(e:any)=>{console.log(fileName.current);file.current=e.target.files[0]} 
   return (
-    <React.Fragment>
-      <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
-        Open modal
-      </Button>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog
-          aria-labelledby="nested-modal-title"
-          aria-describedby="nested-modal-description"
-          sx={(theme) => ({
-            [theme.breakpoints.only('xs')]: {
-              top: 'unset',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              borderRadius: 0,
-              transform: 'none',
-              maxWidth: 'unset',
-            },
-          })}
-        >
-          <Typography id="nested-modal-title" level="h2">
-            Are you absolutely sure?
-          </Typography>
-          <Typography id="nested-modal-description" textColor="text.tertiary">
-            This action cannot be undone. This will permanently delete your account
-            and remove your data from our servers.
-          </Typography>
-          <Box
-            sx={{
-              mt: 1,
-              display: 'flex',
-              gap: 1,
-              flexDirection: { xs: 'column', sm: 'row-reverse' },
-            }}
-          >
-            <Button variant="solid" color="primary" onClick={() => setOpen(false)}>
-              Continue
-            </Button>
-            <Button
-              variant="outlined"
-              color="neutral"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </ModalDialog>
-      </Modal>
-    </React.Fragment>
+   
+      <div>
+         <Modal 
+                open={open}
+                onClose={()=>{setOpen(false);close()}}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                >
+                <Box sx={uploadHealthRecordModalStyle}>
+                <Typography align='center' color="#103939" fontFamily="Inter" id="modal-modal-title" variant="h6" component="h2">
+                  Upload Health Record
+                </Typography>
+                <Stack  
+                      direction='column'
+                      component="form"
+                      sx={{
+                        '& .MuiTextField-root': { mt: 3, width: '25ch', },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                    <TextField
+                      onChange={(ev)=>{fileName.current=ev.target.value}}
+                      id="filled-multiline-flexible"
+                      label="File Name"
+                      multiline
+                      maxRows={1}
+                      margin='normal'
+                      variant="standard"
+                      size='small'
+                      sx={textFieldStyle}
+                      
+                    />
+                     <TextField
+                      onChange={(ev)=>{recordType.current=ev.target.value}}
+                      id="filled-multiline-flexible"
+                      label="Record Type"
+                      multiline
+                      maxRows={1}
+                      margin='normal'
+                      variant="standard"
+                      size='small'
+                      sx={textFieldStyle}
+                      
+                    />
+                        <Button sx={{backgroundColor:'#103939',maxWidth:200}}component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                          Select file
+                          <VisuallyHiddenInput onChange={fileChange} type="file" />
+                        </Button>
+
+                        <LoadingButton
+                        sx={{marginTop:10,backgroundColor:'#103939',maxWidth:100,color:"white",":hover":{color:'black',borderColor:'#103939'}}}
+                        loading={saveLoading}
+                        loadingPosition="start"
+                        variant="outlined"
+                        onClick={SaveImage}
+                        
+                      >
+                        Upload
+                      </LoadingButton>
+                </Stack>
+                </Box>
+            </Modal>
+      </div>
+   
   );
 }
 export default UploadHealthRecordModal
