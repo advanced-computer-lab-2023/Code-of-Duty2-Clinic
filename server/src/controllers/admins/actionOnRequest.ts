@@ -30,7 +30,7 @@ export const acceptDoctorRegistrationRequest = async (req: Request, res: Respons
       medicalDegree: request.medicalDegree,
       wallet: { amount: 0 },
       contract: '',
-      contractStatus: 'pending'
+      contractStatus: 'accepted'
     });
 
     await newDoctor.save();

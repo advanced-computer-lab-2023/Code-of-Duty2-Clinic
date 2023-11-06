@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import DoctorRegistrationRequestModel from '../../models/doctors/DoctorRegistrationRequest';
+import { stat } from 'fs';
 
 
  const getDoctorRegistrationRequests = async (req: Request, res: Response) => {
   try {
-    const request = await DoctorRegistrationRequestModel.find();
+    const request = await DoctorRegistrationRequestModel.find({status: 'pending'});
 
     if (!request) {
       return res.status(404).json({ message: 'Doctor registration request not found' });

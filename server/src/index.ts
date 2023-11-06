@@ -5,6 +5,8 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import DoctorRegistrationRequestModel from './models/doctors/DoctorRegistrationRequest';
+import Patient from './models/patients/Patient';
 
 const app = express();
 
@@ -37,5 +39,7 @@ async function useAllAppRoutes() {
             app.use(`/api/${applicationEntities}`, route);
         });
     });
+    const req = new Date();
+    console.log(req);
 }
 

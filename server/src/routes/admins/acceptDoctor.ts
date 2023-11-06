@@ -3,6 +3,6 @@ import {acceptDoctorRegistrationRequest}  from '../../controllers/admins/actionO
 
 const router = express.Router();
 
-router.post('/acceptDoctor/username', acceptDoctorRegistrationRequest);
+router.post('/acceptDoctor/:username', acceptDoctorRegistrationRequest);
 
 export default router;
