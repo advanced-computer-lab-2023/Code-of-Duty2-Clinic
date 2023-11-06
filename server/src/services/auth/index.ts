@@ -61,3 +61,15 @@ const validateUserPassword = async (user: any, password: string) => {
         throw new Error(emailOrPasswordIncorrectErrorMessage);
     }
 }
+
+export const sendEmailToResetPassword = async (email: string) => {
+    const admin = await findAdminByUsername(email);
+    if(admin) {
+        return ;
+    }
+    const patient = await findPatientByUsername(email);
+    if(patient) {
+        return ;
+    }
+    throw new Error(emailOrPasswordIncorrectErrorMessage);
+}

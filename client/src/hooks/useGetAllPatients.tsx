@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
-import { config } from '../utils/config';
+import { config } from '../configuration';
 import { Patient } from '../types/Patient';
 
 const getAllPatients = async (): Promise<Patient[]> => {
