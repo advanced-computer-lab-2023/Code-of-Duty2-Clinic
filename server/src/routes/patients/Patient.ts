@@ -42,6 +42,7 @@ patientRouter
 .put('/health-records', addPatientHealthRecord)
 
 .delete('/health-records', deletePatientHealthRecord)
+
 .get('/family-members', getPatientRegisteredFamilyMembers)
 
 .get('/appointments', getAppointmentsWithAllDoctors)

@@ -7,7 +7,20 @@ import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistratio
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
+import PatientList from "../../components/PatientList";
+import PatientInfo from "../../pages/patients/PatientInfo";
 
+
+
+export const allPatientsRoute: Route = {
+    path: '/doctor/patients',
+    element: <PatientList />
+}
+
+export const patientInfoRoute: Route = {
+    path: '/patient/info',
+    element: <PatientInfo />
+}
 
 export const doctorDashboardRoute: Route = {
     path: '/doctor/dashboard',
@@ -50,6 +63,8 @@ export const patientSearchRoute: Route = {
 }
 
 const routes: Route[] = [
+    allPatientsRoute,
+    patientInfoRoute,
     doctorDashboardRoute,
     updateAccountInfoRoute,
     doctorAppointmentsRoute,

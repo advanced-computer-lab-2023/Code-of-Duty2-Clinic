@@ -9,8 +9,8 @@ import generalRoutes from "./data/routes/generalRoutes";
 import PublicRoutesHandler from "./components/auth/PublicRoutesHandler";
 import LoginRoutesHandler from "./components/auth/LoginRoutesHandler";
 import loginRoutes from "./data/routes/loginRoutes";
-import { Route, Routes } from "react-router-dom";
 import axios from "axios";
+import {Route, Routes } from 'react-router-dom';
 
 
 axios.defaults.withCredentials = true;

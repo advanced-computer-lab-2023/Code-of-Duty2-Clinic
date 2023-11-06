@@ -9,6 +9,9 @@ import getRegisteredPatientDetails from '../../controllers/doctors/getRegistered
 import { UserRole } from "../../types/UserRole";
 import { authorizeUser } from '../../middlewares/authorization';
 import { authenticateUser } from '../../middlewares/authentication';
+import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
+import { getAllPatients } from '../../controllers/patients/getAllPatients';
+
 
 const doctorRouter = express.Router();
 
@@ -17,6 +20,8 @@ doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
 doctorRouter
 .patch('/account', updateDoctor)
+
+.get('/patients', getAllPatients)
 
 .get('/allDetails', getDoctor)
 
