@@ -17,13 +17,11 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   affiliation: {type: String, required: true},
   educationalBackground: {type: String, required: true},
   speciality: {type: String, required: true},
-  availableSlots: [
-    {startTime: Date, endTime: Date}
-  ],
+  availableSlots: { type: [{startTime: Date, endTime: Date}], default: [], select: false },
   imageUrl: String,
-  identificationUrl: String,
-  medicalLicenseUrl: String,
-  medicalDegreeUrl: String,
+  identificationUrl: { type: String, select: false },
+  medicalLicenseUrl: { type: String, select: false },
+  medicalDegreeUrl: { type: String, select: false },
   wallet: {
     type: {
       amount: Number,
@@ -32,8 +30,16 @@ export const DoctorSchema = new Schema<IDoctorModel>({
     },
     select: false,  
   },
-  contractUrl: String,
+  contractUrl: { type: String, select: false },
   contractStatus: { type: String, enum: ['pending', 'accepted', 'rejected'], required: true, default: 'accepted', select: false },
+  passwordReset: {
+    type: {
+      code: String,
+      expiryDate: Date,
+    },
+    required: false,
+    select: false,
+  },
 }, 
 {timestamps: true}
 );

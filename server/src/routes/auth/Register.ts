@@ -1,7 +1,8 @@
-const express = require('express');
 
+import express from "express";
 import { registerAsDoctor } from "../../controllers/doctors/doctorRegisterController";
 import { registerAsPatient } from "../../controllers/patients/patientRegisterController";
+
 const registrationRouter = express.Router();
 
 registrationRouter

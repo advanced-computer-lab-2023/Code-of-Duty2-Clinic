@@ -7,6 +7,14 @@ export interface IAdminModel extends IAdmin, Document {}
 export const AdminSchema = new Schema<IAdminModel>({
   username: { type: String, required: true, unique: true, index: true },
   password: { type: String, required: true, select: false, bcrypt: true },
+  passwordReset: {
+    type: {
+      code: String,
+      expiryDate: Date,
+    },
+    required: false,
+    select: false,
+  },
 }, 
 {timestamps: true}
 );

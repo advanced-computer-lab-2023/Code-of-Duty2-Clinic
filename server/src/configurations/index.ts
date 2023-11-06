@@ -13,7 +13,13 @@ const ACCESS_TOKEN_EXPIRATION_TIME = process.env.ACCESS_TOKEN_EXPIRATION_TIME ||
 const REFRESH_TOKEN_EXPIRATION_TIME = process.env.REFRESH_TOKEN_EXPIRATION_TIME || "40s";
 
 const FRONT_END_URL = process.env.FRONT_END_URL || "http://localhost:5173";
-const corsOptions: cors.CorsOptions = {};
+
+const corsOptions: cors.CorsOptions = {
+    origin: FRONT_END_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
 
 
 const config = {
@@ -28,6 +34,13 @@ const config = {
             accessTokenExpirationTime: ACCESS_TOKEN_EXPIRATION_TIME,
             refreshTokenSecret: REFRESH_TOKEN_SECRET,
             refreshTokenExpirationTime: REFRESH_TOKEN_EXPIRATION_TIME
+        },
+        emailServiceCredentials: {
+            user: process.env.GOOGLE_EMAIL_API_USER || "",
+            clientId: process.env.GOOGLE_EMAIL_API_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_EMAIL_API_CLIENT_SECRET || "",
+            redirectUri: process.env.GOOGLE_EMAIL_API_REDIRECT_URI || "",
+            refreshToken: process.env.GOOGLE_EMAIL_API_REFRESH_TOKEN || ""
         }
     },
     frontEndUri: FRONT_END_URL

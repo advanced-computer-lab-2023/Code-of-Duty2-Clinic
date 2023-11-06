@@ -10,13 +10,13 @@ import { getHealthPackage } from "../../controllers/healthPackages/getHealthPack
 import { updateHealthPackage } from "../../controllers/healthPackages/updateHealthPackage";
 import { deleteHealthPackageHandler } from "../../controllers/healthPackages/deleteHealthPackage";
 import { authenticateUser } from "../../middlewares/authentication";
-import { ROLE } from "../../types/Role";
+import { UserRole } from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 
 const router = express.Router();
 
 router.use(authenticateUser);
-router.use(authorizeUser(ROLE.ADMIN));
+router.use(authorizeUser(UserRole.ADMIN));
 
 router.route('/health-packages')
         .post(addHealthPackage)

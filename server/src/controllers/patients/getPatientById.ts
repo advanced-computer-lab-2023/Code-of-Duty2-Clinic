@@ -7,7 +7,7 @@ export const getPatientById = async (req: Request, res: Response) => {
     const patient = await findPatientById(id);
     
     if (!patient) {
-        return res.status(StatusCodes.NOT_FOUND).json({ error: 'Patient not' });
+        return res.status(StatusCodes.NOT_FOUND).json({ error: 'No such patient found' });
     } else {
         return res.status(StatusCodes.OK).json(patient);
     }

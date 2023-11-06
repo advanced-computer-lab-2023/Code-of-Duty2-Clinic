@@ -11,11 +11,11 @@ import { getPatientPrescriptions } from "../../controllers/prescriptions/getPati
 import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
-import { ROLE } from "../../types/Role";
+import { UserRole } from "../../types/UserRole";
 const patientRouter = express.Router();
 
-// patientRouter.use(authenticateUser);
-// patientRouter.use(authorizeUser(ROLE.PATIENT));
+patientRouter.use(authenticateUser);
+patientRouter.use(authorizeUser(UserRole.PATIENT));
 
 patientRouter
 .get('/doctors', getAllDoctors)
@@ -36,11 +36,12 @@ patientRouter
 
 .get('prescriptions', getAllPrescriptions)
 
-.get('/:patientId/health-records', getPatientHealthRecords)
+.get('/health-records', getPatientHealthRecords)
 
-.put('/:patientId/health-records', addPatientHealthRecord)
+.put('/health-records', addPatientHealthRecord)
 
-.delete('/:patientId/health-records', deletePatientHealthRecord)
+.delete('/health-records', deletePatientHealthRecord)
+
 .get('/family-members', getPatientRegisteredFamilyMembers)
 
 .get('/appointments', getAppointmentsWithAllDoctors)

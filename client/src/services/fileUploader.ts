@@ -2,7 +2,7 @@ import {v4 as generateID } from 'uuid'
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from '../utils/firebase.config';
 
-export const uploadImage =async (file:File,comment:string):Promise<any> => {
+export const uploadImage =async (file:File, comment:string):Promise<any> => {
   
     const imageID = generateID();
     return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 import { Dayjs } from 'dayjs';
 import { Link, useLocation } from 'react-router-dom';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -107,7 +107,7 @@ const Appointments: React.FC<Props> = ({ isPatient }) => {
           View Appointments
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-          <TextField label="Doctor Name" value={targetName} name='name' onChange={handleChangeTargetName} sx={{ marginRight: 2 }} />
+          <TextField label={`${isPatient? "Doctor": "Patient"} Name`} value={targetName} name='name' onChange={handleChangeTargetName} sx={{ marginRight: 2 }} />
           <FormControl>
               <InputLabel id="gender-label">Appointment Status</InputLabel>
               <Select labelId="appointment-status-label" name="status" value={status} onChange={handleAppointmentStatusChange} 
@@ -144,10 +144,10 @@ const Appointments: React.FC<Props> = ({ isPatient }) => {
             ) : (
               filteredAppointments.map((appointment) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={appointment.appointmentId}>
-                  <AppointmentItem component={Link} to={`/patient/${userId}/appointment/${appointment.appointmentId}`}>
+                  <AppointmentItem component={Link} to={`/${isPatient? 'patient': 'doctor'}/appointment/${appointment.appointmentId}`}>
                     {/* <DoctorImage image={doctor.image} /> */}
                     <CardContent>
-                      <AppointmentInfo variant="subtitle1">{isPatient ? 'Patient': 'Doctor'} Name: {appointment.user.name}</AppointmentInfo>
+                      <AppointmentInfo variant="subtitle1">{isPatient ? 'Doctor': 'Patient'} Name: {appointment.user.name}</AppointmentInfo>
                       <AppointmentInfo variant="subtitle2">Appointment day: {getFormattedDate(appointment.timePeriod.startTime)}</AppointmentInfo>
                       <AppointmentInfo variant="subtitle2">Appointment period: {getFormattedTime(appointment.timePeriod.startTime)} - {getFormattedTime(appointment.timePeriod.endTime)}</AppointmentInfo>
                     </CardContent>

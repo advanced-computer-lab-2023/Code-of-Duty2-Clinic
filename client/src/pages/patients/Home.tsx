@@ -1,7 +1,9 @@
-const Home: React.FC = () => {
-    return (
-        <div>Patient Home</div>
-    );
-}
+import React from 'react';
 
-export default Home;
+export default function Home() {
+    return (
+        <div>
+            <h1>Home</h1>
+        </div>
+    )
+}  

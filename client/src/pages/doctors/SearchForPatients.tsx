@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../../css/PatientSearchStyle.css';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 import { useLocation } from 'react-router-dom';
 
 const PatientSearch = () => {

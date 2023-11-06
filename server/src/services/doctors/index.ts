@@ -1,8 +1,9 @@
+import { type } from "os";
 import { getClinicCommission } from "../../models/clinic/Clinic";
 import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
 import HealthPackage, { IHealthPackageModel } from "../../models/health_packages/HealthPackage";
 import Patient from "../../models/patients/Patient";
-import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
+import { entityEmailDoesNotExistError, entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
 
 export const findAllDoctors = async () => 
@@ -26,7 +27,6 @@ export const createNewDoctor = async (username: string, password: string) => {
     await newDoctor.save();
 }
 
-
 export const updateInfo = async (doctorId: string, updatedInfo: any ) => {
     const doctor = await findDoctorById(doctorId);
     const updates = Object.keys(updatedInfo);
@@ -39,7 +39,35 @@ export const updateInfo = async (doctorId: string, updatedInfo: any ) => {
     await doctor.save();
 }
 
-export const getAllDoctorsRequiredInfo = async (patientId: string, urlQuery: any) => {
+export const updatePasswordByEmail = async (email: string, newPassword: string) => {
+    const doctor = await findDoctorByEmail(email);
+    if (!doctor) {
+      throw new Error(entityEmailDoesNotExistError('doctor', email));
+    }
+    await updatePassword(doctor, newPassword);
+}
+
+export const updatePasswordById = async (doctorId: string, newPassword: string) => {
+    const doctor = await findDoctorById(doctorId);
+    if (!doctor) {
+      throw new Error(entityIdDoesNotExistError('doctor', doctorId));
+    }
+    await updatePassword(doctor, newPassword);
+}
+
+export const updatePassword = async (doctor: IDoctorModel, newPassword: string) => {
+    doctor.password = newPassword;
+    await doctor.save();
+}
+
+type DoctorInfo = {
+    _id: string;
+    name: string;
+    speciality: string | undefined;
+    sessionPrice: number;
+}
+
+export const getAllDoctorsRequiredInfo = async (patientId: string, urlQuery: any): Promise<DoctorInfo[]> => {
     const patient = await Patient.findById(patientId);
     if (!patient) {
       throw new Error(entityIdDoesNotExistError('patient', patientId));
@@ -57,12 +85,11 @@ export const getAllDoctorsRequiredInfo = async (patientId: string, urlQuery: any
       })
       .select({ _id: 1, name: 1, hourlyRate: 1, speciality: 1, imageUrl: 1});
 
-    const doctorsRequiredInfo = await getDoctorRequiredInfo(allDoctors, packageDetails);
-
+    return await getDoctorRequiredInfo(allDoctors, packageDetails);
 }
 
 async function getDoctorRequiredInfo(allDoctors: IDoctorModel[], packageDetails: IHealthPackageModel | null) {
-    return await Promise.all(allDoctors.map(async (doctor) => ({
+    return await Promise.all(allDoctors.map(async (doctor: IDoctorModel) => ({
         _id: doctor._id,
         name: doctor.name,
         speciality: doctor.speciality,
@@ -78,14 +105,23 @@ async function getRequiredSessionPrice(doctorHourlyRate: number, healthPackageDe
 }
 
 
-function getMetchingDoctorsQueryFields(urlQuery: any) {
-    const { name, speciality, availabilityTime, isTimeSet } = urlQuery;
-
-    let searchQuery: {
+type DoctorUrlQuery = {
+    name?: string;
+    speciality?: string;
+    availabilityTime?: string;
+    isTimeSet?: string;
+}
+type DoctorSearchQuery = {
     name?: { $regex: string; $options: string };
     speciality?: { $regex: string; $options: string };
     availableSlots?: { $elemMatch: { startTime: any; endTime: any } };
-    } = {};
+}
+
+function getMetchingDoctorsQueryFields(urlQuery: DoctorUrlQuery) {
+    const { name, speciality, availabilityTime } = urlQuery;
+    const isTimeSet = urlQuery.isTimeSet === 'true';
+
+    let searchQuery: DoctorSearchQuery = {};
     
     if (name && name !== '') {
     searchQuery.name = { $regex: `^${name}`, $options: 'i' };
@@ -96,13 +132,13 @@ function getMetchingDoctorsQueryFields(urlQuery: any) {
 
 
     if (availabilityTime && availabilityTime !== '') {
-    const { requestedStartTime, requestedEndTime } = getRequestedTimePeriod(availabilityTime, isTimeSet);
-    searchQuery.availableSlots = {
-        $elemMatch: {
-        startTime: { $lte: requestedStartTime },
-        endTime: { $gte: requestedEndTime }
-        }
-    };
+        const { requestedStartTime, requestedEndTime } = getRequestedTimePeriod(availabilityTime, isTimeSet);
+        searchQuery.availableSlots = {
+            $elemMatch: {
+                startTime: { $lte: requestedStartTime },
+                endTime: { $gte: requestedEndTime }
+            }
+        };
     }
     return searchQuery;
 }

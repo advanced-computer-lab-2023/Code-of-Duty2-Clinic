@@ -82,6 +82,14 @@ export const PatientSchema = new Schema<IPatientModel>({
     required: false,
     select: false,
   },
+  passwordReset: {
+    type: {
+      code: String,
+      expiryDate: Date,
+    },
+    required: false,
+    select: false,
+  },
 }, 
 {timestamps: true}
 );

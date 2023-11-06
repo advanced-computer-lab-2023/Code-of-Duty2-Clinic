@@ -20,8 +20,8 @@ export const getAllDoctors = async (req: AuthorizedRequest, res: Response) => {
   if(!patientId) return res.status(StatusCodes.BAD_REQUEST).json({message: 'patientId is required'});
 
   try {
-   
     const doctorsRequiredInfo = await getAllDoctorsRequiredInfo(patientId, req.query);
+    console.log(doctorsRequiredInfo);
     res.status(StatusCodes.OK).json(doctorsRequiredInfo);
 
   } catch (err) {

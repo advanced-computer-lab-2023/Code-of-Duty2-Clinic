@@ -1,34 +1,40 @@
-import AdminForm from "../../components/adminForm";
-import UserList from "../../pages/admins/userList";
-import { Route } from "./Route";
-import DoctorRegistrationRequests from"../../pages/admins/viewDoctorRequests"
-import HealthPackagesPage from "../../pages/admins/HealthPackages/HealthPackages";
+import AdminForm from '../../components/adminForm';
+import UserList from '../../pages/admins/userList';
+import { Route } from '../../types';
+import DoctorRegistrationRequests from '../../pages/admins/ViewDoctorRequests';
+import HealthPackagesPage from '../../pages/admins/HealthPackages/HealthPackages';
+import Home from '../../pages/admins/Home';
 
+export const adminDashboardRoute: Route = {
+    path: '/admin/dashboard',
+    element: <Home />,
+};
 
 export const adminAddRoute: Route = {
     path: '/admin/add',
-    component: <AdminForm />
+    element: <AdminForm />
 }
 
 export const userlistRoute: Route = {
     path: '/admin/users',
-    component: <UserList />
+    element: <UserList />
 }
 
 export const viewDoctorRequestsRoute: Route = {
     path: '/admin/doctor-requests',
-    component: <DoctorRegistrationRequests />
+    element: <DoctorRegistrationRequests />
 }
 
 export const HealthPackagesRoute :Route ={
-    path:"/admin/healthPackages" ,
-    component:<HealthPackagesPage/>
+    path:'/admin/healthPackages' ,
+    element:<HealthPackagesPage/>
 }
 const routes: Route[] = [
     adminAddRoute,
     userlistRoute,
     viewDoctorRequestsRoute,
     HealthPackagesRoute,
+    adminDashboardRoute,
 ];
 
 export default routes;

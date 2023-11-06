@@ -6,13 +6,13 @@ export const findAppointmentById = async (id: string) => await Appointment.findB
 
 export const getAppointments = async (isPatient: boolean, userId: string, urlQuery: any) => {
     const searchQuery = getMatchingAppointmentsFields(urlQuery);
-
+    const user = isPatient ? 'patientId' : 'doctorId';
     return await Appointment.aggregate([
-        { $match: { doctorId: new mongoose.Types.ObjectId(userId) } },
+        { $match: { [user]: new mongoose.Types.ObjectId(userId) }},
         {
             $lookup: {
-                from: isPatient ? 'patients' : 'doctors',
-                localField: isPatient ? 'patientId' : 'doctorId',
+                from: isPatient ? 'doctors' : 'patients',
+                localField: isPatient ? 'doctorId' : 'patientId',
                 foreignField: '_id',
                 as: 'user',
             }

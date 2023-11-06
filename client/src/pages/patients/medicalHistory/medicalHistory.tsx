@@ -3,7 +3,6 @@ import { storage } from '../../../utils/firebase.config';
 import { ref, deleteObject } from "firebase/storage";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import Box from '@mui/material/Box';
 import Modal from '@mui/joy/Modal';
@@ -16,14 +15,13 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import { EnhancedTableToolbar } from './components/tableToolBar';
 import { EnhancedTableHead } from './components/tableHead';
-import { CircularProgress, Divider, IconButton, Skeleton, Stack, Typography } from '@mui/material';
+import { CircularProgress, Divider, IconButton, Stack,Typography } from '@mui/material';
 import image from '../../../assets/medicalDoc2.png'
 import { saveAs } from 'file-saver';
 import FileViewer from 'react-file-viewer'
-
 import UploadHealthRecordModal from './components/uploadHealthRecord';
 import TableLoadingSkeleton from '../../../components/tableLoadingSkeleton';
-import { config } from "../../../utils/config";
+import { config } from "../../../configuration";
 import {FileViewModalStyle} from './medicalHistoryCSS'
 
 export interface IHealthRecord {
@@ -43,7 +41,6 @@ const MedicalHistory:React.FC=()=> {
   const [fileType,setFileType] = useState<string>()
   const [viewFileUrl,setViewFileUrl] = useState<string>()
   const [viewFileName,setViewFileName] = useState<string>()
-  const [doc,setDoc] = useState<any>()
 
   useEffect(()=>{
       getAllFiles()
@@ -120,7 +117,6 @@ const MedicalHistory:React.FC=()=> {
   const openViewFileModal = (file:IHealthRecord)=>{
     setViewFileName(file.name);setViewFileUrl(file.url);
     setFileType(file.fileType?.split('/')[1]);
-    setDoc([{uri:viewFileUrl},{uri:viewFileModal}]);
     setViewFileModal(true)
   }
     

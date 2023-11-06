@@ -6,17 +6,22 @@ import { getRegisteredPatients } from '../../controllers/doctors/getRegisteredPa
 import { getAppointmentDetails } from '../../controllers/doctors/getAppointmentDetails';
 import { getDoctorById } from '../../controllers/patients/getDoctorById';
 import getRegisteredPatientDetails from '../../controllers/doctors/getRegisteredPatientDetails';
-import { ROLE } from "../../types/Role";
+import { UserRole } from "../../types/UserRole";
 import { authorizeUser } from '../../middlewares/authorization';
 import { authenticateUser } from '../../middlewares/authentication';
+import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
+import { getAllPatients } from '../../controllers/patients/getAllPatients';
+
 
 const doctorRouter = express.Router();
 
 doctorRouter.use(authenticateUser);
-doctorRouter.use(authorizeUser(ROLE.DOCTOR));
+doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
 doctorRouter
 .patch('/account', updateDoctor)
+
+.get('/patients', getAllPatients)
 
 .get('/allDetails', getDoctor)
 

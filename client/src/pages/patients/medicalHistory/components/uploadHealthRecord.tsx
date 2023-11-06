@@ -4,15 +4,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Modal from '@mui/joy/Modal';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {uploadImage} from '../../../../services/fileUploader'
 import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
-import { config } from '../../../../utils/config';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import {  Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+
 import { IHealthRecord } from '../medicalHistory';
+import {uploadImage} from '../../../../services/fileUploader'
+import { config } from '../../../../configuration';
 import {uploadHealthRecordModalStyle,textFieldStyle,VisuallyHiddenInput} from '../medicalHistoryCSS'
 
 interface UploadHealthRecordModalProps {

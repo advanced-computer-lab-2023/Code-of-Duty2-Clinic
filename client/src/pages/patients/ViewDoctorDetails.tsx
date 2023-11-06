@@ -2,7 +2,7 @@ import axios from "axios";
 import { DoctorDetails } from "../../types";
 import {useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
-import { config } from "../../utils/config";
+import { config } from "../../configuration";
 import { getFormattedDateTime } from "../../utils/formatter";
 
 

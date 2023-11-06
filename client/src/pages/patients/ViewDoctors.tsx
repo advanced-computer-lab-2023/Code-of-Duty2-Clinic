@@ -14,7 +14,7 @@ import Grid from '@mui/material/Grid';
 import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import {Dayjs} from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 import { getQueredDateTime } from '../../utils/formatter';
 import { filterParams } from '../../utils/filterer';
 

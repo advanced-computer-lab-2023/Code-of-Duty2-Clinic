@@ -5,10 +5,10 @@ import Box from "@mui/material/Box";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { FormControl, FormLabel } from '@mui/material';
-import { config } from '../utils/config';
+import { config } from '../configuration';
 
 const deleteModalStyle = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -57,9 +57,7 @@ const HealthPackagesModal:React.FC<HealthPackagesModalProps> =({healthPackage,cr
                 },
                 packageDurationInYears: healthPackage.packageDurationInYears
             }
-            await axios.post(`${config.serverUri}/admins/health-packages`,data)
-            //inefficient
-             //fetchHealthPackages()  request fetching from parent
+            await axios.post(`${config.serverUri}/admins/health-packages`, data)
              onSubmit?.(true);
             setOpenEditingModal(false);
             onClos?.(false)

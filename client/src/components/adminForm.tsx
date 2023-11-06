@@ -1,8 +1,9 @@
 // src/components/AdminForm.tsx
 
 import React, { useState } from 'react';
-import './adminform.css';
-import { config } from '../utils/config';
+// import './adminform.css';
+import { config } from '../configuration';
+import axios from 'axios';
 
 interface FormData {
   username: string;
@@ -27,19 +28,7 @@ const AdminForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      // Send the admin creation data to the backend API
-      const response = await fetch(`${config.serverUri}/admins/admin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        console.log('nailed it')
-      } else {
-        // Handle admin creation failure, show an error message, etc.
-      }
+      await axios.post(`${config.serverUri}/admins/admin`, formData);
     } catch (error) {
       console.error('Error:', error);
     }

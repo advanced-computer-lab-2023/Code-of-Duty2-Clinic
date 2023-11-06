@@ -3,7 +3,7 @@ import MedicineIcon from '@mui/icons-material/Medication';
 import SearchIcon from '@mui/icons-material/Search';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
-import { addFamilyMemberRoute, homeRoute, patientAppointmentsRoute, patientFamilyMembersRoute, searchForDoctorsRoute, viewAllDoctorsRoute, patientPrescriptions, patientMedicalHistoryRoute } from '../routes/patientRoutes';
+import { addFamilyMemberRoute, patientDashboardRoute, patientAppointmentsRoute, patientFamilyMembersRoute, searchForDoctorsRoute, viewAllDoctorsRoute, patientPrescriptions, patientMedicalHistoryRoute } from '../routes/patientRoutes';
 
 
 export const patientSidebarItems = [
@@ -12,7 +12,7 @@ export const patientSidebarItems = [
         items: [
             {
                 title: "Home",
-                href: homeRoute.path,
+                href: patientDashboardRoute.path,
                 icon: <HomeIcon />
             },
             {

@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import Button from '@mui/material/Button';
 import HealthPackagesModal from "./components/HealthPackagesModal";
-import { config } from "../../../utils/config";
+import { config } from "../../../configuration";
 import DeletePackageModal from "./components/DeletePackagesModal";
 
 
