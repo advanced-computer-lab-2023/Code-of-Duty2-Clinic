@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import axios from 'axios';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 
 const AddFamilyMember = () => {
 

@@ -12,11 +12,11 @@ import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthReco
 
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
-import { ROLE } from "../../types/Role";
+import { UserRole } from "../../types/UserRole";
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
-patientRouter.use(authorizeUser(ROLE.PATIENT));
+patientRouter.use(authorizeUser(UserRole.PATIENT));
 
 patientRouter
 .get('/doctors', getAllDoctors)

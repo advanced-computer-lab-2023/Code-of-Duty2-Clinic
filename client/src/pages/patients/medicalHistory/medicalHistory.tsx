@@ -1,16 +1,10 @@
 import { useState,useEffect,useRef } from 'react';
 import { storage } from '../../../utils/firebase.config';
 import { ref, deleteObject } from "firebase/storage";
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {uploadImage} from '../../../services/fileUploader'
-import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
-import { config } from "../../../utils/config";
-import { useLocation } from "react-router-dom";
+import { config } from "../../../configuration";
 import axios from "axios";
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -22,9 +16,8 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import { EnhancedTableToolbar } from './components/tableToolBar';
 import { EnhancedTableHead } from './components/tableHead';
-import { CircularProgress, Divider, IconButton, Skeleton, Stack } from '@mui/material';
+import { CircularProgress, Divider, IconButton, Stack } from '@mui/material';
 import TableLoadingSkeleton from '../../../components/tableLoadingSkeleton';
-import {Image} from 'mui-image'
 import image from '../../../assets/medicalDoc2.png'
 
 const MedicalHistory:React.FC=()=> {

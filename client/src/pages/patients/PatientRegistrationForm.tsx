@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import '../../css/PatientRegistrationFormStyle.css';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
+import axios from 'axios';
 
 interface FormData {
   username: string;
@@ -116,13 +117,7 @@ const PatientRegistrationForm: React.FC = () => {
     e.preventDefault();
 
     try {      
-      await fetch(`${config.serverUri}/patients/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      await axios.post(`${config.serverUri}/patients/register`, formData);
     } catch (error: any) {
       setError(error.message);
       console.error(error.message);

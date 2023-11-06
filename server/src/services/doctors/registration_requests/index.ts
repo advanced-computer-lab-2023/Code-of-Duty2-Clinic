@@ -37,6 +37,7 @@ export const createNewDoctorRegistrationRequest = async (request: IDoctorBaseInf
         hourlyRate: request.hourlyRate,
         affiliation: request.affiliation,
         educationalBackground: request.educationalBackground,
+        speciality: request.speciality,
     });
     return await newDoctorRegistrationRequest.save();
 }

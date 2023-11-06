@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const ViewRegisteredPatientData: React.FC = () => {
   const [patientData, setPatientData] = useState<any>(null);
@@ -8,13 +9,8 @@ const ViewRegisteredPatientData: React.FC = () => {
   const { patientId } = useParams();
   const fetchPatientData = async () => {
     try {
-      const response = await fetch(`${config.serverUri}/doctors/patients/${patientId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setPatientData(data);
-      } else {
-        console.error('Error fetching patient data');
-      }
+      const response = await axios.get(`${config.serverUri}/doctors/patients/${patientId}`);
+      setPatientData(response.data);
     } catch (error) {
       console.error('Error:', error);
     }

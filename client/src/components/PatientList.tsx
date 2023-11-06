@@ -2,7 +2,7 @@ import CardGrid from "./CardGrid";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import '@fontsource/roboto';
-import { config } from "../utils/config";
+import { config } from "../configuration";
 
 export default function PatientList() {
 

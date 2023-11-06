@@ -1,7 +1,7 @@
 import { Box, Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState} from 'react'
-import { config } from '../../../../utils/config';
+import { config } from '../../../../configuration';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const ModalStyle = {

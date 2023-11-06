@@ -2,18 +2,17 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { authenticateDoctor } from "../../services/auth";
 
-
 export const doctorLogin = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    if(! email || ! password) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Email and password are required' });
+    const { username, password } = req.body;
+    if(! username || ! password) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Username and password are required' });
     }
     try {
-        const { accessToken, refreshToken } = await authenticateDoctor(email, password);
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' });
-        res.status(StatusCodes.OK).json(accessToken);
+        const { accessToken, refreshToken, role } = await authenticateDoctor(username, password);
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, path: '/' });
+        res.status(StatusCodes.OK).json({ accessToken, role });
     }
-    catch (error: any) {
-        res.status(StatusCodes.BAD_REQUEST).json(error.message);
+    catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json(error);
     }
 }

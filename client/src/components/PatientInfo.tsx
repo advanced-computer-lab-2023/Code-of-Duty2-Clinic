@@ -3,7 +3,7 @@ import '../css/PatientInfo.css';
 import axios from 'axios';
 import { useEffect, useState} from 'react';
 import { Patient } from '../types';
-import { config } from '../utils/config';
+import { config } from '../configuration';
 
 
 export default function PatientInfo() {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import axios from 'axios';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 
 const UpdateAccountInfo = () => {
 

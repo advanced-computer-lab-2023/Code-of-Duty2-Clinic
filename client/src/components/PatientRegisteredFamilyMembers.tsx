@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Grid, Card, CardContent, Typography} from "@mui/material";
 import axios from "axios";
-import { config } from "../utils/config";
+import { config } from "../configuration";
 
 export default function PatientRegisteredFamilyMembers() {
 

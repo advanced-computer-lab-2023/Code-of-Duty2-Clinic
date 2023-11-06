@@ -18,7 +18,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InfoIcon from '@mui/icons-material/Info';
 import { FormControl, FormLabel } from '@mui/material';
 import axios, { AxiosResponse } from "axios";
-import { config } from "../../utils/config";
+import { config } from "../../configuration";
 
 const searchstyle = {
 

@@ -2,7 +2,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AboutIcon from '@mui/icons-material/Info';
 import ContactUsIcon from '@mui/icons-material/ContactSupport';
 import PeopleIcon from '@mui/icons-material/People';
-import { aboutRoute, contactUsRoute, homeRoute } from '../routes/guestRoutes';
+import { aboutRoute, contactUsRoute, welcomeRoute } from '../routes/guestRoutes';
 import { doctorRegistrationRequestRoute } from '../routes/doctorRoutes';
 import { patientRegistrationRoute } from '../routes/patientRoutes';
 
@@ -13,7 +13,7 @@ export const guestSidebarItems = [
         items: [
             {
                 title: 'Home',
-                href: homeRoute.path,
+                href: welcomeRoute.path,
                 icon: <HomeIcon />
             },
             {

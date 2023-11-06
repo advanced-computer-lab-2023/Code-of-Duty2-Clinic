@@ -15,9 +15,11 @@ export const signAndGetRefreshToken = (user: User) => {
 }
 
 export const verifyAndDecodeAccessToken = (accessToken: string) => {
-    return jwt.verify(accessToken, config.server.auth.accessTokenSecret) as User;
+    const decodedUserSessionData = jwt.verify(accessToken, config.server.auth.accessTokenSecret) as User;
+    return { id: decodedUserSessionData.id, role: decodedUserSessionData.role };
 }
 
 export const verifyAndDecodeRefreshToken = (refreshToken: string) => {
-    return jwt.verify(refreshToken, config.server.auth.refreshTokenSecret) as User;
+    const decodedUserSessionData = jwt.verify(refreshToken, config.server.auth.refreshTokenSecret) as User;
+    return { id: decodedUserSessionData.id, role: decodedUserSessionData.role };
 }

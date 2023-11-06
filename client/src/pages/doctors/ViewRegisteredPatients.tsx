@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, CardMedia, Grid, TextField, Typography, styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { config } from "../../utils/config";
+import { config } from "../../configuration";
 import axios from "axios";
 
 const PatientItem = styled(Card)({

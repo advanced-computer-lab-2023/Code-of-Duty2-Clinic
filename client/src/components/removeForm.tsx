@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './removeForm.css'; // Import the CSS file
-import { config } from '../utils/config';
+// import './removeForm.css'; // Import the CSS file
+import { config } from '../configuration';
 
 const UserRemovalForm: React.FC = () => {
   const [username, setUsername] = useState('');
