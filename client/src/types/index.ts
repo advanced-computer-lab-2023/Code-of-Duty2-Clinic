@@ -13,6 +13,9 @@ import { RegisteredFamilyMember } from "./RegisteredFamilyMember";
 import { SubscribedPackage } from "./SubscribedPackage";
 import { UserBaseInfo } from "./UserBaseInfo";
 import { DoctorDetails } from "./ViewedDoctorDetails";
+import Route from  "./Route";
+import SidebarItem from "./SidebarItem";
+import ButtonColor from "./ButtonColor";
 
 export type {
     Admin,
@@ -30,4 +33,7 @@ export type {
     SubscribedPackage,
     UserBaseInfo,
     DoctorDetails,
+    Route,
+    SidebarItem,
+    ButtonColor,
 };

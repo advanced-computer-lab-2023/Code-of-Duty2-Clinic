@@ -4,16 +4,36 @@ import { getDoctor } from '../../controllers/doctors/getDoctor'
 import { getAppointmentsWithAllPatients } from '../../controllers/doctors/getAllAppointments';
 import { getRegisteredPatients } from '../../controllers/doctors/getRegisteredPatients';
 import { getAppointmentDetails } from '../../controllers/doctors/getAppointmentDetails';
+import { getDoctorById } from '../../controllers/patients/getDoctorById';
+import getRegisteredPatientDetails from '../../controllers/doctors/getRegisteredPatientDetails';
+import { UserRole } from "../../types/UserRole";
+import { authorizeUser } from '../../middlewares/authorization';
+import { authenticateUser } from '../../middlewares/authentication';
+import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
+import { getAllPatients } from '../../controllers/patients/getAllPatients';
+
 
 const doctorRouter = express.Router();
 
-doctorRouter.patch('/:doctorId/account', updateDoctor);
+doctorRouter.use(authenticateUser);
+doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
-doctorRouter.get('/:id/allDetails',getDoctor)
-doctorRouter.get('/:doctorId/patients', getRegisteredPatients)
+doctorRouter
+.patch('/account', updateDoctor)
 
-doctorRouter.get('/:doctorId/appointments', getAppointmentsWithAllPatients);
+.get('/patients', getAllPatients)
 
-doctorRouter.get('/:doctorId/appointments/:appointmentId', getAppointmentDetails);
+.get('/allDetails', getDoctor)
+
+.get('/patients', getRegisteredPatients)
+
+.get('/patients/:patientId', getRegisteredPatientDetails)
+
+.get('/appointments', getAppointmentsWithAllPatients)
+
+.get('/appointments/:appointmentId', getAppointmentDetails)
+
+.get('', getDoctorById)
+
 
 export default doctorRouter;

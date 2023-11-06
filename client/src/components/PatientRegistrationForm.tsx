@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { config } from '../utils/config';
+import { config } from '../configuration';
+import axios from 'axios';
 
 const PatientRegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -87,22 +88,7 @@ const handlePackageStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
 
     try {
-      // Send the patient registration data to the backend API
-      const response = await fetch(`${config.serverUri}/patients/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        console.log('Patient registered successfully');
-        // You can redirect to another page or show a success message here
-      } else {
-        // Handle patient registration failure, show an error message, etc.
-        console.error('Patient registration failed');
-      }
+      await axios.post(`${config.serverUri}/users/registration`, formData);
     } catch (error) {
       console.error('Error:', error);
     }

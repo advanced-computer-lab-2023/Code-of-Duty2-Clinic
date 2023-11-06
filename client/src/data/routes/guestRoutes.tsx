@@ -1,35 +1,34 @@
+import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
 import About from "../../pages/general/About";
 import ContactUs from "../../pages/general/ContactUs";
 import Home from "../../pages/general/Home";
-import LogIn from "../../pages/patients/LogIn";
 import SignUp from "../../pages/patients/SignUp";
-import { Route } from "./Route";
+import { Route } from "../../types";
 
-export const homeRoute: Route = {
+export const welcomeRoute: Route = {
     path: '/',
-    component: <Home />
-};
-export const patientLoginRoute: Route = {
-    path: '/login',
-    component: <LogIn />
+    element: <Home />
 };
 export const patientSignUpRoute: Route = {
     path: '/signup',
-    component: <SignUp />
+    element: <SignUp />
+};
+export const doctorSignUpRoute: Route = {
+    path: '/signup/doctor',
+    element: <DoctorRegistrationRequestForm />
 };
 export const aboutRoute: Route = {
     path: '/about',
-    component: <About />
+    element: <About />
 };
 export const contactUsRoute: Route = {
     path: '/contact-us',
-    component: <ContactUs />
+    element: <ContactUs />
 };
 
 const routes: Route[] = 
 [
-    homeRoute,
-    patientLoginRoute,
+    welcomeRoute,
     patientSignUpRoute,
     aboutRoute,
     contactUsRoute,

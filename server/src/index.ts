@@ -1,41 +1,29 @@
-import connectToDB from './config/database';
-import config from './config/config';
+import connectToDB from './utils/database'; 
+import config from './configurations';
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs';
+import { useAllAppRoutes } from './utils/useAllAppRoutes';
+import cookieParser from 'cookie-parser';
 import path from 'path';
-import bodyParser from 'body-parser';
 
-const app = express();
+export const app = express();
 
 app.use(cors(config.server.corsOptions));
 
+app.use(express.urlencoded({ extended: true }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(bodyParser.json());
+app.use(cookieParser());
 
-useAllAppRoutes();
+useAllAppRoutes(path.resolve(__dirname, 'routes'));
 
 connectToDB();
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.send('Server Online!');
 });
 
-app.listen(config.server.port, async () => {
+app.listen(config.server.port, () => {
     console.log(`Server listening on port ${config.server.port}`);
 });
-
-async function useAllAppRoutes() {
-    const routesPath = path.resolve(__dirname, 'routes');
-    fs.readdirSync(routesPath).forEach((folderName) => {
-        const innerRouteFolder = path.join(routesPath, folderName);
-        const applicationEntities = folderName;
-        fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
-            const route = require(path.join(innerRouteFolder, routeFileName)).default;
-            app.use(`/api/${applicationEntities}`, route);
-        });
-    });
-}
-

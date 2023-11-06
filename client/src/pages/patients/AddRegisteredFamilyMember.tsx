@@ -6,7 +6,6 @@ import { Alert } from "@mui/material";
 import { findPatientByEmail } from "../../utils/findPatientByEmail";
 import { findPatientByMobile } from "../../utils/findPatientByMobile";
 import { Patient } from "../../types";
-import e from "cors";
 
 
 export default function AddRegisteredFamilyMember() {

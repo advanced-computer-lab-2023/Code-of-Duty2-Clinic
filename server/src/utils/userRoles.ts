@@ -1,0 +1,1 @@
+export const applicationRoles = ['admins', 'doctors', 'patients']

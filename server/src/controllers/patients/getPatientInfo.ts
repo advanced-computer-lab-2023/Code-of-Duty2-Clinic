@@ -26,6 +26,6 @@ export const getPatientInfo = async (req: Request, res: Response) => {
         res.status(StatusCodes.OK).send(patientInfo);
        
     } catch (error) {
-        res.status(500).json({ message: 'Error getting patient by ID' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error getting patient by ID' });
     }
 }

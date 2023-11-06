@@ -2,10 +2,7 @@ import useGetAllPatients from "../hooks/useGetAllPatients";
 import { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import '@fontsource/roboto';
-
-
 import { Typography } from '@mui/material';
-
 
     export default function PatientList() {
         const [searchTerm, setSearchTerm] = useState('');

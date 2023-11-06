@@ -7,4 +7,5 @@ export interface IUserBaseInfo {
     dateOfBirth: Date;
     gender: 'male' | 'female';
     mobileNumber: string;
+    imageUrl?: string;
 }

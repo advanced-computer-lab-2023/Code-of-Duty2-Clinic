@@ -1,12 +1,9 @@
 import { ChangeEvent, useState } from 'react';
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 
 const AddFamilyMember = () => {
-
-    const patientId = useLocation().pathname.split('/')[2];
 
     type FormType = {
         nationalId: string;
@@ -47,7 +44,7 @@ const AddFamilyMember = () => {
             }
         }
         try {
-            await axios.post(`${config.serverUri}/patients/${patientId}/family-members`, form);
+            await axios.post(`${config.serverUri}/patients/family-members`, form);
             setSuccess(true);
         } catch (error: any) {
            setError(error.response.data.message);

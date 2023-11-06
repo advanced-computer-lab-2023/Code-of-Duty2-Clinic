@@ -18,7 +18,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InfoIcon from '@mui/icons-material/Info';
 import { FormControl, FormLabel } from '@mui/material';
 import axios, { AxiosResponse } from "axios";
-import { config } from "../../utils/config";
+import { config } from "../../configuration";
 
 const searchstyle = {
 
@@ -29,31 +29,30 @@ const searchstyle = {
     margin:'20px'
 }
 
+interface IMedicine {
+        
+    medicineId: {
+        _id: string,
+        name: string,
+        price: number
+    }
+    dosage: string,
+        
+}
+
 interface IPrescription {
     _id: string
     patientName:string,
-    doctorName:string,
+    doctorId:{
+        _id:string
+        name:string
+    },
     status:string, 
-    medicines: [
-        {
-            name: string,
-            dosage: string,
-            price:number,
-            _id: string
-        }
-    ],
+    medicines: [IMedicine],
     updatedAt:Date
 }
 
 
-interface IMedicine {
-        
-    name: string,
-    dosage: string,
-    _id: string,
-    price:number
-        
-}
 interface ISearch{
     doctorName?:string,
     updatedAt?:string,
@@ -79,11 +78,9 @@ const deleteModalStyle = {
     const [status,setStatus] = useState<string>("none")
 
     const [prescriptions,setPrescriptions] = useState([])
-   
-    const patientId = useLocation().pathname.split('/')[2];
 
     useEffect(()=>{
-        axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`).then((response:AxiosResponse)=>{
+        axios.get(`${config.serverUri}/patients/prescriptions`).then((response:AxiosResponse)=>{
             setPrescriptions(response.data)
         })
         console.log(prescriptions)
@@ -141,7 +138,7 @@ const deleteModalStyle = {
         if(searchOptions?.updatedAt) data.updatedAt = searchOptions.updatedAt
         if(searchOptions?.doctorName) data.doctorName = searchOptions.doctorName 
         if(searchOptions?.status&&searchOptions?.status!='none')data.status = searchOptions.status
-        const searchResults:[]=await (await axios.get(`${config.serverUri}/prescriptions/patient/${patientId}`,{params:data})).data
+        const searchResults:[]=await (await axios.get(`${config.serverUri}/patients/prescriptions`,{params:data})).data
         setPrescriptions(searchResults)
     }
     return (
@@ -204,7 +201,7 @@ const deleteModalStyle = {
                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                        >
                            <TableCell component="th" scope="row">
-                            {prescription.doctorName}
+                            {prescription.doctorId.name}
                            </TableCell>
                            <TableCell align="center">{prescription.status}</TableCell>
                            <TableCell align="center">{printDate(prescription.updatedAt.toString())}</TableCell>
@@ -245,9 +242,9 @@ const deleteModalStyle = {
                                 key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell align="center">{medicine.name}</TableCell>
+                                    <TableCell align="center">{medicine.medicineId.name}</TableCell>
                                     <TableCell align="center">{medicine.dosage}</TableCell>
-                                    <TableCell align="center">{medicine.price}</TableCell>
+                                    <TableCell align="center">{medicine.medicineId.price}</TableCell>
 
                                 </TableRow>
                                 ))}

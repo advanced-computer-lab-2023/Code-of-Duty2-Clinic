@@ -1,8 +1,7 @@
 import { useQuery, UseQueryResult } from 'react-query';
 import axios from 'axios';
 import { Patient } from '../types';
-import { config } from '../utils/config';
-
+import { config } from '../configuration';
 
 const getPatient = async (patientId: string) => {
     const { data } = await axios.get(`${config.serverUri}/patients/${patientId}/info`);
