@@ -11,12 +11,15 @@ import LoginRoutesHandler from "./components/auth/LoginRoutesHandler";
 import loginRoutes from "./data/routes/loginRoutes";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 
 axios.defaults.withCredentials = true;
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
+    <QueryClientProvider client={queryClient}>
     <Routes>
       <Route element={<LoginRoutesHandler />}>
         {loginRoutes.map((route, index) => (
@@ -70,5 +73,6 @@ export default function App() {
         ))}
       </Route>
     </Routes>
+    </QueryClientProvider>
   );
 }

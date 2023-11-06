@@ -7,8 +7,8 @@ import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistratio
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
-import PatientList from "../../components/PatientList";
-import PatientInfo from "../../pages/patients/PatientInfo";
+import PatientList from "../../pages/doctors/PatientList";
+import PatientInfo from "../../pages/doctors/PatientInfo";
 
 
 

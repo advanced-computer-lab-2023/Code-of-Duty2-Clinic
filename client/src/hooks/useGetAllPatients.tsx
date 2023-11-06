@@ -4,7 +4,7 @@ import { config } from '../configuration';
 import { Patient } from '../types/Patient';
 
 const getAllPatients = async (): Promise<Patient[]> => {
-    const { data } = await axios.get(`${config.serverUri}/patients`);
+    const { data } = await axios.get(`${config.serverUri}/doctors/patients`);
     return data;
 };
 
