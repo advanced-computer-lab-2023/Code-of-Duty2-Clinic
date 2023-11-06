@@ -9,6 +9,7 @@ import { getHealthPackages } from "../../controllers/healthPackages/getHealthPac
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 import { updateHealthPackage } from "../../controllers/healthPackages/updateHealthPackage";
 import { deleteHealthPackage } from "../../controllers/healthPackages/deleteHealthPackage";
+import { updateAdminPassword } from "../../controllers/admins/adminUpdatePassword";
 
 const router = express.Router();
 
@@ -32,7 +33,9 @@ router
 
 .get('/doctor-registration-requests', getDoctorRegistrationRequests)
 
-.get('/doctor-registration-requests/:email', getDoctorRegistrationRequest);
+.get('/doctor-registration-requests/:email', getDoctorRegistrationRequest)
+
+.patch('/admin/changePassword', updateAdminPassword);
 
 
 export default router;

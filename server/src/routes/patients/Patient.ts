@@ -8,6 +8,7 @@ import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
 const patientRouter = express.Router();
 
 patientRouter
@@ -28,6 +29,8 @@ patientRouter
 .get('/:patientId/appointments', getAppointmentsWithAllDoctors)
 
 .get('', getAllPrescriptions)
+
+.patch('/:patientId/changePassword', updatePatientPassword);
 
 
 export default patientRouter;

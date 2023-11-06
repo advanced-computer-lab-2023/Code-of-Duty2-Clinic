@@ -6,6 +6,8 @@ import { getRegisteredPatients } from '../../controllers/doctors/getRegisteredPa
 import { getAppointmentDetails } from '../../controllers/doctors/getAppointmentDetails';
 import { getDoctorById } from '../../controllers/patients/getDoctorById';
 import getRegisteredPatientDetails from '../../controllers/doctors/getRegisteredPatientDetails';
+import { addAvailableTimeSlotsForDoctor } from '../../controllers/doctors/addAvailableTimeSlots';
+import { updateDoctorPassword } from '../../controllers/doctors/doctorUpdatePassword';
 
 const doctorRouter = express.Router();
 
@@ -23,6 +25,11 @@ doctorRouter
 .get('/:doctorId/appointments/:appointmentId', getAppointmentDetails)
 
 .get('/:doctorId', getDoctorById)
+
+.post('/:doctorId/appointments/availableTimeSlots', addAvailableTimeSlotsForDoctor)
+
+.patch('/:doctorId/changePassword', updateDoctorPassword);
+
 
 
 export default doctorRouter;
