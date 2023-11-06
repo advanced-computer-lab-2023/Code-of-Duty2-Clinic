@@ -12,4 +12,13 @@ export interface IPatient extends IUserBaseInfo {
   subscribedPackage?: ISubscribedPackage;
   dependentFamilyMembers?: IDependentFamilyMember[];
   registeredFamilyMembers?: IRegisteredFamilyMember[];
+  wallet?: {
+    amount: number;
+    currency: string;
+    pinCode: string;
+  };
+  passwordReset?: {
+    token: string;
+    expires: Date;
+  };
 }

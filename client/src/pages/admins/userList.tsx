@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './userList.css'
 import axios from 'axios';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
 
 interface User {
   username: string;
@@ -29,19 +29,8 @@ const UserList: React.FC = () => {
 
   const fetchUsersByType = async (userType: string): Promise<User[]> => {
     try {
-      const response = await fetch(`${config.serverUri}/admins/users/${userType}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }});
-
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        console.error(`Error fetching ${userType}s`);
-        return [];
-      }
+      const response = await axios.get(`${config.serverUri}/admins/users/${userType}`);
+      return response.data;
     } catch (error) {
       console.error('Error:', error);
       return [];
@@ -56,9 +45,9 @@ const UserList: React.FC = () => {
     try {
      await axios.delete(`${config.serverUri}/admins/users`,{data})   
       switch(Type){
-        case 'Admin':setAdmins(previous => previous.filter(user=> user.username != username));break;
-        case 'Doctor':setDoctors(previous => previous.filter(user=> user.username != username));break;
-        case 'Patient':setPatients(previous => previous.filter(user=> user.username != username));break;
+        case 'Admin': setAdmins(previous => previous.filter(user=> user.username != username)); break;
+        case 'Doctor': setDoctors(previous => previous.filter(user=> user.username != username)); break;
+        case 'Patient': setPatients(previous => previous.filter(user=> user.username != username)); break;
         default:console.log('invalidType');
       } 
     } catch (error) {

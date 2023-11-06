@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import '../../css/DoctorRegistrationRequestFormStyle.css';
-import { config } from '../../utils/config';
+import { config } from '../../configuration';
+import axios from 'axios';
 
 interface FormData {
   username: string;
@@ -38,19 +39,11 @@ const DoctorRegistrationRequestForm: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
-      await fetch(`${config.serverUri}/doctors`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      await axios.post(`${config.serverUri}/users/doctor-registration`, formData);
     } catch (error: any) {
         setMessage(error?.message || 'error occured during submission');
     }
-
   };
 
   return (

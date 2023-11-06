@@ -1,41 +1,18 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
-import Doctor from "../../models/doctors/Doctor";
-import Appointment from "../../models/appointments/Appointment";
-import { IAppointmentDetails } from "./interfaces/AppointmentDetails";
+import { findAppointmentDetailsForDoctor } from "../../services/appointments/doctors";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 
-export const getAppointmentDetails = async (req: Request, res: Response) => {
-    const { doctorId, appointmentId } = req.params;
+export const getAppointmentDetails = async (req: AuthorizedRequest, res: Response) => {
+    const doctorId  = req.user?.id;
+    const { appointmentId } = req.params;
     if(!doctorId) return res.status(StatusCodes.BAD_REQUEST).json({message: 'doctorId is required'});
     if(!appointmentId) return res.status(StatusCodes.BAD_REQUEST).json({message: 'appointmentId is required'});
 
     try {
-        const doctor = await Doctor.findById(doctorId);
-        if(!doctor) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Doctor', doctorId)});
-
-        const appointment: any = await Appointment.findById(appointmentId)?.populate({
-            path: 'patientId',
-            select: {_id: 1, patientId: 1, timePeriod: 1, status: 1, name: 1, mobileNumber: 1, email: 1, gender: 1},
-        });
-
-        if(!appointment) return res.status(StatusCodes.NOT_FOUND).json({message: entityIdDoesNotExistError('Appointment', appointmentId)}); 
-
-        const result: IAppointmentDetails = {
-            appointmentId: appointment._id,
-            patient: {
-                id: appointment.patientId._id,
-                name: appointment.patientId.name,
-                mobileNumber: appointment.patientId.mobileNumber,
-                email: appointment.patientId.email,
-                gender: appointment.patientId.gender,
-                age: appointment.patientId.age,
-            },
-            timePeriod: appointment.timePeriod,
-            status: appointment.status,
-        };
-        res.status(StatusCodes.OK).json(result);
+        const appointmentDetails: any = await findAppointmentDetailsForDoctor(doctorId, appointmentId)
+        res.status(StatusCodes.OK).json(appointmentDetails);
     } catch(error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+        res.status(StatusCodes.BAD_REQUEST).send(error);
     }
 }

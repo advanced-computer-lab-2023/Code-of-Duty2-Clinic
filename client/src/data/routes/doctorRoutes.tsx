@@ -4,54 +4,53 @@ import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
 
 import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
-import PatientSearch from "../../pages/doctors/PatientSearch";
-import { Route } from "./Route";
-import { doctorId } from "../dummyUsers";
+import PatientSearch from "../../pages/doctors/SearchForPatients";
+import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
 
 
-export const doctorHomeRoute: Route = {
-    path: `/doctor/home`,
-    component: <Home />
+export const doctorDashboardRoute: Route = {
+    path: '/doctor/dashboard',
+    element: <Home />
 }
 
 export const updateAccountInfoRoute: Route = {
-    path: `/doctor/${doctorId}/account/update`,
-    component: <UpdateAccountInfo />
+    path: '/doctor/account/update',
+    element: <UpdateAccountInfo />
 }
 
 export const doctorAppointmentsRoute: Route = {
-    path: `/doctor/${doctorId}/appointments`,
-    component: <ViewAppointments />
+    path: '/doctor/appointments',
+    element: <ViewAppointments />
 }
 
 export const doctorAppointmentDetailsRoute: Route = {
-    path: `/doctor/${doctorId}/appointment/:appointmentId`,
-    component: <ViewAppointments />
+    path: '/doctor/appointment/:appointmentId',
+    element: <ViewAppointments />
 }
 
 export const doctorRegisteredPatientsRoute: Route = {
-    path: `/doctor/${doctorId}/patients`,
-    component: <ViewRegisteredPatients />
+    path: '/doctor/patients',
+    element: <ViewRegisteredPatients />
 }
 
 export const doctorRegisteredPatientDetailsRoute: Route = {
-    path: `/doctor/${doctorId}/patient/:patientId`,
-    component: <ViewRegisteredPatientData />
+    path: '/doctor/patient/:patientId',
+    element: <ViewRegisteredPatientData />
 }
 
 export const doctorRegistrationRequestRoute: Route = {
-    path: `/doctor/register`,
-    component: <DoctorRegistrationRequestForm />
+    path: '/doctor/register',
+    element: <DoctorRegistrationRequestForm />
 }
 
 export const patientSearchRoute: Route = {
-    path: `/doctor/${doctorId}/patient/search`,
-    component: <PatientSearch />
+    path: '/doctor/patient/search',
+    element: <PatientSearch />
 }
 
 const routes: Route[] = [
-    doctorHomeRoute,
+    doctorDashboardRoute,
     updateAccountInfoRoute,
     doctorAppointmentsRoute,
     doctorAppointmentDetailsRoute,
