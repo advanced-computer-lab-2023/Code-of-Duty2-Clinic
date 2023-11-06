@@ -9,6 +9,7 @@ const TableLoadingSkeleton : FC = ()=>{
             <TableCell><Skeleton /></TableCell>
             <TableCell><Skeleton /></TableCell>
             <TableCell><Skeleton /></TableCell>
+            <TableCell><Skeleton /></TableCell>
             </TableRow>
         ))
     )
