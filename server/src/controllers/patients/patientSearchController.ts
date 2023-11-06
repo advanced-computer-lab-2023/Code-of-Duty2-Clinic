@@ -1,19 +1,15 @@
-const express = require('express');
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import Patient from '../../models/patients/Patient';
 import { StatusCodes } from 'http-status-codes';
 
 const searchPatientByName = async (req: Request, res: Response) => {
     try {
-        const  { name }  = req.params;
+        const { name } = req.params;
+        console.log(name);
 
-        
-        const patientData = await Patient.find({name :{ $regex: new RegExp(name as string, 'i') }});
-
-        // console.log(patientData);
+        const patientData = await Patient.findOne({ name: { $regex: new RegExp(name as string, 'i') } });
 
         if (!patientData) {
-            // If no patient with the specified name is found, return a 404 response.
             return res.status(StatusCodes.NOT_FOUND).send('Patient not found');
         }
 
@@ -24,17 +20,12 @@ const searchPatientByName = async (req: Request, res: Response) => {
     }
 };
 
-const searchPatientByPhoneNumber = async (req: Request, res: Response) => {
+const searchPatientByMobileNumber = async (req: Request, res: Response) => {
     try {
-        const  { phoneNumber }  = req.params;
-
-        
-        const patientData = await Patient.find({phoneNumber :{ $regex: new RegExp(phoneNumber as string, 'i') }});
-
-        // console.log(patientData);
+        const { mobile } = req.params;
+        const patientData = await Patient.findOne({ mobileNumber: mobile });
 
         if (!patientData) {
-            // If no patient with the specified phone number is found, return a 404 response.
             return res.status(StatusCodes.NOT_FOUND).send('Patient not found');
         }
 
@@ -47,16 +38,11 @@ const searchPatientByPhoneNumber = async (req: Request, res: Response) => {
 
 const searchPatientByEmail = async (req: Request, res: Response) => {
     try {
-        const  { email }  = req.params;
-
-        
-        const patientData = await Patient.find({email :{ $regex: new RegExp(email as string, 'i') }});
-
-        // console.log(patientData);
+        const { email } = req.params;
+        const patientData = await Patient.findOne({ email: { $regex: new RegExp(email as string, 'i') } });
 
         if (!patientData) {
-            // If no patient with the specified email is found, return a 404 response.
-            return res.status(StatusCodes.NOT_FOUND).send('Patient not found');
+            return res.status(StatusCodes.NOT_FOUND).send();
         }
 
         res.status(StatusCodes.OK).send(patientData);
@@ -66,4 +52,4 @@ const searchPatientByEmail = async (req: Request, res: Response) => {
     }
 };
 
-export { searchPatientByName, searchPatientByPhoneNumber, searchPatientByEmail };
+export { searchPatientByName, searchPatientByMobileNumber, searchPatientByEmail };

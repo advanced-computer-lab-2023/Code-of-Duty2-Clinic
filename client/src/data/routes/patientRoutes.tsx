@@ -1,4 +1,4 @@
-import PatientInfo from "../../components/PatientInfo";
+import PatientInfo from "../../pages/patients/PatientInfo";
 import PatientList from "../../components/PatientList";
 import PatientRegisteredFamilyMembers from "../../components/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
@@ -45,7 +45,7 @@ export const addRegisteredFamilyMemberRoute: Route = {
 }
 
 export const patientInfoRoute: Route = {
-    path: `/patient/${patientId}/info`,
+    path: `/patient/:patientId/info`,
     component: <PatientInfo />
 }
 export const patientFamilyMembersRoute: Route = {

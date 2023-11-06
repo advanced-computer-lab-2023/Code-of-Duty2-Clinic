@@ -1,47 +1,117 @@
 import { useState } from "react";
-import { TextField, Button, Grid, Snackbar } from "@mui/material";
+import { TextField, Button, Grid, AlertColor } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { Alert } from "@mui/material";
 import { findPatientByEmail } from "../../utils/findPatientByEmail";
-import { findPatientByPhone } from "../../utils/findPatientByPhone";
+import { findPatientByMobile } from "../../utils/findPatientByMobile";
+import { Patient } from "../../types";
+import e from "cors";
 
 
 export default function AddRegisteredFamilyMember() {
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [mobile, setMobile] = useState("");
   const [emailError, setEmailError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
+  const [mobileError, setMobileError] = useState(false);
   const [open, setOpen] = useState(false);
-
-
+  const [formError, setFormError] = useState(false);
+  const [alert, setAlert] = useState<{ open: boolean, message: string, severity: AlertColor }>({ open: false, message: '', severity: 'success' });
+  const [familyMember, setFamilyMember] = useState<Patient | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (validateEmail(email) && validatePhone(phone)) {
-      setOpen(true);
-      setEmailError(false);
-      setPhoneError(false);
+    setOpen(false);
 
-      const familyMember = findPatientByEmail(email) || findPatientByPhone(phone) || null;
+    let foundFamilyMember: Patient | null = null;
+    let mobileError = false;
+    let emailError = false;
+    let formError = false;
 
-      console.log(familyMember);
 
-      if (await familyMember) {
-        // add family member to patient's familyMembers array
+    console.log(email, mobile)
+    console.log(familyMember)
+    console.log(foundFamilyMember)
+    
+    if (email && !mobile) {
+      formError = false;
+      mobileError = false;
+      if (!validateEmail(email)) {
+        emailError = true;
       } else {
-        // display error alert
-        setOpen(false);
-        setEmailError(true);
-        setPhoneError(true);
-        alert("Family member not found. Please enter a valid email or phone number.");
+        emailError = false;
+        setOpen(true);
+        foundFamilyMember = await findPatientByEmail(email) || null;
+      }
+    } else if (mobile && !email) {
+      emailError = false;
+      formError = false;
+      if (!validatePhone(mobile)) {
+        mobileError = true;
+      } else {
+        mobileError = false;
+        setOpen(true);
+        foundFamilyMember = await findPatientByMobile(mobile) || null;
+      }
+    } else if (email && mobile) {
+      if (!validateEmail(email)) {
+        emailError = true;
+      } else {
+        emailError = false;
       }
 
-      
+      if (!validatePhone(mobile)) {
+        mobileError = true;
+      } else {
+        mobileError = false;
+      }
+
+      if (!emailError && !mobileError) {
+        setOpen(true);
+        const emailMember = await findPatientByEmail(email);
+        const mobileMember = await findPatientByMobile(mobile);
+        if (emailMember && mobileMember) {
+          foundFamilyMember = emailMember; // or mobileMember, depending on your logic
+        } else {
+          foundFamilyMember = null;
+  }
+      }
+
     } else {
-      setEmailError(!validateEmail(email));
-      setPhoneError(!validatePhone(phone));
+      setFormError(true);
     }
+
+    setFamilyMember(foundFamilyMember);
+
+    if (emailError) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+
+    if (mobileError) {
+      setMobileError(true);
+    } else {
+      setMobileError(false);
+    }
+
+    if (formError) {
+      setFormError(true);
+    } else {
+      setFormError(false);
+    }
+
+    if (foundFamilyMember) {
+      console.log('found')
+      setAlert({ open: true, message: `Successfully added ${foundFamilyMember.name}`, severity: 'success' });
+    } else {
+      console.log('not found')
+      setAlert({ open: true, message: 'Family member not found', severity: 'error' });
+    }
+
+    console.log(foundFamilyMember);
+    console.log(familyMember)
+
   };
 
   const validateEmail = (email: string) => {
@@ -50,12 +120,13 @@ export default function AddRegisteredFamilyMember() {
   };
 
   const validatePhone = (phone: string) => {
-    const phoneRegex = /^\d{10}$/;
+    const phoneRegex = /^\d{10,}$/;
     return phoneRegex.test(phone);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setFamilyMember(null);
   };
 
   return (
@@ -95,30 +166,23 @@ export default function AddRegisteredFamilyMember() {
               fullWidth
               label="Phone"
               variant="outlined"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              error={phoneError}
-              helperText={phoneError ? "Invalid phone number" : ""}
+              value={mobile}
+              onChange={(event) => setMobile(event.target.value)}
+              error={mobileError}
+              helperText={mobileError ? "Invalid phone number" : ""}
             />
           </Grid>
           <Grid item xs={12}>
+            {open && (
+          <Alert onClose={handleClose} severity={alert.severity}>
+                    {alert.message}
+            </Alert>
+            )}
             <Grid container spacing={2}>
               <Grid item xs={12} sx={{ textAlign: "center" }}>
                 <Button type="submit" variant="contained" sx={{ marginBottom: '2vh' }}>
                   Submit
                 </Button>
-              </Grid>
-              <Grid item xs={12} sx={{ marginTop: "-6vh" }}>
-                <Snackbar
-                  open={open}
-                  autoHideDuration={6000}
-                  onClose={handleClose}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                >
-                  <Alert variant= "filled" onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-                    Family member added successfully!
-                  </Alert>
-                </Snackbar>
               </Grid>
             </Grid>
           </Grid>

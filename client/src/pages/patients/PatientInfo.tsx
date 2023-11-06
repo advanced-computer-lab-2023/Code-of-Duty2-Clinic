@@ -1,7 +1,7 @@
 import { Paper, Button } from '@mui/material';
-import '../css/PatientInfo.css';
+import '../../css/PatientInfo.css'
 import { useLocation, useNavigate } from 'react-router-dom';
-import useGetPatient from '../hooks/useGetPatient';
+import useGetPatient from '../../hooks/useGetPatient';
 import { Typography } from '@mui/material';
 import { Person, Cake, Wc, Email, Phone } from '@mui/icons-material';
 

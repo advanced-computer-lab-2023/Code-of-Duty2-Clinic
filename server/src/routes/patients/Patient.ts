@@ -16,7 +16,7 @@ patientRouter.get('/:patientId/doctors', getAllDoctors);
 
 patientRouter.get('/:patientId/doctors/:doctorId', getDoctorById);
 
-patientRouter.get('/patient-info/:patientId', getPatientInfo);
+patientRouter.get('/:patientId/info', getPatientInfo);
 
 patientRouter.post('/:patientId/family-members', addFamilyMembers);
 

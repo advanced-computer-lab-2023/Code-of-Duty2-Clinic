@@ -5,7 +5,7 @@ import { config } from '../utils/config';
 
 
 const getPatient = async (patientId: string) => {
-    const { data } = await axios.get(`${config.serverUri}/patients/${patientId}`);
+    const { data } = await axios.get(`${config.serverUri}/patients/${patientId}/info`);
     return data;
 };
 
