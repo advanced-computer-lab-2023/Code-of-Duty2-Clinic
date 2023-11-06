@@ -3,7 +3,7 @@ import { getClinicCommission } from "../../models/clinic/Clinic";
 import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
 import HealthPackage, { IHealthPackageModel } from "../../models/health_packages/HealthPackage";
 import Patient from "../../models/patients/Patient";
-import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
+import { entityEmailDoesNotExistError, entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
 
 export const findAllDoctors = async () => 
@@ -39,11 +39,23 @@ export const updateInfo = async (doctorId: string, updatedInfo: any ) => {
     await doctor.save();
 }
 
-export const updatePassword = async (doctorId: string, newPassword: string) => {
+export const updatePasswordByEmail = async (email: string, newPassword: string) => {
+    const doctor = await findDoctorByEmail(email);
+    if (!doctor) {
+      throw new Error(entityEmailDoesNotExistError('doctor', email));
+    }
+    await updatePassword(doctor, newPassword);
+}
+
+export const updatePasswordById = async (doctorId: string, newPassword: string) => {
     const doctor = await findDoctorById(doctorId);
     if (!doctor) {
       throw new Error(entityIdDoesNotExistError('doctor', doctorId));
     }
+    await updatePassword(doctor, newPassword);
+}
+
+export const updatePassword = async (doctor: IDoctorModel, newPassword: string) => {
     doctor.password = newPassword;
     await doctor.save();
 }

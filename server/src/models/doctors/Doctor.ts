@@ -32,6 +32,14 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   },
   contractUrl: { type: String, select: false },
   contractStatus: { type: String, enum: ['pending', 'accepted', 'rejected'], required: true, default: 'accepted', select: false },
+  passwordReset: {
+    type: {
+      code: String,
+      expiryDate: Date,
+    },
+    required: false,
+    select: false,
+  },
 }, 
 {timestamps: true}
 );
