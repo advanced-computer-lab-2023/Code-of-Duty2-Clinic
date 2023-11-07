@@ -30,14 +30,12 @@
     "react": "^18.2.0",
     "react-datetime-picker": "^5.5.2",
     "react-dom": "^18.2.0",
-    "react-file-viewer": "^1.2.1",
     "react-icons": "^4.11.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.16.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/mui-image": "^1.0.3",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.7",

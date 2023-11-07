@@ -8,10 +8,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import {
-  doctorSignUpRoute,
-  welcomeRoute,
-} from "../../data/routes/guestRoutes";
+import { doctorSignUpRoute, welcomeRoute } from "../../data/routes/guestRoutes";
 import doctorImage from "../../assets/Doctor.jpeg";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useContext, useState } from "react";
@@ -23,6 +20,7 @@ import { AlertTitle } from "@mui/material";
 import { doctorDashboardRoute } from "../../data/routes/doctorRoutes";
 import axios from "axios";
 import { config } from "../../configuration";
+import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -191,7 +189,10 @@ export default function DoctorLogin() {
               <Grid container>
                 <Grid item xs>
                   {/* TODO: Add Forgot password href here but use Navigate instead */}
-                  <NavLink to="/" style={{ color: "inherit" }}>
+                  <NavLink
+                    to={forgetPasswordRoute.path}
+                    style={{ color: "inherit" }}
+                  >
                     Forgot password?
                   </NavLink>
                 </Grid>

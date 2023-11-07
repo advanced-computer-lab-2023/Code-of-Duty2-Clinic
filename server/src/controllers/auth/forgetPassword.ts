@@ -18,12 +18,13 @@ export const resetPasswordRequestHandler = async (
 ) => {
   const { email } = req.body;
   if (!email)
-    res.status(StatusCodes.BAD_REQUEST).json({ error: "Email is required" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Email is required" });
   try {
-    const passwordResetInfo = await sendPasswordResetOTPIfUserExists(email);
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Password reset OTP sent successfully" });
+    const userData = await sendPasswordResetOTPIfUserExists(email);
+    console.log(userData);
+    res.status(StatusCodes.OK).json(userData);
   } catch (error: any) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
@@ -35,7 +36,9 @@ export const deletePasswordResetInfoHandler = async (
 ) => {
   const { email } = req.body;
   if (!email)
-    res.status(StatusCodes.BAD_REQUEST).json({ error: "Email is required" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Email is required" });
   try {
     const user = await findUserByEmail(email);
     await deletePasswordResetInfo(user);
@@ -48,16 +51,16 @@ export const deletePasswordResetInfoHandler = async (
 };
 
 export const validateOTPHandler = async (req: Request, res: Response) => {
-  const { email, otp } = req.body;
-  if (!email || !otp)
-    res
+  const { userData, otp } = req.body;
+  if (!userData || !otp)
+    return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Email and OTP are required" });
+      .json({ error: "UserData and OTP are required" });
   try {
-    const user = await validateOTP(email, otp);
+    const user = await validateOTP(userData, otp);
     const passwordResetToken = signAndGetPasswordResetToken({
       id: user._id,
-      role: user.role,
+      role: userData.role,
     } as User);
     res.cookie("passwordResetToken", passwordResetToken, {
       httpOnly: true,
@@ -72,14 +75,21 @@ export const validateOTPHandler = async (req: Request, res: Response) => {
 };
 
 export const resetPasswordHandler = async (req: Request, res: Response) => {
-  const { password } = req.body;
-  if (!password)
-    res.status(StatusCodes.BAD_REQUEST).json({ error: "Password is required" });
+  const { password, confirmPassword } = req.body;
+  if (!password || !confirmPassword)
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Both Password and Confirm password is required" });
+  if (password !== confirmPassword)
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Password and Confirm password must be same" });
   try {
     const { passwordResetToken } = req.cookies;
     if (!passwordResetToken) throw new Error("Password reset token not found");
     const userData = verifyAndDecodePasswordResetToken(passwordResetToken);
     await updatePassword(userData, password);
+    res.clearCookie("passwordResetToken", { httpOnly: true });
     res.status(StatusCodes.OK).json({ message: "Password reset successfully" });
   } catch (error: any) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });

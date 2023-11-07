@@ -87,13 +87,22 @@ export const findUserByEmail = async (
   elementsToSelect?: any
 ) => {
   const admin = await findAdminByEmail(email, elementsToSelect);
-  if (admin) return admin;
+  if (admin) {
+    admin.role = UserRole.ADMIN;
+    return admin;
+  }
 
   const doctor = await findDoctorByEmail(email, elementsToSelect);
-  if (doctor) return doctor;
+  if (doctor) {
+    doctor.role = UserRole.DOCTOR;
+    return doctor;
+  }
 
   const patient = await findPatientByEmail(email, elementsToSelect);
-  if (patient) return patient;
+  if (patient) {
+    patient.role = UserRole.PATIENT;
+    return patient;
+  }
 
   throw new Error("User not found");
 };

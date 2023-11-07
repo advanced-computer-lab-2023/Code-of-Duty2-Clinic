@@ -52,14 +52,12 @@ export const validateOTP = async (
   const user = await findUser(userPayload, { _id: 1, passwordReset: 1 });
   if (!user) throw new Error("User not found");
 
-  console.log(user);
-
   if (!user.passwordReset) throw new Error("Password reset info not found");
 
   if (user.passwordReset.expiryDate < new Date())
     throw new Error("OTP expired");
 
-  const isOtpValid = user.verifyPasswordResetOtp?.(otp);
+  const isOtpValid: boolean = await user.verifyPasswordResetOtp?.(otp)!;
   if (!isOtpValid) throw new Error("Invalid OTP");
 
   deletePasswordResetInfo(user);
