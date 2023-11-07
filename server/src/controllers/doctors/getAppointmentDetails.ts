@@ -12,7 +12,7 @@ export const getAppointmentDetails = async (req: AuthorizedRequest, res: Respons
     try {
         const appointmentDetails: any = await findAppointmentDetailsForDoctor(doctorId, appointmentId)
         res.status(StatusCodes.OK).json(appointmentDetails);
-    } catch(error) {
-        res.status(StatusCodes.BAD_REQUEST).send(error);
+    } catch(error: any) {
+        res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
     }
 }

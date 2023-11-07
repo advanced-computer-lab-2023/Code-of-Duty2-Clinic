@@ -1,7 +1,9 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
 import { IDoctor } from './interfaces/IDoctor';
-import bcrypt from 'mongoose-bcrypt'
+import bcrypt from 'bcrypt'
+import WalletSchema from '../wallets/Wallet';
+import PasswordResetSchema from '../users/PasswordReset';
 
 export interface IDoctorModel extends IDoctor, Document {} 
 
@@ -22,30 +24,29 @@ export const DoctorSchema = new Schema<IDoctorModel>({
   identificationUrl: { type: String, select: false },
   medicalLicenseUrl: { type: String, select: false },
   medicalDegreeUrl: { type: String, select: false },
-  wallet: {
-    type: {
-      amount: Number,
-      currency: { type: String, default: 'EGP' },
-      pinCode: { type: String, bcrypt: true },
-    },
-    select: false,  
-  },
   contractUrl: { type: String, select: false },
   contractStatus: { type: String, enum: ['pending', 'accepted', 'rejected'], required: true, default: 'accepted', select: false },
-  passwordReset: {
-    type: {
-      code: String,
-      expiryDate: Date,
-    },
-    required: false,
+  wallet: {
+    type: { WalletSchema },
     select: false,
   },
+  passwordReset: {
+    type: PasswordResetSchema,
+    select: false 
+  }
 }, 
 {timestamps: true}
 );
 
 
-DoctorSchema.plugin(bcrypt);
+DoctorSchema.plugin(require('mongoose-bcrypt'), { rounds: 10 });
+
+DoctorSchema.methods.verifyPasswordResetOtp = function(otp: string) {
+  return bcrypt.compare(otp, this.passwordReset.otp);
+}
+DoctorSchema.methods.verifyWalletPinCode = function(pinCode: string) {
+  return bcrypt.compare(pinCode, this.wallet.pinCode);
+}
 
 
 export default mongoose.model<IDoctorModel>('Doctor', DoctorSchema);
