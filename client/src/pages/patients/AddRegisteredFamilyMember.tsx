@@ -16,14 +16,15 @@ const schema = z.object({
 });
 
 export default function AddRegisteredFamilyMember() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+
+  const { register, handleSubmit, formState: { errors }, getValues } = useForm({
     resolver: zodResolver(schema)
   });
+
   const onSubmit = async (data: any) => {
-    console.log(data);
+    console.log(data.email, data.phoneNumber);
   };
  
-
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -37,7 +38,7 @@ export default function AddRegisteredFamilyMember() {
         </Typography>
         <Typography
           variant="h6"
-          gutterBottom
+          gutterBottom 
           sx={{ marginBottom: "2vh" }}
         >
           Enter the email and/or phone number of the family member you would like
@@ -46,27 +47,24 @@ export default function AddRegisteredFamilyMember() {
 
         <Grid container spacing={2}>
           <Grid item xs={12}>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box mb={2} sx={{ display: 'flex', flexDirection: 'column' }}>
+                <TextField 
+        {...register('email')}
+        label="Email"
+        error={Boolean(errors.email)}
+        helperText={errors.email ? errors.email.message : ''}
+        sx={{ marginBottom: '1rem' }}
+      />
 
-
-        <TextField
-          {...register('email')}
-          label="Email"
-          error={Boolean(errors.email)}
-          helperText={errors.email ? errors.email.message : ''}
-        />
-
-        <TextField
-          {...register('phoneNumber')}
-          label="Phone Number"
-          error={Boolean(errors.phoneNumber)}
-          helperText={errors.phoneNumber ? errors.phoneNumber.message : ''}
-        />
-
-
-{errors[''] && <Alert severity="error">{errors['']?.message}</Alert>}
-          </Box>
-          </Grid>
+      <TextField
+        {...register('phoneNumber')}
+        label="Phone Number"
+        error={Boolean(errors.phoneNumber)}
+        helperText={errors.phoneNumber ? errors.phoneNumber.message : ''}
+      />
+        {errors[''] && !(getValues('email') || getValues('phoneNumber')) && <Alert severity="error">{errors['']?.message}</Alert>}
+              </Box>
+             </Grid>
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sx={{ textAlign: "center" }}>
