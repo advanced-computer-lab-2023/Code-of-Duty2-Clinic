@@ -6,32 +6,31 @@ import SignUp from "../../pages/patients/SignUp";
 import { Route } from "../../types";
 
 export const welcomeRoute: Route = {
-    path: '/',
-    element: <Home />
+  path: "/",
+  element: <Home />,
 };
 export const patientSignUpRoute: Route = {
-    path: '/signup',
-    element: <SignUp />
+  path: "/signup",
+  element: <SignUp />,
 };
 export const doctorSignUpRoute: Route = {
-    path: '/signup/doctor',
-    element: <DoctorRegistrationRequestForm />
+  path: "/signup/doctor",
+  element: <DoctorRegistrationRequestForm />,
 };
 export const aboutRoute: Route = {
-    path: '/about',
-    element: <About />
+  path: "/about",
+  element: <About />,
 };
 export const contactUsRoute: Route = {
-    path: '/contact-us',
-    element: <ContactUs />
+  path: "/contact-us",
+  element: <ContactUs />,
 };
 
-const routes: Route[] = 
-[
-    welcomeRoute,
-    patientSignUpRoute,
-    aboutRoute,
-    contactUsRoute,
+const routes: Route[] = [
+  welcomeRoute,
+  patientSignUpRoute,
+  aboutRoute,
+  contactUsRoute,
 ];
 
 export default routes;

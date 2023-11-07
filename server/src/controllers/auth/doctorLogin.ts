@@ -12,7 +12,7 @@ export const doctorLogin = async (req: Request, res: Response) => {
         res.cookie('refreshToken', refreshToken, { httpOnly: true, path: '/' });
         res.status(StatusCodes.OK).json({ accessToken, role });
     }
-    catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json(error);
+    catch (error: any) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
     }
 }

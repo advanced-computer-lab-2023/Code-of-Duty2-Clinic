@@ -1,11 +1,12 @@
-import { IUserBaseInfo } from '../../users/interfaces/IUserBaseInfo';
-import { ISubscribedPackage } from './ISubscribedPackage';
-import { IDependentFamilyMember } from './IDependentFamilyMember';
-import { IRegisteredFamilyMember } from './IRegisteredFamilyMember';
-import { IEmergencyContact } from './IEmergencyContact';
-
+import { IUserBaseInfo } from "../../users/interfaces/IUserBaseInfo";
+import { ISubscribedPackage } from "./ISubscribedPackage";
+import { IDependentFamilyMember } from "./IDependentFamilyMember";
+import { IRegisteredFamilyMember } from "./IRegisteredFamilyMember";
+import { IEmergencyContact } from "./IEmergencyContact";
+import { UserRole } from "../../../types/UserRole";
 
 export interface IPatient extends IUserBaseInfo {
+  role?: UserRole.PATIENT;
   emergencyContact: IEmergencyContact;
   deliveryAddresses?: string[];
   healthRecords?: string[];
@@ -18,7 +19,9 @@ export interface IPatient extends IUserBaseInfo {
     pinCode: string;
   };
   passwordReset?: {
-    token: string;
-    expires: Date;
+    otp: string;
+    expiryDate: Date;
   };
+  verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
+  verifyPassword?: (password: string) => Promise<boolean>;
 }

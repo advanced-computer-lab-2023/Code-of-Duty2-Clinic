@@ -38,7 +38,6 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/mui-image": "^1.0.3",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.7",
