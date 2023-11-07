@@ -9,28 +9,44 @@ import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAll
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
+import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
+
+import { authenticateUser } from "../../middlewares/authentication";
+import { authorizeUser } from "../../middlewares/authorization";
+import { UserRole } from "../../types/UserRole";
 const patientRouter = express.Router();
 
+patientRouter.use(authenticateUser);
+patientRouter.use(authorizeUser(UserRole.PATIENT));
+
 patientRouter
-.get('/:patientId/doctors', getAllDoctors)
+.get('/doctors', getAllDoctors)
 
-.get('/:patientId/doctors/:doctorId', getDoctorById)
+.get('/doctors/:doctorId', getDoctorById)
 
-.get('/patient-info/:patientId', getPatientInfo)
+.get('/patient-info', getPatientInfo)
 
-.post('/:patientId/family-members', addFamilyMembers)
+.post('/family-members', addFamilyMembers)
 
-.get('/:patientId', getPatientById)
+.get('', getPatientById)
 
-.get('/:patientId/prescriptions', getPatientPrescriptions)
+.get('/prescriptions', getPatientPrescriptions)
 
-.get('/:patientId/family-members', getPatientRegisteredFamilyMembers)
+.get('/family-members', getPatientRegisteredFamilyMembers)
 
-.get('/:patientId/appointments', getAppointmentsWithAllDoctors)
+.get('/appointments', getAppointmentsWithAllDoctors)
 
-.get('', getAllPrescriptions)
+.get('prescriptions', getAllPrescriptions)
 
-.patch('/:patientId/changePassword', updatePatientPassword);
+.patch('/changePassword', updatePatientPassword)
 
+.get('/health-records', getPatientHealthRecords)
+
+.put('/health-records', addPatientHealthRecord)
+
+.delete('/health-records', deletePatientHealthRecord)
+.get('/family-members', getPatientRegisteredFamilyMembers)
+
+.get('/appointments', getAppointmentsWithAllDoctors)
 
 export default patientRouter;

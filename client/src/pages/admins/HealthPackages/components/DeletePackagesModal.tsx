@@ -1,7 +1,7 @@
 import { Box, Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState} from 'react'
-import { config } from '../../../../utils/config';
+import { config } from '../../../../configuration';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const ModalStyle = {
@@ -28,7 +28,7 @@ const DeletePackageModal : React.FC<IDeletePackageModalProps> = ({close,onSubmit
 
     const deleteHealthPackage =async ()=>{
         
-        await axios.delete(`${config.serverUri}/healthPackages/${id}`).then(response =>{console.log(response.status) })
+        await axios.delete(`${config.serverUri}/health-packages/${id}`).then(response =>{console.log(response.status) })
         setOpenDeletingModal(false);
         onSubmit();
         close();

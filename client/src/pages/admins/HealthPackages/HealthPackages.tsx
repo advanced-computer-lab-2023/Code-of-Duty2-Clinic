@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import Button from '@mui/material/Button';
 import HealthPackagesModal from "./components/HealthPackagesModal";
-import { config } from "../../../utils/config";
+import { config } from "../../../configuration";
 import DeletePackageModal from "./components/DeletePackagesModal";
 
 
@@ -53,7 +53,7 @@ const HealthPackagesPage:React.FC=()=>{
     useEffect(()=>{fetchHealthPackages()},[]);
 
    function fetchHealthPackages(){
-        axios.get(`${config.serverUri}/healthPackages`).then(response =>{setHealthPackages(response.data) })
+        axios.get(`${config.serverUri}/admins/health-packages`).then(response =>{setHealthPackages(response.data) })
     }
    
    

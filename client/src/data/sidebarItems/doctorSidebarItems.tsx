@@ -1,6 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
-import { doctorAppointmentsRoute, doctorHomeRoute, doctorRegisteredPatientsRoute, updateAccountInfoRoute } from '../routes/doctorRoutes';
+import { doctorAppointmentsRoute, doctorDashboardRoute, doctorRegisteredPatientsRoute, updateAccountInfoRoute } from '../routes/doctorRoutes';
 import PeopleIcon from '@mui/icons-material/People';
 
 
@@ -10,7 +10,7 @@ export const doctorSidebarItems = [
         items: [
             {
                 title: "Home",
-                href: doctorHomeRoute.path,
+                href: doctorDashboardRoute.path,
                 icon: <HomeIcon />
             }
         ]

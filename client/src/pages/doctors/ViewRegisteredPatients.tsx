@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, CardMedia, Grid, TextField, Typography, styled } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { config } from "../../utils/config";
+import { Link } from "react-router-dom";
+import { config } from "../../configuration";
 import axios from "axios";
 
 const PatientItem = styled(Card)({
@@ -37,15 +37,13 @@ const ViewRegisteredPatients = () => {
     const [patientName, setPatientName] = useState('');
     const [error, setError] = useState('');
 
-    const doctorId = useLocation().pathname.split('/')[2];
-
     const handleChangePatientName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPatientName(event.target.value);
     }
 
     const getAllPatients = async () => {
         try {
-            const response = await axios.get(`${config.serverUri}/doctors/${doctorId}/patients`);
+            const response = await axios.get(`${config.serverUri}/doctors/patients`);
             setFilteredPatients(response.data);
         } catch(error: any) {
             setError(error.message);
@@ -60,7 +58,7 @@ const ViewRegisteredPatients = () => {
     const handleFilterChange = async() => {
         try {
             setFilteredPatients(undefined);
-            const response = await axios.get(`${config.serverUri}/doctors/${doctorId}/patients`, {
+            const response = await axios.get(`${config.serverUri}/doctors/patients`, {
               params: {
                 patientName,
               }
@@ -92,7 +90,7 @@ const ViewRegisteredPatients = () => {
                     (
                     filteredPatients.map((patient) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={patient.id}>
-                            <PatientItem component={Link} to={`/doctor/${doctorId}/patient/${patient.id}`}>
+                            <PatientItem component={Link} to={`/doctor/patient/${patient.id}`}>
                                 <PatientImage image={patient.imageUrl || ""} />
                                 <CardContent>
                                     <PatientInfo variant="subtitle1">Name: {patient.name}</PatientInfo>

@@ -1,48 +1,87 @@
-import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import Sidebar from './Sidebar';
-import { useLocation } from 'react-router-dom';
-import { doctorSidebarItems, guestSidebarItems, patientSidebarItems } from '../data/sidebarItems';
-import { adminSidebarItems } from '../data/sidebarItems/adminSidebarItems';
+import React from "react";
+import { useLocation } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
+import { Box, useMediaQuery } from "@mui/material";
 
-interface LayoutProps {
-    children: React.ReactNode;
+import Navbar from "../components/navigation/Navbar";
+import UserPanel from "../components/navigation/UserPanel";
+import Sidebar from "../components/navigation/Sidebar";
+import Footer from "../components/navigation/Footer";
+import {
+  patientSignUpRoute,
+  doctorSignUpRoute,
+} from "../data/routes/guestRoutes";
+import useFirstPath from "../hooks/useFirstPath";
+import getRequiredSidebarItems from "../utils/getRequiredSidebarItems";
+import {
+  loginRoute,
+  doctorLoginRoute,
+} from "../data/routes/loginRoutes";
+
+interface Props {
+  children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-    return (
-        <div className='w-screen'>
-            <Header />
-            <Sidebar 
-                items={getRequiredSidebarItems()}
-            />
-            {children}
-            <Footer />
-        </div>
-    );
-};
-
-
-function getRequiredSidebarItems() {
-    const firstPath = getFirstPath();
-    switch (firstPath) {
-        case 'patient':
-            return patientSidebarItems;
-        case 'doctor':
-            return doctorSidebarItems;
-        case 'admin':
-            return adminSidebarItems;
-        default:
-        return guestSidebarItems;
-    }
-}
-
-function getFirstPath() {
+const Layout: React.FC<Props> = ({ children }) => {
   const location = useLocation();
-  const parts = location.pathname.split('/');
-  return parts[1];
-};
+  const theme = useTheme();
+  const isMediumScreenOrLarger = useMediaQuery(theme.breakpoints.up("md"));
+  const sidebarWidth = "17rem";
 
+  // We apply a left margin to the main content in the layout of
+  // authenticated user pages when the sidebar is open (on medium screens and larger)
+  // to prevent the main content from being hidden behind the sidebar. We don't apply
+  //this margin on small screens because the sidebar is hidden on small screens.
+  const marginLeft = isMediumScreenOrLarger ? sidebarWidth : "0";
+  const firstPath = useFirstPath();
+
+  const MainPageContent = () => {
+    return <>{children}</>;
+  };
+
+  if (
+    firstPath === "admin" ||
+    firstPath === "doctor" ||
+    firstPath === "patient"
+  ) {
+    const sidebarItems = getRequiredSidebarItems(firstPath);
+    return (
+      <Box display="flex">
+        <Sidebar sidebarItems={sidebarItems} sidebarWidth={sidebarWidth} />
+        <Box
+          sx={{
+            marginLeft,
+            transition: "margin-left 0.2s ease-in-out",
+            flexGrow: 1,
+          }}
+        >
+          <UserPanel sidebarItems={sidebarItems} />
+          <MainPageContent />
+          <Footer />
+        </Box>
+      </Box>
+    );
+  } else if (
+    location.pathname !== loginRoute.path &&
+    location.pathname !== doctorLoginRoute.path &&
+    location.pathname !== patientSignUpRoute.path &&
+    location.pathname !== doctorSignUpRoute.path
+  ) {
+    return (
+      <>
+        <Navbar />
+        <MainPageContent />
+        <Footer />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <MainPageContent />
+        <Footer />
+      </>
+    );
+  }
+};
 
 export default Layout;

@@ -1,11 +1,9 @@
-import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-import config from '../configurations/config';
+import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { verifyAndDecodeAccessToken } from '../utils/jwt';
+import { AuthorizedRequest } from '../types/AuthorizedRequest';
 
-type AuthenticatedRequest = Request & { userId: string };
-
-export const authenticateUser = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authenticateUser = (req: AuthorizedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authorization header is missing' });
@@ -17,14 +15,13 @@ export const authenticateUser = (req: AuthenticatedRequest, res: Response, next:
   }
 
   try {
-    const decodedToken = jwt.verify(accessToken, config.server.auth.accessTokenSecret) as unknown as { userId: string };
-    req.userId = decodedToken.userId;
+    const decodedUserData = verifyAndDecodeAccessToken(accessToken);
+    req.user = decodedUserData;
     next();
   } catch (error: any) {
     if (error.name === 'TokenExpiredError') {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token has expired', redirectTo: '/refresh' });
+      return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token has expired', accessTokenExpired: true });
     }
-    return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token is invalid' });
+    res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token is invalid' });
   }
 };
-

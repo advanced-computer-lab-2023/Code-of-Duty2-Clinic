@@ -10,8 +10,8 @@ export const  AppointmentSchema = new Schema<IAppointmentModel> ({
         endTime: {type: Date, required: true},
     },
     status:{type: String, enum:['upcoming','completed','canceled', 'rescheduled'], required: true}, 
-    doctorId:{type: Schema.Types.ObjectId, ref:'Doctor', required: true},
-    patientId:{type: Schema.Types.ObjectId,ref:'Patient', requred: true},
+    doctorId:{ type: Schema.Types.ObjectId, ref:'Doctor', required: true, index: true },
+    patientId:{ type: Schema.Types.ObjectId, ref:'Patient', requred: true, index: true },
     
 })
 

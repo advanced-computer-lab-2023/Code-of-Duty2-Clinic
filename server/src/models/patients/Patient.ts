@@ -2,13 +2,14 @@ import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
 import isMobileNumber from 'validator/lib/isMobilePhone';
 import { IPatient } from './interfaces/IPatient';
+import bcrypt from 'mongoose-bcrypt';
 
 export interface IPatientModel extends IPatient, Document {} 
 
 export const PatientSchema = new Schema<IPatientModel>({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false },
-  email:{type:String, validate: [ isEmail, 'invalid email' ], unique: true},
+  username: { type: String, required: true, unique: true, index: true },
+  password: { type: String, required: true, select: false, bcrypt: true },
+  email:{ type: String, validate: [ isEmail, 'invalid email' ], unique: true, index: true },
   name: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, required: true, enum: ['male', 'female'] },
@@ -19,16 +20,16 @@ export const PatientSchema = new Schema<IPatientModel>({
     relationToPatient: { type: String, required: true },
   },
  
-  deliveryAddresses: {type: Array<{ type: String }>, select: false },
+  deliveryAddresses: { type: Array<{ type: String }>, select: false },
   imageUrl: String,
-  healthRecords: Array<{ type: String }>,
+  healthRecords: {type: Array<{ type: String }>, select: false },
   subscribedPackage: 
   {
     type:{
       packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
       startDate: {type: Date, required: true},
       endDate: {type: Date, required: true},
-      status: {type: String, enum:['subscribed', 'unsubscribed', 'cancelled'], required:true}, 
+      status: {type: String, enum:['subscribed', 'unsubscribed', 'cancelled'], required: true}, 
     },
     required: false,
     select: false,
@@ -66,8 +67,16 @@ export const PatientSchema = new Schema<IPatientModel>({
   wallet: {
     type: {
       amount: Number,
-      currency: String,
-      pinCode: String,
+      currency: {type: String, default: 'EGP'},
+      pinCode: {type: String, bcrypt: true},
+    },
+    required: false,
+    select: false,
+  },
+  passwordReset: {
+    type: {
+      code: String,
+      expiryDate: Date,
     },
     required: false,
     select: false,
@@ -75,6 +84,8 @@ export const PatientSchema = new Schema<IPatientModel>({
 }, 
 {timestamps: true}
 );
+
+PatientSchema.plugin(bcrypt);
 
 PatientSchema.virtual('age').get(function() {
   let today = new Date();

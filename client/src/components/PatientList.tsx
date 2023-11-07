@@ -2,7 +2,7 @@ import CardGrid from "./CardGrid";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import '@fontsource/roboto';
-import { config } from "../utils/config";
+import { config } from "../configuration";
 
 export default function PatientList() {
 
@@ -10,7 +10,7 @@ export default function PatientList() {
 
     useEffect(() => {
         const fetchPatients = async () => {
-            await axios.get(`${config.serverUri}/api/patients`)
+            await axios.get(`${config.serverUri}/patients`)
             .then (response => {
                setPatient(response.data);
             })

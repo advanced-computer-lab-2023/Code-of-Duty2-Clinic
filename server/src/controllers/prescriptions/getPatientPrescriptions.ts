@@ -1,12 +1,23 @@
-import Medicine from '../../models/medicines/Medicine';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import Prescription from '../../models/prescriptions/Prescription';
 import checkUpdateParams from '../../utils/attributeExistanceChecker'
-export const getPatientPrescriptions= async (req:Request, res:Response)=>{
+import { StatusCodes } from 'http-status-codes';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
+import { findPatientById } from '../../services/patients';
+import Medicine from '../../models/medicines/Medicine';
+
+export const getPatientPrescriptions= async (req: AuthorizedRequest, res: Response)=>{
     try{
         const allowedUpdateParams =['updatedAt','doctorName','date','status']
-        const patientId= req.params.patientId
+        //join patient
+        const patientId = req.user?.id;
+        if(!patientId) return res.status(StatusCodes.BAD_REQUEST).json({error:'No such patient'});
 
+        const patient = await findPatientById(patientId);
+        if(!patient) {
+            return res.status(StatusCodes.BAD_REQUEST).json({error:'No such patient'});
+        }
+        
         //check params
         let updateParams:any= {...req.query}
         if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(400).json({error:"Invalid Params"})
@@ -39,7 +50,7 @@ export const getPatientPrescriptions= async (req:Request, res:Response)=>{
 
         res.json(result); 
            
-    }catch(err){
+    } catch(err){
         console.log(err)
         res.status(400).send(err)
     }

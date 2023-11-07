@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import HealthPackage from "../../models/health_packages/HealthPackage";
 import { Request,Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 const  HEALTH_PACKAGE_ATTRIBUTES = ['name','amountToPay','discounts','packageDurationInYears']
 const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
 
@@ -11,7 +13,7 @@ function checkIfIncludes(superSet:string[] , subSet:string[]):boolean{
 }
 
 
-export const updateHealthPackage = async (req:Request,res:Response)=>{
+export const updateHealthPackage = async (req:AuthorizedRequest,res:Response)=>{
 
     //Get attributes for validation
     const requestAttributes = Object.keys(req.body)
@@ -22,21 +24,20 @@ export const updateHealthPackage = async (req:Request,res:Response)=>{
     validAttributes= validAttributes && requestAttributes.length <= HEALTH_PACKAGE_ATTRIBUTES.length && requestDiscountAttributes.length <= DISCOUNT_ATTRIBUTES.length 
 
     if(!validAttributes )   
-        res.sendStatus(400)
+        res.sendStatus(StatusCodes.BAD_REQUEST)
     
-    try{
+    try {
         const _id = req.params.id;
 
         await HealthPackage.updateOne({_id},{$set:req.body},{runValidators: true})
 
-        res.status(200).send("Updated Successfuly")
+        res.status(StatusCodes.OK).send("Updated Successfuly")
     
-    }catch(err:any){
+    } catch(err:any){
 
         if(err instanceof mongoose.Error.CastError)
             return res.send("Health Package not found")
 
-        return res.status(400).send(err.message)
-    }          
-
+        return res.status(StatusCodes.BAD_REQUEST).send(err.message)
+    }
 }

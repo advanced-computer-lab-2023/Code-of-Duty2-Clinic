@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import ViewDoctorRegistrationRequest, { DoctorRequest } from './viewDetailsofRequest';
-import'./viewDoctorRequest.css'
-import { config } from '../../utils/config';
+import'./ViewDoctorRequest.css'
+import { config } from '../../configuration';
+import axios from 'axios';
 
 
 function DoctorRegistrationRequests() {
@@ -14,16 +15,12 @@ function DoctorRegistrationRequests() {
     // Replace this with your actual API endpoint.
     const fetchData = async () => {
       try {
-        const response = await fetch(`${config.serverUri}/admins/doctor-registration-requests`);
-        if (response.ok) {
-          const data = await response.json() as DoctorRequest[];
-          setRequests(data);
-        }
+        const response = await axios.get(`${config.serverUri}/admins/doctor-registration-requests`);
+        setRequests(response.data);
       } catch (error) {
         console.error('Error fetching doctor registration requests:', error);
       }
     };
-
     fetchData();
   }, []);
 
