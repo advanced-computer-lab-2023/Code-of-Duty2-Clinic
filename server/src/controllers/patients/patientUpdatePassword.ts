@@ -1,51 +1,41 @@
-import { Request, Response } from 'express';
-import Patient from '../../models/patients/Patient';
-import bcrypt from 'bcrypt';
+import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { findPatientById, updatePasswordById, validatePatientPassword } from '../../services/patients';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
+import bcrypt from 'bcrypt';
 
-export const updatePatientPassword = async (req: Request, res: Response) => {
+export const updatePatientPassword = async (req: AuthorizedRequest, res: Response) => {
   try {
-    const { email, oldPassword, newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const patientId = req.user?.id!;
 
-    // if (!email || !oldPassword || !newPassword || !confirmPassword) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({ message: 'All fields are required' });
-    // }
-
-
-    const patient = await Patient.findOne({ email });
+    const patient = await findPatientById(patientId);
 
     if (!patient) {
       return res.status(StatusCodes.NOT_FOUND).json({ message: 'Patient not found' });
     }
 
+    const isPasswordCorrect = await validatePatientPassword(patient, currentPassword);
 
-    const isOldPasswordValid = await bcrypt.compare(oldPassword, patient.password);
-
-    if (!isOldPasswordValid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid old password' });
-    }
-
-
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!strongPasswordRegex.test(newPassword)) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password must be strong (min 8 characters, uppercase, lowercase, number, special character)' });
+    if (!isPasswordCorrect) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Current password is incorrect' });
     }
 
     if (newPassword !== confirmPassword) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "New password and confirmation password don't match" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New password and confirm password do not match' });
     }
 
     const saltRounds = 10;
-    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    patient.password = hashedPassword;
 
+    await updatePasswordById(patientId, hashedPassword);
 
-    patient.password = hashedNewPassword;
-    await patient.save();
+    return res.status(StatusCodes.OK).json({ message: 'Password updated successfully!' });
 
-    res.status(StatusCodes.OK).json({ message: 'Password updated successfully' });
   } catch (error) {
+
     console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred while updating the password' });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while updating the password' });
   }
 };

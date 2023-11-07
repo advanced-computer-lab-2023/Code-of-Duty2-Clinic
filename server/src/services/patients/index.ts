@@ -1,4 +1,6 @@
-import Patient from "../../models/patients/Patient";
+import Patient, { IPatientModel } from "../../models/patients/Patient";
+import { entityEmailDoesNotExistError, entityIdDoesNotExistError } from "../../utils/ErrorMessages";
+import bcrypt from 'bcrypt';
 
 export const findAllPatients = async () => await Patient.find();
 
@@ -13,4 +15,30 @@ export const deletePatientById = async (id: string) => await Patient.findByIdAnd
 export const createNewPatient = async (username: string, password: string) => {
     const newPatient = new Patient({ username, password });
     await newPatient.save();
+}
+
+export const updatePasswordByEmail = async (email: string, newPassword: string) => {
+    const patient = await findPatientByEmail(email);
+    if (!patient) {
+      throw new Error(entityEmailDoesNotExistError('patient', email));
+    }
+    await updatePassword(patient, newPassword);
+}
+
+export const updatePasswordById = async (patientId: string, newPassword: string) => {
+    const patient = await findPatientById(patientId);
+    if (!patient) {
+      throw new Error(entityIdDoesNotExistError('patient', patientId));
+    }
+    await updatePassword(patient, newPassword);
+}
+
+export const updatePassword = async (patient: IPatientModel, newPassword: string) => {
+    patient.password = newPassword;
+    await patient.save();
+}
+
+export const validatePatientPassword = async (patient: IPatientModel, password: string) => {
+  const isPasswordCorrect = await bcrypt.compare(password, patient.password);
+  return isPasswordCorrect;
 }

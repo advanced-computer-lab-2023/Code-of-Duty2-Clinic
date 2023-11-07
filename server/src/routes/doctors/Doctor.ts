@@ -6,7 +6,7 @@ import { getRegisteredPatients } from '../../controllers/doctors/getRegisteredPa
 import { getAppointmentDetails } from '../../controllers/doctors/getAppointmentDetails';
 import { getDoctorById } from '../../controllers/patients/getDoctorById';
 import getRegisteredPatientDetails from '../../controllers/doctors/getRegisteredPatientDetails';
-import { addAvailableTimeSlotsForDoctor } from '../../controllers/doctors/addAvailableTimeSlots';
+import { addDoctorAvailableSlots } from '../../controllers/doctors/addAvailableTimeSlots';
 import { updateDoctorPassword } from '../../controllers/doctors/doctorUpdatePassword';
 import { UserRole } from "../../types/UserRole";
 import { authorizeUser } from '../../middlewares/authorization';
@@ -32,9 +32,9 @@ doctorRouter
 
 .get('', getDoctorById)
 
-.post('/:doctorId/appointments/availableTimeSlots', addAvailableTimeSlotsForDoctor)
+.post('/appointments/availableTimeSlots', addDoctorAvailableSlots)
 
-.patch('/:doctorId/changePassword', updateDoctorPassword);
+.patch('/changePassword', updateDoctorPassword);
 
 
 

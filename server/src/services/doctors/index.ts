@@ -3,8 +3,9 @@ import { getClinicCommission } from "../../models/clinic/Clinic";
 import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
 import HealthPackage, { IHealthPackageModel } from "../../models/health_packages/HealthPackage";
 import Patient from "../../models/patients/Patient";
-import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
+import { entityEmailDoesNotExistError, entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
+import bcrypt from 'bcrypt';
 
 export const findAllDoctors = async () => 
     await Doctor.find();
@@ -39,12 +40,38 @@ export const updateInfo = async (doctorId: string, updatedInfo: any ) => {
     await doctor.save();
 }
 
-export const updatePassword = async (doctorId: string, newPassword: string) => {
+export const updatePasswordByEmail = async (email: string, newPassword: string) => {
+    const doctor = await findDoctorByEmail(email);
+    if (!doctor) {
+      throw new Error(entityEmailDoesNotExistError('doctor', email));
+    }
+    await updatePassword(doctor, newPassword);
+}
+
+export const updatePasswordById = async (doctorId: string, newPassword: string) => {
     const doctor = await findDoctorById(doctorId);
     if (!doctor) {
       throw new Error(entityIdDoesNotExistError('doctor', doctorId));
     }
+    await updatePassword(doctor, newPassword);
+}
+
+export const updatePassword = async (doctor: IDoctorModel, newPassword: string) => {
     doctor.password = newPassword;
+    await doctor.save();
+}
+
+export const validateDoctorPassword = async (doctor: IDoctorModel, password: string) => {
+    const isPasswordCorrect = await bcrypt.compare(password, doctor.password);
+    return isPasswordCorrect;
+  }
+
+export const addAvailableSlots = async (doctorID: string, startTime: Date, endTime: Date) => {
+    const doctor = await findDoctorById(doctorID);
+    if (!doctor) {
+        throw new Error(entityIdDoesNotExistError('doctor', doctorID));
+    }
+    doctor.availableSlots.push({ startTime: startTime, endTime: endTime });
     await doctor.save();
 }
 

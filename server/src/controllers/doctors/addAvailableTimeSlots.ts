@@ -1,32 +1,25 @@
-import { Request, Response } from 'express';
-import Doctor from '../../models/doctors/Doctor';
+import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
+import { addAvailableSlots } from '../../services/doctors';
 
-export const addAvailableTimeSlotsForDoctor = async (req: Request, res: Response) => {
+export const addDoctorAvailableSlots = async (req: AuthorizedRequest, res: Response) => {
   try {
+    const { startTime, endTime } = req.body;
+    const doctorId = req.user?.id!;
 
-    const doctorId = req.params.doctorId; // msh 3arf ezay a get el Doctors ID mn mongo!
+    // if (!doctorId) {
+    //   return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
+    // }
 
     
-    const doctor = await Doctor.findById(doctorId);
+    await addAvailableSlots(doctorId, startTime, endTime);
 
-    if (!doctor) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: 'Doctor not found' });
-    }
-
-    const { startTime, endTime } = req.body;
-
-    doctor.availableSlots.push({
-      startTime,
-      endTime,
-    });
-
-    await doctor.save();
-
-    res.status(StatusCodes.CREATED).json({ message: 'Time slot added successfully' });
+    return res.status(StatusCodes.OK).json({ message: 'Available time slots added successfully!' });
 
   } catch (error) {
+
     console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred while adding the time slot' });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while adding time slots' });
   }
 };

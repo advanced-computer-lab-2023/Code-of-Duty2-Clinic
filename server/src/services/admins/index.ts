@@ -1,4 +1,6 @@
-import Admin from "../../models/admins/Admin";
+import Admin, { IAdminModel } from "../../models/admins/Admin";
+import { entityEmailDoesNotExistError, entityIdDoesNotExistError } from "../../utils/ErrorMessages";
+import bcrypt from 'bcrypt';
 
 export const findAllAdmins = async () => await Admin.find();
 
@@ -13,4 +15,30 @@ export const deleteAdminById = async (id: string) => await Admin.findByIdAndDele
 export const createNewAdmin = async (username: string, password: string) => {
     const newAdmin = new Admin({ username, password });
     await newAdmin.save();
+}
+
+export const validateAdminPassword = async (admin: IAdminModel, password: string) => {
+  const isPasswordCorrect = await bcrypt.compare(password, admin.password);
+  return isPasswordCorrect;
+}
+
+export const updatePasswordByEmail = async (email: string, newPassword: string) => {
+    const admin = await findAdminByEmail(email);
+    if (!admin) {
+      throw new Error(entityEmailDoesNotExistError('admin', email));
+    }
+    await updatePassword(admin, newPassword);
+}
+
+export const updatePasswordById = async (adminId: string, newPassword: string) => {
+    const admin = await findAdminById(adminId);
+    if (!admin) {
+      throw new Error(entityIdDoesNotExistError('admin', adminId));
+    }
+    await updatePassword(admin, newPassword);
+}
+
+export const updatePassword = async (admin: IAdminModel, newPassword: string) => {
+    admin.password = newPassword;
+    await admin.save();
 }

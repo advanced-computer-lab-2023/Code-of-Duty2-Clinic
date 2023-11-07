@@ -1,46 +1,42 @@
-import { Request, Response } from 'express';
-import Admin from '../../models/admins/Admin';
-import bcrypt from 'bcrypt';
+// In admins/controllers/updatePasswordById.ts
+import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { findAdminById, updatePasswordById, validateAdminPassword } from '../../services/admins';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
+import bcrypt from 'bcrypt';
 
-export const updateAdminPassword = async (req: Request, res: Response) => {
+export const updateAdminPassword = async (req: AuthorizedRequest, res: Response) => {
   try {
-    const { username, oldPassword, newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
 
-    const admin = await Admin.findOne({ username });
+    const adminId = req.user?.id!;
+    
+    const admin = await findAdminById(adminId);
 
     if (!admin) {
       return res.status(StatusCodes.NOT_FOUND).json({ message: 'Admin not found' });
     }
 
+    const isPasswordCorrect = await validateAdminPassword(admin, currentPassword);
 
-    const isOldPasswordValid = await bcrypt.compare(oldPassword, admin.password);
-
-    if (!isOldPasswordValid) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid old password' });
-    }
-
-
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!strongPasswordRegex.test(newPassword)) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password must be strong (min 8 characters, uppercase, lowercase, number, special character)' });
+    if (!isPasswordCorrect) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Current password is incorrect' });
     }
 
     if (newPassword !== confirmPassword) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "New password and confirmation password don't match" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New password and confirm password do not match' });
     }
 
     const saltRounds = 10;
-    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    admin.password = hashedPassword;
 
+    await updatePasswordById(adminId, hashedPassword);
 
-    admin.password = hashedNewPassword;
-    await admin.save();
+    return res.status(StatusCodes.OK).json({ message: 'Password updated successfully!' });
 
-    res.status(StatusCodes.OK).json({ message: 'Password updated successfully' });
   } catch (error) {
     console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred while updating the password' });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while updating the password' });
   }
 };

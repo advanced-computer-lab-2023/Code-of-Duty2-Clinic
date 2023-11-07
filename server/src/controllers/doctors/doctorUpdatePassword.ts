@@ -1,50 +1,43 @@
-import bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
-import Doctor from '../../models/doctors/Doctor';
-import jwt from 'jsonwebtoken';
-import config from '../../configurations/config';
+import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { ROLE } from "../../utils/userRoles";
+import { findDoctorById, updatePasswordById, validateDoctorPassword } from '../../services/doctors';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
+import bcrypt from 'bcrypt'; 
 
-export const updateDoctorPassword = async (req: Request, res: Response) => {
 
-    const { email, oldPassword, newPassword, newPasswordConfirmation } = req.body;
+export const updateDoctorPassword = async (req: AuthorizedRequest, res: Response) => {
+    try {
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+        const doctorId = req.user?.id!;
+        
+        const doctor = await findDoctorById(doctorId);
+        
+        if (!doctor) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Doctor not found' });
+        }
+        
+        const isPasswordCorrect = await validateDoctorPassword(doctor, currentPassword);
+        
+        if (!isPasswordCorrect) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Current password is incorrect' });
+        }
+        
+        if (newPassword !== confirmPassword) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New password and confirm password do not match' });
+        }
+        
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        doctor.password = hashedPassword;
+        
+        await updatePasswordById(doctorId, hashedPassword);
 
-    if (newPassword !== newPasswordConfirmation) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New passwords do not match' });
-    }
+    return res.status(StatusCodes.OK).json({ message: 'Password updated successfully!' });
 
-    
-    const doctor = await Doctor.findOne({ email });
+  } catch (error) {
 
-    if (!doctor) {
-        return res.status(StatusCodes.NOT_FOUND).json({ message: 'Doctor not found' });
-    }
+    console.error(error);
 
-    
-    const isOldPasswordCorrect = await bcrypt.compare(oldPassword, doctor.password);
-
-    if (!isOldPasswordCorrect) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Old password is incorrect' });
-    }
-
-    
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!strongPasswordRegex.test(newPassword)) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New password must be strong (min 8 characters, uppercase, lowercase, number, special character)' });
-    }
-
-    
-    const saltRounds = 10; // Complexity of a single bcrypt hash
-    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-
-    doctor.password = hashedNewPassword;
-
-    await doctor.save();
-
-    // New access token with the updated information
-    const accessToken = jwt.sign({ userId: doctor._id, role: ROLE.DOCTOR }, config.server.auth.accessTokenSecret, { expiresIn: config.server.auth.accessTokenExpirationTime });
-
-    res.status(StatusCodes.OK).json({ message: 'Password updated successfully', accessToken });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while updating the password' });
+  }
 };
