@@ -2,7 +2,7 @@ import React, { useState,useRef } from 'react';
 import Box from '@mui/joy/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Modal from '@mui/joy/Modal';
+import Modal from '@mui/material/Modal';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
@@ -30,7 +30,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
     setSaveLoading(true)
     if (!file||fileName.current==="") return;
     if(file.current)
-    imgUrl.current= await uploadImage(file.current,fileName.current||"")
+    imgUrl.current= await uploadImage(file.current,recordType.current,fileName.current||"")
     const healthrecord:IHealthRecord = {
       name:fileName.current,
       url:imgUrl.current,
@@ -104,7 +104,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
                         <LoadingButton
                         sx={{marginTop:10,backgroundColor:'#103939',maxWidth:100,color:"white",":hover":{color:'black',borderColor:'#103939'}}}
                         loading={saveLoading}
-                        loadingPosition="start"
+                        //loadingPosition="start"
                         variant="outlined"
                         onClick={SaveImage}
                         

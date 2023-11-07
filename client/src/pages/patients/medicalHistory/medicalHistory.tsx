@@ -16,9 +16,8 @@ import Checkbox from '@mui/material/Checkbox';
 import { EnhancedTableToolbar } from './components/tableToolBar';
 import { EnhancedTableHead } from './components/tableHead';
 import { CircularProgress, Divider, IconButton, Stack,Typography } from '@mui/material';
-import image from '../../../assets/medicalDoc2.png'
 import { saveAs } from 'file-saver';
-import FileViewer from 'react-file-viewer'
+import FileViewer from 'react-file-viewer-extended'
 import UploadHealthRecordModal from './components/uploadHealthRecord';
 import TableLoadingSkeleton from '../../../components/tableLoadingSkeleton';
 import { config } from "../../../configuration";
@@ -86,14 +85,14 @@ const MedicalHistory:React.FC=()=> {
   }
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = files?.map((n,index) => index);
+      const newSelected = files?.map((_,index) => index);
       setSelected(newSelected||[]);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (_: React.MouseEvent<unknown>, id: number) => {
       const selectedIndex = selected.indexOf(id);
       let newSelected: readonly number[] = [];
 
@@ -127,12 +126,12 @@ const MedicalHistory:React.FC=()=> {
       
           <EnhancedTableToolbar numSelected={selected.length} openModal={()=>{setUpload(true)}} />
           <TableContainer>
-          <Box
+          {/* <Box
             component="img"
             className='my-img'
             alt="The house from the offer."
             src={image}
-            />
+            /> */}
           <Table
               sx={{ minWidth: 750, }}
               aria-labelledby="tableTitle"
@@ -147,7 +146,7 @@ const MedicalHistory:React.FC=()=> {
               {tableLoading ? (<TableLoadingSkeleton/>):
               files?.map((file, index) => (
                   <TableRow
-                  role="checkbox"
+                      role="checkbox"
                       hover
                       onClick={() =>openViewFileModal(file)}
                       aria-checked={isSelected(index)}
