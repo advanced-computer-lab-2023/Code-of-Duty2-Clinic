@@ -8,11 +8,13 @@ import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
 import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
 
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { UserRole } from "../../types/UserRole";
+import { addPatientRegisteredFamilyMember } from "../../controllers/patients/addPatientRegisteredFamilyMember";
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
@@ -33,6 +35,10 @@ patientRouter
 
 .get('/family-members', getPatientRegisteredFamilyMembers)
 
+.get('/family-members/:familyMemberId', getPatientRegisteredFamilyMemberById)
+
+.post('/family-members/add-registered', addPatientRegisteredFamilyMember)
+
 .get('/appointments', getAppointmentsWithAllDoctors)
 
 .get('prescriptions', getAllPrescriptions)
@@ -42,8 +48,6 @@ patientRouter
 .put('/health-records', addPatientHealthRecord)
 
 .delete('/health-records', deletePatientHealthRecord)
-
-.get('/family-members', getPatientRegisteredFamilyMembers)
 
 .get('/appointments', getAppointmentsWithAllDoctors)
 
