@@ -13,8 +13,6 @@ export const addPatientRegisteredFamilyMember = async (req: AuthorizedRequest, r
     const mobile = req.body.mobile;
     const relation = req.body.relation;
 
-  
-
   try {
     // Find the requesting patient
     const requestingPatient = await Patient.findById(patientId).select('+registeredFamilyMembers');
@@ -30,10 +28,8 @@ export const addPatientRegisteredFamilyMember = async (req: AuthorizedRequest, r
 
   const familyMember = await Patient.findOne(query);
 
-      console.log(familyMember);
-
     if (!familyMember) {
-        return res.status(StatusCodes.NOT_FOUND).json({ message: 'Patient to be added as a family member not found' });
+        return res.status(StatusCodes.NOT_FOUND).json({ message: 'No patient with the entered details was found' });
       }
 
     const registeredFamilyMember: IRegisteredFamilyMember = {
@@ -48,7 +44,6 @@ if (!requestingPatient!.registeredFamilyMembers) {
 
 // Check if the family member already exists in the registeredFamilyMembers array
 if (requestingPatient!.registeredFamilyMembers.some(member => member.id.toString() === familyMember!.id.toString())) {
-  console.log('This family member is already registered');
   return res.status(StatusCodes.BAD_REQUEST).json({ message: `${familyMember.name} is already registered as a family member` });
 }
 
@@ -58,7 +53,6 @@ await requestingPatient!.save();
 res.status(StatusCodes.OK).json({ message: `${familyMember.name} has been added as a registered family member` });
 
   } catch (error) {
-    console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });
   }
 };
