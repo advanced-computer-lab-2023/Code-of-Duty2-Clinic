@@ -21,6 +21,7 @@
     "@types/node": "^20.8.2",
     "@types/nodemailer": "^6.4.13",
     "axios": "^1.5.1",
+    "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

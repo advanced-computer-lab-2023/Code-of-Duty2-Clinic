@@ -1,9 +1,9 @@
-// In admins/controllers/updatePasswordById.ts
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { findAdminById, updatePasswordById, validateAdminPassword } from '../../services/admins';
 import { AuthorizedRequest } from '../../types/AuthorizedRequest';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 
 export const updateAdminPassword = async (req: AuthorizedRequest, res: Response) => {
   try {
@@ -16,6 +16,7 @@ export const updateAdminPassword = async (req: AuthorizedRequest, res: Response)
     if (!admin) {
       return res.status(StatusCodes.NOT_FOUND).json({ message: 'Admin not found' });
     }
+    // await admin.verifyPassword(currentPassword, (err: any, isMatch: boolean) => {
 
     const isPasswordCorrect = await validateAdminPassword(admin, currentPassword);
 

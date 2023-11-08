@@ -20,4 +20,4 @@ async function registerAdmin(req: Request, res: Response) {
   }
 }
 
-export default registerAdmin ;
+export default registerAdmin;

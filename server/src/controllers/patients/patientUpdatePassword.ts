@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 export const updatePatientPassword = async (req: AuthorizedRequest, res: Response) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
+    
     const patientId = req.user?.id!;
 
     const patient = await findPatientById(patientId);
