@@ -13,6 +13,8 @@ import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthReco
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { UserRole } from "../../types/UserRole";
+import { selectAppointment } from "../../controllers/patients/selectAppointmentTime";
+
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
@@ -37,7 +39,7 @@ patientRouter
 
 .get('prescriptions', getAllPrescriptions)
 
-.patch('/changePassword', updatePatientPassword)
+.patch('/change-password', updatePatientPassword)
 
 .get('/health-records', getPatientHealthRecords)
 
@@ -48,5 +50,7 @@ patientRouter
 .get('/family-members', getPatientRegisteredFamilyMembers)
 
 .get('/appointments', getAppointmentsWithAllDoctors)
+
+.post('/appointments/select-time', selectAppointment)
 
 export default patientRouter;

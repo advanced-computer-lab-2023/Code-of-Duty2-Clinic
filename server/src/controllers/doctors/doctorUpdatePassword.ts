@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { findDoctorById, updatePasswordById, validateDoctorPassword } from '../../services/doctors';
+import { findDoctorById, updatePasswordById } from '../../services/doctors';
 import { AuthorizedRequest } from '../../types/AuthorizedRequest';
-import bcrypt from 'bcrypt'; 
+// import bcrypt from 'bcrypt'; 
 
 
 export const updateDoctorPassword = async (req: AuthorizedRequest, res: Response) => {
@@ -16,7 +16,7 @@ export const updateDoctorPassword = async (req: AuthorizedRequest, res: Response
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Doctor not found' });
         }
         
-        const isPasswordCorrect = await validateDoctorPassword(doctor, currentPassword);
+        const isPasswordCorrect = await doctor.verfiyPassword?.(currentPassword);
         
         if (!isPasswordCorrect) {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Current password is incorrect' });
@@ -26,11 +26,9 @@ export const updateDoctorPassword = async (req: AuthorizedRequest, res: Response
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New password and confirm password do not match' });
         }
         
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-        doctor.password = hashedPassword;
+
         
-        await updatePasswordById(doctorId, hashedPassword);
+        await updatePasswordById(doctorId, newPassword);
 
     return res.status(StatusCodes.OK).json({ message: 'Password updated successfully!' });
 

@@ -41,7 +41,7 @@ router
 
 .get('/doctor-registration-requests/:email', getDoctorRegistrationRequest)
 
-.patch('/admin/change-password', updateAdminPassword);
+.patch('/admin/change-password', updateAdminPassword)
 
 
 export default router;

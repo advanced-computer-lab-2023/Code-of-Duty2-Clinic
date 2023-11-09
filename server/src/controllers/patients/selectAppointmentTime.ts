@@ -1,62 +1,83 @@
-// import { Response } from 'express';
-// import { AuthorizedRequest } from '../../types/AuthorizedRequest';
-// import { StatusCodes } from 'http-status-codes';
-// import  Appointment  from '../../models/appointments/Appointment';
-// import { findDoctorById } from '../../services/doctors';
-// import { findPatientById } from '../../services/patients';
+import { Response } from 'express';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
+import { StatusCodes } from 'http-status-codes';
+import Appointment from '../../models/appointments/Appointment';
+import { findDoctorByEmail } from '../../services/doctors';
+import { findPatientByEmail, findPatientById } from '../../services/patients';
 
-// export const createAppointmentController = async (req: AuthorizedRequest, res: Response) => {
-//   try {
-//     const { startTime, endTime, familyMemberType, familyMemberId } = req.body;
+export const selectAppointment = async (req: AuthorizedRequest, res: Response) => {
+  try {
+    const { startTime, endTime, doctorEmail, familyMemberType, familyMemberEmail, dependentMemberNatID } = req.body;
 
-//     const patientId = req.user?.id!;
-//     const doctorId = req.params.doctorId;
+    const patientId = req.user?.id!;
 
-//     const patient = await findPatientById(patientId);
-//     const doctor = await findDoctorById(doctorId);
+    const familyMember = await findPatientByEmail(familyMemberEmail);
 
-//     if (!patient || !doctor) {
-//       return res.status(StatusCodes.NOT_FOUND).json({ message: 'Patient or doctor not found' });
-//     }
+    const patient = await findPatientById(patientId);
+    const doctor = await findDoctorByEmail(doctorEmail);
 
-//     if (familyMemberType === 'registered') {
-//       const registeredFamilyMember = patient.registeredFamilyMembers?.find(
-//         (member) => member.id === familyMemberId
-//       );
+    if (!patient || !doctor) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: 'Patient or doctor not found' });
+    }
 
-//       if (!registeredFamilyMember) {
-//         return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Family member not found or not registered' });
-//       }
+    let appointmentData;
 
-//       const appointment = new Appointment({
-//         timePeriod: { startTime, endTime },
-//         status: 'upcoming',
-//         doctorId: doctor._id, 
-//         patientId: patientId,
-//       });
+    if (familyMemberType === 'None') {
 
-//       if (!appointment) {
-//         return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Failed to create the appointment' });
-//       }
-//     } else if (familyMemberType === 'dependent') {
-//       const dependentFamilyMember = patient.dependentFamilyMembers?.find(
-//         (member) => member.id === familyMemberId
-//       );
+      appointmentData = {
+        timePeriod: { startTime, endTime },
+        status: 'upcoming',
+        doctorId: doctor._id, 
+        patientId: patientId,
+      };
 
-//       if (!dependentFamilyMember) {
-//         return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Dependent family member not found' });
-//       }
+    } else if (familyMemberType === 'Registered') {
+      const registeredFamilyMember = patient.registeredFamilyMembers?.find(
+        (member) => member.id === familyMember?.id
+      );
 
-//       // const newAppointment = new Appointment(appointment);
-//       // await newAppointment.save();
+      if (!registeredFamilyMember) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Family member not found or not registered' });
+      }
 
-//     } else {
-//       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid family member type' });
-//     }
+      appointmentData = {
+        timePeriod: { startTime, endTime },
+        status: 'upcoming',
+        doctorId: doctor._id, 
+        patientId: familyMember?.id,
+      };
+
+    } else if (familyMemberType === 'Dependent') {
+      const dependentFamilyMember = patient.dependentFamilyMembers?.find(
+        (member) => member.nationalId === dependentMemberNatID
+      );
+
+      if (!dependentFamilyMember) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Dependent family member not found' });
+      }
+
+      appointmentData = {
+        timePeriod: { startTime, endTime },
+        status: 'upcoming',
+        doctorId: doctor._id, 
+        patientId: patientId,
+      };
+      
+    } else {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid family member type' });
+    }
+
+    const appointment = new Appointment(appointmentData);
+
+    if (!appointment) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Failed to create the appointment' });
+    }
+
+    await appointment.save();
     
-//     return res.status(StatusCodes.OK).json({ message: 'Appointment created successfully' });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while creating the appointment' });
-//   }
-// };
+    return res.status(StatusCodes.OK).json({ message: 'Appointment created successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while creating the appointment' });
+  }
+};

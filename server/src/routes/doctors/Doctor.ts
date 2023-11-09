@@ -13,6 +13,7 @@ import { authorizeUser } from '../../middlewares/authorization';
 import { authenticateUser } from '../../middlewares/authentication';
 import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAllPatients } from '../../controllers/patients/getAllPatients';
+import { scheduleFollowUp } from '../../controllers/doctors/doctorFollowUp';
 
 
 const doctorRouter = express.Router();
@@ -37,9 +38,11 @@ doctorRouter
 
 .get('', getDoctorById)
 
-.post('/appointments/availableTimeSlots', addDoctorAvailableSlots)
+.post('/appointments/available-time-slots', addDoctorAvailableSlots)
 
-.patch('/changePassword', updateDoctorPassword);
+.patch('/change-password', updateDoctorPassword)
+
+.post('/appointments/:initialAppointmentId/follow-up', scheduleFollowUp)
 
 
 
