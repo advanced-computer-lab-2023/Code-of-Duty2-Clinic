@@ -3,7 +3,7 @@ import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
 
-import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
+import DoctorRegistrationRequestForm from "../../pages/doctors/Doccc/DoctorRegistrationRequestForm";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";

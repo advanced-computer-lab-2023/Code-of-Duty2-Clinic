@@ -1,4 +1,4 @@
-import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
+import DoctorRegistrationRequestForm from "../../pages/doctors/Doccc/DoctorRegistrationRequestForm";
 import About from "../../pages/general/About";
 import ContactUs from "../../pages/general/ContactUs";
 import Home from "../../pages/general/Home";

@@ -19,6 +19,12 @@ export const DoctorRegistrationRequestSchema = new Schema<IDoctorRegistrationReq
     educationalBackground: { type: String, required: true },
     status: { type: String, enum: ['accepted', 'pending', 'rejected'], default: 'pending', required: true },
     speciality: { type: String, required: true },
+    experienceFiles:{
+        type:[{
+            name:{type:String},
+            url:{type:String}
+        }]
+    } 
 }, 
 {timestamps: true}
 );

@@ -31,6 +31,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
     if (!file||fileName.current==="") return;
     if(file.current)
     imgUrl.current= await uploadImage(file.current,recordType.current,fileName.current||"")
+
     const healthrecord:IHealthRecord = {
       name:fileName.current,
       url:imgUrl.current,
@@ -38,6 +39,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
       fileType:file.current?.type,
       createdAt:new Date(),
     }
+    
     try{    
       await axios.put(`${config.serverUri}/patients/health-records`,healthrecord)
       setSaveLoading(false)
