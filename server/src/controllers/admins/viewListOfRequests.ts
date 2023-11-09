@@ -9,7 +9,7 @@ import { StatusCodes } from 'http-status-codes';
     res.status(StatusCodes.OK).json(requests);
   } catch (error: any) {
     console.error('Error fetching doctor registration request:', error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+    res.status(StatusCodes.BAD_REQUEST).json(error.message);
   }
 };
 export default getDoctorRegistrationRequests;

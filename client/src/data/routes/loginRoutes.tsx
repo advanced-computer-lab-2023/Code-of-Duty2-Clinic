@@ -1,6 +1,7 @@
 import Login from "../../pages/guest/Login";
 import DoctorLogin from "../../pages/guest/DoctorLogin";
 import { Route } from "../../types";
+import ForgetPassword from "../../pages/guest/forget-password/ForgetPassword";
 
 export const loginRoute: Route = {
   path: "/login",
@@ -12,6 +13,11 @@ export const doctorLoginRoute: Route = {
   element: <DoctorLogin />,
 };
 
-const routes: Route[] = [loginRoute, doctorLoginRoute];
+export const forgetPasswordRoute: Route = {
+  path: "/forget-password",
+  element: <ForgetPassword />,
+};
+
+const routes: Route[] = [loginRoute, doctorLoginRoute, forgetPasswordRoute];
 
 export default routes;

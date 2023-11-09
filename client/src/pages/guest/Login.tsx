@@ -24,6 +24,7 @@ import { patientDashboardRoute } from "../../data/routes/patientRoutes";
 import { adminDashboardRoute } from "../../data/routes/adminRoutes";
 import axios from "axios";
 import { config } from "../../configuration";
+import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -34,7 +35,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [invalidLoginAlertMessage, setInvalidLoginAlert] = useState<string | null>();
+  const [invalidLoginAlertMessage, setInvalidLoginAlert] = useState<
+    string | null
+  >();
   const location = useLocation();
 
   const { login } = useContext(AuthContext);
@@ -194,7 +197,10 @@ export default function Login() {
               <Grid container>
                 <Grid item xs>
                   {/* TODO: Add Forgot password href here but use Navigate instead */}
-                  <NavLink to="/" style={{ color: "inherit" }}>
+                  <NavLink
+                    to={forgetPasswordRoute.path}
+                    style={{ color: "inherit" }}
+                  >
                     Forgot password?
                   </NavLink>
                 </Grid>

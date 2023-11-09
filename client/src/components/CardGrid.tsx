@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 import '../css/CardGrid.css';
 
 
-export default function CardGrid ({title, list, primary, secondary, buttonText}: {title: string, primary: string, secondary: string, list: any, buttonText: string}) {
+export default function CardGrid ({title, list, primary, secondary, buttonText}: {title: string, primary: string, secondary: string, list: never[], buttonText: string}) {
     return (
         <>
         <div className='gridTitle'>

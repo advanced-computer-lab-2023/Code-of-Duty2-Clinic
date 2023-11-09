@@ -16,7 +16,7 @@ async function registerAdmin(req: Request, res: Response) {
     return res.status(StatusCodes.CREATED).json({ message: 'Admin registered successfully' });
   } catch (error) {
     console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+    res.status(StatusCodes.BAD_REQUEST).json(error);
   }
 }
 

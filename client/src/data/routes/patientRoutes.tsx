@@ -1,4 +1,3 @@
-import PatientInfo from "../../components/PatientInfo";
 import PatientRegisteredFamilyMembers from "../../components/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/AddFamilyMember";
@@ -10,6 +9,7 @@ import ViewDoctors from "../../pages/patients/ViewDoctors";
 import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
+import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
 
 
 export const patientDashboardRoute: Route = {
@@ -32,10 +32,12 @@ export const addFamilyMemberRoute: Route = {
     path: '/patient/family-members/add',
     element: <AddFamilyMember />
 }
-export const patientInfoRoute: Route = {
-    path: '/patient/info',
-    element: <PatientInfo />
+
+export const addRegisteredFamilyMemberRoute: Route = {
+    path: `/patient/family-members/add-registered`,
+    element: <AddRegisteredFamilyMember />
 }
+
 export const patientFamilyMembersRoute: Route = {
     path: '/patient/family-members',
     element: <PatientRegisteredFamilyMembers />
@@ -68,7 +70,7 @@ const routes: Route[] = [
     viewDoctorDetailsRoute,
     searchForDoctorsRoute,
     addFamilyMemberRoute,
-    patientInfoRoute,
+    addRegisteredFamilyMemberRoute,
     patientFamilyMembersRoute,
     patientAppointmentsRoute,
     patientDoctorAppointmentDetailsRoute,
