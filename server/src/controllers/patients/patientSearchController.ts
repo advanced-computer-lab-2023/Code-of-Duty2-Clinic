@@ -9,28 +9,30 @@ const searchPatient = async (req: AuthorizedRequest , res: Response) => {
     const mobile = req.query.mobile;
     const email = req.query.email;
 
-    if (name) {
-        const patientData = await Patient.findOne({ name: { $regex: new RegExp(name as string, 'i') } });
-        return res.status(StatusCodes.OK).send(patientData);
-    } 
-    
-    if (mobile && !email) {
-        const patientData = await Patient.findOne({ mobileNumber: mobile });
-        return patientData ? res.status(StatusCodes.OK).send(patientData) : res.status(StatusCodes.NOT_FOUND).send('Patient not found');
-    } else if (email && !mobile) {
-        const patientData = await Patient.findOne({ email: { $regex: new RegExp(email as string, 'i') } });
-        return patientData ? res.status(StatusCodes.OK).send(patientData) : res.status(StatusCodes.NOT_FOUND).send('Patient not found');
-    } else if (mobile && email) {
-        const patientData = await Patient.findOne({
-            $and: [
-              { mobileNumber: mobile },
-              { email: { $regex: new RegExp(email as string, 'i') } }
-            ]
-          });
-          return patientData ? res.status(StatusCodes.OK).send(patientData) : res.status(StatusCodes.NOT_FOUND).send('Patient not found');
+   const query: any = {};
+    if(name) {
+         query.name = name;
+    }
+    if(mobile) {
+         query.mobileNumber = mobile;
+    }
+    if(email) {
+         query.email = email;
     }
 
-    res.status(StatusCodes.BAD_REQUEST).send('Invalid query parameters');
+    if (name || mobile || email) {
+        try {
+            const patient = await Patient.find(query);
+            if (patient) {
+                return res.status(StatusCodes.OK).json({patient});
+            }
+            return res.status(StatusCodes.NOT_FOUND).json({message: 'No patient with the entered details was found'});
+        } catch (error) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: 'Internal Server Error'});
+        }
+    }
+
+    return res.status(StatusCodes.BAD_REQUEST).send('Invalid query parameters');
 
 }
 

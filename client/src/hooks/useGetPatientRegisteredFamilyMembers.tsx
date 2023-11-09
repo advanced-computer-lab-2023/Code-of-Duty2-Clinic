@@ -1,16 +1,16 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { config } from '../configuration';
-import { Patient } from '../types';
+import { RegisteredFamilyMember } from '../types';
 
-const getPatientRegisteredFamilyMembers = async (patientId: string): Promise<Patient[]> => {
-    const { data } = await axios.get<never[]>(`${config.serverUri}/patients/${patientId}/family-members`);
+const getPatientRegisteredFamilyMembers = async (): Promise<RegisteredFamilyMember[]> => {
+    const { data } = await axios.get<RegisteredFamilyMember[]>(`${config.serverUri}/patients/family-members`);
     return data;
 };
 
 
-const useGetPatientRegisteredFamilyMembers = (patientId: string) => {
-    return useQuery<Patient[]>(['patientFamilyMembers', patientId], () => getPatientRegisteredFamilyMembers(patientId));
+const useGetPatientRegisteredFamilyMembers = () => {
+    return useQuery<RegisteredFamilyMember[]>(['patientFamilyMembers'], () => getPatientRegisteredFamilyMembers());
 }
 
 export default useGetPatientRegisteredFamilyMembers;
