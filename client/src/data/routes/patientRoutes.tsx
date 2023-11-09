@@ -1,4 +1,4 @@
-import PatientRegisteredFamilyMembers from "../../components/PatientRegisteredFamilyMembers";
+import PatientRegisteredFamilyMembers from "../../pages/patients/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/AddFamilyMember";
 import Home from "../../pages/patients/Home";
