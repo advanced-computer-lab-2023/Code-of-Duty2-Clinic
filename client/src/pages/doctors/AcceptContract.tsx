@@ -1,5 +1,8 @@
 
-import React, { useState } from 'react';
+import axios from "axios";
+import {useEffect, useState} from "react";
+import { config } from "../../configuration";
+
 
 const ViewContract = () => {
 
@@ -7,8 +10,30 @@ const ViewContract = () => {
     
       const handleAccept = () => {
         setAccepted(true);
-        // You might want to perform additional actions upon acceptance, like updating a database or triggering further steps.
+        updateContractStatus("accepted");
       };
+
+      const updateContractStatus =async (status:String) => {
+        try {
+          const response = await axios.patch(`${config.serverUri}/doctors/contract`,{contractStatus:status});
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      const getContractStatus = async () => {
+        try {
+          const response = await axios.get(`${config.serverUri}/doctors/contract`);
+          if(response.data === "accepted")
+            setAccepted(true);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      useEffect(() => {
+        getContractStatus();
+    }, []);
     
       return (
         <div className="bg-white shadow-md rounded-md mt-10 ml-10">

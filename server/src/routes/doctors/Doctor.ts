@@ -11,6 +11,8 @@ import { authorizeUser } from '../../middlewares/authorization';
 import { authenticateUser } from '../../middlewares/authentication';
 import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAllPatients } from '../../controllers/patients/getAllPatients';
+import { getContractStatus } from '../../controllers/doctors/getContractStatus';
+import { updateDoctorContractStatus } from '../../controllers/doctors/updateContractStatus';
 
 
 const doctorRouter = express.Router();
@@ -19,6 +21,10 @@ doctorRouter.use(authenticateUser);
 doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
 doctorRouter
+.get('/contract', getContractStatus)
+
+.patch('/contract',updateDoctorContractStatus)
+
 .patch('/account', updateDoctor)
 
 .get('/patients', getAllPatients)
