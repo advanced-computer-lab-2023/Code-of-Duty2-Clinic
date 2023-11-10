@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, Button, Grid, Snackbar, AlertColor, Popover } from "@mui/material";
+import { TextField, Button, Grid, AlertColor, Popover } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { Alert } from "@mui/material";
@@ -30,7 +30,7 @@ export default function AddRegisteredFamilyMember() {
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = React.useState<AlertColor>('info');
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState<AlertColor>('success');
   const submitButtonRef = useRef(null);
 
 
@@ -52,9 +52,7 @@ export default function AddRegisteredFamilyMember() {
     setOpenSnackbar(true);
     }
   );
-
-
-  }
+ }
  
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -72,7 +70,7 @@ export default function AddRegisteredFamilyMember() {
           gutterBottom 
           sx={{ marginBottom: "2vh" }}
         >
-          Enter the email and/or phone number of the family member you would like
+          Enter the email and/or mobile number of the family member you would like
           to add.
         </Typography>
 

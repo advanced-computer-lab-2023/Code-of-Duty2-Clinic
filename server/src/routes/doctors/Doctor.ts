@@ -10,7 +10,7 @@ import { UserRole } from "../../types/UserRole";
 import { authorizeUser } from '../../middlewares/authorization';
 import { authenticateUser } from '../../middlewares/authentication';
 import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
-import { getAllPatients } from '../../controllers/patients/getAllPatients';
+
 
 
 const doctorRouter = express.Router();
