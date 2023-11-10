@@ -19,9 +19,11 @@
     "@mui/lab": "^5.0.0-alpha.148",
     "@mui/material": "^5.14.12",
     "@mui/x-date-pickers": "^6.16.1",
+    "@types/file-saver": "^2.0.6",
     "@types/uuid": "^9.0.6",
     "axios": "^1.5.1",
     "dayjs": "^1.11.10",
+    "file-saver": "^2.0.5",
     "firebase": "^10.5.2",
     "moment": "^2.29.4",
     "mongoose": "^7.5.4",
@@ -38,7 +40,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/mui-image": "^1.0.3",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.7",

@@ -8,7 +8,7 @@ const registerAsDoctor = async (req: Request, res: Response) => {
         res.status(StatusCodes.CREATED).send('Doctor Registration Request Sent Successfully!' );
     } catch(err: any){
         console.log(err);
-        res.status(StatusCodes.BAD_REQUEST).send(err.message);
+        res.status(StatusCodes.BAD_REQUEST).send({message: err.message});
     }
 }
 

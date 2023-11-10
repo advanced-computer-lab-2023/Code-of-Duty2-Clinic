@@ -26,8 +26,8 @@ export const getAppointmentsWithAllPatients = async (req: AuthorizedRequest, res
         const appointments = await getDoctorAppointments(doctorId, req.query);
         
         res.status(StatusCodes.OK).json(appointments);
-    } catch(error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
+    } catch(error: any) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: error.message });
     }    
 }
 

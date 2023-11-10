@@ -23,6 +23,6 @@ export const DoctorRegistrationRequestSchema = new Schema<IDoctorRegistrationReq
 {timestamps: true}
 );
 
-DoctorRegistrationRequestSchema.plugin(bcrypt);
+DoctorRegistrationRequestSchema.plugin(bcrypt, { rounds: 10 });
 
 export default mongoose.model<IDoctorRegistrationRequestModel>('DoctorRegistrationRequest', DoctorRegistrationRequestSchema);

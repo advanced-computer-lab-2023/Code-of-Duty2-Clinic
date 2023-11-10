@@ -1,11 +1,8 @@
-import { IDoctorBaseInfo } from './IDoctorBaseInfo';
-
+import { IDoctorBaseInfo } from "./IDoctorBaseInfo";
 
 export interface IDoctor extends IDoctorBaseInfo {
   speciality?: string;
-  availableSlots: [
-    {startTime: Date, endTime: Date}
-  ],
+  availableSlots: [{ startTime: Date; endTime: Date }];
   identification?: Buffer;
   medicalLicense?: Buffer;
   medicalDegree?: Buffer;
@@ -13,5 +10,11 @@ export interface IDoctor extends IDoctorBaseInfo {
     amount: number;
   };
   contract?: Buffer;
-  contractStatus?: 'pending' | 'accepted' | 'rejected';
+  contractStatus?: "pending" | "accepted" | "rejected";
+  passwordReset?: {
+    otp: string;
+    expiryDate: Date;
+  };
+  verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
+  verifyPassword?: (password: string) => Promise<boolean>;
 }

@@ -8,10 +8,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import {
-  doctorSignUpRoute,
-  welcomeRoute,
-} from "../../data/routes/guestRoutes";
+import { doctorSignUpRoute, welcomeRoute } from "../../data/routes/guestRoutes";
 import doctorImage from "../../assets/Doctor.jpeg";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useContext, useState } from "react";
@@ -23,6 +20,7 @@ import { AlertTitle } from "@mui/material";
 import { doctorDashboardRoute } from "../../data/routes/doctorRoutes";
 import axios from "axios";
 import { config } from "../../configuration";
+import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -33,7 +31,9 @@ export default function DoctorLogin() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [showInvalidLoginAlert, setShowInvalidLoginAlert] = useState(false);
+  const [invalidLoginAlertMessage, setInvalidLoginAlertMessage] = useState<
+    string | null
+  >();
   const location = useLocation();
 
   const { login } = useContext(AuthContext);
@@ -46,7 +46,7 @@ export default function DoctorLogin() {
 
     setUsernameError(false);
     setPasswordError(false);
-    setShowInvalidLoginAlert(false);
+    setInvalidLoginAlertMessage(null);
 
     if (username === "") {
       setUsernameError(true);
@@ -79,8 +79,10 @@ export default function DoctorLogin() {
       } else if (data.role === UserRole.DOCTOR) {
         navigate(doctorDashboardRoute.path);
       }
-    } catch (error) {
-      setShowInvalidLoginAlert(true);
+    } catch (error: any) {
+      setInvalidLoginAlertMessage(
+        error.response.data?.message || "Network error"
+      );
     }
   };
 
@@ -121,7 +123,7 @@ export default function DoctorLogin() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            {showInvalidLoginAlert && (
+            {invalidLoginAlertMessage && (
               <Alert
                 variant="outlined"
                 severity="error"
@@ -132,7 +134,7 @@ export default function DoctorLogin() {
                     color="inherit"
                     size="small"
                     onClick={() => {
-                      setShowInvalidLoginAlert(false);
+                      setInvalidLoginAlertMessage(null);
                     }}
                   >
                     <CloseIcon fontSize="inherit" />
@@ -140,8 +142,7 @@ export default function DoctorLogin() {
                 }
               >
                 <AlertTitle>Oops!</AlertTitle>
-                Something's wrong with your credentials —{" "}
-                <strong>please make sure they're correct!</strong>
+                <strong>{invalidLoginAlertMessage}</strong>
               </Alert>
             )}
             <Box
@@ -191,7 +192,10 @@ export default function DoctorLogin() {
               <Grid container>
                 <Grid item xs>
                   {/* TODO: Add Forgot password href here but use Navigate instead */}
-                  <NavLink to="/" style={{ color: "inherit" }}>
+                  <NavLink
+                    to={forgetPasswordRoute.path}
+                    style={{ color: "inherit" }}
+                  >
                     Forgot password?
                   </NavLink>
                 </Grid>

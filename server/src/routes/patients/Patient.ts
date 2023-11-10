@@ -10,7 +10,6 @@ import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescrip
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
 import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
-
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { UserRole } from "../../types/UserRole";

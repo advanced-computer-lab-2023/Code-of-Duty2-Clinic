@@ -2,7 +2,9 @@ import mongoose, { Document, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
 import isMobileNumber from 'validator/lib/isMobilePhone';
 import { IPatient } from './interfaces/IPatient';
-import bcrypt from 'mongoose-bcrypt';
+import PasswordResetSchema from '../users/PasswordReset';
+import WalletSchema from '../wallets/Wallet';
+import bcrypt from 'bcrypt';
 
 export interface IPatientModel extends IPatient, Document {} 
 
@@ -22,7 +24,16 @@ export const PatientSchema = new Schema<IPatientModel>({
  
   deliveryAddresses: { type: Array<{ type: String }>, select: false },
   imageUrl: String,
-  healthRecords: {type: Array<{ type: String }>, select: false },
+  healthRecords: {
+    type:Array<{type:{ 
+      name: {type: String, required: true},
+      url: {type: String, required: true},
+      recordType:{type:String,required:true},
+      fileType:{type:String,required:true},
+      createdAt: {type: Date,immutable: true}
+    }}>,
+    required: false
+  },
   subscribedPackage: 
   {
     type:{
@@ -65,27 +76,26 @@ export const PatientSchema = new Schema<IPatientModel>({
     select: false,
   },
   wallet: {
-    type: {
-      amount: Number,
-      currency: {type: String, default: 'EGP'},
-      pinCode: {type: String, bcrypt: true},
-    },
-    required: false,
+    type: { WalletSchema },
     select: false,
   },
   passwordReset: {
-    type: {
-      code: String,
-      expiryDate: Date,
-    },
-    required: false,
-    select: false,
-  },
+    type: PasswordResetSchema,
+    select: false 
+  }
 }, 
 {timestamps: true}
 );
 
-PatientSchema.plugin(bcrypt);
+PatientSchema.plugin(require('mongoose-bcrypt'), { rounds: 10 });
+
+PatientSchema.methods.verifyPasswordResetOtp = function(otp: string) {
+  return bcrypt.compare(otp, this.passwordReset.otp);
+}
+PatientSchema.methods.verifyWalletPinCode = function(pinCode: string) {
+  return bcrypt.compare(pinCode, this.wallet.pinCode);
+}
+
 
 PatientSchema.virtual('age').get(function() {
   let today = new Date();

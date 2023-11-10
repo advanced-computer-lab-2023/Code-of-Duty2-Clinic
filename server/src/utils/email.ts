@@ -10,8 +10,14 @@ const oAuth2Client = new google.auth.OAuth2(
 ); 
 oAuth2Client.setCredentials({ refresh_token: refreshToken });
 
+type MailOptions = {
+    to: string;
+    subject: string;
+    text: string;
+    html?: string;
+}
 
-export const sendEmail = async (to: string, subject: string, text: string) => {
+export const sendEmail = async (mailOptions: MailOptions) => {
     const accessToken = await oAuth2Client.getAccessToken();
     const transport = nodemailer.createTransport({
         service: "gmail",
@@ -24,12 +30,12 @@ export const sendEmail = async (to: string, subject: string, text: string) => {
             accessToken
         }
     } as nodemailer.TransportOptions);
-    const mailOptions = {
+    const mailRequiredOptions = {
         from: `El7a2ny <${user}>`,
-        to,
-        subject,
-        text,
-        html: `<h1>${text}</h1>`,
+        to: mailOptions.to,
+        subject: mailOptions.subject,
+        text: mailOptions.text,
+        html: mailOptions.html || `<h2>${mailOptions.text}</h2>`,
     };
     const result = await transport.sendMail(mailOptions);
     return result;
