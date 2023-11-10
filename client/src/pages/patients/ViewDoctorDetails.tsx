@@ -8,7 +8,7 @@ import { getFormattedDateTime } from "../../utils/formatter";
 
 const ViewDoctorDetails:React.FC = () => {
     const [doctor, setDoctor] = useState<DoctorDetails>({} as DoctorDetails);
-    const doctorId  = useLocation().pathname.split('/')[4];
+    const doctorId  = useLocation().pathname.split('/')[3];
     const fetchDoctor = async () => {
         try {
           const response = await axios.get(`${config.serverUri}/patients/doctors/${doctorId}`);

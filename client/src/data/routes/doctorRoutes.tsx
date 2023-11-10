@@ -5,6 +5,7 @@ import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
 
 import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
+import DoctorContract from "../../pages/doctors/AcceptContract";
 import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
 
@@ -48,6 +49,11 @@ export const patientSearchRoute: Route = {
   element: <PatientSearch />,
 };
 
+export const acceptContractRoute: Route = {
+  path: "/doctor/contract",
+  element: <DoctorContract />,
+}
+
 const routes: Route[] = [
   doctorDashboardRoute,
   updateAccountInfoRoute,
@@ -57,6 +63,7 @@ const routes: Route[] = [
   doctorRegisteredPatientDetailsRoute,
   doctorRegistrationRequestRoute,
   patientSearchRoute,
+  acceptContractRoute
 ];
 
 export default routes;
