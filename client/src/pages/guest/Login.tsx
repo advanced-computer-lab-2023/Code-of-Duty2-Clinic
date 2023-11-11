@@ -22,9 +22,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { AlertTitle } from "@mui/material";
 import { patientDashboardRoute } from "../../data/routes/patientRoutes";
 import { adminDashboardRoute } from "../../data/routes/adminRoutes";
-import axios from "axios";
-import { config } from "../../configuration";
 import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
+import { useMutation } from "react-query";
+import { loginService } from "./loginService";
+import { displayError } from "../../utils/displayError";
+import { LoginResponse } from "../../types/LoginResponse";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -35,22 +37,22 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [invalidLoginAlertMessage, setInvalidLoginAlert] = useState<
-    string | null
-  >();
   const location = useLocation();
+  const loginMutation = useMutation({
+    mutationFn: loginService,
+    onSuccess: (data: LoginResponse) => handleLoginSuccess(data),
+  });
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const fromOrWelcome = location.state?.from?.pathname || welcomeRoute.path;
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setUsernameError(false);
     setPasswordError(false);
-    setInvalidLoginAlert(null);
 
     if (username === "") {
       setUsernameError(true);
@@ -61,36 +63,28 @@ export default function Login() {
       setPasswordError(true);
       return;
     }
-
-    try {
-      const response = await axios.post(`${config.serverUri}/auth/login`, {
-        username,
-        password,
-      });
-
-      const data = response.data;
-      login(data.accessToken, data.role);
-
-      if (
-        data.role === UserRole.PATIENT &&
-        fromOrWelcome.startsWith("/patient")
-      ) {
-        navigate(fromOrWelcome);
-      } else if (
-        data.role === UserRole.ADMIN &&
-        fromOrWelcome.startsWith("/admin")
-      ) {
-        navigate(fromOrWelcome);
-      } else if (data.role === UserRole.PATIENT) {
-        navigate(patientDashboardRoute.path);
-      } else if (data.role === UserRole.ADMIN) {
-        navigate(adminDashboardRoute.path);
-      }
-    } catch (error: any) {
-      setInvalidLoginAlert(error.message);
-    }
+    loginMutation.mutate({ username, password });
   };
 
+  function handleLoginSuccess(data: LoginResponse) {
+    login(data.accessToken, data.role);
+
+    if (
+      data.role === UserRole.PATIENT &&
+      fromOrWelcome.startsWith("/patient")
+    ) {
+      navigate(fromOrWelcome);
+    } else if (
+      data.role === UserRole.ADMIN &&
+      fromOrWelcome.startsWith("/admin")
+    ) {
+      navigate(fromOrWelcome);
+    } else if (data.role === UserRole.PATIENT) {
+      navigate(patientDashboardRoute.path);
+    } else if (data.role === UserRole.ADMIN) {
+      navigate(adminDashboardRoute.path);
+    }
+  }
   return (
     <Container component="main" maxWidth="lg" sx={{ pb: 6 }}>
       <Grid container columnSpacing={7}>
@@ -128,7 +122,7 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            {invalidLoginAlertMessage && (
+            {loginMutation.isError && (
               <Alert
                 variant="outlined"
                 severity="error"
@@ -138,16 +132,14 @@ export default function Login() {
                     aria-label="close"
                     color="inherit"
                     size="small"
-                    onClick={() => {
-                      setInvalidLoginAlert(null);
-                    }}
+                    onClick={loginMutation.reset}
                   >
                     <CloseIcon fontSize="inherit" />
                   </IconButton>
                 }
               >
                 <AlertTitle>Oops!</AlertTitle>
-                {invalidLoginAlertMessage}
+                {displayError(loginMutation.error)}
               </Alert>
             )}
             <Box
@@ -191,6 +183,7 @@ export default function Login() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loginMutation.isLoading}
               >
                 Sign In
               </Button>

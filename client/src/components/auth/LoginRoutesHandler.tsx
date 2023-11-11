@@ -22,6 +22,7 @@ import { adminDashboardRoute } from "../../data/routes/adminRoutes";
 import { doctorDashboardRoute } from "../../data/routes/doctorRoutes";
 import UserRole from "../../types/enums/UserRole";
 import { pageNotFoundRoute } from "../../data/routes/generalRoutes";
+import { doctorUnverifiedRoute } from "../../data/routes/unverifiedRoutes";
 
 const LoginRoutesHandler = () => {
   const { authState } = useContext(AuthContext);
@@ -33,6 +34,8 @@ const LoginRoutesHandler = () => {
       <Navigate to={adminDashboardRoute.path} replace />
     ) : authState.role === UserRole.DOCTOR ? (
       <Navigate to={doctorDashboardRoute.path} replace />
+    ) : authState.role === UserRole.UNVERIFIED_DOCTOR ? (
+      <Navigate to={doctorUnverifiedRoute.path} replace />
     ) : (
       <Navigate to={pageNotFoundRoute.path} replace />
     )

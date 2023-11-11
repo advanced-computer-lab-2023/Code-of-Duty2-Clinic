@@ -12,30 +12,37 @@ import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
 
 export const findAllDoctors = async () => await Doctor.find();
 
-export const findDoctorById = async (id: string) =>
-  await Doctor.findById(id).select({
-    _id: 1,
-    name: 1,
-    email: 1,
-    mobileNumber: 1,
-    hourlyRate: 1,
-    affiliation: 1,
-    speciality: 1,
-    educationalBackground: 1,
-    availableSlots: 1,
-  });
+export const findDoctorById = async (id: string, elementsToSelect?: any) =>
+  await Doctor.findById(id).select(
+    elementsToSelect || {
+      _id: 1,
+      name: 1,
+      email: 1,
+      mobileNumber: 1,
+      hourlyRate: 1,
+      affiliation: 1,
+      speciality: 1,
+      educationalBackground: 1,
+      availableSlots: 1,
+    }
+  );
 
-export const findDoctorByUsername = async (username: string) =>
-  await Doctor.findOne({ username }).select({ _id: 1, password: 1 });
-
+export const findDoctorByUsername = async (
+  username: string,
+  elementsToSelect?: any
+) => {
+  return await Doctor.findOne({ username }).select(
+    elementsToSelect || { _id: 1, password: 1 }
+  );
+};
 export const findDoctorByEmail = async (
   email: string,
   elementsToSelect?: any
 ) => {
   const PromisedDoctor = Doctor.findOne({ email });
-  if (!elementsToSelect)
-    return await PromisedDoctor.select({ _id: 1, password: 1 });
-  return await PromisedDoctor.select(elementsToSelect);
+  return await PromisedDoctor.select(
+    elementsToSelect || { _id: 1, password: 1 }
+  );
 };
 
 export const deleteDoctorById = async (id: string) =>
