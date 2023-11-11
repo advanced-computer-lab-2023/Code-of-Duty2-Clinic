@@ -38,6 +38,7 @@ export const createNewDoctorRegistrationRequest = async (request: IDoctorBaseInf
         affiliation: request.affiliation,
         educationalBackground: request.educationalBackground,
         speciality: request.speciality,
+        experienceFiles:request.experienceFiles
     });
     return await newDoctorRegistrationRequest.save();
 }

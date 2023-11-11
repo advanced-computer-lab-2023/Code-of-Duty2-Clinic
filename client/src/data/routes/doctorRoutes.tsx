@@ -3,10 +3,9 @@ import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
 
-import DoctorRegistrationRequestForm from "../../pages/doctors/Doccc/DoctorRegistrationRequestForm";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
-import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
+import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
@@ -38,10 +37,7 @@ export const doctorRegisteredPatientDetailsRoute: Route = {
   element: <ViewRegisteredPatientData />,
 };
 
-export const doctorRegistrationRequestRoute: Route = {
-  path: "/doctor/register",
-  element: <DoctorRegistrationRequestForm />,
-};
+
 
 export const patientSearchRoute: Route = {
   path: "/doctor/patient/search",
@@ -55,7 +51,6 @@ const routes: Route[] = [
   doctorAppointmentDetailsRoute,
   doctorRegisteredPatientsRoute,
   doctorRegisteredPatientDetailsRoute,
-  doctorRegistrationRequestRoute,
   patientSearchRoute,
 ];
 

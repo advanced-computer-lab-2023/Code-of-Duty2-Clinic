@@ -36,14 +36,16 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
         alignItems={'center'}
         minHeight={400}
         rowSpacing={1}
+        padding={5}
         >
-      <Grid item sm={3} xs={12}>
+      <Grid item sm={12} xs={12}>
         <Controller
           name="username"
           control={control}
           render={({ field }) => (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
             <TextField
+            fullWidth
             {...field}
             variant="standard"
             label="Username"
@@ -53,13 +55,14 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
           )}
         />
       </Grid>
-      <Grid item sm={3} xs={12}>
+      <Grid item sm={12} xs={12}>
       <Controller
         name="password"
         control={control}
         render={({ field }) => (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
           <TextField
+          fullWidth
           {...field}
           variant="standard"
           type='password'
@@ -72,7 +75,7 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
         )}
       />
       </Grid>
-      <Grid item sm={3} xs={12}>
+      <Grid item sm={12} xs={12}>
       <Controller
         name="email"
         control={control}
@@ -80,6 +83,7 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
           // <input type="email" {...field} placeholder="Enter Your Email"  />
           <div style={{ display: 'flex', justifyContent: 'center' }}>
           <TextField
+          fullWidth
           {...field}
           variant="standard"
           type='email'
@@ -92,7 +96,7 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
         
       />
       </Grid>
-      <Grid item sm={3} xs={12}>
+      <Grid item sm={12} xs={12}>
       <Controller
         name="name"
         control={control}
@@ -100,6 +104,7 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
           // <input type="text" {...field} placeholder="Enter Your Full Name"  />
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <TextField
+            fullWidth
             {...field}
             variant="standard"
             type='text'
@@ -111,13 +116,14 @@ const StepOneForm : React.FC<IStepOneProps> = ({passFormDataToParent}) =>{
         )}
       />
       </Grid>
-      <Grid item sm={3} xs={12}>
+      <Grid item sm={12} xs={12}>
       <Controller
         name="gender"
         control={control}
         render={({ field }) => (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Select
+          fullWidth
           variant="standard"
           {...field} 
           defaultValue='choose your gender'

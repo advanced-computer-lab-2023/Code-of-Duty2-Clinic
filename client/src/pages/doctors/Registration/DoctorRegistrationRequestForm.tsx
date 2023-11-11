@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useRef, useState } from 'react';
 import {
   useForm,
   SubmitHandler,
-  Controller,
-  FormProvider,
   useWatch,
 } from 'react-hook-form';
-import { Button,Container,Stack, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { Button,Container,Stack, Step, StepLabel, Stepper,Typography } from '@mui/material';
 import axios from 'axios';
 import { config } from '../../../configuration';
 import StepOneForm from './components/stepOne';
@@ -28,11 +26,12 @@ export interface IFormTwoData {
   affiliation: string;
   educationalBackground: string;
   medicalDegree: string;
+  speciality?:string 
 }
 
 export interface IExperienceFile{
   url:string,
-  type:string
+  DocumentType:string
   name:string
 }
 
@@ -48,17 +47,22 @@ interface FormData {
   affiliation: string;
   educationalBackground: string;
   medicalDegree: string;
-  medicalLicenses: [];
-  id: { front: File | null; back: File | null };
-  activeStep:number,
-  fileName:string,
-  file:File|string,
-  files:{file:File,fileType:String}[]
+  speciality?:string
+  // medicalLicenses: [];
+  // id: { front: File | null; back: File | null };
+  // activeStep:number,
+  // fileName:string,
+  // file:File|string,
+  // files:{file:File,fileType:String}[]
+   //experienceFiles:IExperienceFile[]
 }
 
 const DoctorRegistrationRequestForm: React.FC = () => {
-  const [filesChanged, setFilesChanged] = useState(false);
   const [activeStep,setActiveStep] = useState<number>(0)
+  const stepOneData = useRef<IFormOneData>(null!)
+  const stepTwoData = useRef<IFormTwoData>(null!)
+  //const stepThreeData = useRef<IExperienceFile[]>([])
+
   const methods = useForm<FormData>({
     defaultValues: {
       username: '',
@@ -72,22 +76,32 @@ const DoctorRegistrationRequestForm: React.FC = () => {
       affiliation: '',
       educationalBackground: '',
       medicalDegree: '',
-      medicalLicenses: [],
-      id: { front: null, back: null },
-      activeStep:0,
-      files:[],
-      fileName:'',
-      file:''
+      speciality:''
+      //medicalLicenses: [],
+      // id: { front: null, back: null },
+      // activeStep:0,
+      // files:[],
+      // fileName:'',
+      // file:''
     },
   });
-  const watchedFiles = useWatch({ name: 'files', control: methods.control });
 
 
 
-  
-  const { handleSubmit, control, reset, watch } = methods;
-
-  const steps = ['Personal Info', 'Experience', 'Experince'];
+  async function  submitRequest() {
+        const formData:FormData = {
+          ...stepOneData.current,
+          ...stepTwoData.current,
+         // experienceFiles: stepThreeData.current,
+          speciality:'ss'
+        }
+        try {
+          console.log(await axios.post(`${config.serverUri}/auth/doctor-registration`, formData));
+        } catch (error: any) {
+            //setMessage(error?.message || 'error occured during submission');
+        }
+    };
+  const steps = ['Personal Info', 'Experience'];
  
 
   const handleNext = () => {
@@ -103,33 +117,32 @@ const DoctorRegistrationRequestForm: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (activeStep === 2) {
       // Handle form submission when all steps are completed
-      console.log(data.medicalLicenses);
-      await axios.post(`${config.serverUri}/users/doctor-registration`, data);
-      reset(); // Optional: Reset the form after submission
+      await axios.post(`${config.serverUri}/auth/doctor-registration`, data);
     } else {
       handleNext(); // Proceed to the next step
     }
   };
   function handleStepOneData(formData:IFormOneData){
-    console.log(formData)
+    stepOneData.current = formData
   }
   function handleStepTwoData(formData:IFormTwoData){
-    console.log(formData)
+    stepTwoData.current = formData
   }
-  function handleStepThreeData(formData:IExperienceFile[]){
-    console.log(formData)
-  }
+  // function handleStepThreeData(formData:IExperienceFile[]){
+  //   stepThreeData.current = formData
+
+  // }
 
   return (
-    <Stack width={'80%'} direction={'column'} alignItems={'center'} justifyContent={'space-between'} >
+    <Stack minWidth={'300px'}margin={'auto'} maxWidth={'500px'} sx={{backgroundColor:'gray'}} direction={'column'} alignItems={'center'} justifyContent={'center'} >
       <Typography  fontSize={20} fontWeight={500} textAlign={'center'}>
         Doctor Registration Request
       </Typography>
         <Container>
-          <Stepper  sx={{marginTop:3}} activeStep={activeStep}>
+          <Stepper  sx={{marginTop:5,marginBottom:2}} activeStep={activeStep}>
             {steps.map((label, index) => (
               <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+                 <StepLabel></StepLabel>
               </Step>
             ))}
           </Stepper>
@@ -141,9 +154,9 @@ const DoctorRegistrationRequestForm: React.FC = () => {
             {activeStep === 1 && (
               <StepTwoForm key={activeStep} passFormDataToParent={(data:IFormTwoData)=>handleStepTwoData(data)}/>   
             )}
-            {activeStep === 2 && (
+            {/* {activeStep === 2 && (
               <StepThreeForm key={activeStep} passFormDataToParent={(data:IExperienceFile[])=>handleStepThreeData(data)}/>
-            )}
+            )} */}
             
             <Stack direction={'row'} justifyContent={'space-between'} marginBottom={7}>
               <Button disabled={activeStep === 0} onClick={handleBack}>
@@ -153,7 +166,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
+                onClick={activeStep === steps.length - 1 ? submitRequest : handleNext}
               >
                 {activeStep === steps.length - 1 ? 'Submit Request' : 'Next'}
               </Button>

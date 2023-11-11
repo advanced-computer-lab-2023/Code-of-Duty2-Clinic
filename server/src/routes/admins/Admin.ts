@@ -3,7 +3,7 @@ import registerAdmin from "../../controllers/admins/addAdminController";
 import removeUserHandler from "../../controllers/admins/removeUserController";
 import viewUsersByTypeHandler from "../../controllers/admins/showUsers";
 import getDoctorRegistrationRequests from "../../controllers/admins/viewListOfRequests";
-import getDoctorRegistrationRequest from "../../controllers/admins/viewDoctorApplicationData";
+import getDoctorRegistrationRequest, { getDoctorRegistrationRequestbyId } from "../../controllers/admins/viewDoctorApplicationData";
 import { addHealthPackage } from "../../controllers/healthPackages/createHealthPackage";
 import { getHealthPackages } from "../../controllers/healthPackages/getHealthPackages";
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
@@ -38,7 +38,8 @@ router
 
 .get('/doctor-registration-requests', getDoctorRegistrationRequests)
 
-.get('/doctor-registration-requests/:email', getDoctorRegistrationRequest);
+.get('/doctor-registration-requests/:email', getDoctorRegistrationRequest)
 
+.get('/doctor-registration/:doctorId',getDoctorRegistrationRequestbyId)
 
 export default router;

@@ -19,6 +19,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
           hourlyRate: '',
           affiliation: '',
           educationalBackground: '',
+          speciality:''
         },
     });
 
@@ -61,7 +62,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
                 <TextField
                 {...field}
                 variant="standard"
-                type='number'
+                type='text'
                 label="Your Affiliation"
                 
                 />
@@ -79,7 +80,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
                 <TextField
                 {...field}
                 variant="standard"
-                type='number'
+                type='text'
                 label="Educational Background"
                 />
             </div>
@@ -88,7 +89,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
         </Grid>
         <Grid item sm={4} xs={12}>
         <Controller
-            name="medicalDegree"
+            name="speciality"
             control={control}
             render={({ field }) => (
             // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
@@ -97,7 +98,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
                 {...field}
                 variant="standard"
                 type='number'
-                label="Me"
+                label="Speciality"
                 />
             </div>
             )}

@@ -6,22 +6,16 @@ export const uploadImage =async (file:File,folder:string, comment:string):Promis
   
     const imageID = generateID();
     return new Promise((resolve, reject) => {
-      console.log("ME")
       const storageRef = ref(storage, `${folder}/${imageID}-${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file,{customMetadata:{comment:''}});
       uploadTask.on("state_changed",
         (snapshot) => {},
         (error) => {
-          console.log(error)
           reject(error)
         },
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {resolve(downloadURL);});
-        }
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {console.log(downloadURL);
+          ;resolve(downloadURL);});}
       )
     })
   }
-
-
-
-  

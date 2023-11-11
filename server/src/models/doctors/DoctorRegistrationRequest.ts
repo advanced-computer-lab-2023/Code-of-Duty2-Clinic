@@ -22,7 +22,8 @@ export const DoctorRegistrationRequestSchema = new Schema<IDoctorRegistrationReq
     experienceFiles:{
         type:[{
             name:{type:String},
-            url:{type:String}
+            url:{type:String},
+            DocumentType:{type:String}
         }]
     } 
 }, 

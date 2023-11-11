@@ -18,36 +18,26 @@ interface IDefaultBasicTableProps{
 export const  DefaultBasicTable:FC<IDefaultBasicTableProps> =({data}) =>{
     const [files, setFiles] = useState<any>(data);
     const [deleteLoading, setDeleteLoading] = useState(false);
-    // const addFileToTable = async (healthrecord:any) => {
-    //     if (healthrecord)
-    //       setFiles((old:any) => {
-    //         return [...old, healthrecord];
-    //       });
-    //     //setUpload(false);
-    //   };
-    useEffect(()=>{
-      setFiles(data)
-    },[])
   return (
-    <TableContainer sx={{ maxWidth: 550 ,minHeight:200}} component={Paper}>
-      <Table sx={{ }} aria-label="simple table">
-        <TableHead>
+    <TableContainer sx={{ maxWidth: 600,minWidth:500 ,minHeight:200}} component={Paper}>
+      <Table  aria-label="simple table">
+        <TableHead sx={{backgroundColor:'gray' ,}}>
           <TableRow>
-            <TableCell>File Name</TableCell>
-            <TableCell align="right">File Type</TableCell>
+            <TableCell sx={{color:'white'}}>File Name</TableCell>
+            <TableCell sx={{color:'white'}} align="right">File Type</TableCell>
             <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {files.map((file:any) => (
+        <TableBody >
+          {data.map((file:any) => (
             <TableRow
-              key={file.fileType}
+              key={file.url}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {file.fileType}
+                {file.type}
               </TableCell>
-              <TableCell align="right">{}</TableCell>
+              <TableCell align="right">{file.type}</TableCell>
               <TableCell align="right">
               <Stack
                         direction="row"

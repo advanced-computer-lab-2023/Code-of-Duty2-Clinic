@@ -11,6 +11,7 @@ import { authorizeUser } from '../../middlewares/authorization';
 import { authenticateUser } from '../../middlewares/authentication';
 import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAllPatients } from '../../controllers/patients/getAllPatients';
+import { doctorAddPatientHealthRecord } from '../../controllers/doctors/addPatientHealthRecord';
 
 
 const doctorRouter = express.Router();
@@ -21,13 +22,13 @@ doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 doctorRouter
 .patch('/account', updateDoctor)
 
-.get('/patients', getAllPatients)
-
 .get('/allDetails', getDoctor)
 
 .get('/patients', getRegisteredPatients)
 
 .get('/patients/:patientId', getRegisteredPatientDetails)
+
+.put('/patients/:patientId/health-records', doctorAddPatientHealthRecord)
 
 .get('/appointments', getAppointmentsWithAllPatients)
 
