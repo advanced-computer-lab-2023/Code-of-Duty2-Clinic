@@ -63,4 +63,13 @@ function getMatchingAppointmentsFields(urlQuery: any) {
     return searchQuery;
 }
 
+export const findMostRecentCompletedAppointment = async (doctorId: string, patientId: string) => {
+    return Appointment.findOne({
+      doctorId,
+      patientId,
+      status: 'completed',
+    }).sort({ 'timePeriod.endTime': -1 }); // Sorting Bl3ks to retreive the top most recent appointment
+  }
+  
+
 

@@ -61,3 +61,13 @@ export const updatePatientPassword = async (
   patient.password = newPassword;
   await patient.save();
 };
+
+export const findRegisteredFamilyMembersByID = async (id: string) => {
+  const patient = await Patient.findById(id).select('+registeredFamilyMembers');
+
+  if (!patient) {
+    throw new Error('Patient not found');
+  }
+
+  return patient.registeredFamilyMembers;
+};

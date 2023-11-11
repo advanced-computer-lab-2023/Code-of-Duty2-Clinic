@@ -38,11 +38,11 @@ doctorRouter
 
 .get('', getDoctorById)
 
-.post('/appointments/available-time-slots', addDoctorAvailableSlots)
+.post('/appointments/add-time-slots', addDoctorAvailableSlots)
 
 .patch('/change-password', updateDoctorPassword)
 
-.post('/appointments/:initialAppointmentId/follow-up', scheduleFollowUp)
+.post('/appointments/follow-up', scheduleFollowUp)
 
 
 
