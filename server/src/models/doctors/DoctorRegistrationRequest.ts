@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import isMobileNumber from "validator/lib/isMobilePhone";
 import { IDoctorBaseInfo } from "./interfaces/IDoctorBaseInfo";
 import isEmail from "validator/lib/isEmail";
-import bcrypt from "mongoose-bcrypt";
+import bcrypt from "bcrypt";
 
 export interface IDoctorRegistrationRequestModel
   extends IDoctorBaseInfo,
@@ -60,8 +60,17 @@ export const DoctorRegistrationRequestSchema =
     { timestamps: true }
   );
 
-DoctorRegistrationRequestSchema.plugin(bcrypt, { rounds: 10 });
+// DoctorRegistrationRequestSchema.plugin(bcrypt, { rounds: 10 });
 
+DoctorRegistrationRequestSchema.pre("save", function (next) {
+  var user = this;
+  if (!user.isModified("password")) return next();
+  bcrypt.hash(user.password, 10, function (err, hash) {
+    if (err) return next(err);
+    user.password = hash;
+    next();
+  });
+});
 export default mongoose.model<IDoctorRegistrationRequestModel>(
   "DoctorRegistrationRequest",
   DoctorRegistrationRequestSchema

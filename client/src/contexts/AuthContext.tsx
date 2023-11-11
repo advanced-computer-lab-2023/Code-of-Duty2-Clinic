@@ -19,6 +19,7 @@ interface IAuthState {
 
 interface IAuthContext {
   authState: IAuthState;
+  updateVerificationStatus: (verificationStatus: VerificationStatus) => void;
   login: (accessToken: string, role: UserRole) => void;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<string>;
@@ -30,6 +31,7 @@ const AuthContext = createContext<IAuthContext>({
     accessToken: null,
     role: UserRole.GUEST,
   },
+  updateVerificationStatus: () => {},
   login: () => {},
   logout: () => Promise.resolve(),
   refreshAuth: () => Promise.resolve(""),
@@ -59,6 +61,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         switch (error.response?.status) {
           case HttpStatusCode.Forbidden:
+            if (isAWalletRequest(originalRequest)) {
+              break;
+            }
             navigateToUserDashboardPage();
             break;
 
@@ -129,6 +134,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthorizationHeader(accessToken);
   };
 
+  const updateVerificationStatus = (verificationStatus: VerificationStatus) => {
+    setAuthState({
+      ...authState,
+      verificationStatus,
+    });
+  };
+
   const logout = async () => {
     setAuthState({
       isAuthenticated: false,
@@ -163,11 +175,23 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authState, login, logout, refreshAuth }}>
+    <AuthContext.Provider
+      value={{
+        authState,
+        updateVerificationStatus,
+        login,
+        logout,
+        refreshAuth,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+function isAWalletRequest(originalRequest: any) {
+  return (originalRequest.url as string).includes("/wallets");
+}
 
 function setAuthorizationHeader(accessToken: string) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;

@@ -24,10 +24,11 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
   userWalletPageLink,
   createNewWalletRoute,
 }) => {
-  const isWalletAlreadyCreated = useQuery({
-    queryKey: ["doesWalletExist"],
-    queryFn: doesUserHasAWallet(walletExistsRoute),
-  });
+  const isWalletAlreadyCreated = useQuery(
+    ["doesWalletExist"],
+    doesUserHasAWallet(walletExistsRoute)
+  );
+
   const navigate = useNavigate();
 
   const [desiredCurrency, setDesiredCurrency] = useState("");
@@ -36,7 +37,7 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
     Array(5).fill("")
   );
 
-  const { mutate, isError, error } = useMutation(
+  const { mutate, isError, error, isLoading } = useMutation(
     createNewWallet(createNewWalletRoute),
     {
       onSuccess: () => {
@@ -45,6 +46,7 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
     }
   );
 
+  if (isWalletAlreadyCreated.isLoading) return <></>;
   if (isWalletAlreadyCreated.isError) {
     return (
       <Typography variant="body2" color="error">
@@ -59,7 +61,10 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (pinCodeDigits !== confirmPinCodeDigits) {
+    const pinCode = pinCodeDigits.concat().join("");
+    const confirmPinCode = confirmPinCodeDigits.concat().join("");
+
+    if (pinCode !== confirmPinCode) {
       alert("Pin codes do not match!");
       return;
     }
@@ -69,8 +74,8 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
     }
     mutate({
       desiredCurrency,
-      pinCode: pinCodeDigits.concat().join(""),
-      confirmPinCode: confirmPinCodeDigits.concat().join(""),
+      pinCode,
+      confirmPinCode,
     });
   };
   return (
@@ -90,15 +95,26 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
             <TextField {...params} label="Select a currency" />
           )}
         />
-        <WalletPasswordInput
-          pinCodeDigits={pinCodeDigits}
-          setPinCodeDigits={setPinCodeDigits}
-        />
-        <WalletPasswordInput
-          pinCodeDigits={confirmPinCodeDigits}
-          setPinCodeDigits={setConfirmPinCodeDigits}
-        />
-        <Button type="submit" variant="contained" color="primary">
+        <div style={{ marginTop: "10px" }}>
+          <label htmlFor="pin-code">Enter a 5 digit pin code</label>
+          <WalletPasswordInput
+            pinCodeDigits={pinCodeDigits}
+            setPinCodeDigits={setPinCodeDigits}
+          />
+        </div>
+        <div style={{ marginTop: "10px" }}>
+          <label htmlFor="pin-code">Confirm your pin code</label>
+          <WalletPasswordInput
+            pinCodeDigits={confirmPinCodeDigits}
+            setPinCodeDigits={setConfirmPinCodeDigits}
+          />
+        </div>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+        >
           Create Wallet
         </Button>
       </form>

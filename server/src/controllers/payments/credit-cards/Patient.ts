@@ -2,14 +2,16 @@ import { Response } from "express";
 import { AuthorizedRequest } from "../../../types/AuthorizedRequest";
 import stripe from "../../../utils/stripe";
 import { StatusCodes } from "http-status-codes";
+import config from "../../../configurations";
 
 export const configureCreditCardPaymentHandler = (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  res
-    .status(StatusCodes.OK)
-    .send({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
+  res.status(StatusCodes.OK).send({
+    publishableKey:
+      config.server.paymentServiceCredentials.stripePublishableKey,
+  });
 };
 
 export const makeCreditCardPaymentHandler = async (
@@ -17,11 +19,11 @@ export const makeCreditCardPaymentHandler = async (
   res: Response
 ) => {
   try {
-    const { amount, currency } = req.body;
+    const { amount } = req.body;
 
     const paymentIntent = await stripe.paymentIntents.create({
-      currency: currency || "EGP",
-      amount,
+      currency: "eur",
+      amount: amount * 100,
     });
 
     res

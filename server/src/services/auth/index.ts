@@ -1,4 +1,4 @@
-import { emailOrPasswordIncorrectErrorMessage } from "../../utils/ErrorMessages";
+import { usernameOrPasswordIncorrectErrorMessage } from "../../utils/ErrorMessages";
 import { signAndGetAccessToken, signAndGetRefreshToken } from "../../utils/jwt";
 import UserRole from "../../types/UserRole";
 import { findAdminByUsername } from "../admins";
@@ -27,7 +27,7 @@ export const authenticatePatientOrAdmin = async (
   if (patientAuthenticationTokens) {
     return patientAuthenticationTokens;
   }
-  throw new Error(emailOrPasswordIncorrectErrorMessage);
+  throw new Error(usernameOrPasswordIncorrectErrorMessage);
 };
 
 const authenticateUserIfAdmin = async (email: string, password: string) => {
@@ -70,7 +70,7 @@ export const authenticateDoctor = async (
   if (unverifiedDoctorAuthenticationTokens) {
     return unverifiedDoctorAuthenticationTokens;
   }
-  throw new Error(emailOrPasswordIncorrectErrorMessage);
+  throw new Error(usernameOrPasswordIncorrectErrorMessage);
 };
 
 const authenticateUserIfVerifiedDoctor = async (
@@ -117,7 +117,7 @@ const authenticateUserIfUnverifiedDoctor = async (
     }
   );
   if (!unverifiedDoctor) {
-    throw new Error(emailOrPasswordIncorrectErrorMessage);
+    throw new Error(usernameOrPasswordIncorrectErrorMessage);
   }
   await validateUserPassword(unverifiedDoctor, password);
   const verificationStatus = getVerificationStatus(unverifiedDoctor);
@@ -155,7 +155,7 @@ const getVerificationStatus = (
 const validateUserPassword = async (user: any, password: string) => {
   const isPasswordCorrect = await user.verifyPassword(password);
   if (!isPasswordCorrect) {
-    throw new Error(emailOrPasswordIncorrectErrorMessage);
+    throw new Error(usernameOrPasswordIncorrectErrorMessage);
   }
 };
 
@@ -168,5 +168,5 @@ export const sendEmailToResetPassword = async (email: string) => {
   if (patient) {
     return;
   }
-  throw new Error(emailOrPasswordIncorrectErrorMessage);
+  throw new Error(usernameOrPasswordIncorrectErrorMessage);
 };

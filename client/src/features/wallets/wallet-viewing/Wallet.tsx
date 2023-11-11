@@ -7,6 +7,7 @@ import { Box } from "@mui/system";
 
 interface WalletProps {
   balance: number;
+  currency: string;
 }
 
 const StyledCard = styled(Card)({
@@ -26,15 +27,19 @@ const BalanceTypography = styled(Typography)({
   fontWeight: "bold",
 });
 
-const Wallet: React.FC<WalletProps> = ({ balance }) => (
+const Wallet: React.FC<WalletProps> = ({ balance, currency }) => (
   <Box display="flex" justifyContent="center" m={1} p={1}>
     <StyledCard>
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{ fontWeight: "bold", fontSize: "2rem" }}
+        >
           Wallet
         </Typography>
         <BalanceTypography variant="h4">
-          Balance: ${balance.toFixed(2)}
+          Balance: {balance.toFixed(2)} {currency}
         </BalanceTypography>
       </CardContent>
     </StyledCard>
