@@ -7,6 +7,7 @@ import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistratio
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
+import ViewWallet from "../../pages/doctors/ViewWallet";
 
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
@@ -48,6 +49,11 @@ export const patientSearchRoute: Route = {
   element: <PatientSearch />,
 };
 
+export const doctorWalletRoute: Route = {
+  path: "/doctor/wallet",
+  element: <ViewWallet />,
+};
+
 const routes: Route[] = [
   doctorDashboardRoute,
   updateAccountInfoRoute,
@@ -57,6 +63,7 @@ const routes: Route[] = [
   doctorRegisteredPatientDetailsRoute,
   doctorRegistrationRequestRoute,
   patientSearchRoute,
+  doctorWalletRoute,
 ];
 
 export default routes;

@@ -3,7 +3,9 @@ import { ISubscribedPackage } from "./ISubscribedPackage";
 import { IDependentFamilyMember } from "./IDependentFamilyMember";
 import { IRegisteredFamilyMember } from "./IRegisteredFamilyMember";
 import { IEmergencyContact } from "./IEmergencyContact";
-import { UserRole } from "../../../types/UserRole";
+import UserRole from "../../../types/UserRole";
+import { IWallet } from "../../wallets/interfaces/IWallet";
+import { IPasswordResetInfo } from "../../users/interfaces/IPasswordReset";
 
 export interface IPatient extends IUserBaseInfo {
   role?: UserRole.PATIENT;
@@ -13,15 +15,9 @@ export interface IPatient extends IUserBaseInfo {
   subscribedPackage?: ISubscribedPackage;
   dependentFamilyMembers?: IDependentFamilyMember[];
   registeredFamilyMembers?: IRegisteredFamilyMember[];
-  wallet?: {
-    amount: number;
-    currency: string;
-    pinCode: string;
-  };
-  passwordReset?: {
-    otp: string;
-    expiryDate: Date;
-  };
+  wallet?: IWallet;
+  passwordReset?: IPasswordResetInfo;
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
+  verifyWalletPinCode?: (pinCode: string) => Promise<boolean>;
   verifyPassword?: (password: string) => Promise<boolean>;
 }

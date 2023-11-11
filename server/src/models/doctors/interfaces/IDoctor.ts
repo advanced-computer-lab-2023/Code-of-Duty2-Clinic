@@ -1,3 +1,5 @@
+import { IPasswordResetInfo } from "../../users/interfaces/IPasswordReset";
+import { IWallet } from "../../wallets/interfaces/IWallet";
 import { IDoctorBaseInfo } from "./IDoctorBaseInfo";
 
 export interface IDoctor extends IDoctorBaseInfo {
@@ -6,15 +8,11 @@ export interface IDoctor extends IDoctorBaseInfo {
   identification?: Buffer;
   medicalLicense?: Buffer;
   medicalDegree?: Buffer;
-  wallet?: {
-    amount: number;
-  };
+  wallet?: IWallet;
   contract?: Buffer;
   contractStatus?: "pending" | "accepted" | "rejected";
-  passwordReset?: {
-    otp: string;
-    expiryDate: Date;
-  };
+  passwordReset?: IPasswordResetInfo;
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
+  verifyWalletPinCode?: (pinCode: string) => Promise<boolean>;
   verifyPassword?: (password: string) => Promise<boolean>;
 }

@@ -12,12 +12,15 @@ const SERVER_PORT = process.env.SERVER_PORT
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "";
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "";
 const PASSWORD_RESET_SECRET = process.env.PASSWORD_RESET_TOKEN_SECRET || "";
+const WALLET_TOKEN = process.env.WALLET_TOKEN_SECRET || "";
 const ACCESS_TOKEN_EXPIRATION_TIME =
   process.env.ACCESS_TOKEN_EXPIRATION_TIME || "30s";
 const REFRESH_TOKEN_EXPIRATION_TIME =
   process.env.REFRESH_TOKEN_EXPIRATION_TIME || "40s";
 const PASSWORD_RESET_TOKEN_EXPIRATION_TIME =
   process.env.PASSWORD_RESET_TOKEN_EXPIRATION_TIME || "10m";
+const WALLET_TOKEN_EXPIRATION_TIME =
+  process.env.WALLET_TOKEN_EXPIRATION_TIME || "10m";
 
 const FRONT_END_URL = process.env.FRONT_END_URL || "http://localhost:5173";
 
@@ -40,8 +43,12 @@ const config = {
       accessTokenExpirationTime: ACCESS_TOKEN_EXPIRATION_TIME,
       refreshTokenSecret: REFRESH_TOKEN_SECRET,
       refreshTokenExpirationTime: REFRESH_TOKEN_EXPIRATION_TIME,
+
       passwordResetSecret: PASSWORD_RESET_SECRET,
       passwordResetTokenExpirationTime: PASSWORD_RESET_TOKEN_EXPIRATION_TIME,
+
+      walletTokenSecret: WALLET_TOKEN,
+      walletTokenExpirationTime: WALLET_TOKEN_EXPIRATION_TIME,
     },
     emailServiceCredentials: {
       user: process.env.GOOGLE_EMAIL_API_USER || "",
@@ -49,6 +56,10 @@ const config = {
       clientSecret: process.env.GOOGLE_EMAIL_API_CLIENT_SECRET || "",
       redirectUri: process.env.GOOGLE_EMAIL_API_REDIRECT_URI || "",
       refreshToken: process.env.GOOGLE_EMAIL_API_REFRESH_TOKEN || "",
+    },
+    paymentServiceCredentials: {
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || "",
+      stripeSecretKey: process.env.STRIPE_SECRET_KEY || "",
     },
   },
   frontEndUri: FRONT_END_URL,
