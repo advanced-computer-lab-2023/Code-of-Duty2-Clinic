@@ -12,7 +12,6 @@ export const buttonStyle = {
   color:'white',
 ':hover': {
     backgroundColor: '#10393999',  // Change to the desired hover color
-    
   },
 }
 function DoctorRegistrationRequests() {
@@ -47,11 +46,9 @@ function DoctorRegistrationRequests() {
         <Link to={`/admin/doctor/${request._id}`}><Button sx={buttonStyle}>View Request</Button></Link>
         <span className="registration-username">{request.username}</span>
       </li>
-      
     ))}
   </ul>
 </div>
-
   );
 }
 

@@ -8,6 +8,10 @@ import { User } from "../../types/User";
 import { findDoctorRegistrationRequestByUsername } from "../doctors/registration_requests";
 import { IDoctorRegistrationRequestModel } from "../../models/doctors/DoctorRegistrationRequest";
 import { VerificationStatus } from "../../types/VerficationStatus";
+import { IPatient } from "../../models/patients/interfaces/IPatient";
+import { IPatientModel } from "../../models/patients/Patient";
+import { IDoctorModel } from "../../models/doctors/Doctor";
+import { IAdminModel } from "../../models/admins/Admin";
 
 export const authenticatePatientOrAdmin = async (
   username: string,
@@ -86,6 +90,7 @@ const authenticateUserIfVerifiedDoctor = async (
     return null;
   }
   if (doctor.contractStatus !== "accepted") {
+    console.log("NOT AAAA")
     return null;
   }
   await validateUserPassword(doctor, password);
@@ -100,7 +105,7 @@ const authenticateUserIfVerifiedDoctor = async (
     accessToken,
     refreshToken,
     role: UserRole.DOCTOR,
-    verificationStatus: VerificationStatus.verified,
+    verificationStatus: VerificationStatus.accepted,
   };
 };
 
@@ -149,11 +154,15 @@ const getVerificationStatus = (
   if (doctor.status === "pending contract acceptance") {
     return VerificationStatus.pendingContractAcceptance;
   }
+  if (doctor.status === "accepted") {
+    return VerificationStatus.accepted;
+  }
   return VerificationStatus.rejected;
 };
 
-const validateUserPassword = async (user: any, password: string) => {
-  const isPasswordCorrect = await user.verifyPassword(password);
+const validateUserPassword = async (user: IPatientModel|IDoctorModel|IAdminModel|IDoctorRegistrationRequestModel, password: string) => {
+  console.log("PASS"+password)
+  const isPasswordCorrect = await user.verifyPassword?.(password);
   if (!isPasswordCorrect) {
     throw new Error(emailOrPasswordIncorrectErrorMessage);
   }

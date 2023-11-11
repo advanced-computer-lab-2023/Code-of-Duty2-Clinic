@@ -25,6 +25,8 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
 } from "../../controllers/payments/credit-cards/Patient";
+import { addDoctorRegistrationFiles } from "../../services/doctors/registration_requests";
+import { addDoctorRegistrationRequestFiles } from "../../controllers/doctors/doctorRegisterController";
 
 const doctorRouter = express.Router();
 
@@ -72,6 +74,7 @@ doctorRouter
 
   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
-  .post("/credit-card-payment", makeCreditCardPaymentHandler);
+  .post("/credit-card-payment", makeCreditCardPaymentHandler)
+
 
 export default doctorRouter;

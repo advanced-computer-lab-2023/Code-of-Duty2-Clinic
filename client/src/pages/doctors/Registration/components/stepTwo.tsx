@@ -1,5 +1,5 @@
 import { Button, Grid ,TextField } from '@mui/material';
-import React, {  useState } from 'react';
+import React, {  useContext, useState } from 'react';
 import {
   useForm,
   SubmitHandler,
@@ -8,6 +8,8 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { IFormTwoData } from '../DoctorRegistrationRequestForm';
+import { AuthContext } from '../../../../contexts/AuthContext';
+import { VerificationStatus } from '../../../../types/enums/VerficationStatus';
 
 interface IStepTwoFormProps {
     passFormDataToParent:(data:IFormTwoData)=>void;
@@ -24,7 +26,6 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
     });
 
     const { handleSubmit, control, reset, watch } = methods;
-
     return (
         <form onSubmit={methods.handleSubmit((data,event)=>{passFormDataToParent(data);event?.preventDefault()})}>
         <Grid container  
@@ -35,7 +36,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
         rowSpacing={1}
         >   
         
-        <Grid item sm={4} xs={12}>
+        <Grid item sm={12} xs={12}>
         <Controller
             name="hourlyRate"
             control={control}
@@ -43,16 +44,17 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
             // <input type="number" {...field} min="0" placeholder="Enter Your Hourly Rate"  />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <TextField
+                fullWidth
                 {...field}
                 variant="standard"
                 type='number'
-                label="Hourly Rate"
+                label="Hourly Rate(EGP)"
                 />
             </div>
             )}
         />
         </Grid>
-        <Grid item sm={4} xs={12}>
+        <Grid item sm={12} xs={12}>
         <Controller
             name="affiliation"
             control={control}
@@ -60,6 +62,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
             // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <TextField
+                fullWidth
                 {...field}
                 variant="standard"
                 type='text'
@@ -70,7 +73,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
             )}
         />
         </Grid>
-        <Grid item sm={4} xs={12}>
+        <Grid item sm={12} xs={12}>
         <Controller
             name="educationalBackground"
             control={control}
@@ -78,6 +81,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
             // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <TextField
+                fullWidth
                 {...field}
                 variant="standard"
                 type='text'
@@ -87,7 +91,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
             )}
         />
         </Grid>
-        <Grid item sm={4} xs={12}>
+        <Grid item sm={12} xs={12}>
         <Controller
             name="speciality"
             control={control}
@@ -95,6 +99,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
             // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <TextField
+                fullWidth
                 {...field}
                 variant="standard"
                 type='number'
@@ -105,8 +110,6 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
         />
         </Grid>
         <Button type='submit'>Save</Button>
-       
-        
     </Grid>
     </form>
     );

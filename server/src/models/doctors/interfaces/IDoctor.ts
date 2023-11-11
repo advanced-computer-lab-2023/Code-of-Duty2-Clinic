@@ -14,5 +14,4 @@ export interface IDoctor extends IDoctorBaseInfo {
   passwordReset?: IPasswordResetInfo;
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
   verifyWalletPinCode?: (pinCode: string) => Promise<boolean>;
-  verifyPassword?: (password: string) => Promise<boolean>;
-}
+  $2y$10$DrCg3DCW3ISHwVpZiXbD1.2c6GGo.V28Xd1oXPxxZCbPtZ4XY0V5i}

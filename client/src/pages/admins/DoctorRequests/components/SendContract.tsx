@@ -11,17 +11,15 @@ import { buttonStyle } from '../viewDoctorRequests';
 
 const SendContract:FC=()=> {
   const contractFile = useRef<HTMLInputElement>(null!)
-
   const {doctorId} = useParams()
-
   async function upload(){
     
     const file = contractFile.current.files?.[0]!
     if(!file) return 
     try{ 
       const contractUrl = await uploadImage(file,'contracts',file.name||"")   
-      await axios.put(`${config.serverUri}/admin/doctor-registration/${doctorId}`,{contract:contractUrl})
-      //change the state to pendingContractAcceptance
+      await axios.put(`${config.serverUri}/admins/accept-doctor/${doctorId}`,{contract:contractUrl})
+      
     }catch(error){
       console.log(error)
     }

@@ -1,4 +1,4 @@
-import React, {  useRef, useState } from 'react';
+import React, {  useContext, useRef, useState } from 'react';
 import {
   useForm,
   SubmitHandler,
@@ -10,6 +10,8 @@ import { config } from '../../../configuration';
 import StepOneForm from './components/stepOne';
 import StepTwoForm from './components/stepTwo';
 import StepThreeForm from './components/stepThree';
+import { AuthContext } from '../../../contexts/AuthContext';
+import { VerificationStatus } from '../../../types/enums/VerficationStatus';
 
 export interface IFormOneData {
   username: string;
@@ -48,6 +50,7 @@ interface FormData {
   educationalBackground: string;
   medicalDegree: string;
   speciality?:string
+  status:string
   // medicalLicenses: [];
   // id: { front: File | null; back: File | null };
   // activeStep:number,
@@ -89,14 +92,17 @@ const DoctorRegistrationRequestForm: React.FC = () => {
 
 
   async function  submitRequest() {
+      const {updateVerificationStatus} = useContext(AuthContext)
+
         const formData:FormData = {
           ...stepOneData.current,
           ...stepTwoData.current,
+          status:'pending documents upload'
          // experienceFiles: stepThreeData.current,
-          speciality:'ss'
         }
         try {
           console.log(await axios.post(`${config.serverUri}/auth/doctor-registration`, formData));
+          updateVerificationStatus(VerificationStatus.pendingDocumentsUpload)
         } catch (error: any) {
             //setMessage(error?.message || 'error occured during submission');
         }

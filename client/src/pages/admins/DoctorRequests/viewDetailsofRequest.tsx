@@ -1,5 +1,5 @@
 // ViewDoctorRegistrationRequest.tsx
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { config } from '../../../configuration';
 import axios from 'axios';
 import FilesTable from '../../../components/filesTable';
@@ -7,6 +7,8 @@ import { IExperienceFile } from '../../doctors/Registration/DoctorRegistrationRe
 import { useParams } from 'react-router-dom';
 import SendContract from './components/SendContract';
 import BasicRequestDetails from './components/review';
+import { AuthContext } from '../../../contexts/AuthContext';
+import { VerificationStatus } from '../../../types/enums/VerficationStatus';
 
 export interface DoctorRequest {
   _id:string
@@ -20,32 +22,31 @@ export interface DoctorRequest {
   affiliation: string;
   educationalBackground: string;
   experienceFiles:IExperienceFile[]
+  status:"accepted"|"pending documents upload"|"pending contract acceptance"|"rejected"
 }
 
 function ViewDoctorRegistrationRequest() {
   const [doctorRequest , setDoctorRequest] = useState<DoctorRequest>(null!)
 
   // GET FROM AUTH REQUEST STATUS
-  let requestStatus = 'Accepted'
-  requestStatus=requestStatus
+  const context = useContext(AuthContext)
+  let requestStatus = context.authState.verificationStatus
 
   const {doctorId} = useParams()
   useEffect(()=>{
     axios.get(`${config.serverUri}/admins/doctor-registration/${doctorId}`)
       .then((response)=>{
-        console.log("s");
-        
         setDoctorRequest(response.data)
       })
       .catch((err)=>{console.log(err)})
   },[doctorId])  
       if(doctorRequest) return (
         <div> 
-          { (requestStatus==='pendingDocumentUploads' || requestStatus==='COMPLETED FORM') && <BasicRequestDetails/>}
+          { (requestStatus===VerificationStatus.pendingContractAcceptance ) && <BasicRequestDetails/>}
 
-          { requestStatus==='COMPLETED FORM'  && <FilesTable files={doctorRequest.experienceFiles}/>}
-          
-          { requestStatus==='Accepted' && <SendContract/>}
+          { doctorRequest.experienceFiles && <FilesTable files={doctorRequest.experienceFiles}/>}
+
+          { doctorRequest.status==='pending contract acceptance' && <SendContract/>}
         </div>
       );else{
         return (<h1>dd</h1>)
