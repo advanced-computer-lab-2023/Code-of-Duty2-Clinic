@@ -10,6 +10,7 @@ import PatientRegistrationForm from "../../pages/patients/PatientRegistrationFor
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
+import UpdatePassword from "../../pages/patients/UpdatePassword";
 
 
 export const patientDashboardRoute: Route = {
@@ -64,6 +65,12 @@ export const patientMedicalHistoryRoute:Route = {
     path: '/patient/medical-history',
     element:<MedicalHistory/>
 }
+
+export const patientUpdatePasswordRoute:Route = {
+    path: '/patient/update-password',
+    element:<UpdatePassword/>
+}
+
 const routes: Route[] = [
     patientDashboardRoute,
     viewAllDoctorsRoute,
@@ -76,7 +83,8 @@ const routes: Route[] = [
     patientDoctorAppointmentDetailsRoute,
     patientRegistrationRoute,
     patientPrescriptions,
-    patientMedicalHistoryRoute
+    patientMedicalHistoryRoute,
+    patientUpdatePasswordRoute
 ];
 
 export default routes;
