@@ -92,7 +92,8 @@ const DoctorRegistrationRequestForm: React.FC = () => {
 
 
   async function  submitRequest() {
-      const {updateVerificationStatus} = useContext(AuthContext)
+    console.log("ssswfergevf")
+     // const {updateVerificationStatus} = useContext(AuthContext)
 
         const formData:FormData = {
           ...stepOneData.current,
@@ -102,7 +103,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
         }
         try {
           console.log(await axios.post(`${config.serverUri}/auth/doctor-registration`, formData));
-          updateVerificationStatus(VerificationStatus.pendingDocumentsUpload)
+          //updateVerificationStatus(VerificationStatus.pendingDocumentsUpload)
         } catch (error: any) {
             //setMessage(error?.message || 'error occured during submission');
         }
