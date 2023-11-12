@@ -3,6 +3,7 @@ import { config } from "../../../configuration";
 import { useQuery } from "react-query";
 import { displayError } from "../../../utils/displayError";
 import { Button } from "@mui/material";
+import React from "react";
 
 type DoctorInfo = {
   username: string;
