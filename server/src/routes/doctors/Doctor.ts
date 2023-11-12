@@ -10,8 +10,8 @@ import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
 import { getAllPatients } from "../../controllers/patients/getAllPatients";
-import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
-import { doctorAddPatientHealthRecord } from '../../controllers/doctors/addPatientHealthRecord';
+import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
+import { doctorAddPatientHealthRecord } from "../../controllers/doctors/addPatientHealthRecord";
 import {
   addDoctorAWalletHandler,
   authenticateWalletDoctorHandler,
@@ -34,19 +34,19 @@ doctorRouter.use(authenticateUser);
 doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
 doctorRouter
+
+  .get("/account", getDoctor)
   .patch("/account", updateDoctor)
 
   .get("/patients", getAllPatients)
-
-  .get("/allDetails", getDoctor)
 
   .get("/patients", getRegisteredPatients)
 
   .get("/patients/:patientId", getRegisteredPatientDetails)
 
-.put('/patients/:patientId/health-records', doctorAddPatientHealthRecord)
+  .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
 
-.get('/appointments', getAppointmentsWithAllPatients)
+  .get("/appointments", getAppointmentsWithAllPatients)
 
   .get("/appointments/:appointmentId", getAppointmentDetails)
 
@@ -74,7 +74,6 @@ doctorRouter
 
   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
-  .post("/credit-card-payment", makeCreditCardPaymentHandler)
-
+  .post("/credit-card-payment", makeCreditCardPaymentHandler);
 
 export default doctorRouter;

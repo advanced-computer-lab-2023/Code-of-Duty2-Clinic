@@ -5,8 +5,6 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import {
   Box,
-  Checkbox,
-  CircularProgress,
   Divider,
   IconButton,
   Modal,
@@ -24,10 +22,7 @@ import UploadNotesModal from "./components/uploadHealthRecord";
 import TableLoadingSkeleton from "../../../components/tableLoadingSkeleton";
 import DownloadIcon from "@mui/icons-material/Download";
 import { EnhancedTableToolbar } from "./components/tableToolBar";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { IHealthRecord } from "../../patients/medicalHistory/medicalHistory";
-import { deleteObject, ref } from "firebase/storage";
-import { storage } from "../../../configuration/firebase.config";
 import { FileViewModalStyle } from "../../patients/medicalHistory/medicalHistoryCSS";
 
 const ViewRegisteredPatientData: React.FC = () => {
