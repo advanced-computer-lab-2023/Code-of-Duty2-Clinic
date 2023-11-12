@@ -3,8 +3,8 @@ import  Patient  from '../../models/patients/Patient';
 import { AuthorizedRequest } from '../../types/AuthorizedRequest';
 import { cancelSubscriptionService } from '../../services/patients';
 
-export const cancelSubscription = async (req: AuthorizedRequest, res: Response) => {
-    const patientId = req.user?.id!;    
+export const cancelSubscriptionForRegistered = async (req: AuthorizedRequest, res: Response) => {
+    const patientId = req.body;    
     try{    
     if(patientId){
             await cancelSubscriptionService(patientId);

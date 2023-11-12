@@ -1,33 +1,22 @@
-import { Request, Response } from 'express';
-import PatientModel from '../../models/patients/Patient';
+import { Request, Response } from "express";
+import PatientModel from "../../models/patients/Patient";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
+import { viewHealthCarePackageStatusService } from "../../services/patients";
 
-export const viewHealthCarePackageStatus = async (req: Request, res: Response) => {
+export const viewHealthCarePackageStatus = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
   try {
-    const { patientId } = req.params;
+    const patientId = req.user?.id!;
 
-    // Find the patient by ID
-    const patient = await PatientModel.findById(patientId);
-
-    if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
-    }
-
-    // Access the subscribed package details for the patient
-    const subscribedPackage = patient.subscribedPackage;
-
-    if (!subscribedPackage) {
-      return res.status(404).json({ message: 'Patient has no subscribed package' });
-    }
-
-    const subscriptionStatus = {
-      status: subscribedPackage.status, 
-      renewalDate: subscribedPackage.startDate, 
-      endDate: subscribedPackage.endDate, 
-    };
+    const subscriptionStatus = await viewHealthCarePackageStatusService(
+      patientId
+    );
 
     res.status(200).json(subscriptionStatus);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(400).json({ message: error.message });
   }
 };

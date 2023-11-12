@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import Patient from "../../models/patients/Patient";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
-import { viewSubscribedHealthPackageService } from "../../services/patients";
+import { viewSubscribedHealthPackageBenefitsService } from "../../services/patients";
 
-export const viewSubscribedHealthPackage = async (
+export const viewSubscribedHealthPackageBenefits = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
   const patientId = req.user?.id!;
   try {
     const subscribedHealthPackage =
-      await viewSubscribedHealthPackageService(patientId);
+      await viewSubscribedHealthPackageBenefitsService(patientId);
     return res.status(200).json({ subscribedHealthPackage });
   } catch (error: any) {
     console.error(error);
