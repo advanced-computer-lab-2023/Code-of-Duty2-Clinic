@@ -43,22 +43,6 @@ export const authenticateWalletDoctorHandler = async (
   }
 };
 
-export const rechargeDoctorWalletHandler = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
-  const doctorId = req.user?.id!;
-  const { transactionAmount } = req.body;
-  try {
-    await rechargeDoctorWallet(doctorId, transactionAmount);
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Wallet recharged successfully" });
-  } catch (error: any) {
-    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
-  }
-};
-
 export const getDoctorWalletHandler = async (
   req: AuthorizedRequest,
   res: Response
@@ -92,6 +76,22 @@ export const addDoctorAWalletHandler = async (
   try {
     await AddDoctorAWallet(doctorId, desiredCurrency, pinCode);
     res.status(StatusCodes.OK).json({ message: "Wallet added successfully" });
+  } catch (error: any) {
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+  }
+};
+
+export const rechargeDoctorWalletHandler = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
+  const doctorId = req.user?.id!;
+  const { transactionAmount } = req.body;
+  try {
+    await rechargeDoctorWallet(doctorId, transactionAmount);
+    res
+      .status(StatusCodes.OK)
+      .json({ message: "Wallet recharged successfully" });
   } catch (error: any) {
     res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }

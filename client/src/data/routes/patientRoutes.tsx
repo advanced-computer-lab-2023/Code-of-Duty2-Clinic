@@ -12,6 +12,7 @@ import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
 import ViewWallet from "../../pages/patients/wallet/ViewWallet";
 import CreateWallet from "../../pages/patients/wallet/CreateWallet";
+import PatientPaymentPage from "../../pages/patients/PatientPaymentPage";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -76,6 +77,11 @@ export const createPatientWalletRoute: Route = {
   element: <CreateWallet />,
 };
 
+export const checkoutRoute: Route = {
+  path: "/patient/payment",
+  element: <PatientPaymentPage />,
+};
+
 const routes: Route[] = [
   patientDashboardRoute,
   viewAllDoctorsRoute,
@@ -91,6 +97,7 @@ const routes: Route[] = [
   patientMedicalHistoryRoute,
   patientWalletRoute,
   createPatientWalletRoute,
+  checkoutRoute,
 ];
 
 export default routes;

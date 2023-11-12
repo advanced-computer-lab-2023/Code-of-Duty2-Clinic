@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import isMobileNumber from "validator/lib/isMobilePhone";
 import { IDoctorBaseInfo } from "./interfaces/IDoctorBaseInfo";
 import isEmail from "validator/lib/isEmail";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
 
 export interface IDoctorRegistrationRequestModel
   extends IDoctorBaseInfo,
@@ -16,8 +16,8 @@ export interface IDoctorRegistrationRequestModel
     | "pending documents upload"
     | "pending contract acceptance"
     | "rejected";
-    verifyPassword?: (password: string) => Promise<boolean>;
-  }
+  verifyPassword?: (password: string) => Promise<boolean>;
+}
 
 export const DoctorRegistrationRequestSchema =
   new Schema<IDoctorRegistrationRequestModel>(
@@ -29,7 +29,7 @@ export const DoctorRegistrationRequestSchema =
         validate: [isEmail, "invalid email"],
       },
       username: { type: String, required: true, unique: true },
-      password: { type: String, required: true, select: false, },
+      password: { type: String, required: true, select: false },
       name: { type: String, required: true },
       gender: { type: String, required: true, enum: ["male", "female"] },
       mobileNumber: {
@@ -61,15 +61,21 @@ export const DoctorRegistrationRequestSchema =
     { timestamps: true }
   );
 
-  DoctorRegistrationRequestSchema.pre("save", function (next) {
-    var user = this;
-    if (!user.isModified("password")) return next();
-    bcrypt.hash(user.password, 10, function (err, hash) {
-      if (err) return next(err);
-      user.password = hash;
-      next();
-    });
+DoctorRegistrationRequestSchema.pre("save", function (next) {
+  var user = this;
+  if (!user.isModified("password")) return next();
+  bcrypt.hash(user.password, 10, function (err, hash) {
+    if (err) return next(err);
+    user.password = hash;
+    next();
   });
+});
+
+DoctorRegistrationRequestSchema.methods.verifyPassword = function (
+  password: string
+) {
+  return bcrypt.compare(password, this.password);
+};
 
 export default mongoose.model<IDoctorRegistrationRequestModel>(
   "DoctorRegistrationRequest",

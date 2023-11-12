@@ -1,18 +1,17 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import React, { ReactNode, createContext, useContext, useState } from "react";
 import { AuthContext } from "../../../../contexts/AuthContext";
-import { VerificationStatus } from "../../../../types/enums/VerficationStatus";
 export enum status {
-    notComplete,
-    submitted,
-    accepted,
-    rejected
-  }
-  
+  notComplete,
+  submitted,
+  accepted,
+  rejected,
+}
+
 interface contextType {
   step: number;
-  setStep: (step: number) => void;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
   error: string;
-  setError: (error: string) => void;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const ApplicationContext = createContext<contextType>({
@@ -26,9 +25,11 @@ const ApplicationContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [step, setStep] = useState(1);
-  const [applicationStatus, setApplicationStatus] = useState<status>(status.notComplete);
+  const [applicationStatus, setApplicationStatus] = useState<status>(
+    status.notComplete
+  );
   const [error, setError] = useState("");
-  const cc = useContext(AuthContext).authState
+  const cc = useContext(AuthContext).authState;
 
   const contextValue: contextType = {
     step,

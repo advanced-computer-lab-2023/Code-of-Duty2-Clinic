@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
-import { storage } from "../../../utils/firebase.config";
+import { storage } from "../../../configuration/firebase.config";
 import { ref, deleteObject } from "firebase/storage";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import Box from '@mui/material/Box';
-import Modal from '@mui/joy/Modal';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { EnhancedTableToolbar } from './components/tableToolBar';
-import { CircularProgress, Divider, IconButton, Stack,TableHead,Typography } from '@mui/material';
-import { saveAs } from 'file-saver';
-import FileViewer from 'react-file-viewer-extended'
-import UploadHealthRecordModal from './components/uploadHealthRecord';
-import TableLoadingSkeleton from '../../../components/tableLoadingSkeleton';
+import Box from "@mui/material/Box";
+import Modal from "@mui/joy/Modal";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { EnhancedTableToolbar } from "./components/tableToolBar";
+import {
+  CircularProgress,
+  Divider,
+  IconButton,
+  Stack,
+  TableHead,
+  Typography,
+} from "@mui/material";
+import { saveAs } from "file-saver";
+import FileViewer from "react-file-viewer-extended";
+import UploadHealthRecordModal from "./components/uploadHealthRecord";
+import TableLoadingSkeleton from "../../../components/tableLoadingSkeleton";
 import { config } from "../../../configuration";
 import { FileViewModalStyle } from "./medicalHistoryCSS";
 
@@ -77,7 +84,7 @@ const MedicalHistory: React.FC = () => {
       setFiles((oldFiles) => {
         return [...oldFiles.slice(0, index), ...oldFiles.slice(index + 1)];
       });
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
     //setDeleteLoading(false)
@@ -91,12 +98,23 @@ const MedicalHistory: React.FC = () => {
   };
 
   return (
-      <Stack position='relative' direction="row" justifyContent='center' sx={{ width: '100%' }}>
-        {upload && <UploadHealthRecordModal openUpload={true} close={addFileToTable}/>}
-      <Paper sx={{mb: 2 ,width:'80%' }}>
-      
-          <EnhancedTableToolbar numSelected={selected.length} openModal={()=>{setUpload(true)}} />
-          <TableContainer>
+    <Stack
+      position="relative"
+      direction="row"
+      justifyContent="center"
+      sx={{ width: "100%" }}
+    >
+      {upload && (
+        <UploadHealthRecordModal openUpload={true} close={addFileToTable} />
+      )}
+      <Paper sx={{ mb: 2, width: "80%" }}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          openModal={() => {
+            setUpload(true);
+          }}
+        />
+        <TableContainer>
           {/* <Box
             component="img"
             className="my-img"
@@ -108,32 +126,42 @@ const MedicalHistory: React.FC = () => {
             aria-labelledby="tableTitle"
             size={"medium"}
           >
-          <TableHead sx={{backgroundColor:'#103939',color:'white'}}>
-            <TableRow>
-              <TableCell sx={{color:'white'}}>File Name</TableCell>
-              <TableCell sx={{color:'white'}} align="center">Health Record Type</TableCell>
-              <TableCell sx={{color:'white'}} align="center">File Type</TableCell>
-              <TableCell sx={{color:'white'}} align="center">Upload Date</TableCell>
-              <TableCell sx={{color:'white'}} id="options" align="right"></TableCell>
-            </TableRow>
-          </TableHead>
+            <TableHead sx={{ backgroundColor: "#103939", color: "white" }}>
+              <TableRow>
+                <TableCell sx={{ color: "white" }}>File Name</TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  Health Record Type
+                </TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  File Type
+                </TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  Upload Date
+                </TableCell>
+                <TableCell
+                  sx={{ color: "white" }}
+                  id="options"
+                  align="right"
+                ></TableCell>
+              </TableRow>
+            </TableHead>
             <TableBody>
               {tableLoading ? (
                 <TableLoadingSkeleton />
               ) : (
                 files?.map((file, index) => (
                   <TableRow
-                      role="checkbox"
-                      hover
-                      onClick={() =>openViewFileModal(file)}
-                      tabIndex={-1}
-                      key={index}
-                      sx={{
-                        '&.Mui-selected, &.Mui-selected:hover': {
-                          backgroundColor: '#1039394D', // Change this to your desired color
-                          cursor:'pointer'
-                        },
-                      }}
+                    role="checkbox"
+                    hover
+                    onClick={() => openViewFileModal(file)}
+                    tabIndex={-1}
+                    key={index}
+                    sx={{
+                      "&.Mui-selected, &.Mui-selected:hover": {
+                        backgroundColor: "#1039394D", // Change this to your desired color
+                        cursor: "pointer",
+                      },
+                    }}
                   >
                     <TableCell
                       id={"enhanced-table-checkbox-" + index}

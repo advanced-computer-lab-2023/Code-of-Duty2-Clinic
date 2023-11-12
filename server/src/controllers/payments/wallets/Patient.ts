@@ -47,12 +47,6 @@ export const getPatientWalletHandler = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const walletToken = req.cookies?.walletToken;
-  if (!walletToken)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Wallet token not found" });
-
   const patientId = req.user?.id!;
   try {
     const patientWallet = await getPatientWallet(patientId);

@@ -10,7 +10,7 @@ export interface IDoctorModel extends IDoctor, Document {}
 export const DoctorSchema = new Schema<IDoctorModel>(
   {
     username: { type: String, required: true, unique: true, index: true },
-    password: { type: String, required: true, select: false},
+    password: { type: String, required: true, select: false },
     email: {
       type: String,
       validate: [isEmail, "invalid email"],
@@ -53,10 +53,9 @@ export const DoctorSchema = new Schema<IDoctorModel>(
   },
   { timestamps: true }
 );
-DoctorSchema.methods.verifyPassword = async function(password:string){
-  console.log(await bcrypt.compare(password,this.password))
-  return await bcrypt.compare(password,this.password)
-}
+DoctorSchema.methods.verifyPassword = function (password: string) {
+  return bcrypt.compare(password, this.password);
+};
 
 DoctorSchema.methods.verifyPasswordResetOtp = function (otp: string) {
   return bcrypt.compare(otp, this.passwordReset.otp);

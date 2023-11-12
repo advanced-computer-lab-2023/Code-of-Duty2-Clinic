@@ -1,41 +1,48 @@
-import { Button, Grid, MenuItem, Select, TextField } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
-import { ApplicationContext } from '../context/application';
-import { redirect } from 'react-router-dom';
-import { config } from '../../../../configuration';
-import axios from 'axios';
+import { Button } from "@mui/material";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { config } from "../../../../configuration";
+import axios from "axios";
+import { useMutation, useQuery } from "react-query";
 
-const Contract : React.FC = () => {
-    const [contract,setContract] = useState<string>()
-    useEffect(()=>{
-        axios.get(`${config.serverUri}/doctors/users/contract`).then((res)=>{
-            console.log(res.data)
-            setContract(res.data.contractUrl)
-        })
-    },[])
-    async function handleAccept(){
+const getContract = async () => {
+  const res = await axios.get(`${config.serverUri}/doctors/users/contract`);
+  return res.data.contractUrl;
+};
+const handleAcceptContract = async () => {
+  await axios.post(`${config.serverUri}/doctors/users/accept-contract`);
+};
+const Contract: React.FC = () => {
+  const navigate = useNavigate();
+  const getContractUrlQuery = useQuery(["contract"], getContract);
+  const acceptContractMutation = useMutation(handleAcceptContract, {
+    onSuccess: () => {
+      navigate("/login/doctor");
+    },
+    onError: () => {
+      navigate("/login/doctor");
+    },
+  });
 
-       try{
-            await axios.post(`${config.serverUri}/doctors/users/accept-contract`)
-       }catch(err){
+  return (
+    <div>
+      {getContractUrlQuery.isSuccess && (
+        <div>
+          <iframe
+            width="400px"
+            height="500px"
+            src={getContractUrlQuery.data}
+          ></iframe>
+          <Button
+            color="primary"
+            onClick={() => acceptContractMutation.mutate()}
+          >
+            Accept Offer
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
 
-       }
-        //api to create a doctor and remove request 
-        redirect('/login/doctor')
-    }
-    
-const {setStep} =useContext(ApplicationContext)
-    return(
-        <div>{contract&& 
-            <div>
-                <iframe width="400px"
-                    height="500px" src={contract}></iframe>
-                <Button color='primary' onClick={handleAccept}>Accept Offer</Button>
-            </div>}
-      
-       </div>
-    )
-}
-    
-
-export default Contract
+export default Contract;

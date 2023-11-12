@@ -2,6 +2,7 @@ import UserRole from "../../../types/UserRole";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import { signAndGetWalletToken } from "../../../utils/jwt";
 import { findUserByIdAndRole } from "../../users";
+import { IWallet } from "../../../models/wallets/interfaces/IWallet";
 
 export const authenticateWalletUser = async (
   userId: string,
@@ -18,8 +19,13 @@ export const authenticateWalletUser = async (
   return walletToken;
 };
 
-export const getWallet = async (userId: string, userRole: UserRole) => {
-  const wallet = await findUserByIdAndRole(userId, userRole, { wallet: 1 });
+export const getWallet = async (
+  userId: string,
+  userRole: UserRole
+): Promise<IWallet> => {
+  const user = await findUserByIdAndRole(userId, userRole, { wallet: 1 });
+  if (!user) throw new Error(entityIdDoesNotExistError("User", userId));
+  return user.wallet!;
 };
 
 export const addWallet = async (
@@ -29,8 +35,8 @@ export const addWallet = async (
   pinCode: string
 ) => {
   const user = await findUserByIdAndRole(userId, userRole, { wallet: 1 });
-  if (!user) throw new Error(entityIdDoesNotExistError("Patient", userId));
-  if (!user.wallet) throw new Error("Patient already has a wallet");
+  if (!user) throw new Error(entityIdDoesNotExistError("User", userId));
+  if (user.wallet) throw new Error("User already has a wallet");
 
   const wallet = {
     currency: desiredCurrency,

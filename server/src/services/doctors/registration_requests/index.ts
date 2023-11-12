@@ -19,30 +19,30 @@ export const findDoctorRegistrationRequestByUsername = async (
   );
 };
 
-export const addDoctorRegistrationFiles = async (
-  id: string,
-  files: any
-) => {
-  return await DoctorRegistrationRequest.updateOne({ _id:id }).set(files)
+export const addDoctorRegistrationFiles = async (id: string, files: any) => {
+  return await DoctorRegistrationRequest.findByIdAndUpdate(id, files);
 };
 
-export const sendDoctorContract = async (
-  id: string,
-  contractUrl: string
-) => {
-  return await DoctorRegistrationRequest.updateOne({ _id:id }).set({contractUrl,status:'accepted'})
+export const sendDoctorContract = async (id: string, contractUrl: string) => {
+  return await DoctorRegistrationRequest.updateOne({ _id: id }).set({
+    contractUrl,
+    status: "accepted",
+  });
 };
 
-
-export const getDoctorRegistrationContract = async (
-  id: string,
-) => {
-  console.log(id)
-  console.log(await DoctorRegistrationRequest.findById(id).select({_id:1,contractUrl:1}))
-  return await DoctorRegistrationRequest.findById(id).select({_id:1,contractUrl:1})
+export const getDoctorRegistrationContract = async (id: string) => {
+  console.log(id);
+  console.log(
+    await DoctorRegistrationRequest.findById(id).select({
+      _id: 1,
+      contractUrl: 1,
+    })
+  );
+  return await DoctorRegistrationRequest.findById(id).select({
+    _id: 1,
+    contractUrl: 1,
+  });
 };
-
-
 
 export const createNewDoctorRegistrationRequest = async (
   request: IDoctorBaseInfo

@@ -1,10 +1,9 @@
-import DoctorRegistrationRequestFormFiles from "../../pages/doctors/Registration/DoctorVerifyRequest";
 import Applications from "../../pages/doctors/Registration/applications";
 import { Route } from "../../types";
 
 export const doctorUnverifiedRoute: Route = {
   path: "/career-dashboard/applications",
-  element: <Applications/>,
+  element: <Applications />,
 };
 
 const unverifiedRoutes: Route[] = [doctorUnverifiedRoute];

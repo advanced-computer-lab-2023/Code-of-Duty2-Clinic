@@ -81,8 +81,8 @@ patientRouter
     rechargePatientWalletHandler
   )
 
-  .get("/credit-card-configuration", configureCreditCardPaymentHandler)
+  .get("/payments/configuration", configureCreditCardPaymentHandler)
 
-  .post("/credit-card-payment", makeCreditCardPaymentHandler);
+  .post("/payments/create-payment-intent", makeCreditCardPaymentHandler);
 
 export default patientRouter;
