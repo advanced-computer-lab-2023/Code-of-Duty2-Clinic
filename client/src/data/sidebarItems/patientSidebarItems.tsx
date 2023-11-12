@@ -7,15 +7,12 @@ import {
   addFamilyMemberRoute,
   patientDashboardRoute,
   patientAppointmentsRoute,
-  patientFamilyMembersRoute,
   searchForDoctorsRoute,
   viewAllDoctorsRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
-  patientWalletRoute,
-  createPatientWalletRoute,
+  familyMembersRoute,
 } from "../routes/patientRoutes";
-import WalletIcon from "@mui/icons-material/Wallet";
 
 export const patientSidebarItems = [
   {
@@ -57,16 +54,6 @@ export const patientSidebarItems = [
     title: "My Account",
     items: [
       {
-        title: "View my family member",
-        href: patientFamilyMembersRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "Add a family member",
-        href: addFamilyMemberRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
         title: "My Medical History",
         href: patientMedicalHistoryRoute.path,
         icon: <PeopleIcon />,
@@ -74,17 +61,17 @@ export const patientSidebarItems = [
     ],
   },
   {
-    title: "My Wallet",
+    title: "My Family Members",
     items: [
       {
-        title: "View my Wallet",
-        href: patientWalletRoute.path,
-        icon: <WalletIcon />,
+        title: "View my family members",
+        href: familyMembersRoute.path,
+        icon: <PeopleIcon />,
       },
       {
-        title: "Create Wallet",
-        href: createPatientWalletRoute.path,
-        icon: <WalletIcon />,
+        title: "Add a family member",
+        href: addFamilyMemberRoute.path,
+        icon: <PeopleIcon />,
       },
     ],
   },

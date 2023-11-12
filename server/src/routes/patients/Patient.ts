@@ -15,6 +15,19 @@ import {
 } from "../../controllers/patients/healthRecords";
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
+import { viewHealthPackagesOptions } from "../../controllers/patients/viewHealthPackagesOptions";
+import { subscribeToHealthPackage } from "../../controllers/patients/subscribePackageOfPatient";
+import { setSubscribedPackageForDependent } from "../../controllers/patients/subscribeToPackageForIndependent";
+import { viewSubscribedHealthPackage } from "../../controllers/patients/viewSubscribedHealthPackage";
+import { viewSubscribedPackageDetailsForDependent } from "../../controllers/patients/viewPackageDetailsForDependent";
+import { viewHealthCarePackageStatus } from "../../controllers/patients/viewPackageDetails";
+import { viewSubscribedPackage } from "../../controllers/patients/viewHealthPackageIndependent";
+import { cancelSubscription } from "../../controllers/patients/cancelSubscription";
+import { cancelSubscribedForDependent } from "../../controllers/patients/cancelSubForIndependent";
+import { viewSubscribedHealthPackageBenefits } from "../../controllers/patients/viewBenefitsOfPackage";
+import { viewDependentFamilyMembersService } from "../../services/patients";
+import { getDependentFamilyMembers } from "../../controllers/patients/viewDependentFamilyMembers";
+import  {cancelSubscriptionForRegistered}  from "../../controllers/patients/cancelSubscriptionForRegistered";
 import UserRole from "../../types/UserRole";
 import {
   addPatientAWalletHandler,
@@ -61,6 +74,29 @@ patientRouter
 
   .get("/appointments", getAppointmentsWithAllDoctors)
 
+  .get("/health-packages", viewHealthPackagesOptions)
+
+  .post("/subscribe", subscribeToHealthPackage)
+
+  .post("/subscribe/dependent-member", setSubscribedPackageForDependent)
+
+  .get("/patient-health-package", viewSubscribedHealthPackage)
+
+  .get("/package-dependent", viewSubscribedPackageDetailsForDependent)
+
+  .get("/health-care-package-status", viewHealthCarePackageStatus)
+
+  .get("/dependent-health-package", viewSubscribedPackage)
+
+  .patch("/cancel-subscription", cancelSubscription)
+
+  .patch("/cancel-subscription-dependent", cancelSubscribedForDependent)
+
+  .get("/package-benefits", viewSubscribedHealthPackageBenefits)
+
+  .get("/dependent-family-members", getDependentFamilyMembers)
+
+  .patch("/registered-family/cancel-subscription", cancelSubscriptionForRegistered)
   .get("/wallets/exists", doesAPatientHaveAWalletHandler)
 
   .post("/validate-wallet-pin-code", authenticateWalletPatientHandler)

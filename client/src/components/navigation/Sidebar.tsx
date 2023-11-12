@@ -102,10 +102,10 @@ const Sidebar: React.FC<Props> = ({ sidebarItems, sidebarWidth }) => {
                     src={el7a2niLogo}
                     alt="El7a2ni Logo"
                     style={{
-                      maxWidth: "70%",
-                      height: "auto",
-                      marginTop: "3rem",
-                      marginBottom: "3rem",
+                      maxWidth: "50%",
+                      height: "30%",
+                      marginTop: "1rem",
+                      marginBottom: "1rem",
                       marginLeft: "auto",
                       marginRight: "auto",
                     }}

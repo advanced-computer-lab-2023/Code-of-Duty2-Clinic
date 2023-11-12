@@ -10,13 +10,38 @@ import PatientRegistrationForm from "../../pages/patients/PatientRegistrationFor
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
+import HealthPackageList from "../../components/healthPackageList";
+import YourPage from "../../pages/patients/cancelSubscriptionForm";
+import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
+import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
 import ViewWallet from "../../pages/patients/wallet/ViewWallet";
 import CreateWallet from "../../pages/patients/wallet/CreateWallet";
 import PatientPaymentPage from "../../pages/patients/PatientPaymentPage";
+import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
   element: <Home />,
+};
+
+export const familyMemberPageRoute: Route = {
+  path: "/patient/familymemberpage",
+  element: <FamilyMemberPage selectedFamilyMember={null} type={""} />,
+};
+
+
+export const familyMembersRoute: Route = {
+  path: "/patient/all-family-members",
+  element: <FamilyMembersComponent />,
+};
+
+export const cancelSubscriptionRoute: Route = {
+  path: "/patient/CancelSubscription",
+  element: <YourPage />,
+};
+export const subscribedPackageBenefitsRoute: Route = {
+  path: "/patient/subscribed-package-benefits",
+  element: <SubscribedPackageBenefits />,
 };
 export const viewAllDoctorsRoute: Route = {
   path: "/patient/doctors",
@@ -66,7 +91,10 @@ export const patientMedicalHistoryRoute: Route = {
   path: "/patient/medical-history",
   element: <MedicalHistory />,
 };
-
+export const healthPackagesOptionsRoute: Route = {
+  path: "/patient/health-packages-options",
+  element: <HealthPackageList />,
+}
 export const patientWalletRoute: Route = {
   path: "/patient/wallet",
   element: <ViewWallet />,
@@ -95,6 +123,11 @@ const routes: Route[] = [
   patientRegistrationRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
+  healthPackagesOptionsRoute,
+  cancelSubscriptionRoute,
+  subscribedPackageBenefitsRoute,
+  familyMembersRoute,
+  familyMemberPageRoute,
   patientWalletRoute,
   createPatientWalletRoute,
   checkoutRoute,

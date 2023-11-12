@@ -3,7 +3,9 @@ import registerAdmin from "../../controllers/admins/addAdminController";
 import removeUserHandler from "../../controllers/admins/removeUserController";
 import viewUsersByTypeHandler from "../../controllers/admins/showUsers";
 import getDoctorRegistrationRequests from "../../controllers/admins/viewListOfRequests";
-import getDoctorRegistrationRequest, { getDoctorRegistrationRequestbyId } from "../../controllers/admins/viewDoctorApplicationData";
+import getDoctorRegistrationRequest, {
+  getDoctorRegistrationRequestbyId,
+} from "../../controllers/admins/viewDoctorApplicationData";
 import { addHealthPackage } from "../../controllers/healthPackages/createHealthPackage";
 import { getHealthPackages } from "../../controllers/healthPackages/getHealthPackages";
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
@@ -12,6 +14,10 @@ import { deleteHealthPackageHandler } from "../../controllers/healthPackages/del
 import { authenticateUser } from "../../middlewares/authentication";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
+import {
+  acceptDoctorRegistrationRequest,
+  rejectDoctorRegistrationRequest,
+} from "../../controllers/admins/actionOnRequest";
 
 const router = express.Router();
 
@@ -31,9 +37,13 @@ router
 router
   .post("/admin", registerAdmin)
 
-.get('/doctor-registration-requests/:email', getDoctorRegistrationRequest)
+  .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest)
 
-.get('/doctor-registration/:doctorId',getDoctorRegistrationRequestbyId)
+  .get("/doctor-registration/:doctorId", getDoctorRegistrationRequestbyId)
+  .post("/acceptDoctor/:username", acceptDoctorRegistrationRequest)
+
+  .post("/rejectDoctor/:username", rejectDoctorRegistrationRequest)
+
   .delete("/users", removeUserHandler)
 
   .get("/users/:Type", viewUsersByTypeHandler)
