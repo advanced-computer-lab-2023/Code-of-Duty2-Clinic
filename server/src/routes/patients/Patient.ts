@@ -15,7 +15,6 @@ import {
 } from "../../controllers/patients/healthRecords";
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
-import { UserRole } from "../../types/UserRole";
 import { viewHealthPackagesOptions } from "../../controllers/patients/viewHealthPackagesOptions";
 import { subscribeToHealthPackage } from "../../controllers/patients/subscribePackageOfPatient";
 import { setSubscribedPackageForDependent } from "../../controllers/patients/subscribeToPackageForIndependent";
@@ -29,6 +28,20 @@ import { viewSubscribedHealthPackageBenefits } from "../../controllers/patients/
 import { viewDependentFamilyMembersService } from "../../services/patients";
 import { getDependentFamilyMembers } from "../../controllers/patients/viewDependentFamilyMembers";
 import  {cancelSubscriptionForRegistered}  from "../../controllers/patients/cancelSubscriptionForRegistered";
+import UserRole from "../../types/UserRole";
+import {
+  addPatientAWalletHandler,
+  authenticateWalletPatientHandler,
+  doesAPatientHaveAWalletHandler,
+  getPatientWalletHandler,
+  rechargePatientWalletHandler,
+} from "../../controllers/payments/wallets/Patient";
+import { performAWalletTransactionHandler } from "../../controllers/payments/wallets/Patient";
+import { authenticateWalletUser } from "../../middlewares/walletAuthentication";
+import {
+  configureCreditCardPaymentHandler,
+  makeCreditCardPaymentHandler,
+} from "../../controllers/payments/credit-cards/Patient";
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
@@ -84,5 +97,28 @@ patientRouter
   .get("/dependent-family-members", getDependentFamilyMembers)
 
   .patch("/registered-family/cancel-subscription", cancelSubscriptionForRegistered)
+  .get("/wallets/exists", doesAPatientHaveAWalletHandler)
+
+  .post("/validate-wallet-pin-code", authenticateWalletPatientHandler)
+
+  .post("/wallets", addPatientAWalletHandler)
+
+  .get("/wallets", authenticateWalletUser, getPatientWalletHandler)
+
+  .patch(
+    "/wallet-transactions",
+    authenticateWalletUser,
+    performAWalletTransactionHandler
+  )
+
+  .patch(
+    "/wallet-recharge",
+    authenticateWalletUser,
+    rechargePatientWalletHandler
+  )
+
+  .get("/payments/configuration", configureCreditCardPaymentHandler)
+
+  .post("/payments/create-payment-intent", makeCreditCardPaymentHandler);
 
 export default patientRouter;

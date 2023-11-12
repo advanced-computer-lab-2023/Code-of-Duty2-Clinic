@@ -13,8 +13,11 @@ import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyM
 import HealthPackageList from "../../components/healthPackageList";
 import YourPage from "../../pages/patients/cancelSubscriptionForm";
 import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
-import FamilyMembersComponent from "../../pages/patients/familyMembers";
 import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
+import ViewWallet from "../../pages/patients/wallet/ViewWallet";
+import CreateWallet from "../../pages/patients/wallet/CreateWallet";
+import PatientPaymentPage from "../../pages/patients/PatientPaymentPage";
+import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -91,6 +94,20 @@ export const patientMedicalHistoryRoute: Route = {
 export const healthPackagesOptionsRoute: Route = {
   path: "/patient/health-packages-options",
   element: <HealthPackageList />,
+}
+export const patientWalletRoute: Route = {
+  path: "/patient/wallet",
+  element: <ViewWallet />,
+};
+
+export const createPatientWalletRoute: Route = {
+  path: "/patient/wallet/create",
+  element: <CreateWallet />,
+};
+
+export const checkoutRoute: Route = {
+  path: "/patient/payment",
+  element: <PatientPaymentPage />,
 };
 
 const routes: Route[] = [
@@ -110,7 +127,10 @@ const routes: Route[] = [
   cancelSubscriptionRoute,
   subscribedPackageBenefitsRoute,
   familyMembersRoute,
-  familyMemberPageRoute
+  familyMemberPageRoute,
+  patientWalletRoute,
+  createPatientWalletRoute,
+  checkoutRoute,
 ];
 
 export default routes;

@@ -5,8 +5,6 @@ import cors from "cors";
 import { useAllAppRoutes } from "./utils/useAllAppRoutes";
 import cookieParser from "cookie-parser";
 import path from "path";
-import HealthPackage from "./models/health_packages/HealthPackage";
-import patient from "./models/patients/Patient";
 
 export const app = express();
 
@@ -26,6 +24,6 @@ app.get("/", (_, res) => {
   res.send("Server Online!");
 });
 
-app.listen(config.server.port, async() => {
+app.listen(config.server.port, () => {
   console.log(`Server listening on port ${config.server.port}`);
 });
