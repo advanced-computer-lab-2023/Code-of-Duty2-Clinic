@@ -1,2 +1,2 @@
 /// <reference types="vite/client" />
-declare module "react-file-viewer"
+declare module "react-file-viewer-extended"

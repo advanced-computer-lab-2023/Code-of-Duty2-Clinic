@@ -25,7 +25,6 @@ export const updateHealthPackage = async (req:AuthorizedRequest,res:Response)=>{
 
     if(!validAttributes )   
         res.sendStatus(StatusCodes.BAD_REQUEST)
-    
     try {
         const _id = req.params.id;
 

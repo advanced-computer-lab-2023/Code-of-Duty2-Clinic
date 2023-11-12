@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
 import ViewDoctorRegistrationRequest, { DoctorRequest } from './viewDetailsofRequest';
 import'./ViewDoctorRequest.css'
-import { config } from '../../configuration';
+import { config } from '../../../configuration';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 
-
+export const buttonStyle = {
+  marginRight:10,
+  backgroundColor:'#103939',
+  color:'white',
+':hover': {
+    backgroundColor: '#10393999',  // Change to the desired hover color
+  },
+}
 function DoctorRegistrationRequests() {
   const [requests, setRequests] = useState<DoctorRequest[]>([]);
-  const [selectedRequest, setSelectedRequest] = useState<DoctorRequest | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<DoctorRequest | null>(null!);
 
   // Fetch a list of doctor registration requests
   useEffect(() => {
@@ -34,20 +43,12 @@ function DoctorRegistrationRequests() {
   <ul className="registration-list">
     {requests.map((request, index) => (
       <li key={index} className="registration-item">
+        <Link to={`/admin/doctor/${request._id}`}><Button sx={buttonStyle}>View Request</Button></Link>
         <span className="registration-username">{request.username}</span>
-        <button className="registration-button" onClick={() => handleViewRequest(request)}>View Request</button>
       </li>
     ))}
   </ul>
-
-  {selectedRequest && (
-    <ViewDoctorRegistrationRequest
-      request={selectedRequest}
-      onClose={() => setSelectedRequest(null)}
-    />
-  )}
 </div>
-
   );
 }
 

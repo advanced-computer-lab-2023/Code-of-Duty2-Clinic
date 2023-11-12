@@ -3,7 +3,7 @@ import { IHealthPackage } from "../../models/health_packages/interfaces/IHealthP
 
 export const createHealthPackage = async (newHealthPackage: IHealthPackage) => {
     const healthPackage = new HealthPackage(newHealthPackage);
-await healthPackage.save();
+    await healthPackage.save();
 }
 
 export const deleteHealthPackage = async (healthPackageId: string) => {

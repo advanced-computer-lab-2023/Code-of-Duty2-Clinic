@@ -8,29 +8,39 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
 import {  Stack, Typography } from '@mui/material';
 
-import { IHealthRecord } from '../medicalHistory';
+import { IHealthRecord } from '../../../patients/medicalHistory/medicalHistory'
 import {uploadImage} from '../../../../services/fileUploader'
 import { config } from '../../../../configuration';
-import {uploadHealthRecordModalStyle,textFieldStyle,VisuallyHiddenInput} from '../medicalHistoryCSS'
+import {uploadHealthRecordModalStyle,textFieldStyle,VisuallyHiddenInput} from '../../../patients/medicalHistory/medicalHistoryCSS'
+import { useParams } from 'react-router-dom';
 
-interface UploadHealthRecordModalProps {
+interface UploadNotesModalProps {
   openUpload:boolean
   close:(healthrecord?:IHealthRecord)=>void 
 }
-const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUpload,close}) => {
+const UploadNotesModal:React.FC<UploadNotesModalProps>= ({openUpload,close}) => {
   const [open, setOpen] = useState(openUpload);
   const fileName =useRef<string>(null!)
   const file = useRef<File>()
   const imgUrl = useRef<string>(null!);
   const recordType = useRef<string>(null!);
   const [saveLoading, setSaveLoading] = useState(false);
+  const { patientId } = useParams();
 
   const SaveImage =async (e:any) => {
     e.preventDefault()
     setSaveLoading(true)
+    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+
     if (!file||fileName.current==="") return;
+
+    if(!(file.current?.type&& validFileTypes.includes(file.current?.type))){      
+     // let isValidFileType = ;
+     // if(isValidFileType)return
+    }
+    
     if(file.current)
-    imgUrl.current= await uploadImage(file.current,recordType.current,fileName.current||"")
+    imgUrl.current= await uploadImage(file.current,'doctor-files',fileName.current||"")
 
     const healthrecord:IHealthRecord = {
       name:fileName.current,
@@ -41,7 +51,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
     }
     
     try{    
-      await axios.put(`${config.serverUri}/patients/health-records`,healthrecord)
+      await axios.put(`${config.serverUri}/doctors/patients/${patientId}/health-records`,healthrecord)
       setSaveLoading(false)
       close(healthrecord)
     }catch(error){
@@ -95,8 +105,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
                       margin='normal'
                       variant="standard"
                       size='small'
-                      sx={textFieldStyle}
-                      
+                      sx={textFieldStyle}            
                     />
                         <Button sx={{backgroundColor:'#103939',maxWidth:200}}component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                           Select file
@@ -108,8 +117,7 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
                         loading={saveLoading}
                         //loadingPosition="start"
                         variant="outlined"
-                        onClick={SaveImage}
-                        
+                        onClick={SaveImage}           
                       >
                         Upload
                       </LoadingButton>
@@ -120,4 +128,4 @@ const UploadHealthRecordModal:React.FC<UploadHealthRecordModalProps>= ({openUplo
    
   );
 }
-export default UploadHealthRecordModal
+export default UploadNotesModal
