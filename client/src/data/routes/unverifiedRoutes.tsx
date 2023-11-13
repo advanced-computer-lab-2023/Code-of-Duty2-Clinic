@@ -1,8 +1,9 @@
+import Applications from "../../pages/doctors/Registration/applications";
 import { Route } from "../../types";
 
 export const doctorUnverifiedRoute: Route = {
-  path: "/verify/doctor",
-  element: <div>Doctor Verify</div>,
+  path: "/career-dashboard/applications",
+  element: <Applications />,
 };
 
 const unverifiedRoutes: Route[] = [doctorUnverifiedRoute];

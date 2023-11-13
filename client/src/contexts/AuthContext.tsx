@@ -133,14 +133,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
     setAuthorizationHeader(accessToken);
   };
-
-  const updateVerificationStatus = (verificationStatus: VerificationStatus) => {
-    setAuthState({
-      ...authState,
-      verificationStatus,
-    });
-  };
-
   const logout = async () => {
     setAuthState({
       isAuthenticated: false,
@@ -172,6 +164,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       logout();
     }
+  };
+
+  const updateVerificationStatus = (verificationStatus: VerificationStatus) => {
+    setAuthState({
+      ...authState,
+      verificationStatus,
+    });
   };
 
   return (

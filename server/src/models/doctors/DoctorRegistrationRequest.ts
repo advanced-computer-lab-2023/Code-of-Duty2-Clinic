@@ -16,6 +16,7 @@ export interface IDoctorRegistrationRequestModel
     | "pending documents upload"
     | "pending contract acceptance"
     | "rejected";
+  verifyPassword?: (password: string) => Promise<boolean>;
 }
 
 export const DoctorRegistrationRequestSchema =
@@ -60,8 +61,6 @@ export const DoctorRegistrationRequestSchema =
     { timestamps: true }
   );
 
-// DoctorRegistrationRequestSchema.plugin(bcrypt, { rounds: 10 });
-
 DoctorRegistrationRequestSchema.pre("save", function (next) {
   var user = this;
   if (!user.isModified("password")) return next();
@@ -71,6 +70,13 @@ DoctorRegistrationRequestSchema.pre("save", function (next) {
     next();
   });
 });
+
+DoctorRegistrationRequestSchema.methods.verifyPassword = function (
+  password: string
+) {
+  return bcrypt.compare(password, this.password);
+};
+
 export default mongoose.model<IDoctorRegistrationRequestModel>(
   "DoctorRegistrationRequest",
   DoctorRegistrationRequestSchema

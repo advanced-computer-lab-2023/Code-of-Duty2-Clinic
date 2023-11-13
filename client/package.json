@@ -10,13 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cyntler/react-doc-viewer": "^1.14.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.12",
     "@mui/joy": "^5.0.0-beta.12",
     "@mui/lab": "^5.0.0-alpha.148",
-    "@mui/material": "^5.14.12",
+    "@mui/material": "^5.14.17",
     "@mui/x-date-pickers": "^6.16.1",
     "@stripe/react-stripe-js": "^2.3.1",
     "@stripe/stripe-js": "^2.1.11",
@@ -34,6 +35,7 @@
     "react": "^18.2.0",
     "react-datetime-picker": "^5.5.2",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
     "react-icons": "^4.11.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.16.0",

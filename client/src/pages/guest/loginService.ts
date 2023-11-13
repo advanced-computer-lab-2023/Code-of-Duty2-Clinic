@@ -24,5 +24,6 @@ export const doctorLoginService = async ({
     username,
     password,
   });
+  console.log(response.data)
   return response.data;
 };
