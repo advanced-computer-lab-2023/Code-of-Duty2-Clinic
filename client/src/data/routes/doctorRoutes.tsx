@@ -7,6 +7,8 @@ import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistratio
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
+import ViewAvailableTimeSlots from "../../pages/doctors/ViewAvailableTimeSlots";
+import AddAvailableTimeSlots from "../../pages/doctors/AddAvailableTimeSlots";
 
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
@@ -48,6 +50,16 @@ export const patientSearchRoute: Route = {
   element: <PatientSearch />,
 };
 
+export const doctorAvailableTimeSlotsRoute: Route = {
+  path: "/doctor/available-time-slots",
+  element: <ViewAvailableTimeSlots/>,
+};
+
+export const addDoctorAvailableTimeSlotsRoute: Route = {
+  path: "/doctor/add-available-time-slots",
+  element: <AddAvailableTimeSlots/>,
+};
+
 const routes: Route[] = [
   doctorDashboardRoute,
   updateAccountInfoRoute,
@@ -57,6 +69,8 @@ const routes: Route[] = [
   doctorRegisteredPatientDetailsRoute,
   doctorRegistrationRequestRoute,
   patientSearchRoute,
+  doctorAvailableTimeSlotsRoute,
+  addDoctorAvailableTimeSlotsRoute,
 ];
 
 export default routes;

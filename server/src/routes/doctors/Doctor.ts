@@ -14,7 +14,7 @@ import { authenticateUser } from '../../middlewares/authentication';
 import { getPatientInfo } from '../../controllers/patients/getPatientInfo';
 import { getAllPatients } from '../../controllers/patients/getAllPatients';
 import { scheduleFollowUp } from '../../controllers/doctors/doctorFollowUp';
-
+import { viewAvailableTimeSlots } from '../../controllers/doctors/getAvailableTimeSlots';
 
 const doctorRouter = express.Router();
 
@@ -43,6 +43,8 @@ doctorRouter
 .patch('/change-password', updateDoctorPassword)
 
 .post('/appointments/follow-up', scheduleFollowUp)
+
+.get('/available-time-slots', viewAvailableTimeSlots)
 
 
 
