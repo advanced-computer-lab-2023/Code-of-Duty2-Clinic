@@ -1,6 +1,7 @@
 // SubscribedPackageCard.tsx
-import React from 'react';
-import { Card, CardContent, Typography, Button } from '@mui/material';
+import React from "react";
+import { Card, CardContent, Typography, Button } from "@mui/material";
+import { getFormattedDateTime } from "../utils/formatter";
 
 interface SubscribedPackageCardProps {
   packageId: string;
@@ -17,29 +18,20 @@ const SubscribedPackageCard: React.FC<SubscribedPackageCardProps> = ({
   status,
   onCancelSubscription,
 }) => {
-  // Function to format date
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZoneName: 'short',
-    };
-    return new Date(dateString).toLocaleString('en-US', options);
-  };
-
   return (
     <Card>
       <CardContent>
         <Typography variant="h6">Subscribed Health Package</Typography>
         <Typography>Package ID: {packageId}</Typography>
-        <Typography>Start Date: {formatDate(startDate)}</Typography>
-        <Typography>End Date: {formatDate(endDate)}</Typography>
+        <Typography>Start Date: {getFormattedDateTime(startDate)}</Typography>
+        <Typography>End Date: {getFormattedDateTime(endDate)}</Typography>
         <Typography>Status: {status}</Typography>
-        <Button variant="outlined" color="error" onClick={onCancelSubscription} disabled={status=='cancelled'}>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={onCancelSubscription}
+          disabled={status == "cancelled"}
+        >
           Cancel Subscription
         </Button>
       </CardContent>

@@ -5,18 +5,19 @@ import { useQueryParams } from "../../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Paper, Grid } from "@mui/material";
 import { healthPackagesOptionsRoute } from "../../data/routes/patientRoutes";
+import { getFormattedDateTime } from "../../utils/formatter";
 const FamilyMemberPage: React.FC = () => {
   const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
   const queryParams = useQueryParams();
   const navigate = useNavigate();
   const type = queryParams.get("type");
   const id = queryParams.get("id");
- let today = new Date();
+  let today = new Date();
   useEffect(() => {
     const fetchData = async () => {
       try {
         let healthPackageResponse;
-  
+
         if (type === "r") {
           healthPackageResponse = await axios.get<any>(
             `${config.serverUri}/patients/registered-family-members/${id}/health-package`
@@ -26,23 +27,22 @@ const FamilyMemberPage: React.FC = () => {
             `${config.serverUri}/patients/dependent-family-members/${id}/health-package`
           );
         }
-  
+
         if (!healthPackageResponse || !healthPackageResponse.data) {
           console.log(
             "No health package found for the selected family member."
           );
           return;
         }
-  
+
         setFamilyMemberData(healthPackageResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [type, id]);
-  
 
   const handleCancelSubscription = async () => {
     try {
@@ -110,16 +110,24 @@ const FamilyMemberPage: React.FC = () => {
               <Typography>
                 Start Date:{" "}
                 {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
-                      .startDate
-                  : familyMemberData.subscribedPackage?.startDate}
+                  ? getFormattedDateTime(
+                      familyMemberData.subscribedHealthPackage
+                        ?.subscribedPackage.startDate
+                    )
+                  : getFormattedDateTime(
+                      familyMemberData.subscribedPackage?.startDate
+                    )}
               </Typography>
               <Typography>
                 End Date:{" "}
                 {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
-                      .endDate
-                  : familyMemberData.subscribedPackage?.endDate}
+                  ? getFormattedDateTime(
+                      familyMemberData.subscribedHealthPackage
+                        ?.subscribedPackage.endDate
+                    )
+                  : getFormattedDateTime(
+                      familyMemberData.subscribedPackage?.endDate
+                    )}
               </Typography>
               <Typography>
                 Status:{" "}
@@ -184,12 +192,13 @@ const FamilyMemberPage: React.FC = () => {
             color="primary"
             onClick={handleCancelSubscription}
             style={{ marginRight: "16px" }}
-            disabled={!(
-              type === "r"
+            disabled={
+              !(type === "r"
                 ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
                     ?.status === "subscribed"
-                : familyMemberData?.subscribedPackage?.status[0] === "subscribed"
-  )}
+                : familyMemberData?.subscribedPackage?.status[0] ===
+                  "subscribed")
+            }
           >
             Cancel Subscription
           </Button>
@@ -198,10 +207,11 @@ const FamilyMemberPage: React.FC = () => {
             color="secondary"
             onClick={handleSubscribe}
             disabled={
-              (type === "r"
+              type === "r"
                 ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
                     ?.status === "subscribed"
-                : familyMemberData?.subscribedPackage?.status[0] === "subscribed")
+                : familyMemberData?.subscribedPackage?.status[0] ===
+                  "subscribed"
             }
           >
             Subscribe

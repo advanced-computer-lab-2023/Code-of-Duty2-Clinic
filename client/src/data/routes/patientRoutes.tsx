@@ -10,7 +10,7 @@ import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
 import HealthPackageList from "../../components/healthPackageList";
-import YourPage from "../../pages/patients/cancelSubscriptionForm";
+import YourPage from "../../pages/patients/HealthPackageStatus";
 import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
 import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
 import ViewWallet from "../../pages/patients/wallet/ViewWallet";
@@ -130,7 +130,7 @@ const routes: Route[] = [
   patientWalletRoute,
   createPatientWalletRoute,
   checkoutRoute,
-  HealthPackageOptionsRDRoute
+  HealthPackageOptionsRDRoute,
 ];
 
 export default routes;
