@@ -8,8 +8,8 @@ import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
-import { addPatientRegisteredFamilyMember } from "../../controllers/patients/addPatientRegisteredFamilyMember";
-import { deletePatientRegisteredFamilyMember } from "../../controllers/patients/deletePatientRegisteredFamilyMember";
+import { addPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
+import { deletePatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
 import { rejectPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { getPatientRegisteredFamilyMemberRequests } from "../../controllers/patients/getPatientRegisteredFamilyMemberRequests";
@@ -30,7 +30,6 @@ import { viewSubscribedPackage } from "../../controllers/patients/viewHealthPack
 import { cancelSubscription } from "../../controllers/patients/cancelSubscription";
 import { cancelSubscribedForDependent } from "../../controllers/patients/cancelSubForIndependent";
 import { viewSubscribedHealthPackageBenefits } from "../../controllers/patients/viewBenefitsOfPackage";
-import { viewDependentFamilyMembersService } from "../../services/patients";
 import { getDependentFamilyMembers } from "../../controllers/patients/viewDependentFamilyMembers";
 import  {cancelSubscriptionForRegistered}  from "../../controllers/patients/cancelSubscriptionForRegistered";
 import UserRole from "../../types/UserRole";

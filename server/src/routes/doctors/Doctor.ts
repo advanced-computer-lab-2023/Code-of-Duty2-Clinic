@@ -10,8 +10,6 @@ import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
 import { doctorAddPatientHealthRecord } from "../../controllers/doctors/addPatientHealthRecord";
-import { getAllPatients } from "../../controllers/doctors/getAllPatients";
-
 import {
   addDoctorAWalletHandler,
   authenticateWalletDoctorHandler,
@@ -37,8 +35,6 @@ doctorRouter
   .get("/account", getDoctor)
 
   .patch("/account", updateDoctor)
-
-  .get("/patients", getAllPatients)
 
   .get("/patients", getRegisteredPatients)
 

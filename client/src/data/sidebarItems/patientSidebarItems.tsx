@@ -3,6 +3,8 @@ import MedicineIcon from "@mui/icons-material/Medication";
 import SearchIcon from "@mui/icons-material/Search";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
+import { addRegisteredFamilyMemberRoute, patientFamilyMembersRoute } from "../routes/patientRoutes";
+
 import {
   addFamilyMemberRoute,
   patientDashboardRoute,
@@ -69,10 +71,20 @@ export const patientSidebarItems = [
         icon: <PeopleIcon />,
       },
       {
+        title: "View Registered Family Members",
+        href: patientFamilyMembersRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
         title: "Add a family member",
         href: addFamilyMemberRoute.path,
         icon: <PeopleIcon />,
       },
+      {
+        title: "Add a Registered Family Member",
+        href: addRegisteredFamilyMemberRoute.path,
+        icon: <PeopleIcon />,
+      }
     ],
   },
 ];

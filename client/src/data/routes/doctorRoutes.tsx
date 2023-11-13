@@ -2,10 +2,9 @@ import Home from "../../pages/doctors/Home";
 import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
-
+import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatients";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
-import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
 import PatientList from "../../pages/doctors/PatientList";
 import PatientInfo from "../../pages/doctors/PatientInfo";
 

@@ -4,7 +4,6 @@ import { ObjectId } from "mongoose";
 import axios from "axios";
 import { config } from "../../../configuration";
 import { useMutation } from "react-query";
-import { useQueryClient } from "react-query";
 import { RegisteredFamilyMember } from "../../../types";
 import { useEffect, useState } from "react";
 
@@ -13,7 +12,6 @@ export default function PatientRegisteredFamilyMemberRequests() {
 
     type RegisteredFamilyMemberWithName = RegisteredFamilyMember & { name: string };
     const [requestsData, setRequestsData] = useState<RegisteredFamilyMemberWithName[]>([]);
-    const queryClient = useQueryClient();
 
 
     useEffect(() => {
@@ -28,7 +26,7 @@ export default function PatientRegisteredFamilyMemberRequests() {
         };
 
         fetchRequests();
-    }, []);
+    });
 
 
 
@@ -56,7 +54,6 @@ export default function PatientRegisteredFamilyMemberRequests() {
         {
           onSuccess: async (data, variables) => {
             // Invalidate and refetch
-            // Fetch the updated list of requests
         const response = await axios.get(`${config.serverUri}/patients/family-members/requests`, { withCredentials: true });
         const requests: RegisteredFamilyMember[] = response.data;
         await fetchPatientNames(requests);
@@ -72,7 +69,7 @@ export default function PatientRegisteredFamilyMemberRequests() {
         },
         {
           onSuccess: async (data, variables) => {
-            // Invalidate and refetch
+
             const response = await axios.get(`${config.serverUri}/patients/family-members/requests`, { withCredentials: true });
             const requests: RegisteredFamilyMember[] = response.data;
             await fetchPatientNames(requests);
