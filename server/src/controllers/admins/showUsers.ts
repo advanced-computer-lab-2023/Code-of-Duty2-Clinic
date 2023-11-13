@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { findAllUsersByType } from '../../services/users';
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { findAllUsersByType } from "../../services/users";
 
 async function viewUsersByTypeHandler(req: Request, res: Response) {
   try {

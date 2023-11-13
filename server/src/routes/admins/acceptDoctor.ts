@@ -1,8 +1,8 @@
-import express from 'express';
-import {acceptDoctorRegistrationRequest}  from '../../controllers/admins/actionOnRequest';
+import express from "express";
+import { sendContract } from "../../controllers/admins/actionOnRequest";
 
 const router = express.Router();
 
-router.post('/acceptDoctor/:username', acceptDoctorRegistrationRequest);
+router.put("/accept-doctor/:doctorId", sendContract);
 
 export default router;

@@ -1,71 +1,78 @@
-import HomeIcon from '@mui/icons-material/Home';
-import MedicineIcon from '@mui/icons-material/Medication';
-import SearchIcon from '@mui/icons-material/Search';
-import PeopleIcon from '@mui/icons-material/People';
-import PersonIcon from '@mui/icons-material/Person';
-import { addFamilyMemberRoute, patientDashboardRoute, patientAppointmentsRoute, patientFamilyMembersRoute, searchForDoctorsRoute, viewAllDoctorsRoute, patientPrescriptions, patientMedicalHistoryRoute, addRegisteredFamilyMemberRoute } from '../routes/patientRoutes';
-
+import HomeIcon from "@mui/icons-material/Home";
+import MedicineIcon from "@mui/icons-material/Medication";
+import SearchIcon from "@mui/icons-material/Search";
+import PeopleIcon from "@mui/icons-material/People";
+import PersonIcon from "@mui/icons-material/Person";
+import {
+  addFamilyMemberRoute,
+  patientDashboardRoute,
+  patientAppointmentsRoute,
+  searchForDoctorsRoute,
+  viewAllDoctorsRoute,
+  patientPrescriptions,
+  patientMedicalHistoryRoute,
+  familyMembersRoute,
+} from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
-    {
+  {
+    title: "Home",
+    items: [
+      {
         title: "Home",
-        items: [
-            {
-                title: "Home",
-                href: patientDashboardRoute.path,
-                icon: <HomeIcon />
-            },
-            {
-                title: "My Prescriptions",
-                href: patientPrescriptions.path,
-                icon: <HomeIcon />
-            }
-
-        ]
-    },
-    {
-        title: "Interact with Doctors",
-        items: [
-            {
-                title: "View Doctors",
-                href: viewAllDoctorsRoute.path,
-                icon: <MedicineIcon />
-            },
-            {
-                title: "Search for Doctors",
-                href: searchForDoctorsRoute.path,
-                icon: <SearchIcon />
-            },
-            {
-                title: "View my Appointments",
-                href: patientAppointmentsRoute.path,
-                icon: <PersonIcon />
-            },
-        ]
-    },
-    {
-        title: "My Account",
-        items: [
-            {
-                title: "View my family member",
-                href: patientFamilyMembersRoute.path,
-                icon: <PeopleIcon />
-            },
-            {
-                title: "Add a family member",
-                href: addFamilyMemberRoute.path,
-                icon: <PeopleIcon />
-            },
-            {
-                title: "Add a registered family member",
-                href: addRegisteredFamilyMemberRoute.path,
-                icon: <PeopleIcon />
-            },
-            {
-                title: "My Medical History",
-                href: patientMedicalHistoryRoute.path,
-                icon: <PeopleIcon />
-            }
-        ]
-    }
+        href: patientDashboardRoute.path,
+        icon: <HomeIcon />,
+      },
+      {
+        title: "My Prescriptions",
+        href: patientPrescriptions.path,
+        icon: <HomeIcon />,
+      },
+    ],
+  },
+  {
+    title: "Interact with Doctors",
+    items: [
+      {
+        title: "View Doctors",
+        href: viewAllDoctorsRoute.path,
+        icon: <MedicineIcon />,
+      },
+      {
+        title: "Search for Doctors",
+        href: searchForDoctorsRoute.path,
+        icon: <SearchIcon />,
+      },
+      {
+        title: "View my Appointments",
+        href: patientAppointmentsRoute.path,
+        icon: <PersonIcon />,
+      },
+    ],
+  },
+  {
+    title: "My Account",
+    items: [
+      {
+        title: "My Medical History",
+        href: patientMedicalHistoryRoute.path,
+        icon: <PeopleIcon />,
+      },
+    ],
+  },
+  {
+    title: "My Family Members",
+    items: [
+      {
+        title: "View my family members",
+        href: familyMembersRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "Add a family member",
+        href: addFamilyMemberRoute.path,
+        icon: <PeopleIcon />,
+      },
+    ],
+  },
 ];

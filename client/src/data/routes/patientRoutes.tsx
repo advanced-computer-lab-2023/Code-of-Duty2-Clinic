@@ -10,73 +10,127 @@ import PatientRegistrationForm from "../../pages/patients/PatientRegistrationFor
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
-
+import HealthPackageList from "../../components/healthPackageList";
+import YourPage from "../../pages/patients/cancelSubscriptionForm";
+import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
+import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
+import ViewWallet from "../../pages/patients/wallet/ViewWallet";
+import CreateWallet from "../../pages/patients/wallet/CreateWallet";
+import PatientPaymentPage from "../../pages/patients/PatientPaymentPage";
+import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
 
 export const patientDashboardRoute: Route = {
-    path: '/patient/dashboard',
-    element: <Home />   
-}
+  path: "/patient/dashboard",
+  element: <Home />,
+};
+
+export const familyMemberPageRoute: Route = {
+  path: "/patient/familymemberpage",
+  element: <FamilyMemberPage selectedFamilyMember={null} type={""} />,
+};
+
+
+export const familyMembersRoute: Route = {
+  path: "/patient/all-family-members",
+  element: <FamilyMembersComponent />,
+};
+
+export const cancelSubscriptionRoute: Route = {
+  path: "/patient/CancelSubscription",
+  element: <YourPage />,
+};
+export const subscribedPackageBenefitsRoute: Route = {
+  path: "/patient/subscribed-package-benefits",
+  element: <SubscribedPackageBenefits />,
+};
 export const viewAllDoctorsRoute: Route = {
-    path: '/patient/doctors',
-    element: <ViewDoctors />   
-}
+  path: "/patient/doctors",
+  element: <ViewDoctors />,
+};
 export const viewDoctorDetailsRoute: Route = {
-    path: '/patient/doctors/:doctorId',
-    element: <ViewDoctorDetails />   
-}
+  path: "/patient/doctors/:doctorId",
+  element: <ViewDoctorDetails />,
+};
 export const searchForDoctorsRoute: Route = {
-    path: '/patient/doctors/search',
-    element: <SearchForDoctors /> 
-}
-export const addFamilyMemberRoute: Route = {    
-    path: '/patient/family-members/add',
-    element: <AddFamilyMember />
-}
+  path: "/patient/doctors/search",
+  element: <SearchForDoctors />,
+};
+export const addFamilyMemberRoute: Route = {
+  path: "/patient/family-members/add",
+  element: <AddFamilyMember />,
+};
 
 export const addRegisteredFamilyMemberRoute: Route = {
-    path: `/patient/family-members/add-registered`,
-    element: <AddRegisteredFamilyMember />
-}
+  path: `/patient/family-members/add-registered`,
+  element: <AddRegisteredFamilyMember />,
+};
 
 export const patientFamilyMembersRoute: Route = {
-    path: '/patient/family-members',
-    element: <PatientRegisteredFamilyMembers />
-}
+  path: "/patient/family-members",
+  element: <PatientRegisteredFamilyMembers />,
+};
 export const patientAppointmentsRoute: Route = {
-    path: '/patient/appointments',
-    element: <ViewAppointments />
-}
+  path: "/patient/appointments",
+  element: <ViewAppointments />,
+};
 export const patientDoctorAppointmentDetailsRoute: Route = {
-    path: 'patient/appointment/:appointmentId',
-    element: <ViewAppointments />
-}
+  path: "patient/appointment/:appointmentId",
+  element: <ViewAppointments />,
+};
 export const patientRegistrationRoute: Route = {
-    path: '/patient/register',
-    element: <PatientRegistrationForm />
-}
+  path: "/patient/register",
+  element: <PatientRegistrationForm />,
+};
 
 export const patientPrescriptions: Route = {
-    path: '/patient/prescriptions',
-    element: <PrescriptionsPage/>
-}
+  path: "/patient/prescriptions",
+  element: <PrescriptionsPage />,
+};
 
-export const patientMedicalHistoryRoute:Route = {
-    path: '/patient/medical-history',
-    element:<MedicalHistory/>
+export const patientMedicalHistoryRoute: Route = {
+  path: "/patient/medical-history",
+  element: <MedicalHistory />,
+};
+export const healthPackagesOptionsRoute: Route = {
+  path: "/patient/health-packages-options",
+  element: <HealthPackageList />,
 }
+export const patientWalletRoute: Route = {
+  path: "/patient/wallet",
+  element: <ViewWallet />,
+};
+
+export const createPatientWalletRoute: Route = {
+  path: "/patient/wallet/create",
+  element: <CreateWallet />,
+};
+
+export const checkoutRoute: Route = {
+  path: "/patient/payment",
+  element: <PatientPaymentPage />,
+};
+
 const routes: Route[] = [
-    patientDashboardRoute,
-    viewAllDoctorsRoute,
-    viewDoctorDetailsRoute,
-    searchForDoctorsRoute,
-    addFamilyMemberRoute,
-    addRegisteredFamilyMemberRoute,
-    patientFamilyMembersRoute,
-    patientAppointmentsRoute,
-    patientDoctorAppointmentDetailsRoute,
-    patientRegistrationRoute,
-    patientPrescriptions,
-    patientMedicalHistoryRoute
+  patientDashboardRoute,
+  viewAllDoctorsRoute,
+  viewDoctorDetailsRoute,
+  searchForDoctorsRoute,
+  addFamilyMemberRoute,
+  addRegisteredFamilyMemberRoute,
+  patientFamilyMembersRoute,
+  patientAppointmentsRoute,
+  patientDoctorAppointmentDetailsRoute,
+  patientRegistrationRoute,
+  patientPrescriptions,
+  patientMedicalHistoryRoute,
+  healthPackagesOptionsRoute,
+  cancelSubscriptionRoute,
+  subscribedPackageBenefitsRoute,
+  familyMembersRoute,
+  familyMemberPageRoute,
+  patientWalletRoute,
+  createPatientWalletRoute,
+  checkoutRoute,
 ];
 
 export default routes;

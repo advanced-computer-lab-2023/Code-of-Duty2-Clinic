@@ -1,6 +1,8 @@
+import { IDoctorModel } from "../../models/doctors/Doctor";
+import { IPatientModel } from "../../models/patients/Patient";
 import { User } from "../../types/User";
 import { IUserModel } from "../../types/UserModel";
-import { UserRole } from "../../types/UserRole";
+import UserRole from "../../types/UserRole";
 import {
   deleteAdminById,
   findAdminByEmail,
@@ -128,4 +130,19 @@ export const updatePassword = async (
 
   updateUserPassword(user, newPassword);
   return user;
+};
+
+export const findUserByIdAndRole = async (
+  id: string,
+  role: UserRole,
+  elementsToSelect?: any
+): Promise<IPatientModel | IDoctorModel | null> => {
+  switch (role) {
+    case UserRole.PATIENT:
+      return await findPatientById(id, elementsToSelect);
+    case UserRole.DOCTOR:
+      return await findDoctorById(id, elementsToSelect);
+    default:
+      throw new Error("Invalid user type");
+  }
 };

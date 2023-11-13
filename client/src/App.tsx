@@ -9,10 +9,11 @@ import generalRoutes from "./data/routes/generalRoutes";
 import PublicRoutesHandler from "./components/auth/PublicRoutesHandler";
 import LoginRoutesHandler from "./components/auth/LoginRoutesHandler";
 import loginRoutes from "./data/routes/loginRoutes";
-import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 import { QueryClient, QueryClientProvider } from "react-query";
-
+import { Route, Routes } from "react-router-dom";
+import UnverifiedRoutesHandler from "./components/auth/UnverifiedRoutesHandler";
+import unverifiedRoutes from "./data/routes/unverifiedRoutes";
 
 axios.defaults.withCredentials = true;
 const queryClient = new QueryClient();
@@ -23,6 +24,12 @@ export default function App() {
     <Routes>
       <Route element={<LoginRoutesHandler />}>
         {loginRoutes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
+      </Route>
+
+      <Route element={<UnverifiedRoutesHandler />}>
+        {unverifiedRoutes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element} />
         ))}
       </Route>

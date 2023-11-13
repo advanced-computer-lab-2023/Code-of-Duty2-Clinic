@@ -3,7 +3,6 @@ import AboutIcon from '@mui/icons-material/Info';
 import ContactUsIcon from '@mui/icons-material/ContactSupport';
 import PeopleIcon from '@mui/icons-material/People';
 import { aboutRoute, contactUsRoute, welcomeRoute } from '../routes/guestRoutes';
-import { doctorRegistrationRequestRoute } from '../routes/doctorRoutes';
 import { patientRegistrationRoute } from '../routes/patientRoutes';
 
 
@@ -27,18 +26,6 @@ export const guestSidebarItems = [
                 icon: <ContactUsIcon />
             }
         ]
-    },
-    {
-        title: 'Sign Up as Doctor',
-        items: [
-            {
-                title: 'Sign up as Doctor',
-                href: doctorRegistrationRequestRoute.path,
-                icon: <PeopleIcon />
-            }
-
-        ]
-
     },
     {
         title: 'Sign Up as Patient',

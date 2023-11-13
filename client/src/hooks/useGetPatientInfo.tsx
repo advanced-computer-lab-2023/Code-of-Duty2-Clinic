@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from 'react-query';
+import { useQuery, UseQueryResult } from 'react-query'
 import axios from 'axios';
 import { Patient } from '../types';
 import { config } from '../configuration';

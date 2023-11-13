@@ -1,7 +1,11 @@
-export enum UserRole {
-    GUEST,
-    ADMIN,
-    PATIENT,
-    PHARMACIST,
-    DOCTOR
+enum UserRole {
+  GUEST,
+  ADMIN,
+  PATIENT,
+  PHARMACIST,
+  UNVERIFIED_PHARMACIST,
+  DOCTOR,
+  UNVERIFIED_DOCTOR,
 }
+
+export default UserRole;
