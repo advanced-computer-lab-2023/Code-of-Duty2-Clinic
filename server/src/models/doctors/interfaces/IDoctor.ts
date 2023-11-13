@@ -5,11 +5,11 @@ import { IDoctorBaseInfo } from "./IDoctorBaseInfo";
 export interface IDoctor extends IDoctorBaseInfo {
   speciality?: string;
   availableSlots: [{ startTime: Date; endTime: Date }];
-  identification?: Buffer;
-  medicalLicense?: Buffer;
-  medicalDegree?: Buffer;
+  identificationUrl?: string;
+  medicalLicenseUrl?: string;
+  medicalDegreeUrl?: string;
   wallet?: IWallet;
-  contract?: Buffer;
+  contractUrl?: string;
   contractStatus?: "pending" | "accepted" | "rejected";
   passwordReset?: IPasswordResetInfo;
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
