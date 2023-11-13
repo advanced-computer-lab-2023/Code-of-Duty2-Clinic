@@ -54,7 +54,9 @@ const FamilyMemberPage: React.FC = () => {
         );
         
       }
-      setFamilyMemberData((prevState: { subscribedHealthPackage: { subscribedPackage: any; }; }) => ({
+      setFamilyMemberData(
+      (type === "r")?(
+        (prevState: { subscribedHealthPackage: { subscribedPackage: any; }; }) => ({
         ...prevState,
         subscribedHealthPackage: {
           ...prevState.subscribedHealthPackage,
@@ -63,7 +65,14 @@ const FamilyMemberPage: React.FC = () => {
             status: "cancelled",
           },
         },
-      }));
+      })):(prevState: { subscribedPackage: any; }) => ({
+        ...prevState,
+        subscribedPackage: {
+          ...prevState.subscribedPackage,
+          status: "cancelled",
+        },
+      })
+      );
       console.log("Subscription cancelled successfully.");
     } catch (error) {
       console.error("Error cancelling subscription:", error);
@@ -131,7 +140,6 @@ const FamilyMemberPage: React.FC = () => {
             variant="contained"
             color="primary"
             onClick={handleCancelSubscription}
-            disabled={((type==='r')?(familyMemberData?.subscribedHealthPackage?.subscribedPackage?.status === "subscribed"):((familyMemberData?.subscribedPackage?.status === "subscribed")))}
             style={{ marginRight: "16px" }}
           >
             Cancel Subscription
@@ -139,9 +147,7 @@ const FamilyMemberPage: React.FC = () => {
           <Button
             variant="contained"
             color="secondary"
-            onClick={handleSubscribe}
-            disabled={!((type==='r')?(familyMemberData?.subscribedHealthPackage?.subscribedPackage?.status === "subscribed"):((familyMemberData?.subscribedPackage?.status === "subscribed")))}
-          >
+            onClick={handleSubscribe}>
             Subscribe
           </Button>
         </Paper>
@@ -151,50 +157,5 @@ const FamilyMemberPage: React.FC = () => {
 };
 
 export default FamilyMemberPage;
-/*{
-    "subscribedPackage": {
-        "packageId": "65228d0d033c935b1c137f9c",
-        "startDate": "2023-11-13T15:12:23.716Z",
-        "endDate": "2024-11-12T15:12:23.716Z",
-        "status": [
-            "subscribed"
-        ],
-        "_id": "65523cd7c7c3984526987658"
-    },
-    "healthPackage": {
-        "discounts": {
-            "gainedDoctorSessionDiscount": 0.8,
-            "gainedPharamcyMedicinesDiscount": 0.7,
-            "gainedFamilyMembersDiscount": 0.2
-        },
-        "_id": "65228d0d033c935b1c137f9c",
-        "name": "Platinum Package",
-        "amountToPay": 19,
-        "packageDurationInYears": 1,
-        "__v": 0
-    }
-} dependent api respone*/ 
 
-/*{
-    "subscribedHealthPackage": {
-        "subscribedPackage": {
-            "packageId": "65228d0d033c935b1c137f9c",
-            "startDate": "2023-11-13T15:49:11.237Z",
-            "endDate": "2024-11-12T15:49:11.237Z",
-            "status": "subscribed",
-            "_id": "655245779bde46391869c4ec"
-        },
-        "healthPackage": {
-            "discounts": {
-                "gainedDoctorSessionDiscount": 0.8,
-                "gainedPharamcyMedicinesDiscount": 0.7,
-                "gainedFamilyMembersDiscount": 0.2
-            },
-            "_id": "65228d0d033c935b1c137f9c",
-            "name": "Platinum Package",
-            "amountToPay": 19,
-            "packageDurationInYears": 1,
-            "__v": 0
-        }
-    }
-} registered api respone */
+

@@ -30,7 +30,6 @@ export const familyMemberPageRoute: Route = {
   element: <FamilyMemberPage />,
 };
 
-
 export const familyMembersRoute: Route = {
   path: "/patient/all-family-members",
   element: <FamilyMembersComponent />,
