@@ -6,12 +6,11 @@ import PatientModel, { IPatientModel } from "../../models/patients/Patient";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 import { subscribeToHealthPackageService } from "../../services/patients";
 
-export const subscribeToHealthPackage = async (
+export const subscribeToHealthPackageR = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const packageId  = req.params.packageId;
-  const patientId = req.user?.id!;
+  const { packageId,patientId } = req.params;
   try {
     await subscribeToHealthPackageService(patientId, packageId);
     res.status(200).json({ message: "Subscription added successfully" });

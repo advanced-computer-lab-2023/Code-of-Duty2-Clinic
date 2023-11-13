@@ -42,6 +42,11 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
 } from "../../controllers/payments/credit-cards/Patient";
+import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/patients/viewSubscribedHealthPackageAllDetailsD";
+import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/patients/viewSubscribedHealthPackageAllDetailsR";
+import { cancelSubscriptionR } from "../../controllers/patients/cancelSubscriptionForR";
+import { subscribeToHealthPackageR } from "../../controllers/patients/subscribeForR";
+
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
@@ -76,9 +81,11 @@ patientRouter
 
   .get("/health-packages", viewHealthPackagesOptions)
 
-  .post("/subscribe", subscribeToHealthPackage)
+  .post("/subscribe/:packageId", subscribeToHealthPackage)
+  
+  .post("/registered-member/subscribe/:patientId/:packageId",subscribeToHealthPackageR)
 
-  .post("/subscribe/dependent-member", setSubscribedPackageForDependent)
+  .post("/dependent-member/subscribe/:dependentNid/:packageId", setSubscribedPackageForDependent)
 
   .get("/patient-health-package", viewSubscribedHealthPackage)
 
@@ -86,17 +93,22 @@ patientRouter
 
   .get("/health-care-package-status", viewHealthCarePackageStatus)
 
-  .get("/dependent-health-package", viewSubscribedPackage)
+  .get("/dependent-family-members/:patientNId/health-package", viewSubscribedHealthPackageAllDetailsD)
+
+  .get("/registered-family-members/:patientId/health-package", viewSubscribedHealthPackageAllDetailsR)
 
   .patch("/cancel-subscription", cancelSubscription)
+  
+  .patch("/cancel-subscription/:patientId", cancelSubscriptionR)
 
-  .patch("/cancel-subscription-dependent", cancelSubscribedForDependent)
+  .patch("/cancel-subscription-dependent/:dependentNid", cancelSubscribedForDependent)
 
   .get("/package-benefits", viewSubscribedHealthPackageBenefits)
 
   .get("/dependent-family-members", getDependentFamilyMembers)
 
   .patch("/registered-family/cancel-subscription", cancelSubscriptionForRegistered)
+
   .get("/wallets/exists", doesAPatientHaveAWalletHandler)
 
   .post("/validate-wallet-pin-code", authenticateWalletPatientHandler)
@@ -120,5 +132,6 @@ patientRouter
   .get("/payments/configuration", configureCreditCardPaymentHandler)
 
   .post("/payments/create-payment-intent", makeCreditCardPaymentHandler);
+
 
 export default patientRouter;

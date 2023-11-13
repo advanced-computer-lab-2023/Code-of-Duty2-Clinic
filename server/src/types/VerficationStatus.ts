@@ -3,4 +3,5 @@ export enum VerificationStatus {
   pendingDocumentsUpload,
   pendingContractAcceptance,
   accepted,
+  verified
 }
