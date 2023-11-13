@@ -4,7 +4,6 @@ import {
   entityIdDoesNotExistError,
 } from "../../utils/ErrorMessages";
 import HealthPackage from "../../models/health_packages/HealthPackage";
-import { ISubscribedPackage } from "../../models/patients/interfaces/ISubscribedPackage";
 import { addDays } from "../../utils/addDays";
 
 export const findAllPatients = async () => await Patient.find();
@@ -100,12 +99,14 @@ export async function setSubscribedPackageForDependentService(
   patientId: string,
   dependentNid: string,
   packageId: string,
-  startDate: Date,
-  endDate: Date
+  _startDate: Date,
+  _endDate: Date
 ) {
   try {
     // Find the patient by patientId
-    const patient = await Patient.findById(patientId).select('+dependentFamilyMembers');
+    const patient = await Patient.findById(patientId).select(
+      "+dependentFamilyMembers"
+    );
     const healthPackage = await HealthPackage.findById(packageId);
     const today = new Date();
 
@@ -117,20 +118,18 @@ export async function setSubscribedPackageForDependentService(
           dependentFamilyMember.nationalId === dependentNid
       );
 
-      if (dependent) {
-        // Set the subscribed package for the dependent family member
-        dependent.subscribedPackage = {
-          packageId: healthPackage._id,
-          startDate: today,
-          endDate: addDays(today, healthPackage.packageDurationInYears * 365),
-          status: "subscribed",
-        };
+      if (!dependent) throw new Error("Dependent not found");
 
-        // Save the changes
-        await patient.save();
-      } else {
-        throw new Error("Dependent not found");
-      }
+      // Set the subscribed package for the dependent family member
+      dependent.subscribedPackage = {
+        packageId: healthPackage._id,
+        startDate: today,
+        endDate: addDays(today, healthPackage.packageDurationInYears * 365),
+        status: "subscribed",
+      };
+
+      // Save the changes
+      await patient.save();
     } else {
       throw new Error("Dependent family members not found");
     }
@@ -145,7 +144,9 @@ export const viewSubscribedPackageForDependentService = async (
   dependentNid: string
 ) => {
   // Find the patient by ID
-  const patient = await Patient.findById(patientId).select('+dependentFamilyMembers');
+  const patient = await Patient.findById(patientId).select(
+    "+dependentFamilyMembers"
+  );
   if (patient) {
     const dependent = patient.dependentFamilyMembers?.find(
       (dependentFamilyMembers) =>
@@ -155,11 +156,10 @@ export const viewSubscribedPackageForDependentService = async (
     if (dependent) {
       // Access the subscribed package details for the dependent
       const subscribedPackage = dependent.subscribedPackage;
-      return subscribedPackage;
-
       if (!subscribedPackage) {
         throw new Error("Dependent family member has no subscribed package");
       }
+      return subscribedPackage;
     }
   }
 };
@@ -191,7 +191,9 @@ export const viewHealthCarePackageStatusForDependentService = async (
   patientId: string,
   dependentNid: string
 ) => {
-  const patient = await Patient.findById(patientId).select('+dependentFamilyMembers');
+  const patient = await Patient.findById(patientId).select(
+    "+dependentFamilyMembers"
+  );
   if (!patient) {
     throw new Error("Patient not found");
   }
@@ -231,7 +233,9 @@ export const viewSubscribedHealthPackageService = async (patientId: string) => {
   return subscribedHealthPackage;
 };
 
-export const viewSubscribedHealthPackageBenefitsService = async (patientId: string) => {
+export const viewSubscribedHealthPackageBenefitsService = async (
+  patientId: string
+) => {
   const patient = await Patient.findById(patientId).select(
     "+subscribedPackage"
   );
@@ -239,7 +243,9 @@ export const viewSubscribedHealthPackageBenefitsService = async (patientId: stri
   if (!patient) {
     throw new Error("Patient not found");
   }
-  const subscribedHealthPackage = HealthPackage.findById(patient.subscribedPackage?.packageId);
+  const subscribedHealthPackage = HealthPackage.findById(
+    patient.subscribedPackage?.packageId
+  );
 
   if (!subscribedHealthPackage) {
     throw new Error("Patient has no subscribed package");
@@ -269,7 +275,9 @@ export const cancelSubscribedForDependentService = async (
   patientId: string,
   dependentNid: string
 ) => {
-  const patient = await Patient.findById(patientId).select('+dependentFamilyMembers');
+  const patient = await Patient.findById(patientId).select(
+    "+dependentFamilyMembers"
+  );
 
   if (!patient) {
     throw new Error("Patient not found");
@@ -294,8 +302,10 @@ export const cancelSubscribedForDependentService = async (
   }
   await patient.save();
 };
- export const viewDependentFamilyMembersService = async (patientId: string) => {
-  const patient = await Patient.findById(patientId).select('+dependentFamilyMembers');
+export const viewDependentFamilyMembersService = async (patientId: string) => {
+  const patient = await Patient.findById(patientId).select(
+    "+dependentFamilyMembers"
+  );
   if (!patient) {
     throw new Error("Patient not found");
   }

@@ -10,7 +10,6 @@ import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
 import { getAllPatients } from "../../controllers/patients/getAllPatients";
-import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
 import { doctorAddPatientHealthRecord } from "../../controllers/doctors/addPatientHealthRecord";
 import {
   addDoctorAWalletHandler,
@@ -25,8 +24,6 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
 } from "../../controllers/payments/credit-cards/Patient";
-import { addDoctorRegistrationFiles } from "../../services/doctors/registration_requests";
-import { addDoctorRegistrationRequestFiles } from "../../controllers/doctors/doctorRegisterController";
 
 const doctorRouter = express.Router();
 
@@ -37,8 +34,6 @@ doctorRouter
 
   .get("/account", getDoctor)
   .patch("/account", updateDoctor)
-
-  .get("/patients", getAllPatients)
 
   .get("/patients", getRegisteredPatients)
 

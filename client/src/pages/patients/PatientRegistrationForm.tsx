@@ -1,7 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import '../../css/PatientRegistrationFormStyle.css';
-import { config } from '../../configuration';
-import axios from 'axios';
+import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
+import "../../css/PatientRegistrationFormStyle.css";
+import { config } from "../../configuration";
+import axios from "axios";
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { patientDashboardRoute } from "../../data/routes/patientRoutes";
 
 interface FormData {
   username: string;
@@ -15,47 +18,23 @@ interface FormData {
     fullname: string;
     mobileNumber: string;
     relationToPatient: string;
-  };
-  deliveryAddresses: string[];
-  healthRecords: Buffer[];
-  
-  dependentFamilyMembers: {
-    name: string;
-    nationalId: string;
-    age: number;
-    gender: string;
-    relation: string;
-
-  }[];
-  registeredFamilyMembers: {
-    id: string;
-    relation: string;
-  }[];
-
-
-  // ... (other attributes)
+  }; // ... (other attributes)
 }
 
 const PatientRegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    username: '',
-    password: '',
-    email: '',
-    name: '',
-    dateOfBirth: '',
-    gender: '',
-    mobileNumber: '',
+    username: "",
+    password: "",
+    email: "",
+    name: "",
+    dateOfBirth: "",
+    gender: "",
+    mobileNumber: "",
     emergencyContact: {
-      fullname: '',
-      mobileNumber: '',
-      relationToPatient: '',
+      fullname: "",
+      mobileNumber: "",
+      relationToPatient: "",
     },
-    deliveryAddresses: [],
-    healthRecords: [],
-
-    dependentFamilyMembers: [],
-    registeredFamilyMembers: []
-    // ... (other attributes)
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,56 +47,39 @@ const PatientRegistrationForm: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  type FormState = {
-    username: string;
-    password: string;
-    email: string;
-    name: string;
-    dateOfBirth: string;
-    gender: string;
-    mobileNumber: string;
-    emergencyContact: {
-      fullname: string;
-      mobileNumber: string;
-      relationToPatient: string;
-    };
-    deliveryAddresses: [],
-    healthRecords: [],
-    subscribedPackage: {
-      packageId: '5f8a2b5c5f4c3d2a1b0e4f5d',
-      startDate: '2023-10-14',
-      endDate: '2023-10-14',
-      status: 'unsubscribed',
-    },
-    dependentFamilyMembers: [],
-    registeredFamilyMembers: []
-    // Add the rest of the properties to match your FormData
-  };
-  
-  
   const handleEmergencyContactChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
+
     setFormData((prevData) => {
       const updatedData: FormData = { ...prevData };
-  
+
       if (name.startsWith("emergencyContact.")) {
         const fieldName = name.split(".")[1];
         (updatedData.emergencyContact as any)[fieldName] = value;
       } else {
         (updatedData as any)[name] = value;
       }
-  
+
       return updatedData;
     });
   };
-  
-  const [error, setError] = useState('');
+
+  const [error, setError] = useState("");
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {      
-      await axios.post(`${config.serverUri}/patients/register`, formData);
+    try {
+      await axios.post(`${config.serverUri}/auth/registration`, formData);
+      const response = await axios.post(`${config.serverUri}/auth/login`, {
+        username: formData.username,
+        password: formData.password,
+      });
+
+      const data = response.data;
+      login(data.accessToken, data.role);
+      navigate(patientDashboardRoute.path);
     } catch (error: any) {
       setError(error.message);
       console.error(error.message);
@@ -209,36 +171,36 @@ const PatientRegistrationForm: React.FC = () => {
         </div>
         <div>
           <label>Emergency Contact*: </label>
-            <input
-              type="text"
-              name="emergencyContact.fullname"
-              value={formData.emergencyContact.fullname}
-              onChange={handleEmergencyContactChange}
-              placeholder="Full Name"
-              required
-            />
-            <input
-              type="number"
-              name="emergencyContact.mobileNumber"
-              value={formData.emergencyContact.mobileNumber}
-              onChange={handleEmergencyContactChange}
-              placeholder="Mobile Number"
-              required
-            />
-            <input
-              type="text"
-              name="emergencyContact.relationToPatient"
-              value={formData.emergencyContact.relationToPatient}
-              onChange={handleEmergencyContactChange}
-              placeholder="Relation to Patient"
-              required
-            />
+          <input
+            type="text"
+            name="emergencyContact.fullname"
+            value={formData.emergencyContact.fullname}
+            onChange={handleEmergencyContactChange}
+            placeholder="Full Name"
+            required
+          />
+          <input
+            type="number"
+            name="emergencyContact.mobileNumber"
+            value={formData.emergencyContact.mobileNumber}
+            onChange={handleEmergencyContactChange}
+            placeholder="Mobile Number"
+            required
+          />
+          <input
+            type="text"
+            name="emergencyContact.relationToPatient"
+            value={formData.emergencyContact.relationToPatient}
+            onChange={handleEmergencyContactChange}
+            placeholder="Relation to Patient"
+            required
+          />
         </div>
         <div>
           <button type="submit">Register</button>
         </div>
       </form>
-      <p style={{color: 'red'}}>{error}</p>
+      <p style={{ color: "red" }}>{error}</p>
     </div>
   );
 };
