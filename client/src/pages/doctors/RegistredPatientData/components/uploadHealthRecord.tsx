@@ -30,6 +30,7 @@ const UploadNotesModal:React.FC<UploadNotesModalProps>= ({openUpload,close}) => 
   const SaveImage =async (e:any) => {
     e.preventDefault()
     setSaveLoading(true)
+    console.log(file.current?.type!)
     const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
 
     if (!file||fileName.current==="") return;
@@ -40,6 +41,7 @@ const UploadNotesModal:React.FC<UploadNotesModalProps>= ({openUpload,close}) => 
     }
     
     if(file.current)
+    try{    
     imgUrl.current= await uploadImage(file.current,'doctor-files',fileName.current||"")
 
     const healthrecord:IHealthRecord = {
@@ -50,13 +52,13 @@ const UploadNotesModal:React.FC<UploadNotesModalProps>= ({openUpload,close}) => 
       createdAt:new Date(),
     }
     
-    try{    
+    
       await axios.put(`${config.serverUri}/doctors/patients/${patientId}/health-records`,healthrecord)
       setSaveLoading(false)
       close(healthrecord)
     }catch(error){
       setSaveLoading(false)
-      close(healthrecord)
+      close()
     }
    
    

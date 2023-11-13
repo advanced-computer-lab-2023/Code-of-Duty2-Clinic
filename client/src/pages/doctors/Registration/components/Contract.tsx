@@ -6,15 +6,15 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
 const getContract = async () => {
-  const res = await axios.get(`${config.serverUri}/doctors/users/contract`);
+  const res = await axios.get(`${config.serverUri}/users/contract`);
   console.log(res.data.contractUrl)
   return res.data.contractUrl;
 };
 const handleAcceptContract = async () => {
-  await axios.post(`${config.serverUri}/doctors/users/accept-contract`);
+  await axios.post(`${config.serverUri}/users/accept-contract`);
 };
 const handleRejectContract = async () => {
-  await axios.post(`${config.serverUri}/doctors/users/reject-contract`);
+  await axios.post(`${config.serverUri}/users/reject-contract`);
 };
 const Contract: React.FC = () => {
   const navigate = useNavigate();

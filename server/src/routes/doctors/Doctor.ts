@@ -36,8 +36,6 @@ doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 doctorRouter
   .patch("/account", updateDoctor)
 
-  .get("/patients", getAllPatients)
-
   .get("/allDetails", getDoctor)
 
   .get("/patients", getRegisteredPatients)

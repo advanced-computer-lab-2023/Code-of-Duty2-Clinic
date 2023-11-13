@@ -55,7 +55,7 @@ const uploadFiles = async ({
     status: "pending contract acceptance",
   };
   await axios.put(
-    `${config.serverUri}/doctors/users/doctor-registration`,
+    `${config.serverUri}/users/doctor-registration`,
     files
   );
 };
