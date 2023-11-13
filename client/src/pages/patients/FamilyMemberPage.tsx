@@ -1,95 +1,238 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import SubscribedPackageCard from '../../components/healthPackageStatusCard';
-import HealthPackageDetails from '../../components/healthPackageCard';
-import { config } from '../../configuration';
-
-interface FamilyMember {
-  _id: string;
-  // Add other relevant properties here
-}
-
-interface FamilyMemberPageProps {
-  selectedFamilyMember: string | null;
-  type: string; // 'r' for registered, 'd' for dependent
-}
-
-const FamilyMemberPage: React.FC<FamilyMemberPageProps> = ({ selectedFamilyMember, type }) => {
-  const [subscribedHealthPackage, setSubscribedHealthPackage] = useState<any | null>(null);
-  const [subscribedPackageCardData, setSubscribedPackageCardData] = useState<any | null>(null);
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { config } from "../../configuration";
+import { useQueryParams } from "../../hooks/useQueryParams";
+import { useNavigate } from "react-router-dom";
+import { Button, Typography, Paper, Grid } from "@mui/material";
+import { healthPackagesOptionsRoute } from "../../data/routes/patientRoutes";
+const FamilyMemberPage: React.FC = () => {
+  const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
+  const queryParams = useQueryParams();
+  const navigate = useNavigate();
+  const type = queryParams.get("type");
+  const id = queryParams.get("id");
+ let today = new Date();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (selectedFamilyMember) {
-          let apiEndpoint = '';
-          if (type === 'r') {
-            apiEndpoint = `${config.serverUri}/patients/registered-family-members/${selectedFamilyMember}`;
-          } else if (type === 'd') {
-            apiEndpoint = `${config.serverUri}/patients/dependent-family-members/${selectedFamilyMember}`;
-          }
-
-          if (apiEndpoint) {
-            const response = await axios.get<any>(apiEndpoint);
-            console.log('API Response:', response.data);
-            setSubscribedHealthPackage(response.data.subscribedHealthPackage);
-
-            // Make a separate API call to fetch data for SubscribedPackageCard
-            const cardDataResponse = await axios.get<any>(
-              `${config.serverUri}/patients/health-package-card-data/${response.data.subscribedHealthPackage.packageId}`
-            );
-            console.log('Card Data Response:', cardDataResponse.data);
-            setSubscribedPackageCardData(cardDataResponse.data);
-          }
+        let healthPackageResponse;
+  
+        if (type === "r") {
+          healthPackageResponse = await axios.get<any>(
+            `${config.serverUri}/patients/registered-family-members/${id}/health-package`
+          );
+        } else if (type === "d") {
+          healthPackageResponse = await axios.get<any>(
+            `${config.serverUri}/patients/dependent-family-members/${id}/health-package`
+          );
         }
-        
+  
+        if (!healthPackageResponse || !healthPackageResponse.data) {
+          console.log(
+            "No health package found for the selected family member."
+          );
+          return;
+        }
+  
+        setFamilyMemberData(healthPackageResponse.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
-  }, [selectedFamilyMember, type]);
+  }, [type, id]);
+  
 
   const handleCancelSubscription = async () => {
     try {
-      if (selectedFamilyMember) {
-        // Make a PATCH request to cancel the subscription
-        await axios.patch(`${config.serverUri}/patients/cancel-subscription/${selectedFamilyMember}`);
-        
-        // Assuming the cancellation was successful, you can update the local state or perform any other necessary actions
-        console.log('Subscription cancelled successfully.');
-        setSubscribedHealthPackage(null); // Set to null or update the state based on your application logic
+      // Make a PATCH request to cancel the subscription
+
+      if (type === "r") {
+        await axios.patch<any>(
+          `${config.serverUri}/patients/cancel-subscription/${id}`
+        );
+      } else if (type === "d") {
+        await axios.patch<any>(
+          `${config.serverUri}/patients/cancel-subscription-dependent/${id}`
+        );
       }
+      setFamilyMemberData(
+        type === "r"
+          ? (prevState: {
+              subscribedHealthPackage: { subscribedPackage: any };
+            }) => ({
+              ...prevState,
+              subscribedHealthPackage: {
+                ...prevState.subscribedHealthPackage,
+                subscribedPackage: {
+                  ...prevState.subscribedHealthPackage.subscribedPackage,
+                  endDate: today.toString(),
+                  status: "cancelled",
+                },
+              },
+            })
+          : (prevState: { subscribedPackage: any }) => ({
+              ...prevState,
+              subscribedPackage: {
+                ...prevState.subscribedPackage,
+                endDate: today.toString(),
+                status: "cancelled",
+              },
+            })
+      );
+      console.log("Subscription cancelled successfully.");
     } catch (error) {
-      console.error('Error cancelling subscription:', error);
+      console.error("Error cancelling subscription:", error);
     }
   };
 
+  const handleSubscribe = async () => {
+    navigate(`${healthPackagesOptionsRoute.path}?type=${type}&id=${id}`);
+  };
+
   return (
-    <div className="family-member-page">
-      <h2>{type === 'r' ? 'Registered' : 'Dependent'} Family Member Health Package Page</h2>
-      {subscribedHealthPackage ? (
-        <>
-          <SubscribedPackageCard
-            packageId={subscribedHealthPackage.packageId}
-            startDate={subscribedHealthPackage.startDate}
-            endDate={subscribedHealthPackage.endDate}
-            status={subscribedHealthPackage.status}
-            onCancelSubscription={handleCancelSubscription}
-          />
-          <HealthPackageDetails
-            name={subscribedHealthPackage.name}
-            amountToPay={subscribedHealthPackage.amountToPay}
-            discounts={subscribedHealthPackage.discounts}
-            packageDurationInYears={subscribedHealthPackage.packageDurationInYears}
-          />
-        </>
-      ) : (
-        <p>Loading subscribed health package details...</p>
-      )}
-    </div>
+    <Grid container justifyContent="center">
+      <Grid item xs={10}>
+        <Paper elevation={3} style={{ padding: "16px", marginTop: "16px" }}>
+          <Typography variant="h2">Family Member Details</Typography>
+          {familyMemberData?.subscribedPackage ||
+          familyMemberData?.subscribedHealthPackage ? (
+            <div>
+              <Typography variant="h3">Subscribed Health Package</Typography>
+              <Typography>
+                Package ID:{" "}
+                {type == "r"
+                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
+                      .packageId
+                  : familyMemberData.subscribedPackage?.packageId}
+              </Typography>
+              <Typography>
+                Start Date:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
+                      .startDate
+                  : familyMemberData.subscribedPackage?.startDate}
+              </Typography>
+              <Typography>
+                End Date:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
+                      .endDate
+                  : familyMemberData.subscribedPackage?.endDate}
+              </Typography>
+              <Typography>
+                Status:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
+                      .status
+                  : familyMemberData.subscribedPackage?.status}
+              </Typography>
+
+              <Typography variant="h3">Health Package Details</Typography>
+              <Typography>
+                Name:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.healthPackage
+                      ?.name
+                  : familyMemberData.healthPackage.name}
+              </Typography>
+              <Typography>
+                Amount To Pay:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.healthPackage
+                      ?.amountToPay
+                  : familyMemberData.healthPackage?.amountToPay}
+              </Typography>
+              <Typography>
+                Package Duration (Years):{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.healthPackage
+                      ?.packageDurationInYears
+                  : familyMemberData.healthPackage.packageDurationInYears}
+              </Typography>
+              <Typography>
+                Gained Doctor Session Discount:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.healthPackage
+                      ?.discounts.gainedDoctorSessionDiscount
+                  : familyMemberData.healthPackage?.discounts
+                      .gainedDoctorSessionDiscount}
+              </Typography>
+              <Typography>
+                Gained Pharmacy Medicines Discount:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.healthPackage
+                      ?.discounts.gainedPharamcyMedicinesDiscount
+                  : familyMemberData.healthPackage.discounts
+                      .gainedPharamcyMedicinesDiscount}
+              </Typography>
+              <Typography>
+                Gained Family Members Discount:{" "}
+                {type === "r"
+                  ? familyMemberData.subscribedHealthPackage?.healthPackage
+                      ?.discounts.gainedFamilyMembersDiscount
+                  : familyMemberData.healthPackage.discounts
+                      .gainedFamilyMembersDiscount}
+              </Typography>
+            </div>
+          ) : (
+            <Typography>No family member details available.</Typography>
+          )}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCancelSubscription}
+            style={{ marginRight: "16px" }}
+            disabled={!(
+              type === "r"
+                ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
+                    ?.status === "subscribed"
+                : familyMemberData?.subscribedPackage?.status[0] === "subscribed"
+  )}
+          >
+            Cancel Subscription
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSubscribe}
+            disabled={
+              (type === "r"
+                ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
+                    ?.status === "subscribed"
+                : familyMemberData?.subscribedPackage?.status[0] === "subscribed")
+            }
+          >
+            Subscribe
+          </Button>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 
 export default FamilyMemberPage;
+/**{
+    "subscribedPackage": {
+        "packageId": "65228d0d033c935b1c137f9c",
+        "startDate": "2023-11-13T20:18:20.416Z",
+        "endDate": "2024-11-12T20:18:20.416Z",
+        "status": [
+            "subscribed"
+        ],
+        "_id": "6552848cd348d55081146225"
+    },
+    "healthPackage": {
+        "discounts": {
+            "gainedDoctorSessionDiscount": 0.8,
+            "gainedPharamcyMedicinesDiscount": 0.7,
+            "gainedFamilyMembersDiscount": 0.2
+        },
+        "_id": "65228d0d033c935b1c137f9c",
+        "name": "Platinum Package",
+        "amountToPay": 19,
+        "packageDurationInYears": 1,
+        "__v": 0
+    }
+} */

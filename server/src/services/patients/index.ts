@@ -71,7 +71,7 @@ export const subscribeToHealthPackageService = async (
   packageId: string
 ) => {
   try {
-    const patient = await Patient.findById(patientId);
+    const patient = await Patient.findById(patientId).select('+subscribedPackage');
     const healthPackage = await HealthPackage.findById(packageId);
     const today = new Date();
 
@@ -99,8 +99,7 @@ export async function setSubscribedPackageForDependentService(
   patientId: string,
   dependentNid: string,
   packageId: string,
-  _startDate: Date,
-  _endDate: Date
+  
 ) {
   try {
     // Find the patient by patientId
@@ -313,4 +312,47 @@ export const viewDependentFamilyMembersService = async (patientId: string) => {
     throw new Error("Dependent family members not found");
   }
   return patient.dependentFamilyMembers;
+};
+export const viewSubscribedHealthPackageAllDetailsServiceR = async (patientId: string) => {
+  const patient = await Patient.findById(patientId).select('+subscribedPackage');
+  const subscribedPackage = patient?.subscribedPackage;
+  const healthPackage = await HealthPackage.findById(patient?.subscribedPackage?.packageId);
+  if (!patient) {
+    throw new Error("Patient not found");
+  }
+  if (!healthPackage) {
+    throw new Error("Health package not found");
+  }
+  return {
+    subscribedPackage,
+    healthPackage
+  }
+};
+
+export const viewSubscribedHealthPackageAllDetailsServiceD = async (patientId:string,patientNId: string) => {
+  const patient = await Patient.findById(patientId).select('+dependentFamilyMembers');
+  if (!patient) {
+    throw new Error("Patient not found");
+  }
+  if (!patient.dependentFamilyMembers) {
+    throw new Error("Dependent family members not found");
+  }
+  console.log(patientNId)
+  console.log(patient.dependentFamilyMembers[0].nationalId)
+  
+  const dependent = patient.dependentFamilyMembers.find(
+    (dependentFamilyMember) =>
+      dependentFamilyMember.nationalId.toString() === patientNId
+  );
+  if (!dependent){
+    throw new Error("Dependent family member not found");
+  }
+
+  
+  const subscribedPackage = dependent?.subscribedPackage!;
+  const healthPackage = await HealthPackage.findById(dependent?.subscribedPackage?.packageId);
+  
+  return {
+    subscribedPackage,healthPackage
+  }
 };

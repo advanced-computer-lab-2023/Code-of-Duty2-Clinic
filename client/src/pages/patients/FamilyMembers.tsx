@@ -2,6 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { config } from "../../configuration";
+import { familyMemberPageRoute } from "../../data/routes/patientRoutes";
+import {
+  FormControlLabel,
+  Checkbox,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 
 const FamilyMembersComponent: React.FC = () => {
   const [registeredMembers, setRegisteredMembers] = useState<any[]>([]);
@@ -16,11 +24,8 @@ const FamilyMembersComponent: React.FC = () => {
           `${config.serverUri}/patients/family-members`
         );
         if (Array.isArray(response.data)) {
-          // If it's an array, set it directly
           setRegisteredMembers(response.data);
         } else if (response.data && typeof response.data === "object") {
-          // If it's an object, you might need to extract the necessary information
-          // For example, if the dependent member details are in a property called 'members'
           setRegisteredMembers(response.data.members);
         }
       } catch (error) {
@@ -34,13 +39,9 @@ const FamilyMembersComponent: React.FC = () => {
           `${config.serverUri}/patients/dependent-family-members`
         );
 
-        // Check the structure of the response and process accordingly
         if (Array.isArray(response.data)) {
-          // If it's an array, set it directly
           setDependentMembers(response.data);
         } else if (response.data && typeof response.data === "object") {
-          // If it's an object, you might need to extract the necessary information
-          // For example, if the dependent member details are in a property called 'members'
           setDependentMembers([response.data.members]);
         }
       } catch (error) {
@@ -62,75 +63,93 @@ const FamilyMembersComponent: React.FC = () => {
       setShowRegisteredMembers(!showRegisteredMembers);
     } else if (type === "dependent") {
       setShowDependentMembers(!showDependentMembers);
-    }
-    else{
+    } else {
       setShowRegisteredMembers(true);
       setShowDependentMembers(true);
     }
   };
 
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={showRegisteredMembers}
-          onChange={() => handleCheckboxChange("registered")}
-        />
-        Family Members
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          checked={showDependentMembers}
-          onChange={() => handleCheckboxChange("dependent")}
-        />
-        Dependent Family Members
-      </label>
+  const renderMemberCardsR = (members: any[], type: "r" | "d") => {
+    return members.map((member, index) => (
+      <Card key={index} style={{ margin: "8px" }}>
+        <CardContent>
+          <Typography variant="h6">{member.name}</Typography>
+          <Link
+            to={{
+              pathname: familyMemberPageRoute.path,
+              search: `?type=${type}&id=${member.id}`,
+            }}
+          >
+            View Details
+          </Link>
+        </CardContent>
+      </Card>
+    ));
+  };
+  const renderMemberCardsD = (members: any[], type: "r" | "d") => {
+    return members.map((member, index) => (
+      <Card key={index} style={{ margin: "8px" }}>
+        <CardContent>
+          <Typography variant="h6">{member.name}</Typography>
+          <Link
+            to={{
+              pathname: familyMemberPageRoute.path,
+              search: `?type=${type}&id=${member.nationalId}`,
+            }}
+          >
+            View Details
+          </Link>
+        </CardContent>
+      </Card>
+    ));
+  };
 
-      <div>
-        <h3>Registered Family Members</h3>
+  return (
+    <div style={{ margin: "16px" }}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={showRegisteredMembers}
+            onChange={() => handleCheckboxChange("registered")}
+          />
+        }
+        label="Family Members"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={showDependentMembers}
+            onChange={() => handleCheckboxChange("dependent")}
+          />
+        }
+        label="Dependent Family Members"
+      />
+
+      <div style={{ marginTop: "16px" }}>
+        <Typography variant="h6">Registered Family Members</Typography>
         {showRegisteredMembers && (
-          <ul>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
             {registeredMembers.length > 0 ? (
-              registeredMembers.map((member, index) => (
-                <li key={index}><Link 
-                to={{
-                  pathname: "/health-package",
-                  search: `?type=r&id=${member.id}`, 
-                }}
-              >
-                {member.name}
-              </Link></li>
-              ))
+              renderMemberCardsR(registeredMembers, "r")
             ) : (
-              <li>No registered family members found.</li>
+              <Typography>No registered family members found.</Typography>
             )}
-          </ul>
+          </div>
         )}
       </div>
 
-      <div>
-  <h3>Dependent Family Members</h3>
-  {showDependentMembers && (
-    <ul>
-      {dependentMembers.length > 0 ? (
-        dependentMembers.map((member: any, index: number) => (
-          <li key={index}><Link 
-          to={{
-            pathname: "/health-package",
-            search: `?type=d&id=${member.nationalId}`,
-          }}
-        >
-          {member.name}
-        </Link></li>
-        ))
-      ) : (
-        <li>No dependent family members found.</li>
-      )}
-    </ul>
-  )}
-</div>
+      <div style={{ marginTop: "16px" }}>
+        <Typography variant="h6">Dependent Family Members</Typography>
+        {showDependentMembers && (
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {dependentMembers.length > 0 ? (
+              renderMemberCardsD(dependentMembers, "d")
+            ) : (
+              <Typography>No dependent family members found.</Typography>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

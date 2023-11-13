@@ -39,7 +39,7 @@ const SubscribedPackageCard: React.FC<SubscribedPackageCardProps> = ({
         <Typography>Start Date: {formatDate(startDate)}</Typography>
         <Typography>End Date: {formatDate(endDate)}</Typography>
         <Typography>Status: {status}</Typography>
-        <Button variant="outlined" color="error" onClick={onCancelSubscription}>
+        <Button variant="outlined" color="error" onClick={onCancelSubscription} disabled={status=='cancelled'}>
           Cancel Subscription
         </Button>
       </CardContent>

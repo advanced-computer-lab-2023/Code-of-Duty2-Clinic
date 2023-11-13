@@ -12,6 +12,9 @@ import {
   patientPrescriptions,
   patientMedicalHistoryRoute,
   familyMembersRoute,
+  cancelSubscriptionRoute,
+  subscribedPackageBenefitsRoute,
+  healthPackagesOptionsRoute,
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
@@ -58,6 +61,22 @@ export const patientSidebarItems = [
         href: patientMedicalHistoryRoute.path,
         icon: <PeopleIcon />,
       },
+      {
+        title: "My Health Package Status",
+        href: cancelSubscriptionRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "My Health Package Benefits",
+        href: subscribedPackageBenefitsRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "Health Package Options",
+        href: healthPackagesOptionsRoute.path,
+        icon: <PeopleIcon />,
+      },
+      
     ],
   },
   {

@@ -17,6 +17,7 @@ import ViewWallet from "../../pages/patients/wallet/ViewWallet";
 import CreateWallet from "../../pages/patients/wallet/CreateWallet";
 import PatientPaymentPage from "../../pages/patients/PatientPaymentPage";
 import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
+import HealthPackageDetailsPage from "../../pages/patients/HealthPackagesOptions";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -24,8 +25,8 @@ export const patientDashboardRoute: Route = {
 };
 
 export const familyMemberPageRoute: Route = {
-  path: "/patient/familymemberpage",
-  element: <FamilyMemberPage selectedFamilyMember={null} type={""} />,
+  path: "/patient/family-member-page",
+  element: <FamilyMemberPage />,
 };
 
 export const familyMembersRoute: Route = {
@@ -104,6 +105,11 @@ export const checkoutRoute: Route = {
   element: <PatientPaymentPage />,
 };
 
+export const HealthPackageOptionsRDRoute: Route = {
+  path: `patient/Health-Packages-Options`,
+  element: <HealthPackageDetailsPage />,
+};
+
 const routes: Route[] = [
   patientDashboardRoute,
   viewAllDoctorsRoute,
@@ -124,6 +130,7 @@ const routes: Route[] = [
   patientWalletRoute,
   createPatientWalletRoute,
   checkoutRoute,
+  HealthPackageOptionsRDRoute
 ];
 
 export default routes;

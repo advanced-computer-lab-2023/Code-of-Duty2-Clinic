@@ -8,7 +8,7 @@ export async function setSubscribedPackageForDependent(
   req: AuthorizedRequest,
   res: Response
 ) {
-  const { dependentNid, packageId, startDate, endDate } = req.body;
+  const { dependentNid, packageId,} = req.params;
   const patientId = req.user?.id!;
 
   try {
@@ -16,8 +16,7 @@ export async function setSubscribedPackageForDependent(
       patientId,
       dependentNid,
       packageId,
-      startDate,
-      endDate
+      
     );
     res
       .status(200)

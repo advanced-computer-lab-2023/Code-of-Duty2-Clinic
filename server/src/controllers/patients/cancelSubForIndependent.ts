@@ -7,7 +7,7 @@ import { cancelSubscribedForDependentService } from '../../services/patients';
 export async function cancelSubscribedForDependent(req: AuthorizedRequest, res: Response) {
   
     const patientId = req.user?.id!;
-    const {  dependentNid} = req.body;
+    const { dependentNid} = req.params;
     
     try {
     await cancelSubscribedForDependentService(patientId,dependentNid);
