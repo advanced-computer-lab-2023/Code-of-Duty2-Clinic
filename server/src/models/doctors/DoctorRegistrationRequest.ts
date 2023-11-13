@@ -53,9 +53,9 @@ export const DoctorRegistrationRequestSchema =
         required: true,
       },
       speciality: { type: String, required: true },
-      identificationUrl: { type: String, select: false },
-      medicalLicenseUrl: { type: String, select: false },
-      medicalDegreeUrl: { type: String, select: false },
+      identificationUrl: { type: String, select: true },
+      medicalLicenseUrl: { type: String, select: true },
+      medicalDegreeUrl: { type: String, select: true },
       contractUrl: { type: String, select: false },
     },
     { timestamps: true }

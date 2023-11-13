@@ -102,7 +102,7 @@ const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
                 fullWidth
                 {...field}
                 variant="standard"
-                type='number'
+                type=''
                 label="Speciality"
                 />
             </div>

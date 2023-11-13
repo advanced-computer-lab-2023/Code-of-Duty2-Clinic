@@ -24,7 +24,7 @@ export const addDoctorRegistrationFiles = async (id: string, files: any) => {
 };
 
 export const sendDoctorContract = async (id: string, contractUrl: string) => {
-  return await DoctorRegistrationRequest.updateOne({ _id: id }).set({
+  return await DoctorRegistrationRequest.findByIdAndUpdate(id).set({
     contractUrl,
     status: "accepted",
   });
@@ -42,6 +42,10 @@ export const getDoctorRegistrationContract = async (id: string) => {
     _id: 1,
     contractUrl: 1,
   });
+};
+
+export const rejectSentContract = async (id: string) => {
+  return await DoctorRegistrationRequest.findByIdAndUpdate(id).set({status:"rejected"})
 };
 
 export const createNewDoctorRegistrationRequest = async (

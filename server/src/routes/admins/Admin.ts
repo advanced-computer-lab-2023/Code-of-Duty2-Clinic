@@ -17,7 +17,7 @@ import { authorizeUser } from "../../middlewares/authorization";
 import {
   acceptDoctorRegistrationRequest,
   rejectDoctorRegistrationRequest,
-} from "../../controllers/admins/actionOnRequest";
+} from "../../controllers/doctors/actionOnRequest";
 
 const router = express.Router();
 
@@ -50,6 +50,8 @@ router
 
   .get("/doctor-registration-requests", getDoctorRegistrationRequests)
 
-  .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest);
+  .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest)
+
+  .put("/rejectDoctor/:doctorId", rejectDoctorRegistrationRequest);
 
 export default router;

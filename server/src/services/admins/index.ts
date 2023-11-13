@@ -64,24 +64,28 @@ export const updateAdminPassword = async (
   await admin.save();
 };
 
-export const rejectDoctorRegistrationRequestService = async (username: string) => {
-   try {
-  const request = await DoctorRegistrationRequest.findById(username);
-  if (!request) {
-    throw new Error('Request not found');
-  }
-  request.status = 'rejected';
-  await request.save();
-}catch(error){
-  console.error('Error rejecting request:', error);
-  throw new Error('Internal Server Error');
-}};
-export const acceptDoctorRegistrationRequestService = async (username: string) => {
+export const rejectDoctorRegistrationRequestService = async (
+  username: string
+) => {
   try {
-
     const request = await DoctorRegistrationRequest.findById(username);
     if (!request) {
-      throw new Error('Request not found');
+      throw new Error("Request not found");
+    }
+    request.status = "rejected";
+    await request.save();
+  } catch (error) {
+    console.error("Error rejecting request:", error);
+    throw new Error("Internal Server Error");
+  }
+};
+export const acceptDoctorRegistrationRequestService = async (
+  username: string
+) => {
+  try {
+    const request = await DoctorRegistrationRequest.findById(username);
+    if (!request) {
+      throw new Error("Request not found");
     }
 
     // Create a new Doctor document using the data from the request
@@ -102,15 +106,15 @@ export const acceptDoctorRegistrationRequestService = async (username: string) =
       medicalLicense: request.medicalLicense,
       medicalDegree: request.medicalDegree,
       wallet: { amount: 0 },
-      contract: '',
-      contractStatus: 'accepted'
+      contract: "",
+      contractStatus: "accepted",
     });
 
     await newDoctor.save();
-    request.status = 'accepted';
+    request.status = "accepted";
     await request.save();
-    
-}catch(error){  
-  console.error('Error accepting request:', error);
-  throw new Error('Internal Server Error');
-}};
+  } catch (error: any) {
+    console.error("Error accepting request:", error);
+    throw new Error(error.message);
+  }
+};

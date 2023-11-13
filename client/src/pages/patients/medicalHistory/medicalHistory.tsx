@@ -5,7 +5,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import Box from "@mui/material/Box";
-import Modal from "@mui/joy/Modal";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,12 +16,12 @@ import {
   CircularProgress,
   Divider,
   IconButton,
+  Modal,
   Stack,
   TableHead,
   Typography,
 } from "@mui/material";
 import { saveAs } from "file-saver";
-import FileViewer from "react-file-viewer-extended";
 import UploadHealthRecordModal from "./components/uploadHealthRecord";
 import TableLoadingSkeleton from "../../../components/tableLoadingSkeleton";
 import { config } from "../../../configuration";
@@ -93,7 +92,6 @@ const MedicalHistory: React.FC = () => {
   const openViewFileModal = (file: IHealthRecord) => {
     setViewFileName(file.name);
     setViewFileUrl(file.url);
-    setFileType(file.fileType?.split("/")[1]);
     setViewFileModal(true);
   };
 
@@ -232,11 +230,11 @@ const MedicalHistory: React.FC = () => {
           >
             {viewFileName}
           </Typography>
-          {/* <FileViewer
-            fileType={fileType}
-            filePath={viewFileUrl}
-            style={{ width: "100%", height: "100%" }}
-          /> */}
+          <iframe
+            width="500px"
+            height="400px"
+            src={viewFileUrl}
+          ></iframe>
         </Box>
       </Modal>
     </Stack>

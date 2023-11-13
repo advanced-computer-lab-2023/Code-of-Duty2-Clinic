@@ -1,5 +1,5 @@
 import express from "express";
-import { sendContract } from "../../controllers/admins/actionOnRequest";
+import { sendContract } from "../../controllers/doctors/actionOnRequest";
 
 const router = express.Router();
 

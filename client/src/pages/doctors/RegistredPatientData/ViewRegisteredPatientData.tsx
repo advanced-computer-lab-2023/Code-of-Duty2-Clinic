@@ -52,6 +52,7 @@ const ViewRegisteredPatientData: React.FC = () => {
   };
 
   const addFileToTable = async (healthrecord?: IHealthRecord) => {
+    console.log(healthrecord)
     if (healthrecord)
       setTableFiles((old) => {
         return [...old, healthrecord];
@@ -164,7 +165,7 @@ const ViewRegisteredPatientData: React.FC = () => {
                       {tableLoading ? (
                         <TableLoadingSkeleton />
                       ) : (
-                        patientData.patientInfo.healthRecords?.map(
+                        TableFiles?.map(
                           (file: IHealthRecord, index: number) => (
                             <TableRow
                               role="checkbox"
@@ -243,11 +244,12 @@ const ViewRegisteredPatientData: React.FC = () => {
                   >
                     {viewFileName}
                   </Typography>
-                  {/* <FileViewer
-        fileType={fileType}
-        filePath={viewFileUrl}
-        style={{ width: "100%", height: "100%" }}
-      /> */}
+                   <iframe
+            width="500px"
+            height="400px"
+            src={viewFileUrl}
+          ></iframe>
+      
                 </Box>
               </Modal>
             </Stack>
