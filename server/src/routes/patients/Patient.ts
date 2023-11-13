@@ -13,7 +13,8 @@ import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthReco
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { UserRole } from "../../types/UserRole";
-import { addPatientRegisteredFamilyMember } from "../../controllers/patients/addPatientRegisteredFamilyMember";
+import { addPatientRegisteredFamilyMember, deletePatientRegisteredFamilyMember, rejectPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
+import { getPatientRegisteredFamilyMemberRequests } from "../../controllers/patients/getPatientRegisteredFamilyMemberRequests";
 const patientRouter = express.Router();
 
 patientRouter.use(authenticateUser);
@@ -34,9 +35,15 @@ patientRouter
 
 .get('/family-members', getPatientRegisteredFamilyMembers)
 
+.get('/family-members/requests', getPatientRegisteredFamilyMemberRequests)
+
 .get('/family-members/:familyMemberId', getPatientRegisteredFamilyMemberById)
 
-.post('/family-members/add-registered', addPatientRegisteredFamilyMember)
+.post('/family-members/registered', addPatientRegisteredFamilyMember)
+
+.delete('/family-members/registered', deletePatientRegisteredFamilyMember)
+
+.post('/family-members/requests/:familyMemberId/reject', rejectPatientRegisteredFamilyMember)
 
 .get('/appointments', getAppointmentsWithAllDoctors)
 
@@ -49,5 +56,7 @@ patientRouter
 .delete('/health-records', deletePatientHealthRecord)
 
 .get('/appointments', getAppointmentsWithAllDoctors)
+
+.get('/:patientId', getPatientById)
 
 export default patientRouter;

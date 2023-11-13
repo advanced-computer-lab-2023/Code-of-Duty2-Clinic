@@ -6,6 +6,17 @@ import PasswordResetSchema from '../users/PasswordReset';
 import WalletSchema from '../wallets/Wallet';
 import bcrypt from 'bcrypt';
 
+enum Relation {
+  WIFE = 'Wife',
+  HUSBAND = 'Husband',
+  SON = 'Son',
+  DAUGHTER = 'Daughter',
+  FATHER = 'Father',
+  MOTHER = 'Mother',
+  SIBLING = 'Sibling',
+  OTHER = 'Other'
+}
+
 export interface IPatientModel extends IPatient, Document {} 
 
 export const PatientSchema = new Schema<IPatientModel>({
@@ -51,7 +62,7 @@ export const PatientSchema = new Schema<IPatientModel>({
       nationalId: {type: String, required: true, unique : true}, 
       birthdate: {type: Date, required: true},
       gender: {type: String, enum: ['male', 'female'], required: true}, 
-      relation: {type: String, enum: ['wife', 'husband', 'children'], required: true}, 
+      relation: {type: String, enum: Object.values(Relation), required: true}, 
       subscribedPackage: { 
         type: {
           packageId: {type: Schema.Types.ObjectId, ref: 'HealthPackage', required: true},
@@ -69,7 +80,17 @@ export const PatientSchema = new Schema<IPatientModel>({
     type: [
       {
         id: {type: Schema.Types.ObjectId, ref:'Patient', required: true, unique: true},
-        relation: {type: String, enum:['wife', 'husband', 'children'], required: true}
+        relation: {type: String, enum: Object.values(Relation), required: true}
+      }
+    ],
+    required: false,
+    select: false,
+  },
+  registeredFamilyMemberRequests: {
+    type: [
+      {
+        id: {type: Schema.Types.ObjectId, ref:'Patient', required: true, unique: true},
+        relation: {type: String, enum: Object.values(Relation), required: true}
       }
     ],
     required: false,
@@ -110,3 +131,4 @@ PatientSchema.virtual('age').get(function() {
 });
 
 export default mongoose.model<IPatientModel>('Patient', PatientSchema);
+export { Relation };

@@ -12,4 +12,5 @@ export interface Patient extends UserBaseInfo {
   subscribedPackage?: SubscribedPackage;
   dependentFamilyMembers?: DependentFamilyMember[];
   registeredFamilyMembers?: RegisteredFamilyMember[];
+  registeredFamilyMemberRequests?: RegisteredFamilyMember[];
 }

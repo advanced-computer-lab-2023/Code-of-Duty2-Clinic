@@ -10,7 +10,7 @@ import { config } from "../../configuration";
 import { MenuItem, Select } from "@mui/material";
 import { FormControl, InputLabel } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-
+import Relation from "../../types/enums/Relation";
 import { useRef } from "react";
 
 
@@ -40,7 +40,7 @@ export default function AddRegisteredFamilyMember() {
 
   const onSubmit = async (data: any) => {
     const { email, mobile, relation } = data;
-    await axios.post(`${config.serverUri}/patients/family-members/add-registered`, { email, mobile, relation }, { withCredentials: true })
+    await axios.post(`${config.serverUri}/patients/family-members/registered`, { email, mobile, relation }, { withCredentials: true })
   .then((response) => {
     setSnackbarMessage(response.data.message);
     setSnackbarSeverity('success');
@@ -95,16 +95,17 @@ export default function AddRegisteredFamilyMember() {
 
         <FormControl variant="filled">
           <InputLabel id="relation-label">Relation</InputLabel>
-                  <Controller
+             <Controller
           name="relation"
           control={control}
-          defaultValue=""
-          rules={{ required: 'This field is required' }}
-            render={({ field }) => (
-            <Select {...field} labelId="relation-label" error={Boolean(errors.relation)}>
-              <MenuItem value="wife">Wife</MenuItem>
-              <MenuItem value="husband">Husband</MenuItem>
-              <MenuItem value="children">Child</MenuItem>
+          defaultValue={Relation.OTHER} // set the default value
+          render={({ field }) => (
+            <Select {...field}>
+              {Object.values(Relation).map((relation) => (
+                <MenuItem key={relation} value={relation}>
+                  {relation}
+                </MenuItem>
+              ))}
             </Select>
           )}
         />
@@ -122,7 +123,7 @@ export default function AddRegisteredFamilyMember() {
               <Box sx={{ position: 'relative' }}>
 
                 <Button type="submit" variant="contained" sx={{ marginBottom: '2vh' }} ref={submitButtonRef}>
-                  Submit
+                  Add
                 </Button>
                 
                 <Popover
