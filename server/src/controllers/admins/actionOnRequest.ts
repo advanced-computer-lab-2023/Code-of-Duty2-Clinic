@@ -78,14 +78,14 @@ export const acceptDoctorRegistrationRequest = async (
   }
 };
 
+
 export const rejectDoctorRegistrationRequest = async (
   req: Request,
   res: Response
 ) => {
-  const { username } = req.params;
-
+  const { doctorId } = req.params;
   try {
-    const request = await DoctorRegistrationRequestModel.findOne({ username });
+    const request = await DoctorRegistrationRequestModel.findByIdAndUpdate(doctorId).set({status:"rejected"})
     if (!request) {
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -93,9 +93,6 @@ export const rejectDoctorRegistrationRequest = async (
     }
 
     // Update the status of the request
-    request.status = "rejected";
-    await request.save();
-
     res.status(StatusCodes.OK).json({ message: "Request rejected" });
   } catch (error: any) {
     console.error("Error rejecting request:", error);
@@ -104,6 +101,8 @@ export const rejectDoctorRegistrationRequest = async (
       .json({ message: error.message });
   }
 };
+
+
 
 export const sendContract = async (req: Request, res: Response) => {
   const { doctorId } = req.params;

@@ -12,6 +12,7 @@ import { deleteHealthPackageHandler } from "../../controllers/healthPackages/del
 import { authenticateUser } from "../../middlewares/authentication";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
+import { rejectDoctorRegistrationRequest } from "../../controllers/admins/actionOnRequest";
 
 const router = express.Router();
 
@@ -40,6 +41,9 @@ router
 
   .get("/doctor-registration-requests", getDoctorRegistrationRequests)
 
-  .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest);
+  .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest)
+
+  .put('/rejectDoctor/:doctorId', rejectDoctorRegistrationRequest);
+
 
 export default router;

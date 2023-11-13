@@ -62,7 +62,7 @@ export default function DoctorLogin() {
   };
 
   function handleLoginSuccess(data: LoginResponse) {
-    login(data.accessToken, data.role);
+    login(data.accessToken, data.role,data.verificationStatus);
     if (data.role === UserRole.UNVERIFIED_DOCTOR) {
       navigate(doctorUnverifiedRoute.path);
     } else if (

@@ -12,6 +12,7 @@ import StepTwoForm from './components/stepTwo';
 import StepThreeForm from './components/stepThree';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { VerificationStatus } from '../../../types/enums/VerficationStatus';
+import { useNavigate } from 'react-router-dom';
 
 export interface IFormOneData {
   username: string;
@@ -64,6 +65,8 @@ const DoctorRegistrationRequestForm: React.FC = () => {
   const [activeStep,setActiveStep] = useState<number>(0)
   const stepOneData = useRef<IFormOneData>(null!)
   const stepTwoData = useRef<IFormTwoData>(null!)
+
+  const navigate = useNavigate()
   //const stepThreeData = useRef<IExperienceFile[]>([])
 
   const methods = useForm<FormData>({
@@ -92,6 +95,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
 
 
   async function  submitRequest() {
+
     console.log("ssswfergevf")
      // const {updateVerificationStatus} = useContext(AuthContext)
 
@@ -102,7 +106,9 @@ const DoctorRegistrationRequestForm: React.FC = () => {
          // experienceFiles: stepThreeData.current,
         }
         try {
-          console.log(await axios.post(`${config.serverUri}/auth/doctor-registration`, formData));
+          console.log(await axios.post(`${config.serverUri}/auth/doctor-registration`, formData));     
+          navigate('/login/doctor')
+
           //updateVerificationStatus(VerificationStatus.pendingDocumentsUpload)
         } catch (error: any) {
             //setMessage(error?.message || 'error occured during submission');

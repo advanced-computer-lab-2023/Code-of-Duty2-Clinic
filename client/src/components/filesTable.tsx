@@ -11,8 +11,8 @@ export const FileViewModalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '55%',
-    height:'70%',
+    width: '80%',
+    height:'auto',
     bgcolor: 'white',
     borderRadius:'8px',
     boxShadow: 24,
@@ -52,18 +52,17 @@ const FilesTable: React.FC<ITableProps> = ({files}) => {
 
   return (
     <div className="view-patient-data">
-    <Stack position='relative' direction="row" justifyContent='center' sx={{ width: '100%' }}>
+    <Stack position='relative' direction="row" justifyContent='center' sx={{ width: '400px' }}>
     <Paper sx={{mb: 2 ,width:'80%' }}>    
       <TableContainer>
       <Table
-        sx={{ minWidth: 750 }}
+        sx={{ minWidth: 300 }}
         aria-labelledby="tableTitle"
         size={"medium"}
       >
       <TableHead sx={{backgroundColor:'#103939',color:'white'}}>
         <TableRow>
           <TableCell sx={{color:'white'}} align="center"> File Name</TableCell>
-          <TableCell sx={{color:'white'}} align="center">File Type</TableCell>
           <TableCell sx={{color:'white'}} id="options" align="right"></TableCell>
         </TableRow>
       </TableHead>
@@ -82,12 +81,12 @@ const FilesTable: React.FC<ITableProps> = ({files}) => {
                     },
                   }}
               >
-                <TableCell
+                {/* <TableCell
                   id={"enhanced-table-checkbox-" + index}
                   scope="row"
                 >
                   {file.DocumentType}
-                </TableCell>
+                </TableCell> */}
                 <TableCell align="center">
                     {file.name}
                 </TableCell>
@@ -119,6 +118,7 @@ const FilesTable: React.FC<ITableProps> = ({files}) => {
     </TableContainer>
   </Paper>
   <Modal
+  sx={{width:"100%",height:'100%'}}
     open={viewFileModal}
     onClose={() => {
       setViewFileModal(false);
@@ -137,11 +137,11 @@ const FilesTable: React.FC<ITableProps> = ({files}) => {
       >
         {viewFileName}
       </Typography>
-      {/* <FileViewer
-        fileType={fileType}
-        filePath={viewFileUrl}
-        style={{ width: "100%", height: "100%" }}
-      /> */}
+      <iframe
+            width="400px"
+            height="500px"
+            src={viewFileUrl}
+          ></iframe>
     </Box>
   </Modal>
 </Stack>

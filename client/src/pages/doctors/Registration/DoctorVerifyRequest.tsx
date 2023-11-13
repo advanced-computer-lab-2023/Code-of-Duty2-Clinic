@@ -12,6 +12,9 @@ import { config } from "../../../configuration";
 import { uploadImage } from "../../../services/fileUploader";
 import { ApplicationContext } from "./context/application";
 import { useMutation } from "react-query";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { VerificationStatus } from "../../../types/enums/VerficationStatus";
+import { Label } from "@mui/icons-material";
 
 export interface IExperienceFile {
   url: string;
@@ -58,6 +61,7 @@ const uploadFiles = async ({
 };
 
 const DoctorRegistrationRequestFormFiles: React.FC = () => {
+  const {updateVerificationStatus} = useContext(AuthContext)
   const { setStep } = useContext(ApplicationContext);
   const identificationFile = useRef<HTMLInputElement>(null!);
   const medicalLicenseFile = useRef<HTMLInputElement>(null!);
@@ -65,7 +69,7 @@ const DoctorRegistrationRequestFormFiles: React.FC = () => {
 
   const uploadFilesMutation = useMutation(uploadFiles, {
     onSuccess: () => {
-      setStep(2);
+      updateVerificationStatus(VerificationStatus.pendingContractAcceptance)
     },
   });
   const SaveFile = () => {
@@ -113,6 +117,7 @@ const DoctorRegistrationRequestFormFiles: React.FC = () => {
                   marginBottom={10}
                 >
                   <Grid item sm={12} xs={12}>
+                    <label>Identification</label>
                     <Input
                       inputRef={identificationFile}
                       id="identification"
@@ -121,6 +126,7 @@ const DoctorRegistrationRequestFormFiles: React.FC = () => {
                     />
                   </Grid>
                   <Grid item sm={12} xs={12}>
+                  <label>Medical License</label>
                     <Input
                       inputRef={medicalLicenseFile}
                       id="medicalLicense"
@@ -129,6 +135,7 @@ const DoctorRegistrationRequestFormFiles: React.FC = () => {
                     />
                   </Grid>
                   <Grid item sm={12} xs={12}>
+                  <label>Medical Degree</label>
                     <Input
                       inputRef={medicalDegreeFile}
                       id="medicalDegree"

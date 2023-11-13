@@ -2,7 +2,7 @@ import { useEffect, useState,FC, useRef } from 'react';
 import { config } from '../../../../configuration';
 import axios from 'axios';
 import { IExperienceFile } from '../../../doctors/Registration/DoctorRegistrationRequestForm';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { uploadImage } from '../../../../services/fileUploader';
 import { DoctorRequest } from './review';
 import { Button } from '@mui/material';
@@ -10,6 +10,7 @@ import { buttonStyle } from '../viewDoctorRequests';
 
 
 const SendContract:FC=()=> {
+  const navigate = useNavigate()
   const contractFile = useRef<HTMLInputElement>(null!)
   const {doctorId} = useParams()
   async function upload(){
@@ -18,8 +19,8 @@ const SendContract:FC=()=> {
     if(!file) return 
     try{ 
       const contractUrl = await uploadImage(file,'contracts',file.name||"")   
-      await axios.put(`${config.serverUri}/admins/accept-doctor/${doctorId}`,{contract:contractUrl})
-      
+      await axios.put(`${config.serverUri}/admins/accept-doctor/${doctorId}`,{contract:contractUrl,status:"accepted"})
+      navigate('')
     }catch(error){
       console.log(error)
     }
