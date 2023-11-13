@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import DoctorRegistrationRequestModel from "../../models/doctors/DoctorRegistrationRequest";
+import DoctorRegistrationRequestModel, {
+  IDoctorRegistrationRequestModel,
+} from "../../models/doctors/DoctorRegistrationRequest";
 import DoctorModel, { IDoctorModel } from "../../models/doctors/Doctor";
 import { StatusCodes } from "http-status-codes";
 import { sendDoctorContract } from "../../services/doctors/registration_requests";
@@ -10,25 +12,26 @@ export const acceptDoctorRegistrationRequest = async (
   res: Response
 ) => {
   try {
-    const request = await DoctorRegistrationRequestModel.findOne({
-      _id: req.user?.id,
-    }).select({
-      password: 1,
-      username: 1,
-      email: 1,
-      name: 1,
-      gender: 1,
-      mobileNumber: 1,
-      dateOfBirth: 1,
-      hourlyRate: 1,
-      affiliation: 1,
-      educationalBackground: 1,
-      speciality: 1,
-      identification: 1,
-      medicalLicense: 1,
-      medicalDegree: 1,
-      contractUrl: 1,
-    });
+    const request: IDoctorRegistrationRequestModel =
+      await DoctorRegistrationRequestModel.findOne({
+        _id: req.user?.id,
+      }).select({
+        password: 1,
+        username: 1,
+        email: 1,
+        name: 1,
+        gender: 1,
+        mobileNumber: 1,
+        dateOfBirth: 1,
+        hourlyRate: 1,
+        affiliation: 1,
+        educationalBackground: 1,
+        speciality: 1,
+        identificationUrl: 1,
+        medicalLicenseUrl: 1,
+        medicalDegreeUrl: 1,
+        contractUrl: 1,
+      });
 
     if (!request) {
       return res
@@ -55,11 +58,10 @@ export const acceptDoctorRegistrationRequest = async (
       educationalBackground: request.educationalBackground,
       speciality: request.speciality,
       availableSlots: request.availableSlots,
-      identification: request.identification,
-      medicalLicense: request.medicalLicense,
-      medicalDegree: request.medicalDegree,
-      wallet: { amount: 0 },
-      contract: request.contractUrl,
+      identificationUrl: request.identificationUrl,
+      medicalLicenseUrl: request.medicalLicenseUrl,
+      medicalDegreeUrl: request.medicalDegreeUrl,
+      contractUrl: request.contractUrl,
       contractStatus: "accepted",
     });
 
