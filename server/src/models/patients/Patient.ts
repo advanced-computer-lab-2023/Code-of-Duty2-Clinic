@@ -136,6 +136,7 @@ export const PatientSchema = new Schema<IPatientModel>(
     wallet: {
       type: WalletSchema,
       select: false,
+      required: false,
     },
     passwordReset: {
       type: PasswordResetSchema,

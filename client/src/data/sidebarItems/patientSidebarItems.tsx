@@ -41,6 +41,31 @@ export const patientSidebarItems = [
     ],
   },
   {
+    title: "My Family Members",
+    items: [
+      {
+        title: "View my family members",
+        href: familyMembersRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "View Registered Family Members",
+        href: patientFamilyMembersRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "Add a family member",
+        href: addFamilyMemberRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "Add a Registered Family Member",
+        href: addRegisteredFamilyMemberRoute.path,
+        icon: <PeopleIcon />,
+      },
+    ],
+  },
+  {
     title: "Interact with Doctors",
     items: [
       {
@@ -61,6 +86,26 @@ export const patientSidebarItems = [
     ],
   },
   {
+    title: "Health Packages",
+    items: [
+      {
+        title: "Health Package Options",
+        href: healthPackagesOptionsRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "My Health Package Status",
+        href: cancelSubscriptionRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "My Health Package Benefits",
+        href: subscribedPackageBenefitsRoute.path,
+        icon: <PeopleIcon />,
+      },
+    ],
+  },
+  {
     title: "Wallets",
     items: [
       {
@@ -76,62 +121,22 @@ export const patientSidebarItems = [
     ],
   },
   {
-    title: "My Account",
+    title: "Medical History",
     items: [
       {
         title: "My Medical History",
         href: patientMedicalHistoryRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "My Health Package Status",
-        href: cancelSubscriptionRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "My Health Package Benefits",
-        href: subscribedPackageBenefitsRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "Health Package Options",
-        href: healthPackagesOptionsRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "Update Password",
-        href: `${patientUpdatePasswordRoute.path}?type=patient`,
         icon: <PeopleIcon />,
       },
     ],
   },
+
   {
-    title: "My Family Members",
+    title: "My Account",
     items: [
       {
-        title: "View my family members",
-        href: familyMembersRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "View Registered Family Members",
-        href: patientFamilyMembersRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "Add a family member",
-        href: addFamilyMemberRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "My Medical History",
-        href: patientMedicalHistoryRoute.path,
-        icon: <PeopleIcon />,
-      },
-
-      {
-        title: "Add a Registered Family Member",
-        href: addRegisteredFamilyMemberRoute.path,
+        title: "Update Password",
+        href: `${patientUpdatePasswordRoute.path}?type=patient`,
         icon: <PeopleIcon />,
       },
     ],

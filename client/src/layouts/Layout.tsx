@@ -13,10 +13,8 @@ import {
 } from "../data/routes/guestRoutes";
 import useFirstPath from "../hooks/useFirstPath";
 import getRequiredSidebarItems from "../utils/getRequiredSidebarItems";
-import {
-  loginRoute,
-  doctorLoginRoute,
-} from "../data/routes/loginRoutes";
+import { loginRoute, doctorLoginRoute } from "../data/routes/loginRoutes";
+import { doctorUnverifiedRoute } from "../data/routes/unverifiedRoutes";
 
 interface Props {
   children: React.ReactNode;
@@ -62,10 +60,11 @@ const Layout: React.FC<Props> = ({ children }) => {
       </Box>
     );
   } else if (
-    location.pathname !== loginRoute.path &&
-    location.pathname !== doctorLoginRoute.path &&
-    location.pathname !== patientSignUpRoute.path &&
-    location.pathname !== doctorSignUpRoute.path
+    location.pathname === doctorUnverifiedRoute.path ||
+    (location.pathname !== loginRoute.path &&
+      location.pathname !== doctorLoginRoute.path &&
+      location.pathname !== patientSignUpRoute.path &&
+      location.pathname !== doctorSignUpRoute.path)
   ) {
     return (
       <>

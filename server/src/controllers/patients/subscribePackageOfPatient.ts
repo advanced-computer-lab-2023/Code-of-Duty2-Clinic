@@ -14,7 +14,12 @@ export const subscribeToHealthPackage = async (
       ? PaymentMethod.WALLET
       : PaymentMethod.CREDIT_CARD;
   try {
-    await subscribeToHealthPackageService(patientId, packageId, paymentMethod);
+    await subscribeToHealthPackageService(
+      patientId,
+      patientId,
+      packageId,
+      paymentMethod
+    );
     res.status(200).json({ message: "Subscription added successfully" });
   } catch (error: any) {
     console.error("Error subscribing to health package:", error);

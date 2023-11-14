@@ -7,9 +7,12 @@ import {
   updateAccountInfoRoute,
   doctorUpdatePasswordRoute,
   addDoctorAvailableTimeSlotsRoute,
+  doctorWalletRoute,
+  doctorWalletCreationRoute,
 } from "../routes/doctorRoutes";
 import PeopleIcon from "@mui/icons-material/People";
 import PlusIcon from "@mui/icons-material/AddBox";
+import WalletIcon from "@mui/icons-material/AccountBalanceWallet";
 export const doctorSidebarItems = [
   {
     title: "Home",
@@ -33,6 +36,21 @@ export const doctorSidebarItems = [
         title: "Update my password",
         href: `${doctorUpdatePasswordRoute.path}?type=doctor`,
         icon: <PersonIcon />,
+      },
+    ],
+  },
+  {
+    title: "Wallets",
+    items: [
+      {
+        title: "View my wallet",
+        href: doctorWalletRoute.path,
+        icon: <WalletIcon />,
+      },
+      {
+        title: "Create a wallet",
+        href: doctorWalletCreationRoute.path,
+        icon: <WalletIcon />,
       },
     ],
   },

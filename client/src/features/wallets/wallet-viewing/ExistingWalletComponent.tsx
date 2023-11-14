@@ -5,6 +5,9 @@ import { UseMutationResult, UseQueryResult } from "react-query";
 import { useState } from "react";
 import { getErrorMessage } from "../../../utils/displayError";
 import { Wallet } from "../../../types/Wallet";
+import { useLocation } from "react-router-dom";
+import { patientWalletRoute } from "../../../data/routes/patientRoutes";
+import { doctorWalletRoute } from "../../../data/routes/doctorRoutes";
 
 type ExistingWalletComponentProps = {
   getWalletDetailsQuery: UseQueryResult<Wallet, unknown>;
@@ -24,11 +27,15 @@ const ExistingWalletComponent: React.FC<ExistingWalletComponentProps> = ({
   };
 
   if (getWalletDetailsQuery.isLoading) return <></>;
+  const currentPageLocation = useLocation().pathname;
   return (
     <div>
       <Modal
-        open={getWalletDetailsQuery.isError || validatePinMutation.isError}
-        onClose={validatePinMutation.reset}
+        open={
+          (currentPageLocation === patientWalletRoute.path ||
+            currentPageLocation === doctorWalletRoute.path) &&
+          (getWalletDetailsQuery.isError || validatePinMutation.isError)
+        }
         sx={{ backgroundColor: "white" }}
       >
         <form onSubmit={handleSubmit}>

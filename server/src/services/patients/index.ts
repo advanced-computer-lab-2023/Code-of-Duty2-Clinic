@@ -76,23 +76,24 @@ export const findRegisteredFamilyMembersByID = async (id: string) => {
   return patient.registeredFamilyMembers;
 };
 export const subscribeToHealthPackageService = async (
-  patientId: string,
+  payingPatientId: string,
+  paidPatientId: string,
   packageId: string,
   paymentMethod: PaymentMethod
 ) => {
-  const patient = await Patient.findById(patientId).select(
+  const patient = await Patient.findById(paidPatientId).select(
     "+subscribedPackage"
   );
   if (!patient) throw new Error("Patient not found");
   const healthPackage = await findHealthPackageDetailsAfterDiscount(
-    patientId,
+    paidPatientId,
     packageId
   );
   if (!healthPackage) throw new Error("Health package not found");
   const today = new Date();
 
   if (paymentMethod === PaymentMethod.WALLET) {
-    await performWalletTransaction(patientId, healthPackage.amountToPay);
+    await performWalletTransaction(payingPatientId, healthPackage.amountToPay);
   }
   patient.subscribedPackage = {
     packageId: healthPackage._id,

@@ -22,6 +22,7 @@ const Wallet = () => {
 
     try {
       await handleWalletPayment();
+      console.log("Payment successful.");
       setIsProcessing(false);
       handleNext();
     } catch (error: any) {

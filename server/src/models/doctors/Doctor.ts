@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import { IDoctor } from "./interfaces/IDoctor";
 import bcrypt from "bcrypt";
-import WalletSchema from "../wallets/Wallet";
+import WalletSchema, { DotctorWalletSchema } from "../wallets/Wallet";
 import PasswordResetSchema from "../users/PasswordReset";
 
 export interface IDoctorModel extends IDoctor, Document {}
@@ -43,8 +43,9 @@ export const DoctorSchema = new Schema<IDoctorModel>(
       select: false,
     },
     wallet: {
-      type: WalletSchema,
+      type: DotctorWalletSchema,
       select: false,
+      required: false,
     },
     passwordReset: {
       type: PasswordResetSchema,
@@ -53,11 +54,24 @@ export const DoctorSchema = new Schema<IDoctorModel>(
   },
   { timestamps: true }
 );
+
+DoctorSchema.pre("save", function (next) {
+  const user = this;
+  if (!user.isModified("wallet")) return next();
+  bcrypt.hash(user.wallet!.pinCode, 10, function (err, hash) {
+    if (err) return next(err);
+    user.wallet!.pinCode = hash;
+    next();
+  });
+});
+
 DoctorSchema.methods.verifyPassword = function (password: string) {
   return bcrypt.compare(password, this.password);
 };
 
 DoctorSchema.methods.verifyPasswordResetOtp = function (otp: string) {
+  console.log(otp, this.passwordReset.otp);
+  console.log(bcrypt.compare(otp, this.passwordReset.otp));
   return bcrypt.compare(otp, this.passwordReset.otp);
 };
 DoctorSchema.methods.verifyWalletPinCode = function (pinCode: string) {
@@ -65,3 +79,4 @@ DoctorSchema.methods.verifyWalletPinCode = function (pinCode: string) {
 };
 
 export default mongoose.model<IDoctorModel>("Doctor", DoctorSchema);
+``;

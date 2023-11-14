@@ -50,7 +50,7 @@ doctorRouter
 
   .patch("/change-password", updateDoctorPassword)
 
-  .post("/appointments/follow-up", scheduleFollowUp)
+  .post("/appointments/:patientId/follow-up", scheduleFollowUp)
 
   .get("/available-time-slots", viewAvailableTimeSlots)
 

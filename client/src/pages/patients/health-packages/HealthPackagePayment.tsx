@@ -14,24 +14,18 @@ const getProperSubscriptionMethod =
     id: string | null
   ) =>
   async () => {
-    try {
-      if (type === "r") {
-        await axios.post<any>(
-          `${config.serverUri}/patients/registered-members/${id}/subscribe/${packageId}?paymentMethod=${paymentMethod}`
-        );
-      } else if (type === "d") {
-        await axios.post<any>(
-          `${config.serverUri}/patients/dependent-members/${id}/subscribe/${packageId}?paymentMethod=${paymentMethod}`
-        );
-      } else {
-        await axios.post<any>(
-          `${config.serverUri}/patients/subscribe/${packageId}?paymentMethod=${paymentMethod}`
-        );
-      }
-
-      console.log("Subscription successful.");
-    } catch (error) {
-      console.error("Error subscribing to health package:", error);
+    if (type === "r") {
+      await axios.post<any>(
+        `${config.serverUri}/patients/registered-members/${id}/subscribe/${packageId}?paymentMethod=${paymentMethod}`
+      );
+    } else if (type === "d") {
+      await axios.post<any>(
+        `${config.serverUri}/patients/dependent-members/${id}/subscribe/${packageId}?paymentMethod=${paymentMethod}`
+      );
+    } else {
+      await axios.post<any>(
+        `${config.serverUri}/patients/subscribe/${packageId}?paymentMethod=${paymentMethod}`
+      );
     }
   };
 
@@ -94,7 +88,7 @@ const HealthPackagePayment = () => {
 function HealthPackageDetails() {
   return (
     <div>
-      <h1>Health Package Details</h1>
+      <h3>Health Package Details</h3>
     </div>
   );
 }

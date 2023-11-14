@@ -22,6 +22,7 @@ export const patientInfoRoute: Route = {
 
 import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
 import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
+import CreateWallet from "../../pages/doctors/wallet/CreateWallet";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
   element: <Home />,
@@ -79,7 +80,7 @@ export const doctorWalletRoute: Route = {
 
 export const doctorWalletCreationRoute: Route = {
   path: "/doctor/wallet/create",
-  element: <ViewWallet />,
+  element: <CreateWallet />,
 };
 
 const routes: Route[] = [

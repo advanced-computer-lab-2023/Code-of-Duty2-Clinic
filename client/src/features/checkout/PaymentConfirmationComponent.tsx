@@ -70,10 +70,10 @@ const PaymentConfirmationComponent: React.FC<
     setStripePromise(loadStripe(publishableKey));
   };
 
-  const fetchPaymentIntentClientSecret = async (total: number) => {
+  const fetchPaymentIntentClientSecret = async (_total: number) => {
     const response = await axios.post(
       `${config.serverUri}/patients/payments/create-payment-intent`,
-      { amount: total }
+      { amount: 100 }
     );
     const clientSecret = response.data.clientSecret;
     setClientSecret(clientSecret);
@@ -88,21 +88,13 @@ const PaymentConfirmationComponent: React.FC<
   };
 
   const handleWalletPayment = async () => {
-    try {
-      await walletPaymentApiFunction();
-      setOpenSnackbar(true);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    await walletPaymentApiFunction();
+    setOpenSnackbar(true);
   };
 
   const handleCreditCardPayment = async () => {
-    try {
-      await creditCardPaymentApiFunction();
-      setOpenSnackbar(true);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    await creditCardPaymentApiFunction();
+    setOpenSnackbar(true);
   };
 
   function getStepContent(stage: number) {

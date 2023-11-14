@@ -21,19 +21,24 @@ export const updatePatientPassword = async (
     }
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          message:
-            "Current password, new password and confirm password are required",
-        });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message:
+          "Current password, new password and confirm password are required",
+      });
+    }
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message:
+          "Current password, new password and confirm password are required",
+      });
     }
 
     const isPasswordCorrect = await patient.verifyPassword?.(currentPassword);
 
     if (!isPasswordCorrect) {
       return res
-        .status(StatusCodes.UNAUTHORIZED)
+        .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Current password is incorrect" });
     }
 

@@ -8,13 +8,20 @@ export const subscribeToHealthPackageR = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const { packageId, patientId } = req.params;
+  const payingPatientId = req.user?.id!;
+  const { packageId } = req.params;
+  const paidPatientId = req.params?.patientId;
   const paymentMethod =
     req.query?.paymentMethod === "wallet"
       ? PaymentMethod.WALLET
       : PaymentMethod.CREDIT_CARD;
   try {
-    await subscribeToHealthPackageService(patientId, packageId, paymentMethod);
+    await subscribeToHealthPackageService(
+      payingPatientId,
+      paidPatientId,
+      packageId,
+      paymentMethod
+    );
     res
       .status(StatusCodes.OK)
       .json({ message: "Subscription added successfully" });
