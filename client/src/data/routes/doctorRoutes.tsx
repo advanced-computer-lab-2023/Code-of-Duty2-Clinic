@@ -2,10 +2,24 @@ import Home from "../../pages/doctors/Home";
 import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
-
+import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatients";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
-import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
+import PatientList from "../../pages/doctors/PatientList";
+import PatientInfo from "../../pages/doctors/PatientInfo";
+
+
+
+export const allPatientsRoute: Route = {
+    path: '/doctor/patients',
+    element: <PatientList />
+}
+
+export const patientInfoRoute: Route = {
+    path: '/patient/info',
+    element: <PatientInfo />
+}
+
 import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",

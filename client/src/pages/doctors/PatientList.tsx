@@ -1,4 +1,4 @@
-import useGetAllPatients from "../hooks/useGetAllPatients";
+import useGetAllPatients from "../../hooks/useGetAllPatients";
 import { useState } from "react";
 import {
   Table,
@@ -12,12 +12,13 @@ import {
 } from "@mui/material";
 import "@fontsource/roboto";
 import { Typography } from "@mui/material";
+import { Patient } from "../../types";
 
 export default function PatientList() {
   const [searchTerm, setSearchTerm] = useState("");
   const patientList = useGetAllPatients().data;
 
-  const filteredPatients = patientList?.filter((patient) => {
+  const filteredPatients = patientList?.filter((patient: Patient) => {
     const searchRegex = new RegExp(searchTerm, "i");
     return (
       searchRegex.test(patient.username) ||
@@ -58,7 +59,7 @@ export default function PatientList() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ textAlign: "center" }}>
-              {filteredPatients.map((patient) => (
+              {filteredPatients.map((patient: Patient) => (
                 <TableRow
                   key={patient.username}
                   sx={{

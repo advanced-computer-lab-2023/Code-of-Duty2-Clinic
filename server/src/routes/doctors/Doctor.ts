@@ -9,7 +9,6 @@ import getRegisteredPatientDetails from "../../controllers/doctors/getRegistered
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
-import { getAllPatients } from "../../controllers/patients/getAllPatients";
 import { doctorAddPatientHealthRecord } from "../../controllers/doctors/addPatientHealthRecord";
 import {
   addDoctorAWalletHandler,
@@ -33,6 +32,7 @@ doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 doctorRouter
 
   .get("/account", getDoctor)
+
   .patch("/account", updateDoctor)
 
   .get("/patients", getRegisteredPatients)

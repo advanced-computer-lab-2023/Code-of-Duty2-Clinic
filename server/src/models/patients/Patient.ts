@@ -6,6 +6,12 @@ import PasswordResetSchema from "../users/PasswordReset";
 import WalletSchema from "../wallets/Wallet";
 import bcrypt from "bcrypt";
 
+enum Relation {
+  WIFE = "wife",
+  HUSBAND = "husband",
+  CHILD = "children",
+}
+
 export interface IPatientModel extends IPatient, Document {}
 
 export const PatientSchema = new Schema<IPatientModel>(
@@ -73,7 +79,7 @@ export const PatientSchema = new Schema<IPatientModel>(
           gender: { type: String, enum: ["male", "female"], required: true },
           relation: {
             type: String,
-            enum: ["wife", "husband", "children"],
+            enum: Relation,
             required: true,
           },
           subscribedPackage: {
@@ -106,11 +112,22 @@ export const PatientSchema = new Schema<IPatientModel>(
             required: true,
             unique: true,
           },
-          relation: {
-            type: String,
-            enum: ["wife", "husband", "children"],
+          relation: { type: String, enum: Relation, required: true },
+        },
+      ],
+      required: false,
+      select: false,
+    },
+    registeredFamilyMemberRequests: {
+      type: [
+        {
+          id: {
+            type: Schema.Types.ObjectId,
+            ref: "Patient",
             required: true,
+            unique: true,
           },
+          relation: { type: String, enum: Relation, required: true },
         },
       ],
       required: false,
@@ -153,3 +170,4 @@ PatientSchema.virtual("age").get(function () {
 });
 
 export default mongoose.model<IPatientModel>("Patient", PatientSchema);
+export { Relation };

@@ -1,55 +1,39 @@
 import express, { Request, Response } from 'express';
 import Patient from '../../models/patients/Patient';
 import { StatusCodes } from 'http-status-codes';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
 
-const searchPatientByName = async (req: Request, res: Response) => {
-    try {
-        const { name } = req.params;
-        console.log(name);
 
-        const patientData = await Patient.findOne({ name: { $regex: new RegExp(name as string, 'i') } });
+const searchPatient = async (req: AuthorizedRequest , res: Response) => {
+    const name = req.query.name;
+    const mobile = req.query.mobile;
+    const email = req.query.email;
 
-        if (!patientData) {
-            return res.status(StatusCodes.NOT_FOUND).send('Patient not found');
-        }
-
-        res.status(StatusCodes.OK).send(patientData);
-    } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+   const query: any = {};
+    if(name) {
+         query.name = name;
     }
-};
-
-const searchPatientByMobileNumber = async (req: Request, res: Response) => {
-    try {
-        const { mobile } = req.params;
-        const patientData = await Patient.findOne({ mobileNumber: mobile });
-
-        if (!patientData) {
-            return res.status(StatusCodes.NOT_FOUND).send('Patient not found');
-        }
-
-        res.status(StatusCodes.OK).send(patientData);
-    } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+    if(mobile) {
+         query.mobileNumber = mobile;
     }
-};
-
-const searchPatientByEmail = async (req: Request, res: Response) => {
-    try {
-        const { email } = req.params;
-        const patientData = await Patient.findOne({ email: { $regex: new RegExp(email as string, 'i') } });
-
-        if (!patientData) {
-            return res.status(StatusCodes.NOT_FOUND).send();
-        }
-
-        res.status(StatusCodes.OK).send(patientData);
-    } catch (error) {
-        console.error(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+    if(email) {
+         query.email = email;
     }
-};
 
-export { searchPatientByName, searchPatientByMobileNumber, searchPatientByEmail };
+    if (name || mobile || email) {
+        try {
+            const patient = await Patient.find(query);
+            if (patient) {
+                return res.status(StatusCodes.OK).json({patient});
+            }
+            return res.status(StatusCodes.NOT_FOUND).json({message: 'No patient with the entered details was found'});
+        } catch (error) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: 'Internal Server Error'});
+        }
+    }
+
+    return res.status(StatusCodes.BAD_REQUEST).send('Invalid query parameters');
+
+}
+
+export {searchPatient};

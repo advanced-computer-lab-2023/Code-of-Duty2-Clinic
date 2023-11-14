@@ -15,6 +15,7 @@ export interface IPatient extends IUserBaseInfo {
   subscribedPackage?: ISubscribedPackage;
   dependentFamilyMembers?: IDependentFamilyMember[];
   registeredFamilyMembers?: IRegisteredFamilyMember[];
+  registeredFamilyMemberRequests?: IRegisteredFamilyMember[];
   wallet?: IWallet;
   passwordReset?: IPasswordResetInfo;
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;

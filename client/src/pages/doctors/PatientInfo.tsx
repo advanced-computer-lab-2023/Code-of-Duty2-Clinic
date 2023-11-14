@@ -1,7 +1,7 @@
 import { Paper, Button } from '@mui/material';
 import '../../css/PatientInfo.css'
-import { useLocation, useNavigate } from 'react-router-dom';
-import useGetPatient from '../../hooks/useGetPatient';
+import { useParams, useNavigate } from 'react-router-dom';
+import useGetPatient from '../../hooks/useGetPatientInfo';
 import { Typography } from '@mui/material';
 import { Person, Cake, Wc, Email, Phone } from '@mui/icons-material';
 
@@ -10,8 +10,8 @@ import { Person, Cake, Wc, Email, Phone } from '@mui/icons-material';
 
 
 export default function PatientInfo() {
-    const patientId = useLocation().pathname.split('/')[2];
-    const patient = useGetPatient(patientId).data;
+    const patientId = useParams().patientId;
+    const patient = useGetPatient(patientId!).data;
     const history = useNavigate();
 
    // Only load when the patient info is fetched
