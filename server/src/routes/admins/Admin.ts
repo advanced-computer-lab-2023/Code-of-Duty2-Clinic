@@ -1,4 +1,4 @@
-import  express from "express";
+import express from "express";
 import registerAdmin from "../../controllers/admins/addAdminController";
 import removeUserHandler from "../../controllers/admins/removeUserController";
 import viewUsersByTypeHandler from "../../controllers/admins/showUsers";
@@ -19,29 +19,27 @@ const router = express.Router();
 router.use(authenticateUser);
 router.use(authorizeUser(UserRole.ADMIN));
 
-router.route('/health-packages')
-        .post(addHealthPackage)
-        .get(getHealthPackages);
-
-router.route('/health-packages/:id')
-        .get(getHealthPackage)
-
-        .put(updateHealthPackage)
-
-        .delete(deleteHealthPackageHandler);
+router.route("/health-packages").post(addHealthPackage).get(getHealthPackages);
 
 router
-.post('/admin', registerAdmin)
+  .route("/health-packages/:id")
+  .get(getHealthPackage)
 
-.delete('/users', removeUserHandler)
+  .put(updateHealthPackage)
 
-.get('/users/:Type', viewUsersByTypeHandler)
+  .delete(deleteHealthPackageHandler);
 
-.get('/doctor-registration-requests', getDoctorRegistrationRequests)
+router
+  .post("/admin", registerAdmin)
 
-.get('/doctor-registration-requests/:email', getDoctorRegistrationRequest)
+  .delete("/users", removeUserHandler)
 
-.patch('/admin/change-password', updateAdminPassword)
+  .get("/users/:Type", viewUsersByTypeHandler)
 
+  .get("/doctor-registration-requests", getDoctorRegistrationRequests)
+
+  .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest)
+
+  .patch("/change-password", updateAdminPassword);
 
 export default router;

@@ -9,6 +9,7 @@ import { Route } from "../../types";
 import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
 import ViewAvailableTimeSlots from "../../pages/doctors/ViewAvailableTimeSlots";
 import AddAvailableTimeSlots from "../../pages/doctors/AddAvailableTimeSlots";
+import UpdatePassword from "../../pages/general/UpdatePassword";
 
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
@@ -52,12 +53,17 @@ export const patientSearchRoute: Route = {
 
 export const doctorAvailableTimeSlotsRoute: Route = {
   path: "/doctor/available-time-slots",
-  element: <ViewAvailableTimeSlots/>,
+  element: <ViewAvailableTimeSlots />,
 };
 
 export const addDoctorAvailableTimeSlotsRoute: Route = {
   path: "/doctor/add-available-time-slots",
-  element: <AddAvailableTimeSlots/>,
+  element: <AddAvailableTimeSlots />,
+};
+
+export const doctorUpdatePasswordRoute: Route = {
+  path: "/doctor/update-password",
+  element: <UpdatePassword />,
 };
 
 const routes: Route[] = [
@@ -71,6 +77,7 @@ const routes: Route[] = [
   patientSearchRoute,
   doctorAvailableTimeSlotsRoute,
   addDoctorAvailableTimeSlotsRoute,
+  doctorUpdatePasswordRoute,
 ];
 
 export default routes;
