@@ -6,9 +6,10 @@ import {
   doctorRegisteredPatientsRoute,
   updateAccountInfoRoute,
   doctorUpdatePasswordRoute,
+  addDoctorAvailableTimeSlotsRoute,
 } from "../routes/doctorRoutes";
 import PeopleIcon from "@mui/icons-material/People";
-
+import PlusIcon from "@mui/icons-material/AddBox";
 export const doctorSidebarItems = [
   {
     title: "Home",
@@ -52,6 +53,11 @@ export const doctorSidebarItems = [
         title: "Search for Patient",
         href: "/doctor/:doctorId/patient/search",
         icon: <PeopleIcon />,
+      },
+      {
+        title: "Add Available Time Slots",
+        href: addDoctorAvailableTimeSlotsRoute.path,
+        icon: <PlusIcon />,
       },
     ],
   },

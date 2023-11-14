@@ -1,41 +1,61 @@
-import { Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { findDoctorById, updatePasswordById } from '../../services/doctors';
-import { AuthorizedRequest } from '../../types/AuthorizedRequest';
-// import bcrypt from 'bcrypt'; 
+import { Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { findDoctorById, updatePasswordById } from "../../services/doctors";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
+// import bcrypt from 'bcrypt';
 
+export const updateDoctorPassword = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const doctorId = req.user?.id!;
 
-export const updateDoctorPassword = async (req: AuthorizedRequest, res: Response) => {
-    try {
-        const { currentPassword, newPassword, confirmPassword } = req.body;
-        const doctorId = req.user?.id!;
-        
-        const doctor = await findDoctorById(doctorId);
-        
-        if (!doctor) {
-            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Doctor not found' });
-        }
-        
-        const isPasswordCorrect = await doctor.verfiyPassword?.(currentPassword);
-        
-        if (!isPasswordCorrect) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Current password is incorrect' });
-        }
-        
-        if (newPassword !== confirmPassword) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'New password and confirm password do not match' });
-        }
-        
+    const doctor = await findDoctorById(doctorId);
 
-        
-        await updatePasswordById(doctorId, newPassword);
+    if (!doctor) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Doctor not found" });
+    }
 
-    return res.status(StatusCodes.OK).json({ message: 'Password updated successfully!' });
+    const isPasswordCorrect = await doctor.verfiyPassword?.(currentPassword);
 
+    if (!isPasswordCorrect) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Current password is incorrect" });
+    }
+
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!strongPasswordRegex.test(newPassword)) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({
+          message:
+            "Password must be strong (min 8 characters, uppercase, lowercase, number, special character)",
+        });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "New password and confirm password do not match" });
+    }
+
+    await updatePasswordById(doctorId, newPassword);
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Password updated successfully!" });
   } catch (error) {
-
     console.error(error);
 
-    res.status(StatusCodes.BAD_REQUEST).json({ message: 'An error occurred while updating the password' });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "An error occurred while updating the password" });
   }
 };
