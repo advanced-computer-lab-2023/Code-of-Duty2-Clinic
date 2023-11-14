@@ -9,6 +9,7 @@ import {
   entityIdDoesNotExistError,
 } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
+import bcrypt from 'bcrypt';
 
 export const findAllDoctors = async () => await Doctor.find();
 
@@ -94,6 +95,20 @@ export const updateDoctorPassword = async (
   doctor.password = newPassword;
   await doctor.save();
 };
+
+export const validateDoctorPassword = async (doctor: IDoctorModel, password: string) => {
+    const isPasswordCorrect = await bcrypt.compare(password, doctor.password);
+    return isPasswordCorrect;
+  }
+
+export const addAvailableSlots = async (doctorID: string, startTime: Date, endTime: Date) => {
+    const doctor = await findDoctorById(doctorID);
+    if (!doctor) {
+        throw new Error(entityIdDoesNotExistError('doctor', doctorID));
+    }
+    doctor.availableSlots.push({ startTime: startTime, endTime: endTime });
+    await doctor.save();
+}
 
 type DoctorInfo = {
   _id: string;

@@ -9,6 +9,7 @@ import ViewDoctors from "../../pages/patients/ViewDoctors";
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
+import UpdatePassword from "../../pages/general/UpdatePassword";
 import HealthPackageList from "../../components/healthPackageList";
 import YourPage from "../../pages/patients/health-packages/HealthPackageStatus";
 import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
@@ -18,6 +19,7 @@ import CreateWallet from "../../pages/patients/wallet/CreateWallet";
 import PatientPaymentPage from "../../pages/patients/health-packages/HealthPackagePayment";
 import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
 import HealthPackageDetailsPage from "../../pages/patients/health-packages/HealthPackagesOptions";
+import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -86,6 +88,11 @@ export const patientMedicalHistoryRoute: Route = {
   path: "/patient/medical-history",
   element: <MedicalHistory />,
 };
+
+export const patientUpdatePasswordRoute: Route = {
+  path: "/patient/update-password",
+  element: <UpdatePassword />,
+};
 export const healthPackagesOptionsRoute: Route = {
   path: "/patient/health-packages-options",
   element: <HealthPackageList />,
@@ -125,6 +132,9 @@ const routes: Route[] = [
   patientFamilyMembersRoute,
   patientAppointmentsRoute,
   patientDoctorAppointmentDetailsRoute,
+  patientPrescriptions,
+  patientMedicalHistoryRoute,
+  patientUpdatePasswordRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
   healthPackagesOptionsRoute,

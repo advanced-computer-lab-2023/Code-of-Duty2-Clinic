@@ -4,25 +4,24 @@ import SearchIcon from "@mui/icons-material/Search";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import WalletIcon from "@mui/icons-material/Wallet";
-import {
-  addRegisteredFamilyMemberRoute,
-  createPatientWalletRoute,
-  patientFamilyMembersRoute,
-  patientWalletRoute,
-} from "../routes/patientRoutes";
 
 import {
   addFamilyMemberRoute,
   patientDashboardRoute,
   patientAppointmentsRoute,
+  createPatientWalletRoute,
+  patientWalletRoute,
+  patientFamilyMembersRoute,
   searchForDoctorsRoute,
   viewAllDoctorsRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
-  familyMembersRoute,
+  patientUpdatePasswordRoute,
   cancelSubscriptionRoute,
-  subscribedPackageBenefitsRoute,
+  familyMembersRoute,
   healthPackagesOptionsRoute,
+  subscribedPackageBenefitsRoute,
+  addRegisteredFamilyMemberRoute,
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
@@ -99,6 +98,11 @@ export const patientSidebarItems = [
         href: healthPackagesOptionsRoute.path,
         icon: <PeopleIcon />,
       },
+      {
+        title: "Update Password",
+        href: `${patientUpdatePasswordRoute.path}?type=patient`,
+        icon: <PeopleIcon />,
+      },
     ],
   },
   {
@@ -119,6 +123,12 @@ export const patientSidebarItems = [
         href: addFamilyMemberRoute.path,
         icon: <PeopleIcon />,
       },
+      {
+        title: "My Medical History",
+        href: patientMedicalHistoryRoute.path,
+        icon: <PeopleIcon />,
+      },
+
       {
         title: "Add a Registered Family Member",
         href: addRegisteredFamilyMemberRoute.path,

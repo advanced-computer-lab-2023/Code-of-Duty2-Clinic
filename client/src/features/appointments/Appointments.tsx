@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { config } from "../../configuration";
 import { Dayjs } from "dayjs";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -65,8 +65,6 @@ const Appointments: React.FC<Props> = ({ isPatient }) => {
   const [time, setTime] = useState<Dayjs | null>();
 
   const [error, setError] = useState("");
-
-  const userId = useLocation().pathname.split("/")[2];
 
   useEffect(() => {
     fetchFilteredAppointments();

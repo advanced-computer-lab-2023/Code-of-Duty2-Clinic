@@ -2,25 +2,26 @@ import Home from "../../pages/doctors/Home";
 import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
-import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatients";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
+import ViewAvailableTimeSlots from "../../pages/doctors/ViewAvailableTimeSlots";
+import AddAvailableTimeSlots from "../../pages/doctors/AddAvailableTimeSlots";
+import UpdatePassword from "../../pages/general/UpdatePassword";
 import PatientList from "../../pages/doctors/PatientList";
 import PatientInfo from "../../pages/doctors/PatientInfo";
 
-
-
 export const allPatientsRoute: Route = {
-    path: '/doctor/patients',
-    element: <PatientList />
-}
+  path: "/doctor/patients",
+  element: <PatientList />,
+};
 
 export const patientInfoRoute: Route = {
-    path: '/patient/info',
-    element: <PatientInfo />
-}
+  path: "/patient/info",
+  element: <PatientInfo />,
+};
 
 import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
+import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
   element: <Home />,
@@ -56,6 +57,21 @@ export const patientSearchRoute: Route = {
   element: <PatientSearch />,
 };
 
+export const doctorAvailableTimeSlotsRoute: Route = {
+  path: "/doctor/available-time-slots",
+  element: <ViewAvailableTimeSlots />,
+};
+
+export const addDoctorAvailableTimeSlotsRoute: Route = {
+  path: "/doctor/add-available-time-slots",
+  element: <AddAvailableTimeSlots />,
+};
+
+export const doctorUpdatePasswordRoute: Route = {
+  path: "/doctor/update-password",
+  element: <UpdatePassword />,
+};
+
 export const doctorWalletRoute: Route = {
   path: "/doctor/wallet",
   element: <ViewWallet />,
@@ -74,6 +90,9 @@ const routes: Route[] = [
   doctorRegisteredPatientsRoute,
   doctorRegisteredPatientDetailsRoute,
   patientSearchRoute,
+  doctorAvailableTimeSlotsRoute,
+  addDoctorAvailableTimeSlotsRoute,
+  doctorUpdatePasswordRoute,
   doctorWalletRoute,
   doctorWalletCreationRoute,
 ];

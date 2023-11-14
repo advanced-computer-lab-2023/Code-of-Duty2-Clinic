@@ -14,6 +14,7 @@ import { deleteHealthPackageHandler } from "../../controllers/healthPackages/del
 import { authenticateUser } from "../../middlewares/authentication";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
+import { updateAdminPassword } from "../../controllers/admins/adminUpdatePassword";
 import {
   acceptDoctorRegistrationRequest,
   rejectDoctorRegistrationRequest,
@@ -51,6 +52,8 @@ router
   .get("/doctor-registration-requests", getDoctorRegistrationRequests)
 
   .get("/doctor-registration-requests/:email", getDoctorRegistrationRequest)
+
+  .patch("/change-password", updateAdminPassword)
 
   .put("/rejectDoctor/:doctorId", rejectDoctorRegistrationRequest);
 

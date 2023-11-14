@@ -6,6 +6,12 @@ import { getRegisteredPatients } from "../../controllers/doctors/getRegisteredPa
 import { getAppointmentDetails } from "../../controllers/doctors/getAppointmentDetails";
 import { getDoctorById } from "../../controllers/patients/getDoctorById";
 import getRegisteredPatientDetails from "../../controllers/doctors/getRegisteredPatientDetails";
+import { addDoctorAvailableSlots } from "../../controllers/doctors/addAvailableTimeSlots";
+import { updateDoctorPassword } from "../../controllers/doctors/doctorUpdatePassword";
+import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
+import { scheduleFollowUp } from "../../controllers/doctors/doctorFollowUp";
+import { viewAvailableTimeSlots } from "../../controllers/doctors/getAvailableTimeSlots";
+import { deleteDoctorAvailableSlots } from "../../controllers/doctors/removeAvailableTimeSlot";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
@@ -30,7 +36,6 @@ doctorRouter.use(authenticateUser);
 doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
 doctorRouter
-
   .get("/account", getDoctor)
 
   .patch("/account", updateDoctor)
@@ -38,6 +43,18 @@ doctorRouter
   .get("/patients", getRegisteredPatients)
 
   .get("/patients/:patientId", getRegisteredPatientDetails)
+
+  .get("", getDoctorById)
+
+  .post("/appointments/add-time-slots", addDoctorAvailableSlots)
+
+  .patch("/change-password", updateDoctorPassword)
+
+  .post("/appointments/follow-up", scheduleFollowUp)
+
+  .get("/available-time-slots", viewAvailableTimeSlots)
+
+  .delete("/available-time-slots/:startTime", deleteDoctorAvailableSlots)
 
   .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
 

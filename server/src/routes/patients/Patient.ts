@@ -8,6 +8,8 @@ import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
 import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
+import { selectAppointment } from "../../controllers/patients/selectAppointmentTime";
 import { addPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { deletePatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
@@ -76,6 +78,9 @@ patientRouter
 
   .get("/family-members/:familyMemberId", getPatientRegisteredFamilyMemberById)
 
+  .patch("/change-password", updatePatientPassword)
+
+  .get("/health-records", getPatientHealthRecords)
   .post("/family-members/registered", addPatientRegisteredFamilyMember)
 
   .delete("/family-members/registered", deletePatientRegisteredFamilyMember)
@@ -88,6 +93,8 @@ patientRouter
   .get("/appointments", getAppointmentsWithAllDoctors)
 
   .get("prescriptions", getAllPrescriptions)
+
+  .post("/appointments/select-time", selectAppointment)
 
   .get("/health-records", getPatientHealthRecords)
 
