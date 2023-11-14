@@ -3,7 +3,13 @@ import MedicineIcon from "@mui/icons-material/Medication";
 import SearchIcon from "@mui/icons-material/Search";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
-import { addRegisteredFamilyMemberRoute, patientFamilyMembersRoute } from "../routes/patientRoutes";
+import WalletIcon from "@mui/icons-material/Wallet";
+import {
+  addRegisteredFamilyMemberRoute,
+  createPatientWalletRoute,
+  patientFamilyMembersRoute,
+  patientWalletRoute,
+} from "../routes/patientRoutes";
 
 import {
   addFamilyMemberRoute,
@@ -56,6 +62,21 @@ export const patientSidebarItems = [
     ],
   },
   {
+    title: "Wallets",
+    items: [
+      {
+        title: "View My Wallet",
+        href: patientWalletRoute.path,
+        icon: <WalletIcon />,
+      },
+      {
+        title: "Create A Wallet",
+        href: createPatientWalletRoute.path,
+        icon: <WalletIcon />,
+      },
+    ],
+  },
+  {
     title: "My Account",
     items: [
       {
@@ -78,7 +99,6 @@ export const patientSidebarItems = [
         href: healthPackagesOptionsRoute.path,
         icon: <PeopleIcon />,
       },
-      
     ],
   },
   {
@@ -103,7 +123,7 @@ export const patientSidebarItems = [
         title: "Add a Registered Family Member",
         href: addRegisteredFamilyMemberRoute.path,
         icon: <PeopleIcon />,
-      }
+      },
     ],
   },
 ];
