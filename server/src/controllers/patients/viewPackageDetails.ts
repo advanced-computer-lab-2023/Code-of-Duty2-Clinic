@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import PatientModel from "../../models/patients/Patient";
+import { Response } from "express";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 import { viewHealthCarePackageStatusService } from "../../services/patients";
+import { StatusCodes } from "http-status-codes";
 
 export const viewHealthCarePackageStatus = async (
   req: AuthorizedRequest,
@@ -14,9 +14,9 @@ export const viewHealthCarePackageStatus = async (
       patientId
     );
 
-    res.status(200).json(subscriptionStatus);
+    res.status(StatusCodes.OK).json(subscriptionStatus);
   } catch (error: any) {
     console.error(error);
-    res.status(400).json({ message: error.message });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
 };

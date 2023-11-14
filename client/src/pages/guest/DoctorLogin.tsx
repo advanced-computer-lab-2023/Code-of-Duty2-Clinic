@@ -21,7 +21,7 @@ import { doctorDashboardRoute } from "../../data/routes/doctorRoutes";
 import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
 import { useMutation } from "react-query";
 import { doctorLoginService } from "./loginService";
-import { displayError } from "../../utils/displayError";
+import { getErrorMessage } from "../../utils/displayError";
 import { doctorUnverifiedRoute } from "../../data/routes/unverifiedRoutes";
 import { LoginResponse } from "../../types/LoginResponse";
 
@@ -62,7 +62,7 @@ export default function DoctorLogin() {
   };
 
   function handleLoginSuccess(data: LoginResponse) {
-    login(data.accessToken, data.role,data.verificationStatus);
+    login(data.accessToken, data.role, data.verificationStatus);
     if (data.role === UserRole.UNVERIFIED_DOCTOR) {
       navigate(doctorUnverifiedRoute.path);
     } else if (
@@ -129,7 +129,7 @@ export default function DoctorLogin() {
                 }
               >
                 <AlertTitle>Oops!</AlertTitle>
-                <strong>{displayError(loginMutation.error)}</strong>
+                <strong>{getErrorMessage(loginMutation.error)}</strong>
               </Alert>
             )}
             <Box

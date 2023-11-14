@@ -7,7 +7,8 @@ import {
 import { StripeElements } from "@stripe/stripe-js";
 import { Box, Button, Typography, Snackbar } from "@mui/material";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { CheckoutContext } from "../../Checkout";
+import { PaymentContext } from "../../PaymentConfirmationComponent";
+import { getErrorMessage } from "../../../../utils/displayError";
 
 function Alert(props: AlertProps, ref: Ref<any>) {
   return <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />;
@@ -19,7 +20,7 @@ const CreditCard: FC = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const { handleNext, handleCreateOrder, total } = useContext(CheckoutContext);
+  const { handleNext, handleCreditCardPayment } = useContext(PaymentContext);
   const [message, setMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [cardComplete, setCardComplete] = useState(false);
@@ -50,12 +51,15 @@ const CreditCard: FC = () => {
       }
       setIsProcessing(false);
       setOpenSnackbar(true);
-    } else {
-      setMessage("Payment Success!");
-      // await handleCreateOrder(total + 0, "card");   // replace with required data (appointments or health packages)
+    }
+    try {
+      await handleCreditCardPayment();
       setIsProcessing(false);
       handleNext();
+    } catch (error: any) {
+      setIsProcessing(false);
       setOpenSnackbar(true);
+      setMessage(getErrorMessage(error));
     }
   };
 
@@ -100,10 +104,7 @@ const CreditCard: FC = () => {
         onClose={() => setOpenSnackbar(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <AlertRef
-          onClose={() => setOpenSnackbar(false)}
-          severity={message === "Payment Success!" ? "success" : "error"}
-        >
+        <AlertRef onClose={() => setOpenSnackbar(false)} severity="error">
           {message}
         </AlertRef>
       </Snackbar>

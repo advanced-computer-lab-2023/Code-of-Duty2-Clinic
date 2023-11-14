@@ -14,8 +14,7 @@ import MuiAlert from "@mui/material/Alert";
 
 import Payment from "./stages/Payment";
 import { config } from "../../configuration";
-import CheckoutContext from "../../contexts/CheckoutContext";
-import PaymentMethod from "../../types/PaymentMethod";
+import PaymentContext from "../../contexts/PaymentContext";
 
 function Alert(props: AlertProps, ref: Ref<any>) {
   return <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />;
@@ -25,13 +24,27 @@ const AlertRef = forwardRef(Alert);
 
 const checkoutStages = ["Payment Details"];
 
-const Checkout = () => {
+type PaymentConfirmationComponentProps = {
+  priceToPay: number;
+  walletPaymentApiFunction: () => Promise<void>;
+  creditCardPaymentApiFunction: () => Promise<void>;
+  paymentPageTitle?: string;
+  children: React.ReactNode;
+};
+const PaymentConfirmationComponent: React.FC<
+  PaymentConfirmationComponentProps
+> = ({
+  priceToPay,
+  walletPaymentApiFunction,
+  creditCardPaymentApiFunction,
+  paymentPageTitle,
+  children,
+}) => {
   const [loading, setLoading] = useState(true);
   const [stripePromise, setStripePromise] =
     useState<null | Promise<Stripe | null>>(null);
   const [clientSecret, setClientSecret] = useState<string>("");
   const [activeStage, setActiveStage] = useState(0);
-  const [price, setPrice] = useState(1000);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
@@ -43,9 +56,9 @@ const Checkout = () => {
 
   const setupPayment = async () => {
     // TODO: fetch item price to be bought
-    if (price !== undefined) {
+    if (priceToPay !== undefined) {
       await fetchStripePublishableKey();
-      await fetchPaymentIntentClientSecret(price);
+      await fetchPaymentIntentClientSecret(priceToPay);
     }
   };
 
@@ -74,27 +87,28 @@ const Checkout = () => {
     setActiveStage(activeStage - 1);
   };
 
-  const handleCreateOrder = async (
-    // logic for creating an payment
-    paidAmount: number,
-    paymentMethod: PaymentMethod
-  ) => {
+  const handleWalletPayment = async () => {
     try {
-      const patientResponse = await axios.get(
-        `${config.serverUri}/patients/me`
-      );
-      const patientData = patientResponse.data;
-
+      await walletPaymentApiFunction();
       setOpenSnackbar(true);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+
+  const handleCreditCardPayment = async () => {
+    try {
+      await creditCardPaymentApiFunction();
+      setOpenSnackbar(true);
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   };
 
   function getStepContent(stage: number) {
     switch (stage) {
       case 0:
-        return <Payment />;
+        return <Payment>{children}</Payment>;
       default:
         throw new Error("Unexpected payment stage");
     }
@@ -114,16 +128,17 @@ const Checkout = () => {
   }
 
   return (
-    <CheckoutContext.Provider
+    <PaymentContext.Provider
       value={{
-        total: price,
-        handleCreateOrder,
+        totalPriceToPay: priceToPay,
+        handleWalletPayment,
+        handleCreditCardPayment,
         handleNext,
       }}
     >
       <Container component="main" sx={{ mb: 4 }}>
         <Typography component="h1" variant="h4" align="center">
-          Checkout
+          {paymentPageTitle}
         </Typography>
 
         <Stepper activeStep={activeStage} sx={{ pt: 3, pb: 5 }}>
@@ -137,11 +152,11 @@ const Checkout = () => {
         {activeStage === checkoutStages.length ? (
           <>
             <Typography variant="h5" gutterBottom>
-              Thank you for nothing.
+              Thank you for Trust.
             </Typography>
             <Typography variant="subtitle1">
               Your payment has been proccessed successfully. Wait for a
-              confirmation email :')
+              confirmation email for the receipt :')
             </Typography>
             <Snackbar
               open={openSnackbar}
@@ -176,9 +191,9 @@ const Checkout = () => {
           </>
         )}
       </Container>
-    </CheckoutContext.Provider>
+    </PaymentContext.Provider>
   );
 };
 
-export { CheckoutContext };
-export default Checkout;
+export { PaymentContext };
+export default PaymentConfirmationComponent;

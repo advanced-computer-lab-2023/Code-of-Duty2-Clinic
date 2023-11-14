@@ -25,7 +25,7 @@ import { adminDashboardRoute } from "../../data/routes/adminRoutes";
 import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
 import { useMutation } from "react-query";
 import { loginService } from "./loginService";
-import { displayError } from "../../utils/displayError";
+import { getErrorMessage } from "../../utils/displayError";
 import { LoginResponse } from "../../types/LoginResponse";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
@@ -139,7 +139,7 @@ export default function Login() {
                 }
               >
                 <AlertTitle>Oops!</AlertTitle>
-                {displayError(loginMutation.error)}
+                {getErrorMessage(loginMutation.error)}
               </Alert>
             )}
             <Box

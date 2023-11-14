@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import { config } from "../../../configuration";
 import { useMutation, useQuery } from "react-query";
-import { displayError } from "../../../utils/displayError";
+import { getErrorMessage } from "../../../utils/displayError";
 import { doesUserHasAWallet } from "../../../features/wallets/services/doesUserHasAWallet";
 import WalletDoesNotExistComponent from "../../../features/wallets/wallet-viewing/WalletDoesNotExistComponent";
 import ExistingWalletComponent from "../../../features/wallets/wallet-viewing/ExistingWalletComponent";
@@ -46,7 +46,7 @@ const ViewWallet: React.FC = () => {
       )}
       {doesWalletExistsQuery.isError && (
         <Typography variant="body2" color="error">
-          {displayError(doesWalletExistsQuery.error)}
+          {getErrorMessage(doesWalletExistsQuery.error)}
         </Typography>
       )}
     </>

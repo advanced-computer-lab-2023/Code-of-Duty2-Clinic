@@ -57,6 +57,10 @@ export const updateWalletBalance = async (
   if (!user.wallet) throw new Error("User does not have a wallet");
   if (user.wallet.amount + transactionAmount < 0)
     throw new Error("Insufficient funds");
+  console.log(
+    "Wallet amount: " + user.wallet.amount,
+    "Transaction amount: " + transactionAmount
+  );
   user.wallet.amount += transactionAmount;
   await user.save();
 };

@@ -1,19 +1,33 @@
-import { Box, Button, Typography } from "@mui/material";
-import { FormEvent, useContext, useState } from "react";
+import { Box, Button, Snackbar, Typography } from "@mui/material";
+import { FormEvent, Ref, forwardRef, useContext, useState } from "react";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { PaymentContext } from "../../PaymentConfirmationComponent";
+import { getErrorMessage } from "../../../../utils/displayError";
 
-import { CheckoutContext } from "../../Checkout";
+function Alert(props: AlertProps, ref: Ref<any>) {
+  return <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />;
+}
+
+const AlertRef = forwardRef(Alert);
 
 const Wallet = () => {
-  const { handleNext, handleCreateOrder, total } = useContext(CheckoutContext);
-  // const [message, setMessage] = useState<string | null>(null);
+  const { handleNext, handleWalletPayment } = useContext(PaymentContext);
+  const [message, setMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    await handleCreateOrder(total + 0, "wallet");
-    setIsProcessing(false);
-    handleNext();
+
+    try {
+      await handleWalletPayment();
+      setIsProcessing(false);
+      handleNext();
+    } catch (error: any) {
+      console.log("Error occured: ", getErrorMessage(error));
+      setMessage(getErrorMessage(error));
+    }
   };
 
   return (
@@ -41,6 +55,16 @@ const Wallet = () => {
           </span>
         </Button>
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4500}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <AlertRef onClose={() => setOpenSnackbar(false)} severity="error">
+          {message}
+        </AlertRef>
+      </Snackbar>
     </form>
   );
 };

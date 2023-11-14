@@ -22,7 +22,7 @@ import { authenticateWalletUser } from "../../middlewares/walletAuthentication";
 import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
-} from "../../controllers/payments/credit-cards/Patient";
+} from "../../controllers/payments/credit-cards";
 
 const doctorRouter = express.Router();
 

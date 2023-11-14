@@ -1,5 +1,5 @@
-import React from 'react';
-import HealthPackageList from '../../components/healthPackageList';
+import React from "react";
+import HealthPackageList from "../../../components/healthPackageList";
 
 const HealthPackagePage: React.FC = () => {
   return (

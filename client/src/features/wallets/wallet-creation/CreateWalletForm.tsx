@@ -8,7 +8,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { doesUserHasAWallet } from "../services/doesUserHasAWallet";
-import { displayError } from "../../../utils/displayError";
+import { getErrorMessage } from "../../../utils/displayError";
 import { useNavigate } from "react-router-dom";
 import { createNewWallet } from "./createNewWallet";
 import WalletPasswordInput from "../../../components/WalletPasswordInput";
@@ -50,7 +50,7 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
   if (isWalletAlreadyCreated.isError) {
     return (
       <Typography variant="body2" color="error">
-        {displayError(isWalletAlreadyCreated.error)}
+        {getErrorMessage(isWalletAlreadyCreated.error)}
       </Typography>
     );
   }
@@ -120,7 +120,7 @@ const CreateWalletForm: React.FC<CreateWalletFormProps> = ({
       </form>
       {isError && (
         <Typography variant="body2" color="error">
-          {displayError(error)}
+          {getErrorMessage(error)}
         </Typography>
       )}
     </Container>

@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 
-export const displayError = (error: any) => {
+export const getErrorMessage = (error: any) => {
   return (
     (((error as AxiosError).response?.data as { message: string })
       ?.message as string) ||

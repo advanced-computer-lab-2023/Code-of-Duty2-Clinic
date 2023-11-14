@@ -1,44 +1,45 @@
-import mongoose, { Document, Schema } from 'mongoose';
-import { IHealthPackage } from './interfaces/IHealthPackage';
- 
-  
-export interface IHealthPackageModel extends IHealthPackage, Document {} 
+import mongoose, { Document, Schema } from "mongoose";
+import { IHealthPackage } from "./interfaces/IHealthPackage";
+
+export interface IHealthPackageModel extends IHealthPackage, Document {}
 
 export const HealthPackageSchema = new Schema<IHealthPackageModel>({
-  name: { 
+  name: {
     type: String,
     required: true,
-    unique: true 
+    unique: true,
   },
-  amountToPay: { 
-    type: Number, 
-    required: true 
+  amountToPay: {
+    type: Number,
+    required: true,
   },
-  discounts:{
+  discounts: {
     gainedDoctorSessionDiscount: {
-      type:Number,
-      min: [0,'The mininum value is 0'], 
-      max: [1,'The maximum value is 1'],
-      required: true
+      type: Number,
+      min: [0, "The mininum value is 0"],
+      max: [1, "The maximum value is 1"],
+      required: true,
     },
-    gainedPharamcyMedicinesDiscount:{
-      type:Number,
-      min: [0,'The mininum value is 0'], 
-      max: [1,'The maximum value is 1'],
-      required: true
+    gainedPharamcyMedicinesDiscount: {
+      type: Number,
+      min: [0, "The mininum value is 0"],
+      max: [1, "The maximum value is 1"],
+      required: true,
     },
     gainedFamilyMembersDiscount: {
-      type:Number,
-      min: [0,'The mininum value is 0'], 
-      max: [1,'The maximum value is 1'],
-      required: true
-    }
+      type: Number,
+      min: [0, "The mininum value is 0"],
+      max: [1, "The maximum value is 1"],
+      required: true,
+    },
   },
-  packageDurationInYears:{
-    type:Number,
-    required:true
-  }
+  packageDurationInYears: {
+    type: Number,
+    required: true,
+  },
 });
 
-
-export default mongoose.model<IHealthPackageModel>('HealthPackage', HealthPackageSchema);
+export default mongoose.model<IHealthPackageModel>(
+  "HealthPackage",
+  HealthPackageSchema
+);

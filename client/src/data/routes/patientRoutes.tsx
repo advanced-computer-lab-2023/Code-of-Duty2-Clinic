@@ -3,21 +3,21 @@ import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/AddFamilyMember";
 import Home from "../../pages/patients/Home";
 import SearchForDoctors from "../../pages/patients/SearchForDoctors";
-import ViewAppointments from "../../pages/patients/ViewAppointments";
+import ViewAppointments from "../../pages/patients/appointments/ViewAppointments";
 import ViewDoctorDetails from "../../pages/patients/ViewDoctorDetails";
 import ViewDoctors from "../../pages/patients/ViewDoctors";
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
 import HealthPackageList from "../../components/healthPackageList";
-import YourPage from "../../pages/patients/HealthPackageStatus";
+import YourPage from "../../pages/patients/health-packages/HealthPackageStatus";
 import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
 import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
 import ViewWallet from "../../pages/patients/wallet/ViewWallet";
 import CreateWallet from "../../pages/patients/wallet/CreateWallet";
-import PatientPaymentPage from "../../pages/patients/PatientPaymentPage";
+import PatientPaymentPage from "../../pages/patients/health-packages/HealthPackagePayment";
 import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
-import HealthPackageDetailsPage from "../../pages/patients/HealthPackagesOptions";
+import HealthPackageDetailsPage from "../../pages/patients/health-packages/HealthPackagesOptions";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -105,9 +105,14 @@ export const checkoutRoute: Route = {
   element: <PatientPaymentPage />,
 };
 
-export const HealthPackageOptionsRDRoute: Route = {
-  path: `patient/Health-Packages-Options`,
+export const healthPackageOptionsRDRoute: Route = {
+  path: `/patient/Health-Packages-Options`,
   element: <HealthPackageDetailsPage />,
+};
+
+export const healthPackagePaymentRoute: Route = {
+  path: `/patient/health-package/:packageId/payment`,
+  element: <PatientPaymentPage />,
 };
 
 const routes: Route[] = [
@@ -130,7 +135,8 @@ const routes: Route[] = [
   patientWalletRoute,
   createPatientWalletRoute,
   checkoutRoute,
-  HealthPackageOptionsRDRoute,
+  healthPackageOptionsRDRoute,
+  healthPackagePaymentRoute,
 ];
 
 export default routes;

@@ -4,6 +4,7 @@ import { Card, CardContent, Grid, Button } from "@mui/material";
 import axios from "axios";
 import { config } from "../configuration";
 import { useQueryParams } from "../hooks/useQueryParams";
+import { useNavigate } from "react-router-dom";
 
 const fetchHealthPackages = async () => {
   try {
@@ -31,25 +32,22 @@ const HealthPackageList: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleSubscribe = async (packageId: string) => {
-    try {
-      if (type === "r") {
-        await axios.post<any>(
-          `${config.serverUri}/patients/registered-member/subscribe/${id}/${packageId}`
+  const navigate = useNavigate();
+  const handleNavigateToHealthPackagePayment = (packageId: string) => {
+    switch (type) {
+      case "r":
+        navigate(
+          `/patient/health-package/${packageId}/payment?type=r&id=${id}`
         );
-      } else if (type === "d") {
-        await axios.post<any>(
-          `${config.serverUri}/patients/dependent-member/subscribe/${id}/${packageId}`
+        break;
+      case "d":
+        navigate(
+          `/patient/health-package/${packageId}/payment?type=d&id=${id}`
         );
-      } else {
-        await axios.post<any>(
-          `${config.serverUri}/patients/subscribe/${packageId}`
-        );
-      }
-
-      console.log("Subscription successful.");
-    } catch (error) {
-      console.error("Error subscribing to health package:", error);
+        break;
+      default:
+        navigate(`/patient/health-package/${packageId}/payment`);
+        break;
     }
   };
 
@@ -63,7 +61,9 @@ const HealthPackageList: React.FC = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleSubscribe(packageItem._id)}
+                onClick={() =>
+                  handleNavigateToHealthPackagePayment(packageItem._id)
+                }
               >
                 Subscribe
               </Button>

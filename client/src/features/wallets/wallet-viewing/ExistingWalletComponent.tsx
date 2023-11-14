@@ -3,7 +3,7 @@ import WalletComponent from "./Wallet";
 import WalletPasswordInput from "../../../components/WalletPasswordInput";
 import { UseMutationResult, UseQueryResult } from "react-query";
 import { useState } from "react";
-import { displayError } from "../../../utils/displayError";
+import { getErrorMessage } from "../../../utils/displayError";
 import { Wallet } from "../../../types/Wallet";
 
 type ExistingWalletComponentProps = {
@@ -39,7 +39,7 @@ const ExistingWalletComponent: React.FC<ExistingWalletComponentProps> = ({
           />
           {validatePinMutation.isError && (
             <Typography variant="body2" color="error">
-              {displayError(validatePinMutation.error)}
+              {getErrorMessage(validatePinMutation.error)}
             </Typography>
           )}
           <Button type="submit">Submit</Button>

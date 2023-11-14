@@ -1,8 +1,8 @@
 // YourPage.tsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SubscribedPackageCard from "../../components/healthPackageStatusCard";
-import { config } from "../../configuration";
+import SubscribedPackageCard from "../../../components/healthPackageStatusCard";
+import { config } from "../../../configuration";
 
 const YourPage: React.FC = () => {
   const [subscribedHealthPackage, setSubscribedHealthPackage] = useState<

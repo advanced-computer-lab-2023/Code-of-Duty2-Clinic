@@ -23,7 +23,7 @@ export const makeCreditCardPaymentHandler = async (
 
     const paymentIntent = await stripe.paymentIntents.create({
       currency: "eur",
-      amount: amount * 100,
+      amount: amount.toFixed(2) * 100,
     });
 
     res

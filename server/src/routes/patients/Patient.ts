@@ -22,7 +22,7 @@ import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { viewHealthPackagesOptions } from "../../controllers/patients/viewHealthPackagesOptions";
 import { subscribeToHealthPackage } from "../../controllers/patients/subscribePackageOfPatient";
-import { setSubscribedPackageForDependent } from "../../controllers/patients/subscribeToPackageForIndependent";
+import { setSubscribedPackageForDependent } from "../../controllers/patients/subscribeToPackageForDependent";
 import { viewSubscribedHealthPackage } from "../../controllers/patients/viewSubscribedHealthPackage";
 import { viewSubscribedPackageDetailsForDependent } from "../../controllers/patients/viewPackageDetailsForDependent";
 import { viewHealthCarePackageStatus } from "../../controllers/patients/viewPackageDetails";
@@ -45,11 +45,12 @@ import { authenticateWalletUser } from "../../middlewares/walletAuthentication";
 import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
-} from "../../controllers/payments/credit-cards/Patient";
+} from "../../controllers/payments/credit-cards";
 import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/patients/viewSubscribedHealthPackageAllDetailsD";
 import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/patients/viewSubscribedHealthPackageAllDetailsR";
 import { cancelSubscriptionR } from "../../controllers/patients/cancelSubscriptionForR";
 import { subscribeToHealthPackageR } from "../../controllers/patients/subscribeForR";
+import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 
 const patientRouter = express.Router();
 
@@ -65,7 +66,7 @@ patientRouter
 
   .post("/family-members", addFamilyMembers)
 
-  .get("", getPatientById)
+  // .get("/me", getPatientDetails)
 
   .get("/prescriptions", getPatientPrescriptions)
 
@@ -103,12 +104,12 @@ patientRouter
   .post("/subscribe/:packageId", subscribeToHealthPackage)
 
   .post(
-    "/registered-member/subscribe/:patientId/:packageId",
+    "/registered-members/:patientId/subscribe/:packageId",
     subscribeToHealthPackageR
   )
 
   .post(
-    "/dependent-member/subscribe/:dependentNid/:packageId",
+    "/dependent-members/:dependentNid/subscribe/:packageId",
     setSubscribedPackageForDependent
   )
 
@@ -170,6 +171,8 @@ patientRouter
 
   .post("/payments/create-payment-intent", makeCreditCardPaymentHandler)
 
-  .get("/:patientId", getPatientById);
+  .get("/:patientId", getPatientById)
+
+  .get("/health-packages/:packageId", getHealthPackage);
 
 export default patientRouter;

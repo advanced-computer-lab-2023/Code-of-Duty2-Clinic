@@ -1,7 +1,7 @@
 import axios from "axios";
 import { config } from "../../../configuration";
 import { useQuery } from "react-query";
-import { displayError } from "../../../utils/displayError";
+import { getErrorMessage } from "../../../utils/displayError";
 import { Button } from "@mui/material";
 import React from "react";
 
@@ -23,7 +23,7 @@ const DoctorInfo = () => {
 
   if (getDoctorInfoQuery.isLoading) return <div>Loading...</div>;
   if (getDoctorInfoQuery.isError)
-    return <div>{displayError(getDoctorInfoQuery.error)}</div>;
+    return <div>{getErrorMessage(getDoctorInfoQuery.error)}</div>;
   return (
     <div>
       <h1>My Info</h1>

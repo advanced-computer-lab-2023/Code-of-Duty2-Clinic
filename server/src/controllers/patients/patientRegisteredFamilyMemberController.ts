@@ -87,9 +87,6 @@ export const addPatientRegisteredFamilyMember = async (
           (member) => member.id.toString() !== familyMember!.id.toString()
         );
     }
-
-    await requestingPatient!.save();
-
     // Add the family member to the requesting patient's registered family members
     requestingPatient!.registeredFamilyMembers.push(registeredFamilyMember);
 
