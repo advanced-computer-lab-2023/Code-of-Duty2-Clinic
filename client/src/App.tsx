@@ -10,8 +10,9 @@ import PublicRoutesHandler from "./components/auth/PublicRoutesHandler";
 import LoginRoutesHandler from "./components/auth/LoginRoutesHandler";
 import loginRoutes from "./data/routes/loginRoutes";
 import axios from "axios";
-import {Route, Routes } from 'react-router-dom';
-
+import { Route, Routes } from "react-router-dom";
+import UnverifiedRoutesHandler from "./components/auth/UnverifiedRoutesHandler";
+import unverifiedRoutes from "./data/routes/unverifiedRoutes";
 
 axios.defaults.withCredentials = true;
 
@@ -20,6 +21,12 @@ export default function App() {
     <Routes>
       <Route element={<LoginRoutesHandler />}>
         {loginRoutes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
+      </Route>
+
+      <Route element={<UnverifiedRoutesHandler />}>
+        {unverifiedRoutes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element} />
         ))}
       </Route>

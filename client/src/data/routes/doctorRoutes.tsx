@@ -2,15 +2,26 @@ import Home from "../../pages/doctors/Home";
 import UpdateAccountInfo from "../../pages/doctors/UpdateAccountInfo";
 import ViewAppointments from "../../pages/doctors/ViewAppointments";
 import ViewRegisteredPatients from "../../pages/doctors/ViewRegisteredPatients";
-
-import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
 import PatientSearch from "../../pages/doctors/SearchForPatients";
 import { Route } from "../../types";
-import ViewRegisteredPatientData from "../../pages/doctors/ViewRegisteredPatientData";
 import ViewAvailableTimeSlots from "../../pages/doctors/ViewAvailableTimeSlots";
 import AddAvailableTimeSlots from "../../pages/doctors/AddAvailableTimeSlots";
 import UpdatePassword from "../../pages/general/UpdatePassword";
+import PatientList from "../../pages/doctors/PatientList";
+import PatientInfo from "../../pages/doctors/PatientInfo";
 
+export const allPatientsRoute: Route = {
+  path: "/doctor/patients",
+  element: <PatientList />,
+};
+
+export const patientInfoRoute: Route = {
+  path: "/patient/info",
+  element: <PatientInfo />,
+};
+
+import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
+import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
   element: <Home />,
@@ -41,11 +52,6 @@ export const doctorRegisteredPatientDetailsRoute: Route = {
   element: <ViewRegisteredPatientData />,
 };
 
-export const doctorRegistrationRequestRoute: Route = {
-  path: "/doctor/register",
-  element: <DoctorRegistrationRequestForm />,
-};
-
 export const patientSearchRoute: Route = {
   path: "/doctor/patient/search",
   element: <PatientSearch />,
@@ -66,6 +72,16 @@ export const doctorUpdatePasswordRoute: Route = {
   element: <UpdatePassword />,
 };
 
+export const doctorWalletRoute: Route = {
+  path: "/doctor/wallet",
+  element: <ViewWallet />,
+};
+
+export const doctorWalletCreationRoute: Route = {
+  path: "/doctor/wallet/create",
+  element: <ViewWallet />,
+};
+
 const routes: Route[] = [
   doctorDashboardRoute,
   updateAccountInfoRoute,
@@ -73,11 +89,12 @@ const routes: Route[] = [
   doctorAppointmentDetailsRoute,
   doctorRegisteredPatientsRoute,
   doctorRegisteredPatientDetailsRoute,
-  doctorRegistrationRequestRoute,
   patientSearchRoute,
   doctorAvailableTimeSlotsRoute,
   addDoctorAvailableTimeSlotsRoute,
   doctorUpdatePasswordRoute,
+  doctorWalletRoute,
+  doctorWalletCreationRoute,
 ];
 
 export default routes;

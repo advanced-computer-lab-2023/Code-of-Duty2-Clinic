@@ -1,20 +1,48 @@
-import PatientRegisteredFamilyMembers from "../../components/PatientRegisteredFamilyMembers";
+import PatientRegisteredFamilyMembers from "../../pages/patients/RegisteredFamilyMembers/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/AddFamilyMember";
 import Home from "../../pages/patients/Home";
 import SearchForDoctors from "../../pages/patients/SearchForDoctors";
-import ViewAppointments from "../../pages/patients/ViewAppointments";
+import ViewAppointments from "../../pages/patients/appointments/ViewAppointments";
 import ViewDoctorDetails from "../../pages/patients/ViewDoctorDetails";
 import ViewDoctors from "../../pages/patients/ViewDoctors";
-import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
 import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
 import UpdatePassword from "../../pages/general/UpdatePassword";
+import HealthPackageList from "../../components/healthPackageList";
+import YourPage from "../../pages/patients/health-packages/HealthPackageStatus";
+import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
+import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
+import ViewWallet from "../../pages/patients/wallet/ViewWallet";
+import CreateWallet from "../../pages/patients/wallet/CreateWallet";
+import PatientPaymentPage from "../../pages/patients/health-packages/HealthPackagePayment";
+import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
+import HealthPackageDetailsPage from "../../pages/patients/health-packages/HealthPackagesOptions";
+import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
   element: <Home />,
+};
+
+export const familyMemberPageRoute: Route = {
+  path: "/patient/family-member-page",
+  element: <FamilyMemberPage />,
+};
+
+export const familyMembersRoute: Route = {
+  path: "/patient/all-family-members",
+  element: <FamilyMembersComponent />,
+};
+
+export const cancelSubscriptionRoute: Route = {
+  path: "/patient/CancelSubscription",
+  element: <YourPage />,
+};
+export const subscribedPackageBenefitsRoute: Route = {
+  path: "/patient/subscribed-package-benefits",
+  element: <SubscribedPackageBenefits />,
 };
 export const viewAllDoctorsRoute: Route = {
   path: "/patient/doctors",
@@ -69,6 +97,34 @@ export const patientUpdatePasswordRoute: Route = {
   path: "/patient/update-password",
   element: <UpdatePassword />,
 };
+export const healthPackagesOptionsRoute: Route = {
+  path: "/patient/health-packages-options",
+  element: <HealthPackageList />,
+};
+export const patientWalletRoute: Route = {
+  path: "/patient/wallet",
+  element: <ViewWallet />,
+};
+
+export const createPatientWalletRoute: Route = {
+  path: "/patient/wallet/create",
+  element: <CreateWallet />,
+};
+
+export const checkoutRoute: Route = {
+  path: "/patient/payment",
+  element: <PatientPaymentPage />,
+};
+
+export const healthPackageOptionsRDRoute: Route = {
+  path: `/patient/Health-Packages-Options`,
+  element: <HealthPackageDetailsPage />,
+};
+
+export const healthPackagePaymentRoute: Route = {
+  path: `/patient/health-package/:packageId/payment`,
+  element: <PatientPaymentPage />,
+};
 
 const routes: Route[] = [
   patientDashboardRoute,
@@ -84,6 +140,18 @@ const routes: Route[] = [
   patientPrescriptions,
   patientMedicalHistoryRoute,
   patientUpdatePasswordRoute,
+  patientPrescriptions,
+  patientMedicalHistoryRoute,
+  healthPackagesOptionsRoute,
+  cancelSubscriptionRoute,
+  subscribedPackageBenefitsRoute,
+  familyMembersRoute,
+  familyMemberPageRoute,
+  patientWalletRoute,
+  createPatientWalletRoute,
+  checkoutRoute,
+  healthPackageOptionsRDRoute,
+  healthPackagePaymentRoute,
 ];
 
 export default routes;

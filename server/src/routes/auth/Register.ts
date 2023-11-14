@@ -1,12 +1,16 @@
-
 import express from "express";
-import { registerAsDoctor } from "../../controllers/doctors/doctorRegisterController";
+import {
+  addDoctorRegistrationRequestFiles,
+  getDoctorContract,
+  registerAsDoctor,
+} from "../../controllers/doctors/doctorRegisterController";
 import { registerAsPatient } from "../../controllers/patients/patientRegisterController";
+import { acceptDoctorRegistrationRequest } from "../../controllers/doctors/actionOnRequest";
 
 const registrationRouter = express.Router();
 
 registrationRouter
-.post('/registration', registerAsPatient)
-.post('/doctor-registration', registerAsDoctor);
+  .post("/registration", registerAsPatient)
+  .post("/doctor-registration", registerAsDoctor);
 
 export default registrationRouter;

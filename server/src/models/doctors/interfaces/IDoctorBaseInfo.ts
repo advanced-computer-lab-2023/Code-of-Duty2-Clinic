@@ -1,4 +1,4 @@
-import { UserRole } from "../../../types/UserRole";
+import UserRole from "../../../types/UserRole";
 import { IUserBaseInfo } from "../../users/interfaces/IUserBaseInfo";
 
 export interface IDoctorBaseInfo extends IUserBaseInfo {

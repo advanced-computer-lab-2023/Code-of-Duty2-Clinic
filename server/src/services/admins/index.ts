@@ -1,4 +1,6 @@
 import Admin, { IAdminModel } from "../../models/admins/Admin";
+import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
+import DoctorRegistrationRequest from "../../models/doctors/DoctorRegistrationRequest";
 import {
   entityEmailDoesNotExistError,
   entityIdDoesNotExistError,
@@ -60,4 +62,59 @@ export const updateAdminPassword = async (
 ) => {
   admin.password = newPassword;
   await admin.save();
+};
+
+export const rejectDoctorRegistrationRequestService = async (
+  username: string
+) => {
+  try {
+    const request = await DoctorRegistrationRequest.findById(username);
+    if (!request) {
+      throw new Error("Request not found");
+    }
+    request.status = "rejected";
+    await request.save();
+  } catch (error) {
+    console.error("Error rejecting request:", error);
+    throw new Error("Internal Server Error");
+  }
+};
+export const acceptDoctorRegistrationRequestService = async (
+  username: string
+) => {
+  try {
+    const request = await DoctorRegistrationRequest.findById(username);
+    if (!request) {
+      throw new Error("Request not found");
+    }
+
+    // Create a new Doctor document using the data from the request
+    const newDoctor: IDoctorModel = new Doctor({
+      username: request.username,
+      password: request.password,
+      email: request.email,
+      name: request.name,
+      gender: request.gender,
+      mobileNumber: request.mobileNumber,
+      dateOfBirth: request.dateOfBirth,
+      hourlyRate: request.hourlyRate,
+      affiliation: request.affiliation,
+      educationalBackground: request.educationalBackground,
+      speciality: request.speciality,
+      availableSlots: request.availableSlots,
+      identification: request.identification,
+      medicalLicense: request.medicalLicense,
+      medicalDegree: request.medicalDegree,
+      wallet: { amount: 0 },
+      contract: "",
+      contractStatus: "accepted",
+    });
+
+    await newDoctor.save();
+    request.status = "accepted";
+    await request.save();
+  } catch (error: any) {
+    console.error("Error accepting request:", error);
+    throw new Error(error.message);
+  }
 };

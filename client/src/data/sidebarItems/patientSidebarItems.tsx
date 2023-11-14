@@ -3,6 +3,7 @@ import MedicineIcon from "@mui/icons-material/Medication";
 import SearchIcon from "@mui/icons-material/Search";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
+
 import {
   addFamilyMemberRoute,
   patientDashboardRoute,
@@ -13,6 +14,11 @@ import {
   patientPrescriptions,
   patientMedicalHistoryRoute,
   patientUpdatePasswordRoute,
+  cancelSubscriptionRoute,
+  familyMembersRoute,
+  healthPackagesOptionsRoute,
+  subscribedPackageBenefitsRoute,
+  addRegisteredFamilyMemberRoute,
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
@@ -55,7 +61,37 @@ export const patientSidebarItems = [
     title: "My Account",
     items: [
       {
-        title: "View my family member",
+        title: "My Medical History",
+        href: patientMedicalHistoryRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "My Health Package Status",
+        href: cancelSubscriptionRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "My Health Package Benefits",
+        href: subscribedPackageBenefitsRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "Health Package Options",
+        href: healthPackagesOptionsRoute.path,
+        icon: <PeopleIcon />,
+      },
+    ],
+  },
+  {
+    title: "My Family Members",
+    items: [
+      {
+        title: "View my family members",
+        href: familyMembersRoute.path,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "View Registered Family Members",
         href: patientFamilyMembersRoute.path,
         icon: <PeopleIcon />,
       },
@@ -72,6 +108,11 @@ export const patientSidebarItems = [
       {
         title: "Update Password",
         href: `${patientUpdatePasswordRoute.path}?type=patient`,
+        icon: <PeopleIcon />,
+      },
+      {
+        title: "Add a Registered Family Member",
+        href: addRegisteredFamilyMemberRoute.path,
         icon: <PeopleIcon />,
       },
     ],

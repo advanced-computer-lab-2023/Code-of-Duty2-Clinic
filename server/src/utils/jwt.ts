@@ -20,11 +20,24 @@ export const signAndGetPasswordResetToken = (user: User) => {
   });
 };
 
+export const signAndGetWalletToken = (user: User) => {
+  return jwt.sign(user, config.server.auth.walletTokenSecret, {
+    expiresIn: config.server.auth.walletTokenExpirationTime,
+  });
+};
+
 export const verifyAndDecodeAccessToken = (accessToken: string) => {
   const decodedUserSessionData = jwt.verify(
     accessToken,
     config.server.auth.accessTokenSecret
   ) as User;
+  if (decodedUserSessionData.verificationStatus) {
+    return {
+      id: decodedUserSessionData.id,
+      role: decodedUserSessionData.role,
+      verificationStatus: decodedUserSessionData.verificationStatus,
+    };
+  }
   return { id: decodedUserSessionData.id, role: decodedUserSessionData.role };
 };
 
@@ -33,6 +46,13 @@ export const verifyAndDecodeRefreshToken = (refreshToken: string) => {
     refreshToken,
     config.server.auth.refreshTokenSecret
   ) as User;
+  if (decodedUserSessionData.verificationStatus) {
+    return {
+      id: decodedUserSessionData.id,
+      role: decodedUserSessionData.role,
+      verificationStatus: decodedUserSessionData.verificationStatus,
+    };
+  }
   return { id: decodedUserSessionData.id, role: decodedUserSessionData.role };
 };
 
@@ -42,6 +62,14 @@ export const verifyAndDecodePasswordResetToken = (
   const decodedUserSessionData = jwt.verify(
     passwordResetToken,
     config.server.auth.passwordResetSecret
+  ) as User;
+  return { id: decodedUserSessionData.id, role: decodedUserSessionData.role };
+};
+
+export const verifyAndDecodeWalletToken = (walletToken: string): User => {
+  const decodedUserSessionData = jwt.verify(
+    walletToken,
+    config.server.auth.walletTokenSecret
   ) as User;
   return { id: decodedUserSessionData.id, role: decodedUserSessionData.role };
 };

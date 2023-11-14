@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import axios from 'axios';
 import { config } from '../../configuration';
+import Relation from '../../types/enums/Relation';
 
 const AddFamilyMember = () => {
 
@@ -70,13 +71,13 @@ const AddFamilyMember = () => {
                 </FormControl>
                 <FormControl>
                     <InputLabel id="gender-label">Relation</InputLabel>
-                    <Select labelId="relation-label" name="relation" value={form.relation} onChange={handleChange} required
-                    sx={{width: '180px'}}
-                    >
-                        <MenuItem value={'wife'}>Wife</MenuItem>
-                        <MenuItem value={'husband'}>Husband</MenuItem>
-                        <MenuItem value={'children'}>Children</MenuItem>
-                    </Select>
+                 <Select labelId="relation-label" name="relation" value={form.relation} onChange={handleChange} required
+                sx={{width: '180px'}}
+                >
+                {Object.values(Relation).map((relation) => (
+                    <MenuItem value={relation}>{relation}</MenuItem>
+                ))}
+                </Select>
                 </FormControl>
                 <br />
                 <br />

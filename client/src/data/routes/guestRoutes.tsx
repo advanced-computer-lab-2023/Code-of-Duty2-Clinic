@@ -1,8 +1,8 @@
-import DoctorRegistrationRequestForm from "../../pages/doctors/DoctorRegistrationRequestForm";
+import DoctorRegistrationRequestForm from "../../pages/doctors/Registration/DoctorRegistrationRequestForm";
 import About from "../../pages/general/About";
 import ContactUs from "../../pages/general/ContactUs";
 import Home from "../../pages/general/Home";
-import SignUp from "../../pages/patients/SignUp";
+import PatientRegistrationForm from "../../pages/patients/PatientRegistrationForm";
 import { Route } from "../../types";
 
 export const welcomeRoute: Route = {
@@ -11,7 +11,7 @@ export const welcomeRoute: Route = {
 };
 export const patientSignUpRoute: Route = {
   path: "/signup",
-  element: <SignUp />,
+  element: <PatientRegistrationForm />,
 };
 export const doctorSignUpRoute: Route = {
   path: "/signup/doctor",
@@ -31,6 +31,7 @@ const routes: Route[] = [
   patientSignUpRoute,
   aboutRoute,
   contactUsRoute,
+  doctorSignUpRoute,
 ];
 
 export default routes;

@@ -1,33 +1,22 @@
-import { Request, Response } from 'express';
-import PatientModel from '../../models/patients/Patient';
+import { Response } from "express";
+import { AuthorizedRequest } from "../../types/AuthorizedRequest";
+import { viewHealthCarePackageStatusService } from "../../services/patients";
+import { StatusCodes } from "http-status-codes";
 
-export const viewHealthCarePackageStatus = async (req: Request, res: Response) => {
+export const viewHealthCarePackageStatus = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
   try {
-    const { patientId } = req.params;
+    const patientId = req.user?.id!;
 
-    // Find the patient by ID
-    const patient = await PatientModel.findById(patientId);
+    const subscriptionStatus = await viewHealthCarePackageStatusService(
+      patientId
+    );
 
-    if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
-    }
-
-    // Access the subscribed package details for the patient
-    const subscribedPackage = patient.subscribedPackage;
-
-    if (!subscribedPackage) {
-      return res.status(404).json({ message: 'Patient has no subscribed package' });
-    }
-
-    const subscriptionStatus = {
-      status: subscribedPackage.status, 
-      renewalDate: subscribedPackage.startDate, 
-      endDate: subscribedPackage.endDate, 
-    };
-
-    res.status(200).json(subscriptionStatus);
-  } catch (error) {
+    res.status(StatusCodes.OK).json(subscriptionStatus);
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
 };

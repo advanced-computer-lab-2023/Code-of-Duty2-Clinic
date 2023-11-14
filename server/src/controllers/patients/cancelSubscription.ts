@@ -1,29 +1,20 @@
 import { Request, Response } from 'express';
 import  Patient  from '../../models/patients/Patient';
+import { AuthorizedRequest } from '../../types/AuthorizedRequest';
+import { cancelSubscriptionService } from '../../services/patients';
 
-export const cancelSubscription = async (req: Request, res: Response) => {
-    const { patientId } = req.params;
-
-    try {
-        const patient = await Patient.findById(patientId);
-
-        if (!patient) {
-            return res.status(404).json({ message: 'Patient not found' });
-        }
-
-        if (patient.subscribedPackage) {
-            patient.subscribedPackage.status = 'cancelled';
-            patient.subscribedPackage.endDate = new Date();
-            await patient.save();
+export const cancelSubscription = async (req: AuthorizedRequest, res: Response) => {
+    const patientId = req.user?.id!;    
+    try{    
+    if(patientId){
+            await cancelSubscriptionService(patientId);
             return res.status(200).json({ message: 'Subscription cancelled successfully' });
-        } 
+        }
         else {
             return res.status(400).json({ message: 'Patient has no subscribed package' });
-        }
-    } 
-    catch (error) {
+        } 
+    }catch (error: any) {
         console.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+        res.status(400).json({ message: error.message });
     }
-       
 };

@@ -38,7 +38,7 @@ export default function LogIn() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+   const data = new FormData(event.currentTarget);
    const email: any = data.get('email');
     if(email.toLowerCase() === "patient") {
         navigate(`/patient/${patientId}`);

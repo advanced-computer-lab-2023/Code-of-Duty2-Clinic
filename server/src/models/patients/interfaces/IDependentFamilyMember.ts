@@ -1,3 +1,4 @@
+import { Relation } from "../Patient";
 import { ISubscribedPackage } from "./ISubscribedPackage";
 
 export interface IDependentFamilyMember  {
@@ -5,6 +6,6 @@ export interface IDependentFamilyMember  {
     nationalId: string;
     birthdate: Date;
     gender: 'male' | 'female';
-    relation: 'wife' | 'husband' | 'children';
+    relation: Relation;
     subscribedPackage?: ISubscribedPackage;
 }

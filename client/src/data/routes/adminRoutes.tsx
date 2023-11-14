@@ -3,8 +3,9 @@ import UserList from "../../pages/admins/userList";
 import { Route } from "../../types";
 import HealthPackagesPage from "../../pages/admins/HealthPackages/HealthPackages";
 import Home from "../../pages/admins/Home";
-import DoctorRegistrationRequests from "../../pages/admins/viewDoctorRequests";
 import UpdatePassword from "../../pages/general/UpdatePassword";
+import ViewDoctorRegistrationRequest from "../../pages/admins/DoctorRequests/viewDetailsofRequest";
+import DoctorRegistrationRequests from "../../pages/admins/DoctorRequests/viewDoctorRequests";
 
 export const adminDashboardRoute: Route = {
   path: "/admin/dashboard",
@@ -36,12 +37,18 @@ export const adminUpdatePasswordRoute: Route = {
   element: <UpdatePassword />,
 };
 
+export const doctorRequestPage: Route = {
+  path: "/admin/doctor/:doctorId",
+  element: <ViewDoctorRegistrationRequest />,
+};
+
 const routes: Route[] = [
   adminAddRoute,
   userlistRoute,
   viewDoctorRequestsRoute,
   HealthPackagesRoute,
   adminDashboardRoute,
+  doctorRequestPage,
   adminUpdatePasswordRoute,
 ];
 

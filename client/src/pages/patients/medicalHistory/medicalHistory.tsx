@@ -1,30 +1,27 @@
 import { useState, useEffect } from "react";
-import { storage } from "../../../utils/firebase.config";
+import { storage } from "../../../configuration/firebase.config";
 import { ref, deleteObject } from "firebase/storage";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import Box from "@mui/material/Box";
-import Modal from "@mui/joy/Modal";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import { EnhancedTableToolbar } from "./components/tableToolBar";
-import { EnhancedTableHead } from "./components/tableHead";
 import {
   CircularProgress,
   Divider,
   IconButton,
+  Modal,
   Stack,
+  TableHead,
   Typography,
 } from "@mui/material";
-import image from "../../../assets/medicalDoc2.png";
 import { saveAs } from "file-saver";
-// import FileViewer from "react-file-viewer";
 import UploadHealthRecordModal from "./components/uploadHealthRecord";
 import TableLoadingSkeleton from "../../../components/tableLoadingSkeleton";
 import { config } from "../../../configuration";
@@ -83,49 +80,18 @@ const MedicalHistory: React.FC = () => {
       await axios.delete(`${config.serverUri}/patients/health-records`, {
         params: { fileUrl: fileUrl },
       });
+      setFiles((oldFiles) => {
+        return [...oldFiles.slice(0, index), ...oldFiles.slice(index + 1)];
+      });
     } catch (error) {
       console.log(error);
     }
-
-    setFiles((oldFiles) => {
-      return [...oldFiles.slice(0, index), ...oldFiles.slice(index + 1)];
-    });
     //setDeleteLoading(false)
   };
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = files?.map((n, index) => index);
-      setSelected(newSelected || []);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   const openViewFileModal = (file: IHealthRecord) => {
     setViewFileName(file.name);
     setViewFileUrl(file.url);
-    setFileType(file.fileType?.split("/")[1]);
     setViewFileModal(true);
   };
 
@@ -147,22 +113,36 @@ const MedicalHistory: React.FC = () => {
           }}
         />
         <TableContainer>
-          <Box
+          {/* <Box
             component="img"
             className="my-img"
             alt="The house from the offer."
             src={image}
-          />
+            /> */}
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size={"medium"}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              onSelectAllClick={handleSelectAllClick}
-              rowCount={files?.length || 0}
-            />
+            <TableHead sx={{ backgroundColor: "#103939", color: "white" }}>
+              <TableRow>
+                <TableCell sx={{ color: "white" }}>File Name</TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  Health Record Type
+                </TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  File Type
+                </TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  Upload Date
+                </TableCell>
+                <TableCell
+                  sx={{ color: "white" }}
+                  id="options"
+                  align="right"
+                ></TableCell>
+              </TableRow>
+            </TableHead>
             <TableBody>
               {tableLoading ? (
                 <TableLoadingSkeleton />
@@ -172,10 +152,8 @@ const MedicalHistory: React.FC = () => {
                     role="checkbox"
                     hover
                     onClick={() => openViewFileModal(file)}
-                    aria-checked={isSelected(index)}
                     tabIndex={-1}
                     key={index}
-                    selected={isSelected(index)}
                     sx={{
                       "&.Mui-selected, &.Mui-selected:hover": {
                         backgroundColor: "#1039394D", // Change this to your desired color
@@ -183,22 +161,9 @@ const MedicalHistory: React.FC = () => {
                       },
                     }}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={(event) => handleClick(event, index)}
-                        role="checkbox"
-                        color="primary"
-                        checked={isSelected(index)}
-                        inputProps={{
-                          "aria-labelledby": `enhanced-table-checkbox-${index}`,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
-                      component="th"
                       id={"enhanced-table-checkbox-" + index}
                       scope="row"
-                      padding="none"
                     >
                       {file.name}
                     </TableCell>
@@ -265,11 +230,11 @@ const MedicalHistory: React.FC = () => {
           >
             {viewFileName}
           </Typography>
-          {/* <FileViewer
-            fileType={fileType}
-            filePath={viewFileUrl}
-            style={{ width: "100%", height: "100%" }}
-          /> */}
+          <iframe
+            width="500px"
+            height="400px"
+            src={viewFileUrl}
+          ></iframe>
         </Box>
       </Modal>
     </Stack>

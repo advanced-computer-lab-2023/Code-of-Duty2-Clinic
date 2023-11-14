@@ -83,7 +83,6 @@ const deleteModalStyle = {
         axios.get(`${config.serverUri}/patients/prescriptions`).then((response:AxiosResponse)=>{
             setPrescriptions(response.data)
         })
-        console.log(prescriptions)
     },[])
 
     function printDate(date :string ) :string{

@@ -18,9 +18,12 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { AlertTitle } from "@mui/material";
 import { doctorDashboardRoute } from "../../data/routes/doctorRoutes";
-import axios from "axios";
-import { config } from "../../configuration";
 import { forgetPasswordRoute } from "../../data/routes/loginRoutes";
+import { useMutation } from "react-query";
+import { doctorLoginService } from "./loginService";
+import { getErrorMessage } from "../../utils/displayError";
+import { doctorUnverifiedRoute } from "../../data/routes/unverifiedRoutes";
+import { LoginResponse } from "../../types/LoginResponse";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -31,60 +34,46 @@ export default function DoctorLogin() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [invalidLoginAlertMessage, setInvalidLoginAlertMessage] = useState<
-    string | null
-  >();
   const location = useLocation();
-
+  const loginMutation = useMutation({
+    mutationFn: doctorLoginService,
+    onSuccess: handleLoginSuccess,
+  });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const fromOrWelcome = location.state?.from?.pathname || welcomeRoute.path;
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setUsernameError(false);
     setPasswordError(false);
-    setInvalidLoginAlertMessage(null);
 
     if (username === "") {
       setUsernameError(true);
       return;
     }
-
     if (password === "") {
       setPasswordError(true);
       return;
     }
-
-    // TODO: Use the actual login endpoint and values/options to be sent.
-    try {
-      const response = await axios.post(
-        `${config.serverUri}/auth/doctor-login`,
-        {
-          username,
-          password,
-        }
-      );
-
-      const data = response.data;
-      login(data.accessToken, data.role);
-
-      if (
-        data.role === UserRole.DOCTOR &&
-        fromOrWelcome.startsWith("/doctor")
-      ) {
-        navigate(fromOrWelcome);
-      } else if (data.role === UserRole.DOCTOR) {
-        navigate(doctorDashboardRoute.path);
-      }
-    } catch (error: any) {
-      setInvalidLoginAlertMessage(
-        error.response.data?.message || "Network error"
-      );
-    }
+    loginMutation.mutate({ username, password });
   };
+
+  function handleLoginSuccess(data: LoginResponse) {
+    login(data.accessToken, data.role, data.verificationStatus);
+    if (data.role === UserRole.UNVERIFIED_DOCTOR) {
+      navigate(doctorUnverifiedRoute.path);
+    } else if (
+      data.role === UserRole.DOCTOR &&
+      fromOrWelcome.startsWith("/doctor")
+    ) {
+      navigate(fromOrWelcome);
+    } else if (data.role === UserRole.DOCTOR) {
+      navigate(doctorDashboardRoute.path);
+    }
+  }
 
   return (
     <Container component="main" maxWidth="lg" sx={{ pb: 6 }}>
@@ -123,7 +112,7 @@ export default function DoctorLogin() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            {invalidLoginAlertMessage && (
+            {loginMutation.isError && (
               <Alert
                 variant="outlined"
                 severity="error"
@@ -133,16 +122,14 @@ export default function DoctorLogin() {
                     aria-label="close"
                     color="inherit"
                     size="small"
-                    onClick={() => {
-                      setInvalidLoginAlertMessage(null);
-                    }}
+                    onClick={loginMutation.reset}
                   >
                     <CloseIcon fontSize="inherit" />
                   </IconButton>
                 }
               >
                 <AlertTitle>Oops!</AlertTitle>
-                <strong>{invalidLoginAlertMessage}</strong>
+                <strong>{getErrorMessage(loginMutation.error)}</strong>
               </Alert>
             )}
             <Box
@@ -186,6 +173,7 @@ export default function DoctorLogin() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loginMutation.isLoading}
               >
                 Sign In
               </Button>
