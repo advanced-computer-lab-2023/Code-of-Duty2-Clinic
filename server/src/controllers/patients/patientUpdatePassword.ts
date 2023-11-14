@@ -20,6 +20,15 @@ export const updatePatientPassword = async (
         .json({ message: "Patient not found" });
     }
 
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({
+          message:
+            "Current password, new password and confirm password are required",
+        });
+    }
+
     const isPasswordCorrect = await patient.verifyPassword?.(currentPassword);
 
     if (!isPasswordCorrect) {

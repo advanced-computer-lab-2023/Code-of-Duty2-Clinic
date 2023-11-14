@@ -80,6 +80,11 @@ export const patientSidebarItems = [
         href: healthPackagesOptionsRoute.path,
         icon: <PeopleIcon />,
       },
+      {
+        title: "Update Password",
+        href: `${patientUpdatePasswordRoute.path}?type=patient`,
+        icon: <PeopleIcon />,
+      },
     ],
   },
   {
@@ -105,11 +110,7 @@ export const patientSidebarItems = [
         href: patientMedicalHistoryRoute.path,
         icon: <PeopleIcon />,
       },
-      {
-        title: "Update Password",
-        href: `${patientUpdatePasswordRoute.path}?type=patient`,
-        icon: <PeopleIcon />,
-      },
+
       {
         title: "Add a Registered Family Member",
         href: addRegisteredFamilyMemberRoute.path,

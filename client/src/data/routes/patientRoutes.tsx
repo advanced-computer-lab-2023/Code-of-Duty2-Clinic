@@ -78,10 +78,6 @@ export const patientDoctorAppointmentDetailsRoute: Route = {
   path: "patient/appointment/:appointmentId",
   element: <ViewAppointments />,
 };
-export const patientRegistrationRoute: Route = {
-  path: "/patient/register",
-  element: <PatientRegistrationForm />,
-};
 
 export const patientPrescriptions: Route = {
   path: "/patient/prescriptions",
@@ -136,7 +132,6 @@ const routes: Route[] = [
   patientFamilyMembersRoute,
   patientAppointmentsRoute,
   patientDoctorAppointmentDetailsRoute,
-  patientRegistrationRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
   patientUpdatePasswordRoute,

@@ -19,9 +19,13 @@ export const updateAdminPassword = async (
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "Admin not found" });
     }
-    // await admin.verifyPassword(currentPassword, (err: any, isMatch: boolean) => {
 
-    // const isPasswordCorrect = await validateAdminPassword(admin, currentPassword);
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message:
+          "Current password, new password and confirm password are required",
+      });
+    }
 
     const isPasswordCorrect = await admin.verifyPassword?.(currentPassword);
 

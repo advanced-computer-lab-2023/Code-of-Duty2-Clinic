@@ -20,6 +20,13 @@ export const updateDoctorPassword = async (
         .json({ message: "Doctor not found" });
     }
 
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message:
+          "Current password, new password and confirm password are required",
+      });
+    }
+
     const isPasswordCorrect = await doctor.verfiyPassword?.(currentPassword);
 
     if (!isPasswordCorrect) {
@@ -32,12 +39,10 @@ export const updateDoctorPassword = async (
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (!strongPasswordRegex.test(newPassword)) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          message:
-            "Password must be strong (min 8 characters, uppercase, lowercase, number, special character)",
-        });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message:
+          "Password must be strong (min 8 characters, uppercase, lowercase, number, special character)",
+      });
     }
 
     if (newPassword !== confirmPassword) {

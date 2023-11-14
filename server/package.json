@@ -39,7 +39,7 @@
     "path": "^0.12.7",
     "react-query": "^3.39.3",
     "remove": "^0.1.5",
-    "stripe": "^14.3.0",
+    "stripe": "^14.4.0",
     "typescript": "^5.2.2",
     "validator": "^13.11.0"
   },
