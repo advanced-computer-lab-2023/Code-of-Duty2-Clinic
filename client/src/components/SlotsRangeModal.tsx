@@ -20,6 +20,7 @@ type Props = {
   selectedEndTime: Date | null;
   setSelectedEndTime: React.Dispatch<React.SetStateAction<Date | null>>;
   handleSaveTimeSlot: () => void;
+  errorMessage: string;
 };
 const SlotsRangeModal: React.FC<Props> = ({
   handleClose,
@@ -29,6 +30,7 @@ const SlotsRangeModal: React.FC<Props> = ({
   selectedEndTime,
   setSelectedEndTime,
   handleSaveTimeSlot,
+  errorMessage,
 }) => {
   return (
     <Modal
@@ -92,6 +94,9 @@ const SlotsRangeModal: React.FC<Props> = ({
           >
             Save Time Slot
           </Button>
+          <Typography variant="body1" component="h2" color="red">
+            {errorMessage}
+          </Typography>
         </Box>
       </Fade>
     </Modal>

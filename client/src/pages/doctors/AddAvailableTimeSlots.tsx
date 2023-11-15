@@ -6,6 +6,7 @@ import DoctorAvailableTimeSlots from "./ViewAvailableTimeSlots";
 import { Button } from "@mui/material";
 import SlotsRangeModal from "../../components/SlotsRangeModal";
 import { Slots } from "../../types/Slots";
+import { getErrorMessage } from "../../utils/displayError";
 
 const addDoctorAvailableTimeSlot = async ({ startTime, endTime }: Slots) => {
   const response = await axios.post(
@@ -25,7 +26,7 @@ function DoctorTimeSlotsPage() {
   const queryKey = "availableTimeSlots";
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(addDoctorAvailableTimeSlot, {
+  const { mutate, error } = useMutation(addDoctorAvailableTimeSlot, {
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
       setOpen(false);
@@ -62,6 +63,7 @@ function DoctorTimeSlotsPage() {
         selectedEndTime={selectedEndTime}
         setSelectedEndTime={setSelectedEndTime}
         handleSaveTimeSlot={handleSaveTimeSlot}
+        errorMessage={error ? getErrorMessage(error) : ""}
       />
       <DoctorAvailableTimeSlots />
     </div>

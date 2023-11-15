@@ -28,6 +28,7 @@ import { FileViewModalStyle } from "../../patients/medicalHistory/medicalHistory
 import { useMutation } from "react-query";
 import { Slots } from "../../../types/Slots";
 import SlotsRangeModal from "../../../components/SlotsRangeModal";
+import { getErrorMessage } from "../../../utils/displayError";
 
 interface FollowUpAppointment extends Slots {
   patientId: string;
@@ -50,15 +51,16 @@ const ViewRegisteredPatientData: React.FC = () => {
   const [openSlotsModal, setOpenSlotsModal] = useState(false);
   const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(null);
   const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(null);
-  const addFollowUpAppointmentMutation = useMutation(addFollowUpAppointment);
+  const addFollowUpAppointmentMutation = useMutation(addFollowUpAppointment, {
+    onSuccess: closeModal,
+  });
 
   const [TableFiles, setTableFiles] = useState<Array<IHealthRecord>>([]);
   const [tableLoading, setTableLoading] = useState(true);
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const [upload, setUpload] = useState(false);
-  const [selected, setSelected] = useState<readonly number[]>([]);
+  const [selected, _setSelected] = useState<readonly number[]>([]);
   const [viewFileModal, setViewFileModal] = useState(false);
-  const [fileType, setFileType] = useState<string>();
+  const [_fileType, setFileType] = useState<string>();
   const [viewFileUrl, setViewFileUrl] = useState<string>();
   const [viewFileName, setViewFileName] = useState<string>();
   const [patientData, setPatientData] = useState<any>(null);
@@ -270,28 +272,36 @@ const ViewRegisteredPatientData: React.FC = () => {
           Schedule a follow up appointment with this patient
         </Button>
         <SlotsRangeModal
-          handleClose={() => setOpenSlotsModal(false)}
+          handleClose={closeModal}
           open={openSlotsModal}
           selectedStartTime={selectedStartTime}
           setSelectedStartTime={setSelectedStartTime}
           selectedEndTime={selectedEndTime}
           setSelectedEndTime={setSelectedEndTime}
-          handleSaveTimeSlot={() => {
-            if (selectedStartTime && selectedEndTime) {
-              const startTime: Date = new Date(selectedStartTime);
-              const endTime: Date = new Date(selectedEndTime);
-              addFollowUpAppointmentMutation.mutate({
-                startTime,
-                endTime,
-                patientId,
-              });
-              setOpenSlotsModal(false);
-            }
-          }}
+          handleSaveTimeSlot={handleSaveTimeSlot}
+          errorMessage={
+            addFollowUpAppointmentMutation.error
+              ? getErrorMessage(addFollowUpAppointmentMutation.error)
+              : ""
+          }
         />
       </Box>
     </div>
   );
+
+  function handleSaveTimeSlot() {
+    const startTime: Date = new Date(selectedStartTime!);
+    const endTime: Date = new Date(selectedEndTime!);
+    addFollowUpAppointmentMutation.mutate({
+      startTime,
+      endTime,
+      patientId,
+    });
+  }
+
+  function closeModal() {
+    setOpenSlotsModal(false);
+  }
 };
 
 export default ViewRegisteredPatientData;

@@ -1,6 +1,5 @@
 import HomeIcon from "@mui/icons-material/Home";
 import MedicineIcon from "@mui/icons-material/Medication";
-import SearchIcon from "@mui/icons-material/Search";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import WalletIcon from "@mui/icons-material/Wallet";
@@ -12,7 +11,6 @@ import {
   createPatientWalletRoute,
   patientWalletRoute,
   patientFamilyMembersRoute,
-  searchForDoctorsRoute,
   viewAllDoctorsRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
@@ -22,6 +20,7 @@ import {
   healthPackagesOptionsRoute,
   subscribedPackageBenefitsRoute,
   addRegisteredFamilyMemberRoute,
+  appointmentBookingRoute,
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
@@ -74,9 +73,9 @@ export const patientSidebarItems = [
         icon: <MedicineIcon />,
       },
       {
-        title: "Search for Doctors",
-        href: searchForDoctorsRoute.path,
-        icon: <SearchIcon />,
+        title: "Book an appointment",
+        href: appointmentBookingRoute.path,
+        icon: <PersonIcon />,
       },
       {
         title: "View my Appointments",

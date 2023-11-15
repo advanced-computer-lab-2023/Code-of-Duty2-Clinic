@@ -8,8 +8,7 @@ import { getDoctorById } from "../../controllers/patients/getDoctorById";
 import getRegisteredPatientDetails from "../../controllers/doctors/getRegisteredPatientDetails";
 import { addDoctorAvailableSlots } from "../../controllers/doctors/addAvailableTimeSlots";
 import { updateDoctorPassword } from "../../controllers/doctors/doctorUpdatePassword";
-import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
-import { scheduleFollowUp } from "../../controllers/doctors/doctorFollowUp";
+import { scheduleFollowUpAppointmentHandler } from "../../controllers/appointments/doctors";
 import { viewAvailableTimeSlots } from "../../controllers/doctors/getAvailableTimeSlots";
 import { deleteDoctorAvailableSlots } from "../../controllers/doctors/removeAvailableTimeSlot";
 import UserRole from "../../types/UserRole";
@@ -50,7 +49,10 @@ doctorRouter
 
   .patch("/change-password", updateDoctorPassword)
 
-  .post("/appointments/:patientId/follow-up", scheduleFollowUp)
+  .post(
+    "/appointments/:patientId/follow-up",
+    scheduleFollowUpAppointmentHandler
+  )
 
   .get("/available-time-slots", viewAvailableTimeSlots)
 

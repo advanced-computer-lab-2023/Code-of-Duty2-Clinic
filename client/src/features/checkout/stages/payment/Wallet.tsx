@@ -28,6 +28,8 @@ const Wallet = () => {
     } catch (error: any) {
       console.log("Error occured: ", getErrorMessage(error));
       setMessage(getErrorMessage(error));
+      setOpenSnackbar(true);
+      setIsProcessing(false);
     }
   };
 
@@ -63,7 +65,7 @@ const Wallet = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <AlertRef onClose={() => setOpenSnackbar(false)} severity="error">
-          {message}
+          Error: {message}
         </AlertRef>
       </Snackbar>
     </form>

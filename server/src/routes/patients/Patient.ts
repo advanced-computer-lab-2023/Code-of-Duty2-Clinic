@@ -9,7 +9,6 @@ import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAll
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
-import { selectAppointment } from "../../controllers/patients/selectAppointmentTime";
 import { addPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { deletePatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
@@ -53,6 +52,12 @@ import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/patien
 import { cancelSubscriptionR } from "../../controllers/patients/cancelSubscriptionForR";
 import { subscribeToHealthPackageR } from "../../controllers/patients/subscribeForR";
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
+import {
+  bookAnAppointmentForADependentFamilyMemberHandler,
+  bookAnAppointmentForARegisteredFamilyMemberHandler,
+  bookAnAppointmentHandler,
+  getDoctorAppointmentFeesHandler,
+} from "../../controllers/appointments/patients";
 
 const patientRouter = express.Router();
 
@@ -94,7 +99,17 @@ patientRouter
 
   .get("prescriptions", getAllPrescriptions)
 
-  .post("/appointments/select-time", selectAppointment)
+  .get("/appointments/:doctorId", getDoctorAppointmentFeesHandler)
+
+  .post("/appointments/:doctorId", bookAnAppointmentHandler)
+  .post(
+    "/registered-family-members/:familyMemberId/appointments/:doctorId",
+    bookAnAppointmentForARegisteredFamilyMemberHandler
+  )
+  .post(
+    "/dependent-family-members/:dependentNationalId/appointments/:doctorId",
+    bookAnAppointmentForADependentFamilyMemberHandler
+  )
 
   .get("/health-records", getPatientHealthRecords)
 
