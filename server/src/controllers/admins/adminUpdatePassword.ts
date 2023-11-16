@@ -12,7 +12,7 @@ export const updateAdminPassword = async (
 
     const adminId = req.user?.id!;
 
-    const admin = await findAdminById(adminId);
+    const admin = await findAdminById(adminId, "+password");
 
     if (!admin) {
       return res

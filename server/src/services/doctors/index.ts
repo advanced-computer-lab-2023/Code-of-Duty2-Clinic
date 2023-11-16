@@ -1,5 +1,6 @@
 import { getClinicCommission } from "../../models/clinic/Clinic";
 import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
+import { IDoctorBaseInfo } from "../../models/doctors/interfaces/IDoctorBaseInfo";
 import HealthPackage, {
   IHealthPackageModel,
 } from "../../models/health_packages/HealthPackage";
@@ -9,7 +10,7 @@ import {
   entityIdDoesNotExistError,
 } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export const findAllDoctors = async () => await Doctor.find();
 
@@ -54,16 +55,33 @@ export const createNewDoctor = async (username: string, password: string) => {
   await newDoctor.save();
 };
 
-export const updateInfo = async (doctorId: string, updatedInfo: any) => {
-  const doctor = await findDoctorById(doctorId);
-  const updates = Object.keys(updatedInfo);
+type DoctorInfoToUpdate = {
+  email?: string;
+  hourlyRate?: number;
+  affiliation?: string;
+};
+
+enum DoctorFieldsToUpdate {
+  "email" = "email",
+  "hourlyRate" = "hourlyRate",
+  "affiliation" = "affiliation",
+}
+export const updateInfo = async (
+  doctorId: string,
+  updatedInfo: DoctorInfoToUpdate
+) => {
+  const doctor = (await findDoctorById(doctorId)) as DoctorInfoToUpdate;
+  const updates = Object.keys(updatedInfo) as DoctorFieldsToUpdate[];
 
   if (!doctor) {
     throw new Error(entityIdDoesNotExistError("doctor", doctorId));
   }
 
-  updates.forEach((update) => (doctor[update] = updatedInfo[update]));
-  await doctor.save();
+  updates.forEach(
+    (update: DoctorFieldsToUpdate) =>
+      ((doctor[update] as string | number | undefined) = updatedInfo[update])
+  );
+  await (doctor as IDoctorModel).save();
 };
 
 export const updateDoctorPasswordByEmail = async (
@@ -96,19 +114,26 @@ export const updateDoctorPassword = async (
   await doctor.save();
 };
 
-export const validateDoctorPassword = async (doctor: IDoctorModel, password: string) => {
-    const isPasswordCorrect = await bcrypt.compare(password, doctor.password);
-    return isPasswordCorrect;
-  }
+export const validateDoctorPassword = async (
+  doctor: IDoctorModel,
+  password: string
+) => {
+  const isPasswordCorrect = await bcrypt.compare(password, doctor.password);
+  return isPasswordCorrect;
+};
 
-export const addAvailableSlots = async (doctorID: string, startTime: Date, endTime: Date) => {
-    const doctor = await findDoctorById(doctorID);
-    if (!doctor) {
-        throw new Error(entityIdDoesNotExistError('doctor', doctorID));
-    }
-    doctor.availableSlots.push({ startTime: startTime, endTime: endTime });
-    await doctor.save();
-}
+export const addAvailableSlots = async (
+  doctorID: string,
+  startTime: Date,
+  endTime: Date
+) => {
+  const doctor = await findDoctorById(doctorID);
+  if (!doctor) {
+    throw new Error(entityIdDoesNotExistError("doctor", doctorID));
+  }
+  doctor.availableSlots.push({ startTime: startTime, endTime: endTime });
+  await doctor.save();
+};
 
 type DoctorInfo = {
   _id: string;

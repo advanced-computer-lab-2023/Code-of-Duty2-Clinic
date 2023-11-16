@@ -1,143 +1,214 @@
-// ViewDoctorRegistrationRequest.tsx
-import { FC, useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import PersonIcon from '@mui/icons-material/Person';
-import PhoneIcon from '@mui/icons-material/Phone';
-import EmailIcon from '@mui/icons-material/Email';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import SchoolIcon from '@mui/icons-material/School';
-import { IExperienceFile } from '../../../doctors/Registration/DoctorRegistrationRequestForm';
-import { getFormattedDate } from '../../../../utils/formatter';
-import { config } from '../../../../configuration';
-import { Avatar, Box, Button, Card, CardHeader, IconButton, List, ListItem, Stack, Tab } from '@mui/material';
-import { red } from '@mui/material/colors';
-import { Money } from '@mui/icons-material';
-import { VerificationStatus } from '../../../../types/enums/VerficationStatus';
-import { buttonStyle } from '../viewDoctorRequests';
-import SendContract from './SendContract';
+import { FC, useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import PersonIcon from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import SchoolIcon from "@mui/icons-material/School";
+import { getFormattedDate } from "../../../../utils/formatter";
+import { config } from "../../../../configuration";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardHeader,
+  IconButton,
+  List,
+  ListItem,
+  Stack,
+  Tab,
+} from "@mui/material";
+import { buttonStyle } from "../viewDoctorRequests";
+import SendContract from "./SendContract";
 
-
-interface ViewDoctorRegistrationRequestProps {
-  
-}
+interface ViewDoctorRegistrationRequestProps {}
 export interface DoctorRequest {
-  _id:string
+  _id: string;
   username: string;
   email: string;
-  name:string;
-  gender:string;
-  mobileNumber:number;
-  dateOfBirth:string;
+  name: string;
+  gender: string;
+  mobileNumber: number;
+  dateOfBirth: string;
   hourlyRate: number;
   affiliation: string;
   educationalBackground: string;
-  speciality:string;
+  speciality: string;
 }
 interface props {
-  requestStatus : string,
+  requestStatus: string;
 }
-const BasicRequestDetails:FC<props>=({requestStatus}) =>{
-  const navigate = useNavigate()
-  const [doctorRequest , setDoctorRequest] = useState<DoctorRequest>(null!)
-  console.log(requestStatus)
+const BasicRequestDetails: FC<props> = ({ requestStatus }) => {
+  const navigate = useNavigate();
+  const [doctorRequest, setDoctorRequest] = useState<DoctorRequest>(null!);
+  console.log(requestStatus);
   // GET FROM AUTH REQUEST STATUS
-  const {doctorId} = useParams()
-  useEffect(()=>{
-    axios.get(`${config.serverUri}/admins/doctor-registration/${doctorId}`)
-      .then((response)=>{
-        console.log("s");
-        
-        setDoctorRequest(response.data)
+  const { doctorId } = useParams();
+  useEffect(() => {
+    axios
+      .get(`${config.serverUri}/admins/doctor-registration/${doctorId}`)
+      .then((response) => {
+        setDoctorRequest(response.data);
       })
-      .catch((err)=>{console.log(err)})
-  },[doctorId])
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [doctorId]);
 
-  async function rejectRequest(){
-    console.log("here")
-    await axios.put(`${config.serverUri}/admins/rejectDoctor/${doctorRequest._id}`)
-    navigate('')
-    //axios reject 
+  async function rejectRequest() {
+    await axios.put(
+      `${config.serverUri}/admins/rejectDoctor/${doctorRequest._id}`
+    );
+    navigate("");
+    //axios reject
   }
   return (
     <div>
-     
-      {doctorRequest &&
-       <Card sx={{ width: '70%',padding:5,margin:'auto', bgcolor: 'background.paper' }}>
-         <CardHeader
-        avatar={
-          <Avatar aria-label="recipe">
-            {doctorRequest.name.charAt(0)}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-          </IconButton>
-        }
-        title={doctorRequest.name}
-        subheader={doctorRequest.speciality||" Professional Doctor "}
-      >
-
-      </CardHeader>
-           { (requestStatus!=='rejected'&& requestStatus!=='accepted')  &&  <Button sx={{...buttonStyle}} color="primary" onClick={()=>rejectRequest()}>Reject Request</Button>}
-           { requestStatus==='pending contract acceptance' && <SendContract/>}
-        <List>
-            <ListItem >
-              <Stack width={'100%'} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                <div>   
-                <Tab disabled icon={<PersonIcon />} iconPosition="start" label="Username" /> {doctorRequest.username}
+      {doctorRequest && (
+        <Card
+          sx={{
+            width: "70%",
+            padding: 5,
+            margin: "auto",
+            bgcolor: "background.paper",
+          }}
+        >
+          <CardHeader
+            avatar={
+              <Avatar aria-label="recipe">
+                {doctorRequest.name.charAt(0)}
+              </Avatar>
+            }
+            action={<IconButton aria-label="settings"></IconButton>}
+            title={doctorRequest.name}
+            subheader={doctorRequest.speciality || " Professional Doctor "}
+          ></CardHeader>
+          {requestStatus !== "rejected" && requestStatus !== "accepted" && (
+            <Button
+              sx={{ ...buttonStyle }}
+              color="primary"
+              onClick={() => rejectRequest()}
+            >
+              Reject Request
+            </Button>
+          )}
+          {requestStatus === "pending contract acceptance" && <SendContract />}
+          <List>
+            <ListItem>
+              <Stack
+                width={"100%"}
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <div>
+                  <Tab
+                    disabled
+                    icon={<PersonIcon />}
+                    iconPosition="start"
+                    label="Username"
+                  />{" "}
+                  {doctorRequest.username}
                 </div>
                 <div>
-                <Tab disabled icon={<EmailIcon />} iconPosition="start" label="Email" /> {doctorRequest.email}
+                  <Tab
+                    disabled
+                    icon={<EmailIcon />}
+                    iconPosition="start"
+                    label="Email"
+                  />{" "}
+                  {doctorRequest.email}
                 </div>
-          
-              </Stack>   
+              </Stack>
             </ListItem>
 
-            <ListItem >
-              <Stack width={'100%'} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <ListItem>
+              <Stack
+                width={"100%"}
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
                 <div>
-                <Tab disabled iconPosition="start" label="Gender" /> {doctorRequest.gender}
+                  <Tab disabled iconPosition="start" label="Gender" />{" "}
+                  {doctorRequest.gender}
                 </div>
-                <div>   
-                <Tab disabled icon={<SchoolIcon/>} iconPosition="start" label="Eduaction" /> {doctorRequest.educationalBackground}
+                <div>
+                  <Tab
+                    disabled
+                    icon={<SchoolIcon />}
+                    iconPosition="start"
+                    label="Eduaction"
+                  />{" "}
+                  {doctorRequest.educationalBackground}
                 </div>
-              </Stack>   
+              </Stack>
             </ListItem>
 
-            <ListItem >
-              <Stack width={'100%'} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                <div>   
-                <Tab disabled icon={<PhoneIcon/>} iconPosition="start" label="Mobile Number" /> {doctorRequest.mobileNumber}
+            <ListItem>
+              <Stack
+                width={"100%"}
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <div>
+                  <Tab
+                    disabled
+                    icon={<PhoneIcon />}
+                    iconPosition="start"
+                    label="Mobile Number"
+                  />{" "}
+                  {doctorRequest.mobileNumber}
                 </div>
                 <div>
-                <Tab disabled icon={<AccessTimeIcon/>} iconPosition="start" label="Date of Birth" /> {getFormattedDate(doctorRequest.dateOfBirth)}
+                  <Tab
+                    disabled
+                    icon={<AccessTimeIcon />}
+                    iconPosition="start"
+                    label="Date of Birth"
+                  />{" "}
+                  {getFormattedDate(doctorRequest.dateOfBirth)}
                 </div>
-              </Stack>   
+              </Stack>
             </ListItem>
-            <ListItem >
-            
-            </ListItem>
+            <ListItem></ListItem>
 
-            <ListItem >
-              <Stack width={'100%'} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                <div>   
-                <Tab disabled icon={<CurrencyExchangeIcon/>} iconPosition="start" label="Hourly Rate" /> {doctorRequest.hourlyRate}
+            <ListItem>
+              <Stack
+                width={"100%"}
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <div>
+                  <Tab
+                    disabled
+                    icon={<CurrencyExchangeIcon />}
+                    iconPosition="start"
+                    label="Hourly Rate"
+                  />{" "}
+                  {doctorRequest.hourlyRate}
                 </div>
                 <div>
-                <Tab disabled icon={<LocalHospitalIcon/>} iconPosition="start" label="Affliation" /> {doctorRequest.affiliation}
+                  <Tab
+                    disabled
+                    icon={<LocalHospitalIcon />}
+                    iconPosition="start"
+                    label="Affliation"
+                  />{" "}
+                  {doctorRequest.affiliation}
                 </div>
-          
-              </Stack>   
+              </Stack>
             </ListItem>
-            
           </List>
         </Card>
-      }
+      )}
     </div>
   );
-}
+};
 
 export default BasicRequestDetails;

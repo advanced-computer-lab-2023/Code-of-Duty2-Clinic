@@ -12,7 +12,7 @@ export const updatePatientPassword = async (
 
     const patientId = req.user?.id!;
 
-    const patient = await findPatientById(patientId);
+    const patient = await findPatientById(patientId, "+password");
 
     if (!patient) {
       return res

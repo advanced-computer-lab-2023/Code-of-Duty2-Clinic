@@ -1,4 +1,5 @@
 import DoctorRegistrationRequest from "../../../models/doctors/DoctorRegistrationRequest";
+import { IDoctor } from "../../../models/doctors/interfaces/IDoctor";
 import { IDoctorBaseInfo } from "../../../models/doctors/interfaces/IDoctorBaseInfo";
 
 export const findAllDoctorRegistrationRequests = async () =>
@@ -31,13 +32,10 @@ export const sendDoctorContract = async (id: string, contractUrl: string) => {
 };
 
 export const getDoctorRegistrationContract = async (id: string) => {
-  console.log(id);
-  console.log(
-    await DoctorRegistrationRequest.findById(id).select({
-      _id: 1,
-      contractUrl: 1,
-    })
-  );
+  await DoctorRegistrationRequest.findById(id).select({
+    _id: 1,
+    contractUrl: 1,
+  });
   return await DoctorRegistrationRequest.findById(id).select({
     _id: 1,
     contractUrl: 1,
@@ -45,21 +43,21 @@ export const getDoctorRegistrationContract = async (id: string) => {
 };
 
 export const rejectSentContract = async (id: string) => {
-  return await DoctorRegistrationRequest.findByIdAndUpdate(id).set({status:"rejected"})
+  return await DoctorRegistrationRequest.findByIdAndUpdate(id).set({
+    status: "rejected",
+  });
 };
 
-export const createNewDoctorRegistrationRequest = async (
-  request: IDoctorBaseInfo
-) => {
+export const createNewDoctorRegistrationRequest = async (request: IDoctor) => {
   const existingDoctorRequestByEmail = await DoctorRegistrationRequest.findOne({
     email: request.email,
   });
-  const existingDoctorRequestByUsername =
-    await DoctorRegistrationRequest.findOne({ username: request.username });
-
   if (existingDoctorRequestByEmail) {
     throw new Error("Email already exists. Please use a different email.");
   }
+
+  const existingDoctorRequestByUsername =
+    await DoctorRegistrationRequest.findOne({ username: request.username });
 
   if (existingDoctorRequestByUsername) {
     throw new Error(

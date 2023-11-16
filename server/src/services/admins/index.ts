@@ -88,7 +88,6 @@ export const acceptDoctorRegistrationRequestService = async (
       throw new Error("Request not found");
     }
 
-    // Create a new Doctor document using the data from the request
     const newDoctor: IDoctorModel = new Doctor({
       username: request.username,
       password: request.password,
@@ -102,11 +101,10 @@ export const acceptDoctorRegistrationRequestService = async (
       educationalBackground: request.educationalBackground,
       speciality: request.speciality,
       availableSlots: request.availableSlots,
-      identification: request.identification,
-      medicalLicense: request.medicalLicense,
-      medicalDegree: request.medicalDegree,
-      wallet: { amount: 0 },
-      contract: "",
+      identificationUrl: request.identificationUrl,
+      medicalLicenseUrl: request.medicalLicenseUrl,
+      medicalDegreeUrl: request.medicalDegreeUrl,
+      contractUrl: request.contractUrl,
       contractStatus: "accepted",
     });
 

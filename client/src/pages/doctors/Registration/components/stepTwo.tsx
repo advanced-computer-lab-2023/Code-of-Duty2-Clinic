@@ -1,119 +1,110 @@
-import { Button, Grid ,TextField } from '@mui/material';
-import React, {  useContext, useState } from 'react';
-import {
-  useForm,
-  SubmitHandler,
-  Controller,
-  FormProvider,
-  useWatch,
-} from 'react-hook-form';
-import { IFormTwoData } from '../DoctorRegistrationRequestForm';
-import { AuthContext } from '../../../../contexts/AuthContext';
-import { VerificationStatus } from '../../../../types/enums/VerficationStatus';
+import { Button, Grid, TextField } from "@mui/material";
+import React from "react";
+import { useForm, Controller } from "react-hook-form";
+import { IFormTwoData } from "../DoctorRegistrationRequestForm";
 
 interface IStepTwoFormProps {
-    passFormDataToParent:(data:IFormTwoData)=>void;
+  passFormDataToParent: (data: IFormTwoData) => void;
 }
 
-const StepTwoForm : React.FC<IStepTwoFormProps> = ({passFormDataToParent}) =>{
-    const methods = useForm<IFormTwoData>({
-        defaultValues: {
-          hourlyRate: '',
-          affiliation: '',
-          educationalBackground: '',
-          speciality:''
-        },
-    });
+const StepTwoForm: React.FC<IStepTwoFormProps> = ({ passFormDataToParent }) => {
+  const methods = useForm<IFormTwoData>({
+    defaultValues: {
+      hourlyRate: "",
+      affiliation: "",
+      educationalBackground: "",
+      speciality: "",
+    },
+  });
 
-    const { handleSubmit, control, reset, watch } = methods;
-    return (
-        <form onSubmit={methods.handleSubmit((data,event)=>{passFormDataToParent(data);event?.preventDefault()})}>
-        <Grid container  
+  const { control } = methods;
+  return (
+    <form
+      onSubmit={methods.handleSubmit((data, event) => {
+        passFormDataToParent(data);
+        event?.preventDefault();
+      })}
+    >
+      <Grid
+        container
         direction="row"
-        justifyItems={'end'}
-        alignItems={'center'}
+        justifyItems={"end"}
+        alignItems={"center"}
         minHeight={400}
         rowSpacing={1}
-        >   
-        
+      >
         <Grid item sm={12} xs={12}>
-        <Controller
+          <Controller
             name="hourlyRate"
             control={control}
             render={({ field }) => (
-            // <input type="number" {...field} min="0" placeholder="Enter Your Hourly Rate"  />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                fullWidth
-                {...field}
-                variant="standard"
-                type='number'
-                label="Hourly Rate(EGP)"
+                  fullWidth
+                  {...field}
+                  variant="standard"
+                  type="number"
+                  label="Hourly Rate(EGP)"
                 />
-            </div>
+              </div>
             )}
-        />
+          />
         </Grid>
         <Grid item sm={12} xs={12}>
-        <Controller
+          <Controller
             name="affiliation"
             control={control}
             render={({ field }) => (
-            // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                fullWidth
-                {...field}
-                variant="standard"
-                type='text'
-                label="Your Affiliation"
-                
+                  fullWidth
+                  {...field}
+                  variant="standard"
+                  type="text"
+                  label="Your Affiliation"
                 />
-            </div>
+              </div>
             )}
-        />
+          />
         </Grid>
         <Grid item sm={12} xs={12}>
-        <Controller
+          <Controller
             name="educationalBackground"
             control={control}
             render={({ field }) => (
-            // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                fullWidth
-                {...field}
-                variant="standard"
-                type='text'
-                label="Educational Background"
+                  fullWidth
+                  {...field}
+                  variant="standard"
+                  type="text"
+                  label="Educational Background"
                 />
-            </div>
+              </div>
             )}
-        />
+          />
         </Grid>
         <Grid item sm={12} xs={12}>
-        <Controller
+          <Controller
             name="speciality"
             control={control}
             render={({ field }) => (
-            // <input type="text" {...field} placeholder="Enter Your Affiliation"  />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <TextField
-                fullWidth
-                {...field}
-                variant="standard"
-                type=''
-                label="Speciality"
+                  fullWidth
+                  {...field}
+                  variant="standard"
+                  type=""
+                  label="Speciality"
                 />
-            </div>
+              </div>
             )}
-        />
+          />
         </Grid>
-        <Button type='submit'>Save</Button>
-    </Grid>
+        <Button type="submit">Save</Button>
+      </Grid>
     </form>
-    );
-}
-    
+  );
+};
 
-export default StepTwoForm
+export default StepTwoForm;

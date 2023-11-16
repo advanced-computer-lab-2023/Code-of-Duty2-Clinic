@@ -15,4 +15,5 @@ export interface IDoctor extends IDoctorBaseInfo {
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
   verifyWalletPinCode?: (pinCode: string) => Promise<boolean>;
   verifyPassword?: (password: string) => Promise<boolean>;
+  storePassword?: (password: string) => Promise<void>;
 }

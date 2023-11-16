@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import axios, { AxiosError } from "axios";
 import { config } from "../../configuration";
@@ -10,20 +10,8 @@ import {
   Snackbar,
 } from "@mui/material";
 import { Alert, AlertColor } from "@mui/material";
-import { useLocation } from "react-router-dom";
-// import { z } from 'zod';
-
-// const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
-
-// const schema = z.object({
-//     currentPassword: passwordSchema,
-//     newPassword: passwordSchema,
-//     confirmPassword: passwordSchema,
-// });
-
-const useQueryParams = () => {
-  return new URLSearchParams(useLocation().search);
-};
+import { useQueryParams } from "../../hooks/useQueryParams";
+import { getErrorMessage } from "../../utils/displayError";
 
 function UpdatePasswordPage() {
   const queryClient = useQueryClient();
@@ -33,8 +21,8 @@ function UpdatePasswordPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const searchParams = useQueryParams();
-  const type = searchParams.get("type");
+
+  const type = useQueryParams().get("type");
 
   const updatePasswordMutation = useMutation(
     async () => {
@@ -59,18 +47,10 @@ function UpdatePasswordPage() {
         );
         return response.data;
       }
-
-      // const response = await axios.patch(
-      //   `${config.serverUri}/patients/change-password`,
-      //   formData
-      // );
-
-      // return response.data;
     },
     {
       onSuccess: (data) => {
         const message = (data as { message: string }).message;
-        // Invalidate and refetch the patient's data after a successful update
         queryClient.invalidateQueries("patientData");
         setSnackbarSeverity("success");
         setSnackbarMessage(message);
@@ -78,11 +58,7 @@ function UpdatePasswordPage() {
       },
       onError: (error: AxiosError) => {
         setSnackbarSeverity("error");
-        // setSnackbarMessage((error as Error).message);
-        setSnackbarMessage(
-          (error?.response?.data as { message: string })?.message ??
-            "An error occurred"
-        );
+        setSnackbarMessage(getErrorMessage(error));
         setSnackbarOpen(true);
       },
     }

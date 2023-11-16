@@ -2,7 +2,7 @@ import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { findDoctorById, updatePasswordById } from "../../services/doctors";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
-// import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export const updateDoctorPassword = async (
   req: AuthorizedRequest,
@@ -12,7 +12,7 @@ export const updateDoctorPassword = async (
     const { currentPassword, newPassword, confirmPassword } = req.body;
     const doctorId = req.user?.id!;
 
-    const doctor = await findDoctorById(doctorId);
+    const doctor = await findDoctorById(doctorId, "+password");
 
     if (!doctor) {
       return res
@@ -27,7 +27,7 @@ export const updateDoctorPassword = async (
       });
     }
 
-    const isPasswordCorrect = await doctor.verfiyPassword?.(currentPassword);
+    const isPasswordCorrect = await doctor.verifyPassword?.(currentPassword);
 
     if (!isPasswordCorrect) {
       return res
@@ -51,16 +51,16 @@ export const updateDoctorPassword = async (
         .json({ message: "New password and confirm password do not match" });
     }
 
-    await updatePasswordById(doctorId, newPassword);
+    await doctor.storePassword?.(newPassword);
 
     return res
       .status(StatusCodes.OK)
       .json({ message: "Password updated successfully!" });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
 
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "An error occurred while updating the password" });
+      .json({ message: error.message || "Something went wrong" });
   }
 };

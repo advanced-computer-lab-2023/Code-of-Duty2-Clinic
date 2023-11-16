@@ -10,6 +10,8 @@ export interface IDoctorRegistrationRequestModel
   identificationUrl?: string;
   medicalLicenseUrl?: string;
   medicalDegreeUrl?: string;
+  speciality?: string;
+  availableSlots?: [{ startTime: Date; endTime: Date }];
   contractUrl?: string;
   status:
     | "accepted"

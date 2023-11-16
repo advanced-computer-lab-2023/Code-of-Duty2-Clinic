@@ -58,7 +58,7 @@ const uploadFiles = async ({
 
 const DoctorRegistrationRequestFormFiles: React.FC = () => {
   const { updateVerificationStatus } = useContext(AuthContext);
-  const { setStep } = useContext(ApplicationContext);
+  useContext(ApplicationContext);
   const identificationFile = useRef<HTMLInputElement>(null!);
   const medicalLicenseFile = useRef<HTMLInputElement>(null!);
   const medicalDegreeFile = useRef<HTMLInputElement>(null!);

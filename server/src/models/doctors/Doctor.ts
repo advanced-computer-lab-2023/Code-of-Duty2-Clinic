@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import { IDoctor } from "./interfaces/IDoctor";
 import bcrypt from "bcrypt";
-import WalletSchema, { DotctorWalletSchema } from "../wallets/Wallet";
+import { DotctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
 import PasswordResetSchema from "../users/PasswordReset";
 
 export interface IDoctorModel extends IDoctor, Document {}
@@ -43,7 +43,7 @@ export const DoctorSchema = new Schema<IDoctorModel>(
       select: false,
     },
     wallet: {
-      type: DotctorWalletSchema,
+      type: DoctorWalletSchema,
       select: false,
       required: false,
     },
@@ -65,7 +65,14 @@ DoctorSchema.pre("save", function (next) {
   });
 });
 
+DoctorSchema.methods.storePassword = async function (password: string) {
+  const user = this;
+  user.password = await bcrypt.hash(password, 10);
+  await user.save();
+};
+
 DoctorSchema.methods.verifyPassword = function (password: string) {
+  console.log(password, this.password);
   return bcrypt.compare(password, this.password);
 };
 
@@ -79,4 +86,3 @@ DoctorSchema.methods.verifyWalletPinCode = function (pinCode: string) {
 };
 
 export default mongoose.model<IDoctorModel>("Doctor", DoctorSchema);
-``;

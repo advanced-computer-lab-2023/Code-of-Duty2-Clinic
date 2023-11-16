@@ -113,7 +113,6 @@ export const sendContract = async (req: Request, res: Response) => {
     if (!request) {
       return res.status(StatusCodes.OK).json({ message: "Request not found" });
     }
-    // Update the status of the request
     res.status(StatusCodes.OK).json({ message: "Contract Sent" });
   } catch (error: any) {
     console.error("Error rejecting request:", error);

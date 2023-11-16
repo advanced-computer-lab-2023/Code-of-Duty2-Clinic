@@ -22,11 +22,9 @@ const Wallet = () => {
 
     try {
       await handleWalletPayment();
-      console.log("Payment successful.");
       setIsProcessing(false);
       handleNext();
     } catch (error: any) {
-      console.log("Error occured: ", getErrorMessage(error));
       setMessage(getErrorMessage(error));
       setOpenSnackbar(true);
       setIsProcessing(false);
