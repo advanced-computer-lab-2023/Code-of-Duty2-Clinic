@@ -2,7 +2,8 @@
 
 <!-- ![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png) -->
 
-A web application which allows **_Doctors_** to manage their medicine stock, **_Patients_** to schedule appointments for themselves and their family members, and **_Admins_** to manage the users and system as a whole.
+A web application which allows **_Doctors_** to manage their interactions with patients regarding apponitments, follow-ups and adding medical health records,
+**_Patients_** to schedule appointments for themselves and their family members, and **_Admins_** to manage the users and system as a whole.
 
 It is part of the larger _El7a2ni Healthcare Platform_, which also includes the [El7a2ni Pharmacy](https://github.com/advanced-computer-lab-2023/Code-of-Duty2-Pharmacy) web application.
 
