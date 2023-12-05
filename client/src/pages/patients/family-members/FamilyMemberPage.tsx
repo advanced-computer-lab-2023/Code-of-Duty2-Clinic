@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { config } from "../../configuration";
-import { useQueryParams } from "../../hooks/useQueryParams";
+import { config } from "../../../configuration";
+import { useQueryParams } from "../../../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Paper, Grid } from "@mui/material";
-import { healthPackagesOptionsRoute } from "../../data/routes/patientRoutes";
-import { getFormattedDateTime } from "../../utils/formatter";
+import { healthPackagesOptionsRoute } from "../../../data/routes/patientRoutes";
+import { getFormattedDateTime } from "../../../utils/formatter";
 const FamilyMemberPage: React.FC = () => {
   const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
   const queryParams = useQueryParams();

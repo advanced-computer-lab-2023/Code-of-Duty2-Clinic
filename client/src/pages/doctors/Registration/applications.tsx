@@ -11,7 +11,7 @@ import ApplicationContextProvider, {
   ApplicationContext,
 } from "./context/application";
 import Contract from "./components/Contract";
-import { VerificationStatus } from "../../../types/enums/VerficationStatus";
+import { VerificationStatus } from "../../../types/enums/VerificationStatus";
 
 const Applications = () => {
   return (
@@ -53,8 +53,7 @@ function a11yProps(index: number) {
 }
 
 function ApplicationsComponent() {
-
-  const { step,setStep } = useContext(ApplicationContext);
+  const { step, setStep } = useContext(ApplicationContext);
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
@@ -63,11 +62,16 @@ function ApplicationsComponent() {
 
   const verifyStatus = useContext(AuthContext);
 
-  switch(verifyStatus.authState.verificationStatus){
-    case VerificationStatus.pendingDocumentsUpload : setStep(1);break
-    case VerificationStatus.pendingContractAcceptance || VerificationStatus.accepted : setStep(2);break
+  switch (verifyStatus.authState.verificationStatus) {
+    case VerificationStatus.pendingDocumentsUpload:
+      setStep(1);
+      break;
+    case VerificationStatus.pendingContractAcceptance ||
+      VerificationStatus.accepted:
+      setStep(2);
+      break;
   }
-  console.log(verifyStatus.authState.verificationStatus+"-->"+step);
+  console.log(verifyStatus.authState.verificationStatus + "-->" + step);
   return (
     <Stack direction={"row"} justifyContent={"center"} alignItems={"center"}>
       <Card sx={{ width: 400, maxWidth: 400 }}>
@@ -83,8 +87,12 @@ function ApplicationsComponent() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            {verifyStatus.authState.verificationStatus === VerificationStatus.pendingDocumentsUpload && <DoctorRegistrationRequestFormFiles />}
-            {verifyStatus.authState.verificationStatus !== VerificationStatus.pendingDocumentsUpload && <Contract />}
+            {verifyStatus.authState.verificationStatus ===
+              VerificationStatus.pendingDocumentsUpload && (
+              <DoctorRegistrationRequestFormFiles />
+            )}
+            {verifyStatus.authState.verificationStatus !==
+              VerificationStatus.pendingDocumentsUpload && <Contract />}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             InActive

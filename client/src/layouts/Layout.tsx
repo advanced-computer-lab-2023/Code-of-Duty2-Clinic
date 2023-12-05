@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { Box, useMediaQuery } from "@mui/material";
@@ -15,6 +15,11 @@ import useFirstPath from "../hooks/useFirstPath";
 import getRequiredSidebarItems from "../utils/getRequiredSidebarItems";
 import { loginRoute, doctorLoginRoute } from "../data/routes/loginRoutes";
 import { doctorUnverifiedRoute } from "../data/routes/unverifiedRoutes";
+import { Session } from "@talkjs/react";
+import { config } from "../configuration";
+import { SidebarItem } from "../types";
+import Talk from "talkjs";
+import { UserContext } from "../contexts/UserContext";
 
 interface Props {
   children: React.ReactNode;
@@ -33,31 +38,48 @@ const Layout: React.FC<Props> = ({ children }) => {
   const marginLeft = isMediumScreenOrLarger ? sidebarWidth : "0";
   const firstPath = useFirstPath();
 
-  const MainPageContent = () => {
-    return <>{children}</>;
-  };
+  const currentUser = useContext(UserContext).user;
 
-  if (
-    firstPath === "admin" ||
-    firstPath === "doctor" ||
-    firstPath === "patient"
-  ) {
+  console.log("currentUser: ", currentUser);
+
+  const createUser = useCallback(() => {
+    return new Talk.User(currentUser as Talk.UserOptions);
+  }, [currentUser]);
+
+  const sessionRef = useRef<Talk.Session>();
+
+  const onPermission = useCallback(() => {
+    alert("permission request coming up!");
+  }, []);
+
+  if (firstPath === "doctor" || firstPath === "patient") {
     const sidebarItems = getRequiredSidebarItems(firstPath);
     return (
-      <Box display="flex">
-        <Sidebar sidebarItems={sidebarItems} sidebarWidth={sidebarWidth} />
-        <Box
-          sx={{
-            marginLeft,
-            transition: "margin-left 0.2s ease-in-out",
-            flexGrow: 1,
-          }}
+      <Session
+        appId={config.talkJsAppId}
+        syncUser={createUser}
+        onBrowserPermissionNeeded={onPermission}
+        sessionRef={sessionRef}
+      >
+        <MainUserLayout
+          sidebarItems={sidebarItems}
+          sidebarWidth={sidebarWidth}
+          marginLeft={marginLeft}
         >
-          <UserPanel sidebarItems={sidebarItems} />
-          <MainPageContent />
-          <Footer />
-        </Box>
-      </Box>
+          {children}
+        </MainUserLayout>
+      </Session>
+    );
+  } else if (firstPath === "admin") {
+    const sidebarItems = getRequiredSidebarItems(firstPath);
+    return (
+      <MainUserLayout
+        sidebarItems={sidebarItems}
+        sidebarWidth={sidebarWidth}
+        marginLeft={marginLeft}
+      >
+        {children}
+      </MainUserLayout>
     );
   } else if (
     location.pathname === doctorUnverifiedRoute.path ||
@@ -69,18 +91,47 @@ const Layout: React.FC<Props> = ({ children }) => {
     return (
       <>
         <Navbar />
-        <MainPageContent />
+        {children}
         <Footer />
       </>
     );
   } else {
     return (
       <>
-        <MainPageContent />
+        {children}
         <Footer />
       </>
     );
   }
 };
 
+type MainUserLayoutProps = {
+  sidebarItems: SidebarItem[];
+  sidebarWidth: string;
+  marginLeft?: string;
+  children: React.ReactNode;
+};
+const MainUserLayout: React.FC<MainUserLayoutProps> = ({
+  sidebarItems,
+  sidebarWidth,
+  marginLeft = "0",
+  children,
+}) => {
+  return (
+    <Box display="flex">
+      <Sidebar sidebarItems={sidebarItems} sidebarWidth={sidebarWidth} />
+      <Box
+        sx={{
+          marginLeft,
+          transition: "margin-left 0.2s ease-in-out",
+          flexGrow: 1,
+        }}
+      >
+        <UserPanel sidebarItems={sidebarItems} />
+        {children}
+        <Footer />
+      </Box>
+    </Box>
+  );
+};
 export default Layout;

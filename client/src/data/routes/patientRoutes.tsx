@@ -1,26 +1,28 @@
 import PatientRegisteredFamilyMembers from "../../pages/patients/RegisteredFamilyMembers/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
-import AddFamilyMember from "../../pages/patients/AddFamilyMember";
+import AddFamilyMember from "../../pages/patients/family-members/AddFamilyMember";
 import Home from "../../pages/patients/Home";
-import SearchForDoctors from "../../pages/patients/SearchForDoctors";
+import SearchForDoctors from "../../pages/patients/doctor-interactions/SearchForDoctors";
 import ViewAppointments from "../../pages/patients/appointments/ViewAppointments";
-import ViewDoctorDetails from "../../pages/patients/ViewDoctorDetails";
-import ViewDoctors from "../../pages/patients/ViewDoctors";
+import ViewDoctorDetails from "../../pages/patients/doctor-interactions/ViewDoctorDetails";
+import ViewDoctors from "../../pages/patients/doctor-interactions/ViewDoctors";
 import { Route } from "../../types";
 import MedicalHistory from "../../pages/patients/medicalHistory/medicalHistory";
-import AddRegisteredFamilyMember from "../../pages/patients/AddRegisteredFamilyMember";
+import AddRegisteredFamilyMember from "../../pages/patients/family-members/AddRegisteredFamilyMember";
 import UpdatePassword from "../../pages/general/UpdatePassword";
 import HealthPackageList from "../../components/healthPackageList";
 import YourPage from "../../pages/patients/health-packages/HealthPackageStatus";
-import SubscribedPackageBenefits from "../../pages/patients/subscribedPackageBenefits";
-import FamilyMemberPage from "../../pages/patients/FamilyMemberPage";
+import SubscribedPackageBenefits from "../../pages/patients/health-packages/subscribedPackageBenefits";
+import FamilyMemberPage from "../../pages/patients/family-members/FamilyMemberPage";
 import ViewWallet from "../../pages/patients/wallet/ViewWallet";
 import CreateWallet from "../../pages/patients/wallet/CreateWallet";
 import PatientPaymentPage from "../../pages/patients/health-packages/HealthPackagePayment";
-import FamilyMembersComponent from "../../pages/patients/FamilyMembers";
+import FamilyMembersComponent from "../../pages/patients/family-members/FamilyMembers";
 import HealthPackageDetailsPage from "../../pages/patients/health-packages/HealthPackagesOptions";
 import AppointmentBooking from "../../pages/patients/appointments/AppointmentBooking";
 import AppointmentPayment from "../../pages/patients/appointments/AppointmentsPayment";
+import PatientDoctorsPage from "../../pages/patients/doctor-interactions/ViewPatientDoctors";
+import ChatsView from "../../features/chats/ChatsView";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -133,6 +135,16 @@ export const appointmentPaymentRoute: Route = {
   element: <AppointmentPayment />,
 };
 
+export const patientDoctorsRoute: Route = {
+  path: "/patient/my-doctors",
+  element: <PatientDoctorsPage />,
+};
+
+export const chatsRoute: Route = {
+  path: "/patient/chats",
+  element: <ChatsView />,
+};
+
 const routes: Route[] = [
   patientDashboardRoute,
   viewAllDoctorsRoute,
@@ -160,6 +172,8 @@ const routes: Route[] = [
   healthPackagePaymentRoute,
   appointmentBookingRoute,
   appointmentPaymentRoute,
+  patientDoctorsRoute,
+  chatsRoute,
 ];
 
 export default routes;

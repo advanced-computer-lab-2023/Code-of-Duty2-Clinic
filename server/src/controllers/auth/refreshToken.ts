@@ -16,13 +16,12 @@ export const refreshAccessToken = (req: AuthorizedRequest, res: Response) => {
   try {
     const decodedUserData = verifyAndDecodeRefreshToken(refreshToken);
     const accessToken = signAndGetAccessToken(decodedUserData);
-    res
-      .status(StatusCodes.OK)
-      .json({
-        accessToken,
-        role: decodedUserData.role,
-        verificationStatus: decodedUserData.verificationStatus,
-      });
+    res.status(StatusCodes.OK).json({
+      accessToken,
+      id: decodedUserData.id,
+      role: decodedUserData.role,
+      verificationStatus: decodedUserData.verificationStatus,
+    });
   } catch (error) {
     res.clearCookie("refreshToken", { httpOnly: true });
     req.user = undefined;

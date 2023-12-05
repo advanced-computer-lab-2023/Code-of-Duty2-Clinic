@@ -10,10 +10,12 @@ export const doctorLogin = async (req: Request, res: Response) => {
       .json({ message: "Username and password are required" });
   }
   try {
-    const { accessToken, refreshToken, role, verificationStatus } =
+    const { accessToken, refreshToken, role, verificationStatus, info } =
       await authenticateDoctor(username, password);
     res.cookie("refreshToken", refreshToken, { httpOnly: true, path: "/" });
-    res.status(StatusCodes.OK).json({ accessToken, role, verificationStatus });
+    res
+      .status(StatusCodes.OK)
+      .json({ accessToken, role, verificationStatus, info });
   } catch (error: any) {
     res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }

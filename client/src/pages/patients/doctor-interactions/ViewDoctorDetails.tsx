@@ -1,9 +1,9 @@
 import axios from "axios";
-import { DoctorDetails } from "../../types";
+import { DoctorDetails } from "../../../types";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { config } from "../../configuration";
-import { getFormattedDateTime } from "../../utils/formatter";
+import { useParams } from "react-router-dom";
+import { config } from "../../../configuration";
+import { getFormattedDateTime } from "../../../utils/formatter";
 
 const ViewDoctorDetails: React.FC = () => {
   const [doctor, setDoctor] = useState<DoctorDetails>({} as DoctorDetails);

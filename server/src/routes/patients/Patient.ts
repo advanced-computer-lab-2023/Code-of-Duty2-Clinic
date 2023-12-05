@@ -58,6 +58,7 @@ import {
   bookAnAppointmentHandler,
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
+import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
 
 const patientRouter = express.Router();
 
@@ -70,6 +71,8 @@ patientRouter
   .get("/doctors/:doctorId", getDoctorById)
 
   .get("/patient-info", getPatientInfo)
+
+  .get("/patient-doctors", getPatientDoctorsHandler)
 
   .post("/family-members", addFamilyMembers)
 

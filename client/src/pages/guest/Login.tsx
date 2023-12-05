@@ -27,6 +27,7 @@ import { useMutation } from "react-query";
 import { loginService } from "./loginService";
 import { getErrorMessage } from "../../utils/displayError";
 import { LoginResponse } from "../../types/LoginResponse";
+import { UserContext } from "../../contexts/UserContext";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -38,12 +39,15 @@ export default function Login() {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const location = useLocation();
+
   const loginMutation = useMutation({
     mutationFn: loginService,
     onSuccess: (data: LoginResponse) => handleLoginSuccess(data),
   });
 
   const { login } = useContext(AuthContext);
+  const { setUser } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const fromOrWelcome = location.state?.from?.pathname || welcomeRoute.path;
@@ -68,6 +72,7 @@ export default function Login() {
 
   function handleLoginSuccess(data: LoginResponse) {
     login(data.accessToken, data.role);
+    storePatientInfo(data);
 
     if (
       data.role === UserRole.PATIENT &&
@@ -84,6 +89,20 @@ export default function Login() {
     } else if (data.role === UserRole.ADMIN) {
       navigate(adminDashboardRoute.path);
     }
+  }
+
+  function storePatientInfo(data: LoginResponse) {
+    setUser(
+      data.info
+        ? {
+            id: data.info.id,
+            email: data.info.email,
+            name: data.info.name,
+            role: "PATIENT",
+            photoUrl: data.info.imageUrl,
+          }
+        : null
+    );
   }
   return (
     <Container component="main" maxWidth="lg" sx={{ pb: 6 }}>

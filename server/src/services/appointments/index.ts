@@ -103,7 +103,7 @@ export const findMostRecentCompletedAppointment = async (
     doctorId,
     patientId,
     status: "completed",
-  }).sort({ "timePeriod.endTime": -1 }); // Sorting Bl3ks to retreive the top most recent appointment
+  }).sort({ "timePeriod.endTime": -1 });
 };
 
 export async function validateAppointmentCreation(

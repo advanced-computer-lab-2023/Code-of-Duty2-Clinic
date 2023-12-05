@@ -19,7 +19,7 @@ import { styled } from "@mui/material";
 import {
   getFormattedDate,
   getFormattedTime,
-  getQueredDateTime,
+  getQueriedDateTime,
 } from "../../utils/formatter";
 import { filterParams } from "../../utils/filterer";
 
@@ -43,6 +43,7 @@ const AppointmentItem = styled(Card)({
   alignItems: "center",
   padding: 16,
   cursor: "pointer",
+  textDecoration: "none",
 }) as typeof Card;
 
 const AppointmentInfo = styled(Typography)({
@@ -88,7 +89,7 @@ const Appointments: React.FC<Props> = ({ isPatient }) => {
   const fetchFilteredAppointments = async () => {
     try {
       setFilteredAppointments(undefined);
-      const dateTimeStr = getQueredDateTime(date, time);
+      const dateTimeStr = getQueriedDateTime(date, time);
       const isTimeSet = dateTimeStr !== "" ? !!time : undefined;
       const params = filterParams({
         targetName,

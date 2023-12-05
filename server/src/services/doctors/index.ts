@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import Appointment from "../../models/appointments/Appointment";
 import { getClinicCommission } from "../../models/clinic/Clinic";
 import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
 import { IDoctorBaseInfo } from "../../models/doctors/interfaces/IDoctorBaseInfo";
@@ -156,7 +158,7 @@ export const getAllDoctorsRequiredInfo = async (
     ? await HealthPackage.findById(subscribedPackage?.packageId)
     : null;
 
-  const searchQuery = getMetchingDoctorsQueryFields(urlQuery);
+  const searchQuery = getMatchingDoctorsQueryFields(urlQuery);
 
   const allDoctors = await Doctor.find({
     contractStatus: "accepted",
@@ -206,8 +208,7 @@ type DoctorSearchQuery = {
   speciality?: { $regex: string; $options: string };
   availableSlots?: { $elemMatch: { startTime: any; endTime: any } };
 };
-
-function getMetchingDoctorsQueryFields(urlQuery: DoctorUrlQuery) {
+function getMatchingDoctorsQueryFields(urlQuery: DoctorUrlQuery) {
   const { name, speciality, availabilityTime } = urlQuery;
   const isTimeSet = urlQuery.isTimeSet === "true";
 
@@ -234,3 +235,53 @@ function getMetchingDoctorsQueryFields(urlQuery: DoctorUrlQuery) {
   }
   return searchQuery;
 }
+
+export const getDoctorPatients = async (
+  doctorId: string,
+  patientName: string
+) => {
+  const doctor = await findDoctorById(doctorId);
+  if (!doctor) throw new Error(entityIdDoesNotExistError("doctor", doctorId));
+
+  const patients = await Appointment.aggregate([
+    {
+      $match: {
+        doctorId: new mongoose.Types.ObjectId(doctorId),
+        status: "completed",
+      },
+    },
+    {
+      $lookup: {
+        from: "patients",
+        localField: "patientId",
+        foreignField: "_id",
+        as: "patient",
+      },
+    },
+    {
+      $match: {
+        ["patient.name"]: { $regex: `^${patientName}`, $options: "i" },
+      },
+    },
+    { $unwind: "$patient" },
+    {
+      $group: {
+        _id: "$patient._id",
+        name: { $first: "$patient.name" },
+        gender: { $first: "$patient.gender" },
+        imageUrl: { $first: "$patient.imageUrl" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        id: "$_id",
+        name: 1,
+        gender: 1,
+        imageUrl: 1,
+      },
+    },
+  ]);
+
+  return patients;
+};

@@ -13,7 +13,7 @@ import { uploadImage } from "../../../services/fileUploader";
 import { ApplicationContext } from "./context/application";
 import { useMutation } from "react-query";
 import { AuthContext } from "../../../contexts/AuthContext";
-import { VerificationStatus } from "../../../types/enums/VerficationStatus";
+import { VerificationStatus } from "../../../types/enums/VerificationStatus";
 
 export interface IExperienceFile {
   url: string;

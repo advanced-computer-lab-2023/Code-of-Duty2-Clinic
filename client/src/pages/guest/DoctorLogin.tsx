@@ -24,6 +24,7 @@ import { doctorLoginService } from "./loginService";
 import { getErrorMessage } from "../../utils/displayError";
 import { doctorUnverifiedRoute } from "../../data/routes/unverifiedRoutes";
 import { LoginResponse } from "../../types/LoginResponse";
+import { UserContext } from "../../contexts/UserContext";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -35,11 +36,15 @@ export default function DoctorLogin() {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const location = useLocation();
+
   const loginMutation = useMutation({
     mutationFn: doctorLoginService,
     onSuccess: handleLoginSuccess,
   });
+
   const { login } = useContext(AuthContext);
+  const { setUser } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const fromOrWelcome = location.state?.from?.pathname || welcomeRoute.path;
@@ -63,6 +68,7 @@ export default function DoctorLogin() {
 
   function handleLoginSuccess(data: LoginResponse) {
     login(data.accessToken, data.role, data.verificationStatus);
+    storeDoctorInfo(data);
     if (data.role === UserRole.UNVERIFIED_DOCTOR) {
       navigate(doctorUnverifiedRoute.path);
     } else if (
@@ -202,4 +208,18 @@ export default function DoctorLogin() {
       </Grid>
     </Container>
   );
+
+  function storeDoctorInfo(data: LoginResponse) {
+    setUser(
+      data.info
+        ? {
+            id: data.info.id,
+            name: data.info.name,
+            email: data.info.email,
+            role: "DOCTOR",
+            photoUrl: data.info.imageUrl,
+          }
+        : null
+    );
+  }
 }

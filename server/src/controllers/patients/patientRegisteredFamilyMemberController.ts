@@ -63,7 +63,6 @@ export const addPatientRegisteredFamilyMember = async (
         ],
     };
 
-    console.log(registeredFamilyMember);
     // Initialize registeredFamilyMembers to an empty array if it is undefined
     if (!requestingPatient!.registeredFamilyMembers) {
       requestingPatient!.registeredFamilyMembers = [];

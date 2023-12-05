@@ -1,5 +1,11 @@
 import axios, { HttpStatusCode } from "axios";
-import { createContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useEffect,
+  useContext,
+} from "react";
 
 import UserRole from "../types/enums/UserRole";
 import { config } from "../configuration";
@@ -8,7 +14,8 @@ import { adminDashboardRoute } from "../data/routes/adminRoutes";
 import { doctorDashboardRoute } from "../data/routes/doctorRoutes";
 import { patientDashboardRoute } from "../data/routes/patientRoutes";
 import { welcomeRoute } from "../data/routes/guestRoutes";
-import { VerificationStatus } from "../types/enums/VerficationStatus";
+import { VerificationStatus } from "../types/enums/VerificationStatus";
+import { UserContext } from "./UserContext";
 
 interface IAuthState {
   isAuthenticated: boolean;
@@ -20,7 +27,11 @@ interface IAuthState {
 interface IAuthContext {
   authState: IAuthState;
   updateVerificationStatus: (verificationStatus: VerificationStatus) => void;
-  login: (accessToken: string, role: UserRole,verificationStatus?:VerificationStatus) => void;
+  login: (
+    accessToken: string,
+    role: UserRole,
+    verificationStatus?: VerificationStatus
+  ) => void;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<string>;
 }
@@ -150,6 +161,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error("Error during logout", error);
     }
     clearAuthorizationHeader();
+    useContext(UserContext).setUser(null);
   };
 
   const refreshAuth = async () => {
@@ -159,7 +171,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         {},
         { withCredentials: true }
       );
-      login(response.data.accessToken, response.data.role,response.data.verificationStatus);
+      login(
+        response.data.accessToken,
+        response.data.role,
+        response.data.verificationStatus
+      );
       return response.data.accessToken;
     } catch (error) {
       logout();

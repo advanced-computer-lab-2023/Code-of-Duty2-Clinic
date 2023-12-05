@@ -8,6 +8,9 @@ import { addDays } from "../../utils/addDays";
 import PaymentMethod from "../../types/PaymentMethod";
 import { findHealthPackageDetailsAfterDiscount } from "../health-packages";
 import { performWalletTransaction } from "../payments/wallets/patients";
+import { IDoctorModel } from "../../models/doctors/Doctor";
+import mongoose from "mongoose";
+import Appointment from "../../models/appointments/Appointment";
 
 export const findAllPatients = async () => await Patient.find();
 export const findPatientById = async (id: string, elementsToSelect?: any) => {
@@ -16,18 +19,22 @@ export const findPatientById = async (id: string, elementsToSelect?: any) => {
     return await PromisedPatient.select({ _id: 1, password: 1 });
   return await PromisedPatient.select(elementsToSelect);
 };
-export const findPatientByUsername = async (username: string) =>
-  await Patient.findOne({ username }).select({ _id: 1, password: 1 });
+export const findPatientByUsername = async (
+  username: string,
+  elementsToSelect?: any
+) =>
+  await Patient.findOne({ username }).select(
+    elementsToSelect || { _id: 1, password: 1 }
+  );
 
 export const findPatientByEmail = async (
   email: string,
   elementsToSelect?: any
-) => {
-  const PromisedPatient = Patient.findOne({ email });
-  if (!elementsToSelect)
-    return await PromisedPatient.select({ _id: 1, password: 1 });
-  return await PromisedPatient.select(elementsToSelect);
-};
+) =>
+  Patient.findOne({ email }).select(
+    elementsToSelect || { _id: 1, password: 1 }
+  );
+
 export const deletePatientById = async (id: string) =>
   await Patient.findByIdAndDelete(id);
 
@@ -360,8 +367,6 @@ export const viewSubscribedHealthPackageAllDetailsServiceD = async (
   if (!patient.dependentFamilyMembers) {
     throw new Error("Dependent family members not found");
   }
-  console.log(patientNId);
-  console.log(patient.dependentFamilyMembers[0].nationalId);
 
   const dependent = patient.dependentFamilyMembers.find(
     (dependentFamilyMember) =>
@@ -380,4 +385,55 @@ export const viewSubscribedHealthPackageAllDetailsServiceD = async (
     subscribedPackage,
     healthPackage,
   };
+};
+
+export const getPatientDoctors = async (
+  patientId: string,
+  doctorName: string
+) => {
+  const patient = await findPatientById(patientId);
+  if (!patient)
+    throw new Error(entityIdDoesNotExistError("patient", patientId));
+
+  const doctors = await Appointment.aggregate([
+    {
+      $match: {
+        patientId: new mongoose.Types.ObjectId(patientId),
+        status: "completed",
+      },
+    },
+    {
+      $lookup: {
+        from: "doctors",
+        localField: "doctorId",
+        foreignField: "_id",
+        as: "doctor",
+      },
+    },
+    {
+      $match: {
+        ["doctor.name"]: { $regex: `^${doctorName}`, $options: "i" },
+      },
+    },
+    { $unwind: "$doctor" },
+    {
+      $group: {
+        _id: "$doctor._id",
+        name: { $first: "$doctor.name" },
+        email: { $first: "$doctor.email" },
+        imageUrl: { $first: "$doctor.imageUrl" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        id: "$_id",
+        name: 1,
+        gender: 1,
+        imageUrl: 1,
+      },
+    },
+  ]);
+
+  return doctors;
 };

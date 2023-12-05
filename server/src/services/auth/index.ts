@@ -7,8 +7,7 @@ import { findPatientByUsername } from "../patients";
 import { User } from "../../types/User";
 import { findDoctorRegistrationRequestByUsername } from "../doctors/registration_requests";
 import { IDoctorRegistrationRequestModel } from "../../models/doctors/DoctorRegistrationRequest";
-import { VerificationStatus } from "../../types/VerficationStatus";
-import { IPatient } from "../../models/patients/interfaces/IPatient";
+import { VerificationStatus } from "../../types/VerificationStatus";
 import { IPatientModel } from "../../models/patients/Patient";
 import { IDoctorModel } from "../../models/doctors/Doctor";
 import { IAdminModel } from "../../models/admins/Admin";
@@ -34,8 +33,8 @@ export const authenticatePatientOrAdmin = async (
   throw new Error(usernameOrPasswordIncorrectErrorMessage);
 };
 
-const authenticateUserIfAdmin = async (email: string, password: string) => {
-  const admin = await findAdminByUsername(email);
+const authenticateUserIfAdmin = async (username: string, password: string) => {
+  const admin = await findAdminByUsername(username);
   if (!admin) {
     return null;
   }
@@ -43,11 +42,20 @@ const authenticateUserIfAdmin = async (email: string, password: string) => {
   const user: User = { id: admin._id, role: UserRole.ADMIN };
   const accessToken = signAndGetAccessToken(user);
   const refreshToken = signAndGetRefreshToken(user);
-  return { accessToken, refreshToken, role: UserRole.ADMIN };
+  return { accessToken, refreshToken, role: user.role, info: null };
 };
 
-const authenticateUserIfPatient = async (email: string, password: string) => {
-  const patient: any = await findPatientByUsername(email);
+const authenticateUserIfPatient = async (
+  username: string,
+  password: string
+) => {
+  const patient: IPatientModel | null = await findPatientByUsername(username, {
+    _id: 1,
+    password: 1,
+    email: 1,
+    name: 1,
+    imageUrl: 1,
+  });
   if (!patient) {
     return null;
   }
@@ -55,7 +63,17 @@ const authenticateUserIfPatient = async (email: string, password: string) => {
   const user = { id: patient._id, role: UserRole.PATIENT };
   const accessToken = signAndGetAccessToken(user);
   const refreshToken = signAndGetRefreshToken(user);
-  return { accessToken, refreshToken, role: UserRole.PATIENT };
+  return {
+    accessToken,
+    refreshToken,
+    role: user.role,
+    info: {
+      id: user.id,
+      email: patient.email,
+      name: patient.name,
+      imageUrl: patient.imageUrl,
+    },
+  };
 };
 
 export const authenticateDoctor = async (
@@ -83,6 +101,9 @@ const authenticateUserIfVerifiedDoctor = async (
 ) => {
   const doctor = await findDoctorByUsername(username, {
     _id: 1,
+    email: 1,
+    name: 1,
+    imageUrl: 1,
     password: 1,
     contractStatus: 1,
   });
@@ -105,6 +126,12 @@ const authenticateUserIfVerifiedDoctor = async (
     refreshToken,
     role: UserRole.DOCTOR,
     verificationStatus: VerificationStatus.accepted,
+    info: {
+      id: user.id,
+      email: doctor.email,
+      name: doctor.name,
+      imageUrl: doctor.imageUrl,
+    },
   };
 };
 
@@ -141,6 +168,7 @@ const authenticateUserIfUnverifiedDoctor = async (
     refreshToken,
     role: UserRole.UNVERIFIED_DOCTOR,
     verificationStatus,
+    info: null,
   };
 };
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { config } from "../../configuration";
-import { familyMemberPageRoute } from "../../data/routes/patientRoutes";
+import { config } from "../../../configuration";
+import { familyMemberPageRoute } from "../../../data/routes/patientRoutes";
 import {
   FormControlLabel,
   Checkbox,

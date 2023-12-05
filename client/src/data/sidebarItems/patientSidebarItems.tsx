@@ -3,6 +3,7 @@ import MedicineIcon from "@mui/icons-material/Medication";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import WalletIcon from "@mui/icons-material/Wallet";
+import ChatIcon from "@mui/icons-material/Chat";
 
 import {
   addFamilyMemberRoute,
@@ -21,6 +22,8 @@ import {
   subscribedPackageBenefitsRoute,
   addRegisteredFamilyMemberRoute,
   appointmentBookingRoute,
+  chatsRoute,
+  patientDoctorsRoute,
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
@@ -81,6 +84,16 @@ export const patientSidebarItems = [
         title: "View my Appointments",
         href: patientAppointmentsRoute.path,
         icon: <PersonIcon />,
+      },
+      {
+        title: "View my Doctors",
+        href: patientDoctorsRoute.path,
+        icon: <PersonIcon />,
+      },
+      {
+        title: "My Chats",
+        href: chatsRoute.path,
+        icon: <ChatIcon />,
       },
     ],
   },

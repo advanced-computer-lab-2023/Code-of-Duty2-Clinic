@@ -6,11 +6,11 @@ import { Alert } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
-import { config } from "../../configuration";
+import { config } from "../../../configuration";
 import { MenuItem, Select } from "@mui/material";
 import { FormControl, InputLabel } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import Relation from "../../types/enums/Relation";
+import Relation from "../../../types/enums/Relation";
 import { useRef } from "react";
 
 const schema = z

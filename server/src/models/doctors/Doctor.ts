@@ -72,13 +72,10 @@ DoctorSchema.methods.storePassword = async function (password: string) {
 };
 
 DoctorSchema.methods.verifyPassword = function (password: string) {
-  console.log(password, this.password);
   return bcrypt.compare(password, this.password);
 };
 
 DoctorSchema.methods.verifyPasswordResetOtp = function (otp: string) {
-  console.log(otp, this.passwordReset.otp);
-  console.log(bcrypt.compare(otp, this.passwordReset.otp));
   return bcrypt.compare(otp, this.passwordReset.otp);
 };
 DoctorSchema.methods.verifyWalletPinCode = function (pinCode: string) {
