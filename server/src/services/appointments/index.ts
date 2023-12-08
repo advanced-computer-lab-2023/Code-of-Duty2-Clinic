@@ -96,6 +96,7 @@ export const scheduleAppointment = async (
     isAFollowUp: isAFollowUpAppointment,
     payerId,
   });
+  console.log(appointment.payerId);
   return await appointment.save();
 };
 

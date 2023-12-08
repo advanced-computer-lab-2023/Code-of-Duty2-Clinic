@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import Appointment from "../../models/appointments/Appointment";
 import { getClinicCommission } from "../../models/clinic/Clinic";
 import Doctor, { IDoctorModel } from "../../models/doctors/Doctor";
-import { IDoctorBaseInfo } from "../../models/doctors/interfaces/IDoctorBaseInfo";
 import HealthPackage, {
   IHealthPackageModel,
 } from "../../models/health_packages/HealthPackage";
@@ -112,8 +111,7 @@ export const updateDoctorPassword = async (
   doctor: IDoctorModel,
   newPassword: string
 ) => {
-  doctor.password = newPassword;
-  await doctor.save();
+  await doctor.storePassword?.(newPassword);
 };
 
 export const validateDoctorPassword = async (
@@ -133,7 +131,7 @@ export const addAvailableSlots = async (
   if (!doctor) {
     throw new Error(entityIdDoesNotExistError("doctor", doctorID));
   }
-  doctor.availableSlots.push({ startTime: startTime, endTime: endTime });
+  doctor.availableSlots.push({ startTime, endTime });
   await doctor.save();
 };
 
@@ -240,7 +238,13 @@ export const getDoctorPatients = async (
   doctorId: string,
   patientName: string
 ) => {
-  const doctor = await findDoctorById(doctorId);
+  const doctor = await findDoctorById(doctorId, {
+    _id: 1,
+    name: 1,
+    email: 1,
+    mobileNumber: 1,
+    imageUrl: 1,
+  });
   if (!doctor) throw new Error(entityIdDoesNotExistError("doctor", doctorId));
 
   const patients = await Appointment.aggregate([
