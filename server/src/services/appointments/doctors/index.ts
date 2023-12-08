@@ -77,5 +77,5 @@ export const scheduleAFollowUpAppointment = async (
       "No recent completed appointment found between the doctor and patient"
     );
   }
-  await scheduleAppointment(doctorId, patientId, startTime, endTime);
+  await scheduleAppointment(doctorId, patientId, startTime, endTime, true);
 };

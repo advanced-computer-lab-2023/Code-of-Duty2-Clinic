@@ -115,7 +115,7 @@ export const bookAnAppointmentForADependentFamilyMember = async (
 };
 
 const validateAppointmentCreationForADependentFamilyMember = async (
-  patientId: string,
+  payerId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
@@ -127,11 +127,10 @@ const validateAppointmentCreationForADependentFamilyMember = async (
 
   const doctor = await findDoctorById(doctorId);
   if (!doctor) throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
-  const patient = await findPatientById(patientId, {
+  const patient = await findPatientById(payerId, {
     dependentFamilyMembers: 1,
   });
-  if (!patient)
-    throw new Error(entityIdDoesNotExistError("Patient", patientId));
+  if (!patient) throw new Error(entityIdDoesNotExistError("Patient", payerId));
 
   if (
     !patient.dependentFamilyMembers ||
@@ -140,7 +139,7 @@ const validateAppointmentCreationForADependentFamilyMember = async (
     throw new Error("Patient has no dependent family members");
 
   const dependentFamilyMember = patient.dependentFamilyMembers.find(
-    (familMember) => familMember.nationalId === dependentNationalId
+    (familyMember) => familyMember.nationalId === dependentNationalId
   );
   if (!dependentFamilyMember)
     throw new Error(
@@ -149,7 +148,7 @@ const validateAppointmentCreationForADependentFamilyMember = async (
 
   const conflictingPatientDependentAppointments =
     await findConflictingPatientDependentFamilyMemberAppointments(
-      patientId,
+      payerId,
       dependentNationalId,
       startTime,
       endTime
@@ -173,7 +172,7 @@ const validateAppointmentCreationForADependentFamilyMember = async (
 };
 
 const findConflictingPatientDependentFamilyMemberAppointments = (
-  patientId: string,
+  payerId: string,
   dependentNationalId: string,
   startTime: string | Date,
   endTime: string | Date
@@ -182,7 +181,7 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
   const chosenEndTime = new Date(endTime);
   return DependentFamilyMemberAppointment.countDocuments({
     dependentNationalId,
-    patientId,
+    patientId: payerId,
     status: "upcoming",
     $or: [
       {
@@ -202,7 +201,7 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
 };
 
 const scheduleAppointmentForADependentFamilyMember = async (
-  patientId: string,
+  payerId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
@@ -214,7 +213,7 @@ const scheduleAppointmentForADependentFamilyMember = async (
   validateChosenTimePeriod(selectedStartTime, selectedEndTime);
 
   const newAppointment = new DependentFamilyMemberAppointment({
-    patientId,
+    payerId,
     dependentNationalId,
     doctorId,
     timePeriod: {

@@ -79,7 +79,9 @@ export const scheduleAppointment = async (
   patientId: string,
   doctorId: string,
   startTime: string | Date,
-  endTime: string | Date
+  endTime: string | Date,
+  isAFollowUpAppointment: boolean = false,
+  payerId?: string
 ) => {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
@@ -91,6 +93,8 @@ export const scheduleAppointment = async (
     status: "upcoming",
     doctorId,
     patientId,
+    isAFollowUp: isAFollowUpAppointment,
+    payerId,
   });
   return await appointment.save();
 };

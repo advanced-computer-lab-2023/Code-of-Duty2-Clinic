@@ -16,7 +16,7 @@ export const getPatientAppointments = async (userId: string, urlQuery: any) =>
   await getAppointments(true, userId, urlQuery);
 
 export const bookAnAppointment = async (
-  bookerPatientId: string,
+  payerId: string,
   appointedPatientId: string,
   doctorId: string,
   startTime: string,
@@ -31,13 +31,20 @@ export const bookAnAppointment = async (
     UserRole.PATIENT
   );
   const appointmentFees = await getAppointmentFeesWithADoctor(
-    appointedPatientId,
+    payerId,
     doctorId
   );
   if (paymentMethod === PaymentMethod.WALLET) {
-    await performWalletTransaction(bookerPatientId, appointmentFees);
+    await performWalletTransaction(payerId, appointmentFees);
   }
-  await scheduleAppointment(appointedPatientId, doctorId, startTime, endTime);
+  await scheduleAppointment(
+    appointedPatientId,
+    doctorId,
+    startTime,
+    endTime,
+    false,
+    payerId
+  );
 };
 
 export const getAppointmentFeesWithADoctor = async (
