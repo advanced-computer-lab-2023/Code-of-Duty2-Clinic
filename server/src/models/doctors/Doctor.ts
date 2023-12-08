@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import { IDoctor } from "./interfaces/IDoctor";
 import bcrypt from "bcrypt";
-import { DotctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
+import { DoctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
 import PasswordResetSchema from "../users/PasswordReset";
 
 export interface IDoctorModel extends IDoctor, Document {}
