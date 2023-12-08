@@ -16,18 +16,21 @@ import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
 import { doctorAddPatientHealthRecord } from "../../controllers/doctors/addPatientHealthRecord";
 import {
-  addDoctorAWalletHandler,
-  authenticateWalletDoctorHandler,
-  doesADoctorHaveAWalletHandler,
-  getDoctorWalletHandler,
-  performAWalletTransactionHandler,
-  rechargeDoctorWalletHandler,
+   addDoctorAWalletHandler,
+   authenticateWalletDoctorHandler,
+   doesADoctorHaveAWalletHandler,
+   getDoctorWalletHandler,
+   performAWalletTransactionHandler,
+   rechargeDoctorWalletHandler,
 } from "../../controllers/payments/wallets/Doctor";
 import { authenticateWalletUser } from "../../middlewares/walletAuthentication";
 import {
-  configureCreditCardPaymentHandler,
-  makeCreditCardPaymentHandler,
+   configureCreditCardPaymentHandler,
+   makeCreditCardPaymentHandler,
 } from "../../controllers/payments/credit-cards";
+import { createPatientPrescriptionHandler } from "../../controllers/doctors/createPatientPrescription";
+import { updateMedicineAndDosageHandler } from "../../controllers/doctors/updateDosageInPatentPrescription";
+import { addMedicineToPatientPrescriptionHandler } from "../../controllers/doctors/addMedicineToPatientPrescription";
 
 const doctorRouter = express.Router();
 
@@ -35,59 +38,71 @@ doctorRouter.use(authenticateUser);
 doctorRouter.use(authorizeUser(UserRole.DOCTOR));
 
 doctorRouter
-  .get("/account", getDoctor)
+   .get("/account", getDoctor)
 
-  .patch("/account", updateDoctor)
+   .patch("/account", updateDoctor)
 
-  .get("/patients", getDoctorPatientsHandler)
+   .get("/patients", getDoctorPatientsHandler)
 
-  .get("/patients/:patientId", getRegisteredPatientDetails)
+   .get("/patients/:patientId", getRegisteredPatientDetails)
 
-  .get("", getDoctorById)
+   .get("", getDoctorById)
 
-  .post("/appointments/add-time-slots", addDoctorAvailableSlots)
+   .post("/appointments/add-time-slots", addDoctorAvailableSlots)
 
-  .patch("/change-password", updateDoctorPassword)
+   .patch("/change-password", updateDoctorPassword)
 
-  .post(
-    "/appointments/:patientId/follow-up",
-    scheduleFollowUpAppointmentHandler
-  )
+   .post(
+      "/appointments/:patientId/follow-up",
+      scheduleFollowUpAppointmentHandler
+   )
 
-  .get("/available-time-slots", viewAvailableTimeSlots)
+   .get("/available-time-slots", viewAvailableTimeSlots)
 
-  .delete("/available-time-slots/:startTime", deleteDoctorAvailableSlots)
+   .delete("/available-time-slots/:startTime", deleteDoctorAvailableSlots)
 
-  .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
+   .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
 
-  .get("/appointments", getAppointmentsWithAllPatients)
+   .get("/appointments", getAppointmentsWithAllPatients)
 
-  .get("/appointments/:appointmentId", getAppointmentDetails)
+   .get("/appointments/:appointmentId", getAppointmentDetails)
 
-  .get("", getDoctorById)
+   .get("", getDoctorById)
 
-  .get("/wallets/exists", doesADoctorHaveAWalletHandler)
+   .get("/wallets/exists", doesADoctorHaveAWalletHandler)
 
-  .post("/validate-wallet-pin-code", authenticateWalletDoctorHandler)
+   .post("/validate-wallet-pin-code", authenticateWalletDoctorHandler)
 
-  .post("/wallets", addDoctorAWalletHandler)
+   .post("/wallets", addDoctorAWalletHandler)
 
-  .get("/wallets", authenticateWalletUser, getDoctorWalletHandler)
+   .get("/wallets", authenticateWalletUser, getDoctorWalletHandler)
 
-  .patch(
-    "/wallet-transactions",
-    authenticateWalletUser,
-    performAWalletTransactionHandler
-  )
+   .patch(
+      "/wallet-transactions",
+      authenticateWalletUser,
+      performAWalletTransactionHandler
+   )
 
-  .patch(
-    "/wallet-recharge",
-    authenticateWalletUser,
-    rechargeDoctorWalletHandler
-  )
+   .patch(
+      "/wallet-recharge",
+      authenticateWalletUser,
+      rechargeDoctorWalletHandler
+   )
 
-  .get("/credit-card-configuration", configureCreditCardPaymentHandler)
+   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
-  .post("/credit-card-payment", makeCreditCardPaymentHandler);
+   .post("/credit-card-payment", makeCreditCardPaymentHandler)
+
+   .post("/patient/:patientId/prescription", createPatientPrescriptionHandler)
+
+   .put(
+      "/prescriptions/:prescriptionId/:medicineId",
+      updateMedicineAndDosageHandler
+   )
+
+   .put(
+      "/prescriptions/:prescriptionId/",
+      addMedicineToPatientPrescriptionHandler
+   );
 
 export default doctorRouter;
