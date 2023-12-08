@@ -28,6 +28,7 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
 } from "../../controllers/payments/credit-cards";
+import { cancelAppointmentController } from "../../controllers/doctors/cancelAppointment";
 
 const doctorRouter = express.Router();
 
@@ -88,6 +89,8 @@ doctorRouter
 
   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
-  .post("/credit-card-payment", makeCreditCardPaymentHandler);
+  .post("/credit-card-payment", makeCreditCardPaymentHandler)
+
+  .patch("/appointments/:appointmentId/cancel", cancelAppointmentController);
 
 export default doctorRouter;

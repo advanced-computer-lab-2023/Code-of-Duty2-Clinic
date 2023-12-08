@@ -13,6 +13,10 @@ import {
 } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
 import bcrypt from "bcrypt";
+import { rechargePatientWallet } from "../payments/wallets/patients";
+import { get } from "config";
+import { getAppointmentFeesWithADoctor } from "../appointments/patients";
+import { isInterfaceDeclaration } from "typescript";
 
 export const findAllDoctors = async () => await Doctor.find();
 
@@ -284,4 +288,21 @@ export const getDoctorPatients = async (
   ]);
 
   return patients;
+};
+
+export const cancelAppointmentD = async (appointmentId: string, doctorId:String) => {
+  const appointment = await Appointment.findOne({ _id: appointmentId, doctorId });
+  if (!appointment) throw new Error("Appointment not found");
+  if (appointment.status !== "upcoming") {
+    throw new Error("Appointment cannot be cancelled");
+  }
+  const patient = await Patient.findOne({ patientId: appointment.patientId }).select('wallet');
+  if (!patient) throw new Error("Patient not found");
+  const wallet = patient.wallet;
+  if (!wallet) throw new Error("Wallet not found");
+  const refund =  await getAppointmentFeesWithADoctor(patient.id, appointment.doctorId.toString()); //this should calculate the refund amout but think about patient.id at all cases patient,registered,dependent
+  await rechargePatientWallet(patient.id, refund);
+  appointment.status = "canceled";
+  await appointment.save();
+  await patient.save();
 };

@@ -7,10 +7,13 @@ import HealthPackage from "../../models/health_packages/HealthPackage";
 import { addDays } from "../../utils/addDays";
 import PaymentMethod from "../../types/PaymentMethod";
 import { findHealthPackageDetailsAfterDiscount } from "../health-packages";
-import { performWalletTransaction } from "../payments/wallets/patients";
+import { performWalletTransaction, rechargePatientWallet } from "../payments/wallets/patients";
 import { IDoctorModel } from "../../models/doctors/Doctor";
 import mongoose from "mongoose";
 import Appointment from "../../models/appointments/Appointment";
+import { getDoctorAppointmentFeesHandler } from "../../controllers/appointments/patients";
+import { getAppointmentFeesWithADoctor } from "../appointments/patients";
+import { exec } from "child_process";
 
 export const findAllPatients = async () => await Patient.find();
 export const findPatientById = async (id: string, elementsToSelect?: any) => {
@@ -437,3 +440,22 @@ export const getPatientDoctors = async (
 
   return doctors;
 };
+
+export const cancelAppointment = async (appointmentId: string, patientId: string) => {
+  const appointment = await Appointment.findOne({ _id: appointmentId});
+  if (!appointment) throw new Error("Appointment not found");
+  if (appointment.status !== "upcoming") {
+    throw new Error("Appointment cannot be cancelled");
+  }
+  if(appointment.timePeriod.startTime.getTime() - new Date().getTime() > 24 * 60 * 60 * 1000){
+  const patient = await Patient.findById(patientId).select("+wallet");
+  if (!patient) throw new Error("Patient not found");
+  const refund =  await getAppointmentFeesWithADoctor(patientId, appointment.doctorId.toString());
+  if (!refund) throw new Error("Error Calculating Refund");
+  await rechargePatientWallet(patientId, refund);
+  await patient.save();  
+}
+  appointment.status = "canceled";
+  await appointment.save();
+};
+
