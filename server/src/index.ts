@@ -5,8 +5,6 @@ import cors from "cors";
 import { useAllAppRoutes } from "./utils/useAllAppRoutes";
 import cookieParser from "cookie-parser";
 import path from "path";
-import patientRouter from "./routes/patients/Patient";
-
 
 export const app = express();
 
