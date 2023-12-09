@@ -1,6 +1,7 @@
 import {
+  findAppointmentById,
   getAppointments,
-  scheduleAppointment,
+  saveAppointment,
   validateAppointmentCreation,
 } from "..";
 import { getClinicCommission } from "../../../models/clinic/Clinic";
@@ -37,7 +38,7 @@ export const bookAnAppointment = async (
   if (paymentMethod === PaymentMethod.WALLET) {
     await performWalletTransaction(payerId, appointmentFees);
   }
-  await scheduleAppointment(
+  await saveAppointment(
     appointedPatientId,
     doctorId,
     startTime,

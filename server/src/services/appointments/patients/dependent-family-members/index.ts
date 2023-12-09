@@ -11,6 +11,7 @@ import { findDoctorById } from "../../../doctors";
 import { entityIdDoesNotExistError } from "../../../../utils/ErrorMessages";
 import DependentFamilyMemberAppointment from "../../../../models/appointments/DependentFamilyMemberAppointment";
 import { findPatientById } from "../../../patients";
+import UserRole from "../../../../types/UserRole";
 
 export const findPatientDependentFamilyMembersAppointments = async (
   patientId?: string,
@@ -96,7 +97,8 @@ export const bookAnAppointmentForADependentFamilyMember = async (
     dependentNationalId,
     doctorId,
     startTime,
-    endTime
+    endTime,
+    UserRole.PATIENT
   );
   const appointmentFees = await getAppointmentFeesWithADoctor(
     payerId,
@@ -105,7 +107,7 @@ export const bookAnAppointmentForADependentFamilyMember = async (
   if (paymentMethod === PaymentMethod.WALLET) {
     await performWalletTransaction(payerId, appointmentFees);
   }
-  await scheduleAppointmentForADependentFamilyMember(
+  await saveAppointmentForADependentFamilyMember(
     payerId,
     dependentNationalId,
     doctorId,
@@ -119,7 +121,8 @@ const validateAppointmentCreationForADependentFamilyMember = async (
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
-  endTime: string
+  endTime: string,
+  appointmentSetter: UserRole
 ) => {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
@@ -155,7 +158,9 @@ const validateAppointmentCreationForADependentFamilyMember = async (
     );
   if (conflictingPatientDependentAppointments > 0) {
     throw new Error(
-      "Your family member has another appointment in the requested time period"
+      appointmentSetter === UserRole.PATIENT
+        ? "Your family member has another appointment in the requested time period"
+        : "The patient is busy during the requested time period"
     );
   }
 
@@ -166,7 +171,9 @@ const validateAppointmentCreationForADependentFamilyMember = async (
   );
   if (conflictingDoctorAppointments > 0) {
     throw new Error(
-      "This doctor has another appointment during the requested time period"
+      appointmentSetter === UserRole.PATIENT
+        ? "This doctor has another appointment during the requested time period"
+        : "You already have another appointment during the requested time period"
     );
   }
 };
@@ -200,17 +207,53 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
   });
 };
 
-const scheduleAppointmentForADependentFamilyMember = async (
+export const scheduleAFollowUpAppointmentForDependent = async (
   payerId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
   endTime: string
 ) => {
+  await validateAppointmentCreationForADependentFamilyMember(
+    payerId,
+    dependentNationalId,
+    doctorId,
+    startTime,
+    endTime,
+    UserRole.DOCTOR
+  );
+
+  const initialAppointment =
+    await findMostRecentCompletedAppointmentForDependent(
+      doctorId,
+      payerId,
+      dependentNationalId
+    );
+  if (!initialAppointment || initialAppointment.status !== "completed") {
+    throw new Error(
+      "No recent completed appointment found between the doctor and dependent patient"
+    );
+  }
+  await saveAppointmentForADependentFamilyMember(
+    payerId,
+    dependentNationalId,
+    doctorId,
+    startTime,
+    endTime,
+    true
+  );
+};
+
+const saveAppointmentForADependentFamilyMember = async (
+  payerId: string,
+  dependentNationalId: string,
+  doctorId: string,
+  startTime: string,
+  endTime: string,
+  isAFollowUpAppointment = false
+) => {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
-
-  validateChosenTimePeriod(selectedStartTime, selectedEndTime);
 
   const newAppointment = new DependentFamilyMemberAppointment({
     payerId,
@@ -220,6 +263,43 @@ const scheduleAppointmentForADependentFamilyMember = async (
       startTime: selectedStartTime,
       endTime: selectedEndTime,
     },
+    isAFollowUp: isAFollowUpAppointment,
   });
   await newAppointment.save();
+};
+
+const findMostRecentCompletedAppointmentForDependent = async (
+  doctorId: string,
+  payerId: string,
+  dependentNationalId: string
+) => {
+  return DependentFamilyMemberAppointment.findOne({
+    doctorId,
+    payerId,
+    dependentNationalId,
+    status: "completed",
+  });
+};
+
+export const rescheduleAppointmentForADependentFamilyMember = async (
+  appointmentId: string,
+  startTime: string,
+  endTime: string,
+  appointmentSetter: UserRole
+) => {
+  const appointment = await DependentFamilyMemberAppointment.findById(
+    appointmentId
+  );
+  if (!appointment) throw new Error("Appointment not found");
+  await validateAppointmentCreationForADependentFamilyMember(
+    appointment.payerId.toString(),
+    appointment.dependentNationalId.toString(),
+    appointment.doctorId.toString(),
+    startTime,
+    endTime,
+    appointmentSetter
+  );
+  await appointment.updateOne({
+    timePeriod: { startTime, endTime },
+  });
 };

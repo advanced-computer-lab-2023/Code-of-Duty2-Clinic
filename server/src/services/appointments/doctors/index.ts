@@ -4,7 +4,7 @@ import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import {
   findMostRecentCompletedAppointment,
   getAppointments,
-  scheduleAppointment,
+  saveAppointment,
 } from "..";
 import { validateAppointmentCreation } from "..";
 import UserRole from "../../../types/UserRole";
@@ -77,5 +77,5 @@ export const scheduleAFollowUpAppointment = async (
       "No recent completed appointment found between the doctor and patient"
     );
   }
-  await scheduleAppointment(doctorId, patientId, startTime, endTime, true);
+  await saveAppointment(doctorId, patientId, startTime, endTime, true);
 };

@@ -75,7 +75,7 @@ function getMatchingAppointmentsFields(urlQuery: any) {
   return searchQuery;
 }
 
-export const scheduleAppointment = async (
+export const saveAppointment = async (
   patientId: string,
   doctorId: string,
   startTime: string | Date,
@@ -86,8 +86,6 @@ export const scheduleAppointment = async (
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
 
-  validateChosenTimePeriod(selectedStartTime, selectedEndTime);
-
   const appointment: IAppointmentModel = new Appointment({
     timePeriod: { startTime: selectedStartTime, endTime: selectedEndTime },
     status: "upcoming",
@@ -96,7 +94,6 @@ export const scheduleAppointment = async (
     isAFollowUp: isAFollowUpAppointment,
     payerId,
   });
-  console.log(appointment.payerId);
   return await appointment.save();
 };
 
@@ -120,10 +117,12 @@ export async function validateAppointmentCreation(
 ) {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
+
   validateChosenTimePeriod(selectedStartTime, selectedEndTime);
 
   const doctor = await findDoctorById(doctorId);
   if (!doctor) throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
+
   const patient = await findPatientById(patientId);
   if (!patient)
     throw new Error(entityIdDoesNotExistError("Patient", patientId));
@@ -216,5 +215,25 @@ export const findConflictingDoctorAppointments = async (
         ],
       },
     ],
+  });
+};
+
+export const rescheduleAppointment = async (
+  appointmentId: string,
+  startTime: string,
+  endTime: string,
+  appointmentSetter: UserRole
+) => {
+  const appointment = await findAppointmentById(appointmentId);
+  if (!appointment) throw new Error("Appointment not found");
+  await validateAppointmentCreation(
+    appointment.patientId.toString(),
+    appointment.doctorId.toString(),
+    startTime,
+    endTime,
+    appointmentSetter
+  );
+  await appointment.updateOne({
+    timePeriod: { startTime, endTime },
   });
 };
