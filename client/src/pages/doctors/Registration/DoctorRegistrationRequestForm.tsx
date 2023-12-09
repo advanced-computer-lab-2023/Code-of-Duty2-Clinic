@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import {
   Button,
+  Card,
+  CardContent,
   Container,
   Stack,
   Step,
@@ -62,9 +64,15 @@ const DoctorRegistrationRequestForm: React.FC = () => {
 
   const navigate = useNavigate();
 
-  async function submitRequest() {
-    console.log("ssswfergevf");
+  function handleStepOneData(formData: IFormOneData) {
+    stepOneData.current = formData;
+  }
 
+  function handleStepTwoData(formData: IFormTwoData) {
+    stepTwoData.current = formData;
+  }
+
+  async function submitRequest() {
     const formData: FormData = {
       ...stepOneData.current,
       ...stepTwoData.current,
@@ -80,6 +88,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
       setErrorMessage(getErrorMessage(error));
     }
   }
+
   const steps = ["Personal Info", "Experience"];
 
   const handleNext = () => {
@@ -90,83 +99,82 @@ const DoctorRegistrationRequestForm: React.FC = () => {
     setActiveStep((activeStep) => activeStep - 1);
   };
 
-  function handleStepOneData(formData: IFormOneData) {
-    stepOneData.current = formData;
-  }
-  function handleStepTwoData(formData: IFormTwoData) {
-    stepTwoData.current = formData;
-  }
-
   return (
-    <Stack
-      minWidth={"300px"}
-      margin={"auto"}
-      maxWidth={"500px"}
-      sx={{ backgroundColor: "gray" }}
-      direction={"column"}
-      alignItems={"center"}
-      justifyContent={"center"}
-    >
-      <Typography fontSize={20} fontWeight={500} textAlign={"center"}>
-        Doctor Registration Request
-      </Typography>
-      <Container>
-        <Stepper sx={{ marginTop: 5, marginBottom: 2 }} activeStep={activeStep}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel></StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-
-        <div>
-          {activeStep === 0 && (
-            <StepOneForm
-              key={activeStep}
-              passFormDataToParent={(data: IFormOneData) =>
-                handleStepOneData(data)
-              }
-            />
-          )}
-          {activeStep === 1 && (
-            <StepTwoForm
-              key={activeStep}
-              passFormDataToParent={(data: IFormTwoData) =>
-                handleStepTwoData(data)
-              }
-            />
-          )}
-
-          <Stack
-            direction={"row"}
-            justifyContent={"space-between"}
-            marginBottom={7}
-          >
-            <Button disabled={activeStep === 0} onClick={handleBack}>
-              Back
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              onClick={
-                activeStep === steps.length - 1 ? submitRequest : handleNext
-              }
+    <Card sx={{ maxWidth: 450, margin: "auto" }}>
+      <CardContent>
+        <Stack
+          minWidth={"300px"}
+          margin={"auto"}
+          sx={{ backgroundColor: "white" }}
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Typography fontSize={20} fontWeight={500} textAlign={"center"}>
+            Doctor Registration Request
+          </Typography>
+          <Container>
+            <Stepper
+              sx={{ marginTop: 5, marginBottom: 2 }}
+              activeStep={activeStep}
             >
-              {activeStep === steps.length - 1 ? "Submit Request" : "Next"}
-            </Button>
-          </Stack>
-        </div>
-      </Container>
-      <Typography
-        fontSize={15}
-        fontWeight={350}
-        textAlign={"center"}
-        color="red"
-      >
-        {errorMessage}
-      </Typography>
-    </Stack>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+
+            <div>
+              {activeStep === 0 && (
+                <StepOneForm
+                  key={activeStep}
+                  passFormDataToParent={(data: IFormOneData) =>
+                    handleStepOneData(data)
+                  }
+                />
+              )}
+              {activeStep === 1 && (
+                <StepTwoForm
+                  key={activeStep}
+                  passFormDataToParent={(data: IFormTwoData) =>
+                    handleStepTwoData(data)
+                  }
+                />
+              )}
+
+              <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                marginBottom={7}
+              >
+                <Button disabled={activeStep === 0} onClick={handleBack}>
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={
+                    activeStep === steps.length - 1 ? submitRequest : handleNext
+                  }
+                >
+                  {activeStep === steps.length - 1 ? "Submit Request" : "Next"}
+                </Button>
+              </Stack>
+            </div>
+          </Container>
+          <Typography
+            fontSize={15}
+            fontWeight={350}
+            textAlign={"center"}
+            color="red"
+          >
+            {errorMessage}
+          </Typography>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 

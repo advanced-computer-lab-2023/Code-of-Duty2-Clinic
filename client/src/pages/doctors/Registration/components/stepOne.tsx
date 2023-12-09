@@ -6,6 +6,7 @@ import { IFormOneData } from "../DoctorRegistrationRequestForm";
 interface IStepOneProps {
   passFormDataToParent: (data: IFormOneData) => void;
 }
+
 const StepOneForm: React.FC<IStepOneProps> = ({ passFormDataToParent }) => {
   const methods = useForm<IFormOneData>({
     defaultValues: {
@@ -22,147 +23,120 @@ const StepOneForm: React.FC<IStepOneProps> = ({ passFormDataToParent }) => {
 
   return (
     <form onSubmit={methods.handleSubmit((data) => passFormDataToParent(data))}>
-      <Grid
-        container
-        direction="row"
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        minHeight={400}
-        rowSpacing={1}
-        padding={5}
-      >
-        <Grid item sm={12} xs={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <Controller
             name="username"
             control={control}
             render={({ field }) => (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  {...field}
-                  variant="standard"
-                  label="Username"
-                  placeholder="Enter Your Username"
-                />
-              </div>
+              <TextField
+                fullWidth
+                {...field}
+                variant="standard"
+                label="Username"
+                placeholder="Enter Your Username"
+              />
             )}
           />
         </Grid>
-        <Grid item sm={12} xs={12}>
+        <Grid item xs={12}>
           <Controller
             name="password"
             control={control}
             render={({ field }) => (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  {...field}
-                  variant="standard"
-                  type="password"
-                  label="Password"
-                  placeholder="Enter Your Password"
-                />
-              </div>
+              <TextField
+                fullWidth
+                {...field}
+                variant="standard"
+                type="password"
+                label="Password"
+                placeholder="Enter Your Password"
+              />
             )}
           />
         </Grid>
-        <Grid item sm={12} xs={12}>
+        <Grid item xs={12}>
           <Controller
             name="email"
             control={control}
             render={({ field }) => (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  {...field}
-                  variant="standard"
-                  type="email"
-                  label="Email"
-                  placeholder="Enter Your Email"
-                />
-              </div>
+              <TextField
+                fullWidth
+                {...field}
+                variant="standard"
+                type="email"
+                label="Email"
+                placeholder="Enter Your Email"
+              />
             )}
           />
         </Grid>
-        <Grid item sm={12} xs={12}>
+        <Grid item xs={12}>
           <Controller
             name="name"
             control={control}
             render={({ field }) => (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  fullWidth
-                  {...field}
-                  variant="standard"
-                  type="text"
-                  label="Name"
-                  placeholder="Enter Your Full Name"
-                />
-              </div>
+              <TextField
+                fullWidth
+                {...field}
+                variant="standard"
+                type="text"
+                label="Name"
+                placeholder="Enter Your Full Name"
+              />
             )}
           />
         </Grid>
-        <Grid item sm={12} xs={12}>
+        <Grid item xs={12}>
           <Controller
             name="gender"
             control={control}
             render={({ field }) => (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <Select
-                  fullWidth
-                  variant="standard"
-                  {...field}
-                  defaultValue="choose your gender"
-                  label="Gender"
-                >
-                  <MenuItem value="choose your gender">
-                    choose your gender
-                  </MenuItem>
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                </Select>
-              </div>
+              <Select
+                fullWidth
+                variant="standard"
+                {...field}
+                defaultValue="choose your gender"
+                label="Gender"
+              >
+                <MenuItem value="choose your gender">
+                  choose your gender
+                </MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+              </Select>
             )}
           />
         </Grid>
-        <Grid item sm={3} xs={12}>
+        <Grid item xs={12}>
           <Controller
             name="mobileNumber"
             control={control}
             render={({ field }) => (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  {...field}
-                  variant="standard"
-                  type="number"
-                  label="Mobile Number"
-                  placeholder="Enter Your Mobile Number"
-                />
-              </div>
+              <TextField
+                {...field}
+                variant="standard"
+                type="number"
+                label="Mobile Number"
+                placeholder="Enter Your Mobile Number"
+                inputProps={{ min: 1 }}
+              />
             )}
           />
         </Grid>
-        <Grid item sm={3} xs={12}>
+        <Grid item xs={12}>
           <Controller
             name="dateOfBirth"
             control={control}
             render={({ field }) => (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <TextField
-                  {...field}
-                  variant="standard"
-                  focused
-                  placeholder="s"
-                  type="date"
-                  label="Date of Birth"
-                />
-              </div>
+              <TextField
+                {...field}
+                variant="standard"
+                focused
+                placeholder="s"
+                type="date"
+                label="Date of Birth"
+              />
             )}
           />
         </Grid>

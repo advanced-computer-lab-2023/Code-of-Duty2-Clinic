@@ -45,6 +45,7 @@ const StepTwoForm: React.FC<IStepTwoFormProps> = ({ passFormDataToParent }) => {
                   variant="standard"
                   type="number"
                   label="Hourly Rate(EGP)"
+                  inputProps={{ min: 1 }}
                 />
               </div>
             )}
