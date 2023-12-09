@@ -266,9 +266,10 @@ export function toRefundPaidFeesToPayer(
   cancellerRole: UserRole
 ) {
   return (
-    cancellerRole === UserRole.DOCTOR ||
-    (cancellerRole === UserRole.PATIENT &&
-      willAppointmentStartAfterADay(appointment))
+    !appointment.isAFollowUp &&
+    (cancellerRole === UserRole.DOCTOR ||
+      (cancellerRole === UserRole.PATIENT &&
+        willAppointmentStartAfterADay(appointment)))
   );
 }
 

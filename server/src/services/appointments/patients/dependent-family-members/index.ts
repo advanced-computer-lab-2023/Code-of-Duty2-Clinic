@@ -211,14 +211,14 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
 };
 
 export const scheduleAFollowUpAppointmentForDependent = async (
-  payerId: string,
+  mainPatientId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
   endTime: string
 ) => {
   await validateAppointmentCreationForADependentFamilyMember(
-    payerId,
+    mainPatientId,
     dependentNationalId,
     doctorId,
     startTime,
@@ -229,7 +229,7 @@ export const scheduleAFollowUpAppointmentForDependent = async (
   const initialAppointment =
     await findMostRecentCompletedAppointmentForDependent(
       doctorId,
-      payerId,
+      mainPatientId,
       dependentNationalId
     );
   if (!initialAppointment || initialAppointment.status !== "completed") {
@@ -238,7 +238,7 @@ export const scheduleAFollowUpAppointmentForDependent = async (
     );
   }
   await saveAppointmentForADependentFamilyMember(
-    payerId,
+    mainPatientId,
     dependentNationalId,
     doctorId,
     startTime,
@@ -248,7 +248,7 @@ export const scheduleAFollowUpAppointmentForDependent = async (
 };
 
 const saveAppointmentForADependentFamilyMember = async (
-  payerId: string,
+  mainPatientId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
@@ -259,7 +259,7 @@ const saveAppointmentForADependentFamilyMember = async (
   const selectedEndTime = new Date(endTime);
 
   const newAppointment = new DependentFamilyMemberAppointment({
-    payerId,
+    payerId: mainPatientId,
     dependentNationalId,
     doctorId,
     timePeriod: {
