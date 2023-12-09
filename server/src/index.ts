@@ -20,7 +20,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-useAllAppRoutes(path.join(__dirname, "routes"));
+useAllAppRoutes(path.resolve(__dirname, "routes"));
 
 connectToDB();
 
