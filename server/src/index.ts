@@ -8,7 +8,7 @@ import path from "path";
 import http from "http";
 import { Server } from "socket.io";
 import { authenticateSocketConnection } from "./middlewares/authentication";
-import addSocketEventListeners from "./routes/socket-connection";
+import addSocketEventListeners from "./socket-connections";
 
 export const app = express();
 

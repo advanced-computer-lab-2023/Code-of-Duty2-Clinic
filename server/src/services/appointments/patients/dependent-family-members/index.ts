@@ -119,7 +119,7 @@ export const bookAnAppointmentForADependentFamilyMember = async (
   );
 };
 
-const validateAppointmentCreationForADependentFamilyMember = async (
+export const validateAppointmentCreationForADependentFamilyMember = async (
   payerId: string,
   dependentNationalId: string,
   doctorId: string,
@@ -210,44 +210,7 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
   });
 };
 
-export const scheduleAFollowUpAppointmentForDependent = async (
-  mainPatientId: string,
-  dependentNationalId: string,
-  doctorId: string,
-  startTime: string,
-  endTime: string
-) => {
-  await validateAppointmentCreationForADependentFamilyMember(
-    mainPatientId,
-    dependentNationalId,
-    doctorId,
-    startTime,
-    endTime,
-    UserRole.DOCTOR
-  );
-
-  const initialAppointment =
-    await findMostRecentCompletedAppointmentForDependent(
-      doctorId,
-      mainPatientId,
-      dependentNationalId
-    );
-  if (!initialAppointment || initialAppointment.status !== "completed") {
-    throw new Error(
-      "No recent completed appointment found between the doctor and dependent patient"
-    );
-  }
-  await saveAppointmentForADependentFamilyMember(
-    mainPatientId,
-    dependentNationalId,
-    doctorId,
-    startTime,
-    endTime,
-    true
-  );
-};
-
-const saveAppointmentForADependentFamilyMember = async (
+export const saveAppointmentForADependentFamilyMember = async (
   mainPatientId: string,
   dependentNationalId: string,
   doctorId: string,
@@ -269,19 +232,6 @@ const saveAppointmentForADependentFamilyMember = async (
     isAFollowUp: isAFollowUpAppointment,
   });
   await newAppointment.save();
-};
-
-const findMostRecentCompletedAppointmentForDependent = async (
-  doctorId: string,
-  payerId: string,
-  dependentNationalId: string
-) => {
-  return DependentFamilyMemberAppointment.findOne({
-    doctorId,
-    payerId,
-    dependentNationalId,
-    status: "completed",
-  });
 };
 
 export const rescheduleAppointmentForADependentFamilyMember = async (
