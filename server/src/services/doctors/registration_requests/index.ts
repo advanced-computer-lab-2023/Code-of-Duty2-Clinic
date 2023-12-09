@@ -1,6 +1,5 @@
 import DoctorRegistrationRequest from "../../../models/doctors/DoctorRegistrationRequest";
 import { IDoctor } from "../../../models/doctors/interfaces/IDoctor";
-import { IDoctorBaseInfo } from "../../../models/doctors/interfaces/IDoctorBaseInfo";
 
 export const findAllDoctorRegistrationRequests = async () =>
   await DoctorRegistrationRequest.find();

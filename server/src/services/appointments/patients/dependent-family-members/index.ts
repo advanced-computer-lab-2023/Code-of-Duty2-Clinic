@@ -84,7 +84,7 @@ const getDependentFamilyMembersAppointmentsMatchingCondition = (
 };
 
 export const bookAnAppointmentForADependentFamilyMember = async (
-  patientId: string,
+  payerId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
@@ -92,21 +92,21 @@ export const bookAnAppointmentForADependentFamilyMember = async (
   paymentMethod: PaymentMethod
 ) => {
   await validateAppointmentCreationForADependentFamilyMember(
-    patientId,
+    payerId,
     dependentNationalId,
     doctorId,
     startTime,
     endTime
   );
   const appointmentFees = await getAppointmentFeesWithADoctor(
-    patientId,
+    payerId,
     doctorId
   );
   if (paymentMethod === PaymentMethod.WALLET) {
-    await performWalletTransaction(patientId, appointmentFees);
+    await performWalletTransaction(payerId, appointmentFees);
   }
   await scheduleAppointmentForADependentFamilyMember(
-    patientId,
+    payerId,
     dependentNationalId,
     doctorId,
     startTime,

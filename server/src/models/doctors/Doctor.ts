@@ -2,8 +2,9 @@ import mongoose, { Document, Schema } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import { IDoctor } from "./interfaces/IDoctor";
 import bcrypt from "bcrypt";
-import { DotctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
+import { DoctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
 import PasswordResetSchema from "../users/PasswordReset";
+import NotificationSchema from "../notifications/Notification";
 
 export interface IDoctorModel extends IDoctor, Document {}
 
@@ -50,6 +51,11 @@ export const DoctorSchema = new Schema<IDoctorModel>(
     passwordReset: {
       type: PasswordResetSchema,
       select: false,
+    },
+    receivedNotifications: {
+      type: Array<typeof NotificationSchema>,
+      select: false,
+      required: false,
     },
   },
   { timestamps: true }
