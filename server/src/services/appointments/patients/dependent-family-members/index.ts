@@ -15,6 +15,12 @@ import { entityIdDoesNotExistError } from "../../../../utils/ErrorMessages";
 import DependentFamilyMemberAppointment from "../../../../models/appointments/DependentFamilyMemberAppointment";
 import { findPatientById } from "../../../patients";
 import UserRole from "../../../../types/UserRole";
+import { getAppointmentEmailText, sendEmail } from "../../../../utils/email";
+import { IPatient } from "../../../../models/patients/interfaces/IPatient";
+import { IAppointmentBaseInfo } from "../../../../models/appointments/interfaces/IAppointmentBaseInfo";
+import { IDoctor } from "../../../../models/doctors/interfaces/IDoctor";
+import { IDependentFamilyMember } from "d:/Projects/ACL/Code-of-Duty2-Clinic/server/src/models/patients/interfaces/IDependentFamilyMember";
+import { IDependentFamilyMemberAppointment } from "../../../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
 
 export const findPatientDependentFamilyMembersAppointments = async (
   patientId?: string,
@@ -234,11 +240,11 @@ export const saveAppointmentForADependentFamilyMember = async (
   await newAppointment.save();
 };
 
-export const rescheduleAppointmentForADependentFamilyMember = async (
+export const rescheduleAppointmentForDependentPatientAndNotifyUsers = async (
   appointmentId: string,
   startTime: string,
   endTime: string,
-  appointmentSetter: UserRole
+  appointmentScheduler: UserRole
 ) => {
   const appointment = await DependentFamilyMemberAppointment.findById(
     appointmentId
@@ -250,14 +256,14 @@ export const rescheduleAppointmentForADependentFamilyMember = async (
     appointment.doctorId.toString(),
     startTime,
     endTime,
-    appointmentSetter
+    appointmentScheduler
   );
   await appointment.updateOne({
     timePeriod: { startTime, endTime },
   });
 };
 
-export const cancelAppointmentForDependent = async (
+export const cancelAppointmentForDependentAndNotifyUsers = async (
   appointmentId: string,
   cancellerRole: UserRole
 ) => {
@@ -273,4 +279,31 @@ export const cancelAppointmentForDependent = async (
   }
   appointment.status = "canceled";
   await appointment.save();
+
+  await notifyConcernedUsers(appointment);
 };
+
+async function notifyConcernedUsers(
+  appointment: IDependentFamilyMemberAppointment
+) {
+  const patient = await findPatientById(
+    appointment.payerId.toString(),
+    "+dependentFamilyMembers"
+  );
+  const dependent = patient!.dependentFamilyMembers?.find(
+    (dependent) => dependent.nationalId === appointment.dependentNationalId
+  );
+  const doctor = await findDoctorById(appointment.doctorId.toString());
+
+  await sendEmail({
+    to: patient!.email,
+    subject: `Appointment of your family members has been ${appointment.status}`,
+    text: getAppointmentEmailText(appointment, doctor!.name),
+  });
+
+  await sendEmail({
+    to: doctor!.email,
+    subject: `Your appointment has been ${appointment.status}`,
+    text: getAppointmentEmailText(appointment, dependent!.name),
+  });
+}

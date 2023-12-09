@@ -2,14 +2,16 @@ import { findDoctorById } from "../../doctors";
 import Appointment from "../../../models/appointments/Appointment";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import {
-  cancelAppointmentForRegisteredPatient,
-  findMostRecentCompletedAppointment,
+  cancelAppointmentForRegisteredPatientAndNotifyUsers as cancelAppointmentForRegisteredPatientAndNotifyUsers,
   getAppointments,
-  saveAppointment,
+  rescheduleAppointmentForRegisteredPatientAndNotifyUsers,
 } from "..";
-import { validateAppointmentCreation } from "..";
 import UserRole from "../../../types/UserRole";
-import { cancelAppointmentForDependent } from "../patients/dependent-family-members";
+import {
+  cancelAppointmentForDependentAndNotifyUsers,
+  rescheduleAppointmentForDependentPatientAndNotifyUsers,
+} from "../patients/dependent-family-members";
+import TimePeriod from "../../../types/TimePeriod";
 
 export const findAppointmentDetailsForDoctor = async (
   doctorId: string,
@@ -56,14 +58,38 @@ const getAppointmentRequiredFieldsForDoctor = (appointment: any) => ({
 export const getDoctorAppointments = async (userId: string, urlQuery: any) =>
   await getAppointments(false, userId, urlQuery);
 
-export const cancelAppointmentAsDoctorForRegisteredPatient = async (
-  appointmentId: string
-) => {
-  await cancelAppointmentForRegisteredPatient(appointmentId, UserRole.DOCTOR);
-};
+export const rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers =
+  async (appointmentId: string, timePeriod: TimePeriod) => {
+    await rescheduleAppointmentForRegisteredPatientAndNotifyUsers(
+      appointmentId,
+      timePeriod.startTime.toString(),
+      timePeriod.endTime.toString(),
+      UserRole.DOCTOR
+    );
+  };
 
-export const cancelAppointmentAsDoctorForDependentPatient = async (
-  appointmentId: string
-) => {
-  await cancelAppointmentForDependent(appointmentId, UserRole.DOCTOR);
-};
+export const rescheduleAppointmentAsDoctorForDependentPatientAndNotifyUsers =
+  async (appointmentId: string, timePeriod: TimePeriod) => {
+    await rescheduleAppointmentForDependentPatientAndNotifyUsers(
+      appointmentId,
+      timePeriod.startTime.toString(),
+      timePeriod.endTime.toString(),
+      UserRole.DOCTOR
+    );
+  };
+
+export const cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers =
+  async (appointmentId: string) => {
+    await cancelAppointmentForRegisteredPatientAndNotifyUsers(
+      appointmentId,
+      UserRole.DOCTOR
+    );
+  };
+
+export const cancelAppointmentAsDoctorForDependentPatientAndNotifyUsers =
+  async (appointmentId: string) => {
+    await cancelAppointmentForDependentAndNotifyUsers(
+      appointmentId,
+      UserRole.DOCTOR
+    );
+  };

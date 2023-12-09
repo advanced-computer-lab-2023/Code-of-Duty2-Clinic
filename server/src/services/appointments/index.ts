@@ -12,6 +12,7 @@ import { rechargePatientWallet } from "../payments/wallets/patients";
 import { getAppointmentFeesWithADoctor } from "./patients";
 import { IAppointmentBaseInfo } from "../../models/appointments/interfaces/IAppointmentBaseInfo";
 import { IDependentFamilyMemberAppointment } from "../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
+import { getAppointmentEmailText, sendEmail } from "../../utils/email";
 
 export const findAppointmentById = async (id: string) =>
   await Appointment.findById(id);
@@ -223,11 +224,11 @@ export const findConflictingDoctorAppointments = async (
   });
 };
 
-export const rescheduleAppointment = async (
+export const rescheduleAppointmentForRegisteredPatientAndNotifyUsers = async (
   appointmentId: string,
   startTime: string,
   endTime: string,
-  appointmentSetter: UserRole
+  appointmentScheduler: UserRole
 ) => {
   const appointment = await findAppointmentById(appointmentId);
   if (!appointment) throw new Error("Appointment not found");
@@ -236,14 +237,16 @@ export const rescheduleAppointment = async (
     appointment.doctorId.toString(),
     startTime,
     endTime,
-    appointmentSetter
+    appointmentScheduler
   );
   await appointment.updateOne({
     timePeriod: { startTime, endTime },
   });
+
+  await notifyConcernedUsers(appointment);
 };
 
-export const cancelAppointmentForRegisteredPatient = async (
+export const cancelAppointmentForRegisteredPatientAndNotifyUsers = async (
   appointmentId: string,
   cancellerRole: UserRole
 ) => {
@@ -257,7 +260,28 @@ export const cancelAppointmentForRegisteredPatient = async (
   }
   appointment.status = "canceled";
   await appointment.save();
+
+  await notifyConcernedUsers(appointment);
 };
+
+async function notifyConcernedUsers(
+  appointment: IRegisteredPatientAppointment
+) {
+  const patient = await findPatientById(appointment.patientId.toString());
+  const doctor = await findDoctorById(appointment.doctorId.toString());
+
+  await sendEmail({
+    to: patient!.email,
+    subject: `Your appointment has been ${appointment.status}`,
+    text: getAppointmentEmailText(appointment, doctor!.name),
+  });
+
+  await sendEmail({
+    to: doctor!.email,
+    subject: `Your appointment has been ${appointment.status}`,
+    text: getAppointmentEmailText(appointment, patient!.name),
+  });
+}
 
 export function toRefundPaidFeesToPayer(
   appointment:
