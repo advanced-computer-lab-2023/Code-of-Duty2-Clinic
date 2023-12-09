@@ -198,6 +198,6 @@ patientRouter
 
   .get("/:patientId", getPatientById)
 
-  .get("/health-packages/:packageId", getHealthPackage);
+  .get("/health-packages/:packageId", getHealthPackage)
 
 export default patientRouter;

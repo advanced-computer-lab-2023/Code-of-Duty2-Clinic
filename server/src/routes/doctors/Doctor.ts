@@ -87,7 +87,6 @@ doctorRouter
   )
 
   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
-
+  
   .post("/credit-card-payment", makeCreditCardPaymentHandler);
-
 export default doctorRouter;

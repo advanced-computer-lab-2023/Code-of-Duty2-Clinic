@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from "react";
 import HealthPackageDetails from "./healthPackageCard";
-import { Card, CardContent, Grid, Button } from "@mui/material";
+import { Card, CardContent, Grid, Button,styled } from "@mui/material";
 import axios from "axios";
 import { config } from "../configuration";
 import { useQueryParams } from "../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
+
+
+const CenteredButtonContainer = styled('div')({
+  textAlign: 'center',
+  marginTop: '16px', // Adjust the spacing as needed
+});
+
+const WideButton = styled(Button)({
+  width: '40%', // Adjust the width as needed
+  fontFamily: 'Arial, sans-serif', // Change this to your desired font for buttons
+  fontSize: '1.2rem',
+  textTransform: 'none',
+});
+
 
 const fetchHealthPackages = async () => {
   try {
@@ -58,20 +72,23 @@ const HealthPackageList: React.FC = () => {
           <Card>
             <CardContent>
               <HealthPackageDetails {...packageItem} />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() =>
-                  handleNavigateToHealthPackagePayment(packageItem._id)
-                }
-              >
-                Subscribe
-              </Button>
+              <CenteredButtonContainer>
+                <WideButton
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    handleNavigateToHealthPackagePayment(packageItem._id)
+                  }
+                >
+                  Subscribe
+                </WideButton>
+              </CenteredButtonContainer>
             </CardContent>
           </Card>
         </Grid>
       ))}
     </Grid>
+
   );
 };
 
