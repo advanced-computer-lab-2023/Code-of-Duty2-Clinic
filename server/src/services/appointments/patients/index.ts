@@ -1,9 +1,13 @@
 import {
   findAppointmentById,
   getAppointments,
+  makeARefund,
   saveAppointment,
   validateAppointmentCreation,
+  validateCancellingAppointment,
 } from "..";
+import { IAppointmentBaseInfo } from "../../../models/appointments/interfaces/IAppointmentBaseInfo";
+import { IRegisteredPatientAppointment } from "../../../models/appointments/interfaces/IRegisteredPatientAppointment";
 import { getClinicCommission } from "../../../models/clinic/Clinic";
 import { IPatient } from "../../../models/patients/interfaces/IPatient";
 import PaymentMethod from "../../../types/PaymentMethod";
@@ -79,3 +83,24 @@ const getDoctorSessionPrice = async (doctorId: string) => {
   if (!doctor) throw new Error("Doctor not found");
   return doctor.hourlyRate + doctor.hourlyRate * (await getClinicCommission());
 };
+
+const ENTIRE_DAY_TIME = 24 * 60 * 60 * 1000;
+export const cancelAppointmentAsPatient = async (appointmentId: string) => {
+  const appointment = await findAppointmentById(appointmentId);
+
+  if (!appointment) throw new Error("Appointment not found");
+  validateCancellingAppointment(appointment);
+
+  if (willAppointmentStartAfterADay(appointment)) {
+    await makeARefund(appointment);
+  }
+  appointment.status = "canceled";
+  await appointment.save();
+};
+
+function willAppointmentStartAfterADay(appointment: IAppointmentBaseInfo) {
+  return (
+    appointment.timePeriod.startTime.getTime() - new Date().getTime() >
+    ENTIRE_DAY_TIME
+  );
+}

@@ -4,10 +4,15 @@ import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import {
   findMostRecentCompletedAppointment,
   getAppointments,
+  makeARefund,
   saveAppointment,
+  validateCancellingAppointment,
 } from "..";
 import { validateAppointmentCreation } from "..";
 import UserRole from "../../../types/UserRole";
+import { findPatientById } from "../../patients";
+import { rechargePatientWallet } from "../../payments/wallets/patients";
+import { getAppointmentFeesWithADoctor } from "../patients";
 
 export const findAppointmentDetailsForDoctor = async (
   doctorId: string,
@@ -78,4 +83,14 @@ export const scheduleAFollowUpAppointment = async (
     );
   }
   await saveAppointment(doctorId, patientId, startTime, endTime, true);
+};
+
+export const cancelAppointmentAsDoctor = async (appointmentId: string) => {
+  const appointment = await Appointment.findById({ _id: appointmentId });
+  if (!appointment) throw new Error("Appointment not found");
+  validateCancellingAppointment(appointment);
+
+  await makeARefund(appointment);
+  appointment.status = "canceled";
+  await appointment.save();
 };

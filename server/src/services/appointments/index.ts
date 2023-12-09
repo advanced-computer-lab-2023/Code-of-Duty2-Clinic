@@ -7,6 +7,9 @@ import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import { findDoctorById } from "../doctors";
 import { findPatientById } from "../patients";
 import UserRole from "../../types/UserRole";
+import { IRegisteredPatientAppointment } from "../../models/appointments/interfaces/IRegisteredPatientAppointment";
+import { rechargePatientWallet } from "../payments/wallets/patients";
+import { getAppointmentFeesWithADoctor } from "./patients";
 
 export const findAppointmentById = async (id: string) =>
   await Appointment.findById(id);
@@ -237,3 +240,25 @@ export const rescheduleAppointment = async (
     timePeriod: { startTime, endTime },
   });
 };
+
+export async function makeARefund(appointment: IRegisteredPatientAppointment) {
+  const payerId = appointment.payerId;
+  const patientId = appointment.patientId.toString();
+  const refund = await getAppointmentFeesWithADoctor(
+    patientId,
+    appointment.doctorId.toString()
+  );
+  if (!refund) throw new Error("Error Calculating Refund");
+  await rechargePatientWallet(payerId.toString(), refund);
+}
+
+export function validateCancellingAppointment(
+  appointment: IRegisteredPatientAppointment
+) {
+  if (appointment.status === "completed") {
+    throw new Error("Appointment already completed");
+  }
+  if (appointment.status === "canceled") {
+    throw new Error("Appointment already cancelled");
+  }
+}
