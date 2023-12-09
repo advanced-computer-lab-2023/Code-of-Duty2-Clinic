@@ -10,6 +10,8 @@ import UserRole from "../../types/UserRole";
 import { IRegisteredPatientAppointment } from "../../models/appointments/interfaces/IRegisteredPatientAppointment";
 import { rechargePatientWallet } from "../payments/wallets/patients";
 import { getAppointmentFeesWithADoctor } from "./patients";
+import { IAppointmentBaseInfo } from "../../models/appointments/interfaces/IAppointmentBaseInfo";
+import { IDependentFamilyMemberAppointment } from "../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
 
 export const findAppointmentById = async (id: string) =>
   await Appointment.findById(id);
@@ -241,11 +243,49 @@ export const rescheduleAppointment = async (
   });
 };
 
-export async function makeARefund(appointment: IRegisteredPatientAppointment) {
-  const payerId = appointment.payerId;
-  const patientId = appointment.patientId.toString();
+export const cancelAppointmentForRegisteredPatient = async (
+  appointmentId: string,
+  cancellerRole: UserRole
+) => {
+  const appointment = await findAppointmentById(appointmentId);
+
+  if (!appointment) throw new Error("Appointment not found");
+  validateCancellingAppointment(appointment);
+
+  if (toRefundPaidFeesToPayer(appointment, cancellerRole)) {
+    await makeARefund(appointment);
+  }
+  appointment.status = "canceled";
+  await appointment.save();
+};
+
+export function toRefundPaidFeesToPayer(
+  appointment:
+    | IRegisteredPatientAppointment
+    | IDependentFamilyMemberAppointment,
+  cancellerRole: UserRole
+) {
+  return (
+    cancellerRole === UserRole.DOCTOR ||
+    (cancellerRole === UserRole.PATIENT &&
+      willAppointmentStartAfterADay(appointment))
+  );
+}
+
+const ENTIRE_DAY_TIME = 24 * 60 * 60 * 1000;
+function willAppointmentStartAfterADay(appointment: IAppointmentBaseInfo) {
+  return (
+    appointment.timePeriod.startTime.getTime() - new Date().getTime() >
+    ENTIRE_DAY_TIME
+  );
+}
+
+export async function makeARefund(
+  appointment: IRegisteredPatientAppointment | IDependentFamilyMemberAppointment
+) {
+  const payerId = appointment.payerId.toString();
   const refund = await getAppointmentFeesWithADoctor(
-    patientId,
+    payerId,
     appointment.doctorId.toString()
   );
   if (!refund) throw new Error("Error Calculating Refund");
@@ -253,7 +293,7 @@ export async function makeARefund(appointment: IRegisteredPatientAppointment) {
 }
 
 export function validateCancellingAppointment(
-  appointment: IRegisteredPatientAppointment
+  appointment: IRegisteredPatientAppointment | IDependentFamilyMemberAppointment
 ) {
   if (appointment.status === "completed") {
     throw new Error("Appointment already completed");

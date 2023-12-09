@@ -4,6 +4,9 @@ import PaymentMethod from "../../../../types/PaymentMethod";
 
 import {
   findConflictingDoctorAppointments,
+  makeARefund,
+  toRefundPaidFeesToPayer,
+  validateCancellingAppointment,
   validateChosenTimePeriod,
 } from "../..";
 import { performWalletTransaction } from "../../../payments/wallets/patients";
@@ -302,4 +305,22 @@ export const rescheduleAppointmentForADependentFamilyMember = async (
   await appointment.updateOne({
     timePeriod: { startTime, endTime },
   });
+};
+
+export const cancelAppointmentForDependent = async (
+  appointmentId: string,
+  cancellerRole: UserRole
+) => {
+  const appointment = await DependentFamilyMemberAppointment.findById(
+    appointmentId
+  );
+
+  if (!appointment) throw new Error("Appointment not found");
+  validateCancellingAppointment(appointment);
+
+  if (toRefundPaidFeesToPayer(appointment, cancellerRole)) {
+    await makeARefund(appointment);
+  }
+  appointment.status = "canceled";
+  await appointment.save();
 };

@@ -2,17 +2,14 @@ import { findDoctorById } from "../../doctors";
 import Appointment from "../../../models/appointments/Appointment";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import {
+  cancelAppointmentForRegisteredPatient,
   findMostRecentCompletedAppointment,
   getAppointments,
-  makeARefund,
   saveAppointment,
-  validateCancellingAppointment,
 } from "..";
 import { validateAppointmentCreation } from "..";
 import UserRole from "../../../types/UserRole";
-import { findPatientById } from "../../patients";
-import { rechargePatientWallet } from "../../payments/wallets/patients";
-import { getAppointmentFeesWithADoctor } from "../patients";
+import { cancelAppointmentForDependent } from "../patients/dependent-family-members";
 
 export const findAppointmentDetailsForDoctor = async (
   doctorId: string,
@@ -85,12 +82,14 @@ export const scheduleAFollowUpAppointment = async (
   await saveAppointment(doctorId, patientId, startTime, endTime, true);
 };
 
-export const cancelAppointmentAsDoctor = async (appointmentId: string) => {
-  const appointment = await Appointment.findById({ _id: appointmentId });
-  if (!appointment) throw new Error("Appointment not found");
-  validateCancellingAppointment(appointment);
+export const cancelAppointmentAsDoctorForRegisteredPatient = async (
+  appointmentId: string
+) => {
+  await cancelAppointmentForRegisteredPatient(appointmentId, UserRole.DOCTOR);
+};
 
-  await makeARefund(appointment);
-  appointment.status = "canceled";
-  await appointment.save();
+export const cancelAppointmentAsDoctorForDependentPatient = async (
+  appointmentId: string
+) => {
+  await cancelAppointmentForDependent(appointmentId, UserRole.DOCTOR);
 };

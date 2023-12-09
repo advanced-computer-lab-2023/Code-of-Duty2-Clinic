@@ -1,13 +1,9 @@
 import {
-  findAppointmentById,
+  cancelAppointmentForRegisteredPatient,
   getAppointments,
-  makeARefund,
   saveAppointment,
   validateAppointmentCreation,
-  validateCancellingAppointment,
 } from "..";
-import { IAppointmentBaseInfo } from "../../../models/appointments/interfaces/IAppointmentBaseInfo";
-import { IRegisteredPatientAppointment } from "../../../models/appointments/interfaces/IRegisteredPatientAppointment";
 import { getClinicCommission } from "../../../models/clinic/Clinic";
 import { IPatient } from "../../../models/patients/interfaces/IPatient";
 import PaymentMethod from "../../../types/PaymentMethod";
@@ -16,6 +12,7 @@ import { findDoctorById } from "../../doctors";
 import { findHealthPackageById } from "../../health-packages";
 import { findPatientById } from "../../patients";
 import { performWalletTransaction } from "../../payments/wallets/patients";
+import { cancelAppointmentForDependent } from "./dependent-family-members";
 
 export const getPatientAppointments = async (userId: string, urlQuery: any) =>
   await getAppointments(true, userId, urlQuery);
@@ -53,10 +50,10 @@ export const bookAnAppointment = async (
 };
 
 export const getAppointmentFeesWithADoctor = async (
-  patientId: string,
+  payerId: string,
   doctorId: string
 ) => {
-  const patient = await findPatientById(patientId, { subscribedPackage: 1 });
+  const patient = await findPatientById(payerId, { subscribedPackage: 1 });
   if (!patient) throw new Error("Patient not found");
   const doctorSessionDiscount = await getDoctorSessionDiscount(patient);
   const doctorSessionPrice = await getDoctorSessionPrice(doctorId);
@@ -84,23 +81,14 @@ const getDoctorSessionPrice = async (doctorId: string) => {
   return doctor.hourlyRate + doctor.hourlyRate * (await getClinicCommission());
 };
 
-const ENTIRE_DAY_TIME = 24 * 60 * 60 * 1000;
-export const cancelAppointmentAsPatient = async (appointmentId: string) => {
-  const appointment = await findAppointmentById(appointmentId);
-
-  if (!appointment) throw new Error("Appointment not found");
-  validateCancellingAppointment(appointment);
-
-  if (willAppointmentStartAfterADay(appointment)) {
-    await makeARefund(appointment);
-  }
-  appointment.status = "canceled";
-  await appointment.save();
+export const cancelAppointmentAsPatientForRegisteredPatient = async (
+  appointmentId: string
+) => {
+  await cancelAppointmentForRegisteredPatient(appointmentId, UserRole.PATIENT);
 };
 
-function willAppointmentStartAfterADay(appointment: IAppointmentBaseInfo) {
-  return (
-    appointment.timePeriod.startTime.getTime() - new Date().getTime() >
-    ENTIRE_DAY_TIME
-  );
-}
+export const cancelAppointmentAsPatientForDependentPatient = async (
+  appointmentId: string
+) => {
+  await cancelAppointmentForDependent(appointmentId, UserRole.PATIENT);
+};
