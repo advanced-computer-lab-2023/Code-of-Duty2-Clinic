@@ -291,17 +291,19 @@ export const getDoctorPatients = async (
 };
 
 export const cancelAppointmentD = async (appointmentId: string, doctorId:String) => {
-  const appointment = await Appointment.findOne({ _id: appointmentId, doctorId });
+  const appointment = await Appointment.findById({ _id: appointmentId});
   if (!appointment) throw new Error("Appointment not found");
+  const payerId = appointment.payerId;
+  if (!payerId) throw new Error("Payer not found");
   if (appointment.status !== "upcoming") {
     throw new Error("Appointment cannot be cancelled");
   }
-  const patient = await Patient.findOne({ patientId: appointment.patientId }).select('wallet');
+  const patient = await Patient.findById({ patientId: appointment.patientId }).select('wallet');
   if (!patient) throw new Error("Patient not found");
   const wallet = patient.wallet;
   if (!wallet) throw new Error("Wallet not found");
-  const refund =  await getAppointmentFeesWithADoctor(patient.id, appointment.doctorId.toString()); //this should calculate the refund amout but think about patient.id at all cases patient,registered,dependent
-  await rechargePatientWallet(patient.id, refund);
+  const refund =  await getAppointmentFeesWithADoctor(appointment.patientId.toString(), appointment.doctorId.toString());
+  await rechargePatientWallet(payerId.toString(), refund);
   appointment.status = "canceled";
   await appointment.save();
   await patient.save();

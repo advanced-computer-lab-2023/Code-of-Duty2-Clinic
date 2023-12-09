@@ -59,7 +59,6 @@ import {
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
-import { cancelAppointmentController } from "../../controllers/patients/cancelAppointment";
 
 const patientRouter = express.Router();
 
@@ -200,7 +199,5 @@ patientRouter
   .get("/:patientId", getPatientById)
 
   .get("/health-packages/:packageId", getHealthPackage)
-
-  .patch("/appointments/:appointmentId/cancel", cancelAppointmentController);
 
 export default patientRouter;

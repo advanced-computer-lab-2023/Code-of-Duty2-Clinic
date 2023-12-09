@@ -437,23 +437,24 @@ export const getPatientDoctors = async (
       },
     },
   ]);
-
   return doctors;
 };
 
 export const cancelAppointment = async (appointmentId: string, patientId: string) => {
-  const appointment = await Appointment.findOne({ _id: appointmentId});
+  const appointment = await Appointment.findById({ _id: appointmentId});
   if (!appointment) throw new Error("Appointment not found");
   if (appointment.status !== "upcoming") {
     throw new Error("Appointment cannot be cancelled");
   }
   if(appointment.timePeriod.startTime.getTime() - new Date().getTime() > 24 * 60 * 60 * 1000){
+  const payerId = appointment.payerId;
+  if (!payerId) throw new Error("Payer not found");
   const patient = await Patient.findById(patientId).select("+wallet");
   if (!patient) throw new Error("Patient not found");
   const refund =  await getAppointmentFeesWithADoctor(patientId, appointment.doctorId.toString());
   if (!refund) throw new Error("Error Calculating Refund");
-  await rechargePatientWallet(patientId, refund);
-  await patient.save();  
+  await rechargePatientWallet(payerId.toString(), refund);
+  await patient.save();
 }
   appointment.status = "canceled";
   await appointment.save();
