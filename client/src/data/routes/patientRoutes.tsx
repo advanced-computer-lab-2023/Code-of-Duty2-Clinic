@@ -1,5 +1,5 @@
 import PatientRegisteredFamilyMembers from "../../pages/patients/RegisteredFamilyMembers/PatientRegisteredFamilyMembers";
-import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
+import PrescriptionsPage from "../../pages/patients/prescriptions/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/family-members/AddFamilyMember";
 import Home from "../../pages/patients/Home";
 import SearchForDoctors from "../../pages/patients/doctor-interactions/SearchForDoctors";
@@ -23,6 +23,9 @@ import AppointmentBooking from "../../pages/patients/appointments/AppointmentBoo
 import AppointmentPayment from "../../pages/patients/appointments/AppointmentsPayment";
 import PatientDoctorsPage from "../../pages/patients/doctor-interactions/ViewPatientDoctors";
 import ChatsView from "../../features/chats/ChatsView";
+import PrescriptionList from "../../pages/patients/prescriptions/PrescriptionList";
+import PrescriptionInfo from "../../pages/patients/prescriptions/PrescriptionInfo";
+import MedicineInfo from "../../pages/patients/prescriptions/MedicineInfo";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -31,7 +34,7 @@ export const patientDashboardRoute: Route = {
 
 export const familyMemberPageRoute: Route = {
   path: "/patient/family-member-page",
-  element: <FamilyMemberPage />,
+  element: <FamilyMemberPage /> ,
 };
 
 export const familyMembersRoute: Route = {
@@ -85,6 +88,21 @@ export const patientDoctorAppointmentDetailsRoute: Route = {
 export const patientPrescriptions: Route = {
   path: "/patient/prescriptions",
   element: <PrescriptionsPage />,
+};
+
+export const patientPrescriptionList: Route = {
+  path: "/patient/prescriptions/view",
+  element: <PrescriptionList />,
+};
+
+export const patientPrescriptionInfo: Route = {
+  path: "/patient/prescriptions/view/info", 
+  element: <PrescriptionInfo />,
+};
+
+export const patientPrescriptionMedicineInfo: Route = {
+  path: "/patient/prescriptions/view/info/medicine", 
+  element: <MedicineInfo />,
 };
 
 export const patientMedicalHistoryRoute: Route = {
@@ -156,9 +174,11 @@ const routes: Route[] = [
   patientAppointmentsRoute,
   patientDoctorAppointmentDetailsRoute,
   patientPrescriptions,
+  patientPrescriptionList,
+  patientPrescriptionInfo,
+  patientPrescriptionMedicineInfo,
   patientMedicalHistoryRoute,
   patientUpdatePasswordRoute,
-  patientPrescriptions,
   patientMedicalHistoryRoute,
   healthPackagesOptionsRoute,
   cancelSubscriptionRoute,

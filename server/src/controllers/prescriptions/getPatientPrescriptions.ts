@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import Prescription from '../../models/prescriptions/Prescription';
-import checkUpdateParams from '../../utils/attributeExistanceChecker'
+import checkUpdateParams from '../../utils/attributeExistanceChecker';
 import { StatusCodes } from 'http-status-codes';
 import { AuthorizedRequest } from '../../types/AuthorizedRequest';
 import { findPatientById } from '../../services/patients';
 import Medicine from '../../models/medicines/Medicine';
 
-export const getPatientPrescriptions= async (req: AuthorizedRequest, res: Response)=>{
+export const getPatientPrescriptions = async (req: AuthorizedRequest, res: Response)=>{
     try{
         const allowedUpdateParams =['updatedAt','doctorName','date','status']
         //join patient
@@ -20,7 +20,7 @@ export const getPatientPrescriptions= async (req: AuthorizedRequest, res: Respon
         
         //check params
         let updateParams:any= {...req.query}
-        if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(400).json({error:"Invalid Params"})
+        if(!checkUpdateParams(Object.keys(updateParams),allowedUpdateParams)) return res.status(StatusCodes.BAD_REQUEST).json({error:"Invalid Params"})
         delete updateParams['doctorName']
     
         //Date search range 
@@ -38,7 +38,7 @@ export const getPatientPrescriptions= async (req: AuthorizedRequest, res: Respon
                 match:{name: new RegExp(req.query.doctorName as string, 'i') },
                 select: 'name -_id'
             }).populate({ 
-                path: 'medicines.medicineId', 
+                path: 'medicines.medicineId',
                 model: Medicine,
                 select:'name price'
             })
@@ -52,7 +52,7 @@ export const getPatientPrescriptions= async (req: AuthorizedRequest, res: Respon
            
     } catch(err){
         console.log(err)
-        res.status(400).send(err)
+        res.status(StatusCodes.BAD_REQUEST).send(err)
     }
 
 }

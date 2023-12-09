@@ -8,7 +8,7 @@ import Medicine from '../../models/medicines/Medicine';
 export const getAllPrescriptions = async (req: AuthorizedRequest, res: Response) => {
     const patientId = req.user?.id;
     try {
-        const prescriptions = await Prescription
+        const prescriptions = await Prescription 
             .find({ patientId: patientId })
             .populate({
                 path: 'doctorId',

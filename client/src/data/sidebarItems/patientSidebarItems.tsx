@@ -24,8 +24,8 @@ import {
   appointmentBookingRoute,
   chatsRoute,
   patientDoctorsRoute,
+  patientPrescriptionList,
 } from "../routes/patientRoutes";
-
 export const patientSidebarItems = [
   {
     title: "Home",
@@ -40,6 +40,11 @@ export const patientSidebarItems = [
         href: patientPrescriptions.path,
         icon: <HomeIcon />,
       },
+      {
+        title: "View Prescriptions",
+        href: patientPrescriptionList.path,
+        icon: <HomeIcon />,
+      }
     ],
   },
   {

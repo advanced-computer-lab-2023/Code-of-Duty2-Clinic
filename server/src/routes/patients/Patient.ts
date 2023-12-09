@@ -80,6 +80,10 @@ patientRouter
 
   .get("/prescriptions", getPatientPrescriptions)
 
+  .get("/prescriptions/view", getAllPrescriptions)
+
+  // .get("/prescriptions", getAllPrescriptions)
+
   .get("/appointments", getAppointmentsWithAllDoctors)
 
   .get("/family-members/requests", getPatientRegisteredFamilyMemberRequests)
@@ -99,8 +103,6 @@ patientRouter
   )
 
   .get("/appointments", getAppointmentsWithAllDoctors)
-
-  .get("prescriptions", getAllPrescriptions)
 
   .get("/appointments/:doctorId", getDoctorAppointmentFeesHandler)
 
