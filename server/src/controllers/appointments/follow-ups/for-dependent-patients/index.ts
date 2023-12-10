@@ -35,8 +35,8 @@ export const createFollowUpRequestForDependentHandler = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const { patientId, dependentNationalId, doctorId, timePeriod, reason } =
-    req.body;
+  const patientId = req.user!.id;
+  const { dependentNationalId, doctorId, timePeriod, reason } = req.body;
   if (
     !patientId ||
     !dependentNationalId ||

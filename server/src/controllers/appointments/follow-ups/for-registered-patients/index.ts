@@ -13,7 +13,7 @@ export const getFollowUpRequestsForRegisteredHandler = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const patientId = req.body.patientId || req.user!.id;
+  const patientId = req.body.registeredFamilyMemberId || req.user!.id;
   try {
     const followUpRequests = await getFollowUpRequestsForRegisteredPatient(
       patientId

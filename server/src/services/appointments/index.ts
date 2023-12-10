@@ -12,7 +12,8 @@ import { rechargePatientWallet } from "../payments/wallets/patients";
 import { getAppointmentFeesWithADoctor } from "./patients";
 import { IAppointmentBaseInfo } from "../../models/appointments/interfaces/IAppointmentBaseInfo";
 import { IDependentFamilyMemberAppointment } from "../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
-import { getAppointmentEmailText, sendEmail } from "../../utils/email";
+import { sendEmail } from "../../utils/email";
+import { getAppointmentNotificationText } from "../../utils/notificationText";
 
 export const findAppointmentById = async (id: string) =>
   await Appointment.findById(id);
@@ -273,13 +274,13 @@ async function notifyConcernedUsers(
   await sendEmail({
     to: patient!.email,
     subject: `Your appointment has been ${appointment.status}`,
-    text: getAppointmentEmailText(appointment, doctor!.name),
+    text: getAppointmentNotificationText(appointment, doctor!.name),
   });
 
   await sendEmail({
     to: doctor!.email,
     subject: `Your appointment has been ${appointment.status}`,
-    text: getAppointmentEmailText(appointment, patient!.name),
+    text: getAppointmentNotificationText(appointment, patient!.name),
   });
 }
 

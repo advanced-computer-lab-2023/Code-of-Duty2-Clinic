@@ -2,15 +2,15 @@ import { IAdminModel } from "../../models/admins/Admin";
 import { IDoctorModel } from "../../models/doctors/Doctor";
 import { INotification } from "../../models/notifications/interfaces/INotification";
 import { IPatientModel } from "../../models/patients/Patient";
-import NotificationTitleDescription from "../../types/NotificationTitleDescription";
+import NotificationSubjectDescription from "../../types/NotificationSubjectDescription";
 import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 
 export const storeNotification = async (
   user: IAdminModel | IPatientModel | IDoctorModel,
-  notificationTitleDescription: NotificationTitleDescription
+  notificationSubjectDescription: NotificationSubjectDescription
 ) => {
   const notification = {
-    ...notificationTitleDescription,
+    ...notificationSubjectDescription,
     time: new Date(),
   } as INotification;
   if (!user.receivedNotifications) user.receivedNotifications = [];

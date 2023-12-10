@@ -1,8 +1,6 @@
 import config from "../configurations";
 import { google } from "googleapis";
 import nodemailer from "nodemailer";
-import { IAppointmentBaseInfo } from "../models/appointments/interfaces/IAppointmentBaseInfo";
-import { getFormattedDate, getFormattedTime } from "./formatter";
 
 const { user, clientId, clientSecret, redirectUri, refreshToken } =
   config.server.emailServiceCredentials;
@@ -43,17 +41,3 @@ export const sendEmail = async (mailOptions: MailOptions) => {
   const result = await transport.sendMail(mailRequiredOptions);
   return result;
 };
-
-export function getAppointmentEmailText(
-  appointment: IAppointmentBaseInfo,
-  name: string
-): string {
-  return `Your appointment on ${getFormattedDate(
-    appointment.timePeriod.startTime.toString()
-  )} 
-     from ${getFormattedTime(
-       appointment.timePeriod.startTime.toString()
-     )} to ${getFormattedTime(appointment.timePeriod.endTime.toString())}
-    with ${name} has been ${appointment.status}.
-    `;
-}

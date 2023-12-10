@@ -1,4 +1,4 @@
-import NotificationTitleDescription from "../../types/NotificationTitleDescription";
+import NotificationSubjectDescription from "../../types/NotificationSubjectDescription";
 import { User } from "../../types/User";
 import UserRole from "../../types/UserRole";
 import { storeNotificationSentToAdmin } from "./admins";
@@ -7,7 +7,7 @@ import { storeNotificationSentToPatient } from "./patients";
 
 export const storeNotificationSentToUser = async (
   userInfo: User,
-  notification: NotificationTitleDescription
+  notification: NotificationSubjectDescription
 ) => {
   switch (userInfo.role) {
     case UserRole.ADMIN:

@@ -1,16 +1,13 @@
 import { markNotificationAsRead, storeNotification } from "../common";
-import NotificationTitleDescription from "../../../types/NotificationTitleDescription";
+import NotificationSubjectDescription from "../../../types/NotificationSubjectDescription";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import { findDoctorById } from "../../doctors";
+import { IDoctorModel } from "../../../models/doctors/Doctor";
 
 export const storeNotificationSentToDoctor = async (
-  doctorId: string,
-  notification: NotificationTitleDescription
+  doctor: IDoctorModel,
+  notification: NotificationSubjectDescription
 ) => {
-  const doctor = await findDoctorById(doctorId);
-  if (!doctor) {
-    throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
-  }
   await storeNotification(doctor, notification);
 };
 

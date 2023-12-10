@@ -15,12 +15,15 @@ import { entityIdDoesNotExistError } from "../../../../utils/ErrorMessages";
 import DependentFamilyMemberAppointment from "../../../../models/appointments/DependentFamilyMemberAppointment";
 import { findPatientById } from "../../../patients";
 import UserRole from "../../../../types/UserRole";
-import { getAppointmentEmailText, sendEmail } from "../../../../utils/email";
-import { IPatient } from "../../../../models/patients/interfaces/IPatient";
-import { IAppointmentBaseInfo } from "../../../../models/appointments/interfaces/IAppointmentBaseInfo";
-import { IDoctor } from "../../../../models/doctors/interfaces/IDoctor";
-import { IDependentFamilyMember } from "d:/Projects/ACL/Code-of-Duty2-Clinic/server/src/models/patients/interfaces/IDependentFamilyMember";
+import { sendEmail } from "../../../../utils/email";
+import { getAppointmentNotificationText } from "../../../../utils/notificationText";
 import { IDependentFamilyMemberAppointment } from "../../../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
+
+export const findDependentPatientAppointmentById = async (
+  appointmentId: string
+) => {
+  return await DependentFamilyMemberAppointment.findById(appointmentId);
+};
 
 export const findPatientDependentFamilyMembersAppointments = async (
   patientId?: string,
@@ -298,12 +301,12 @@ async function notifyConcernedUsers(
   await sendEmail({
     to: patient!.email,
     subject: `Appointment of your family members has been ${appointment.status}`,
-    text: getAppointmentEmailText(appointment, doctor!.name),
+    text: getAppointmentNotificationText(appointment, doctor!.name),
   });
 
   await sendEmail({
     to: doctor!.email,
     subject: `Your appointment has been ${appointment.status}`,
-    text: getAppointmentEmailText(appointment, dependent!.name),
+    text: getAppointmentNotificationText(appointment, dependent!.name),
   });
 }

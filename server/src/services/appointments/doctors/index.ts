@@ -3,8 +3,11 @@ import Appointment from "../../../models/appointments/Appointment";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import {
   cancelAppointmentForRegisteredPatientAndNotifyUsers as cancelAppointmentForRegisteredPatientAndNotifyUsers,
+  findMostRecentCompletedAppointment,
   getAppointments,
   rescheduleAppointmentForRegisteredPatientAndNotifyUsers,
+  saveAppointment,
+  validateAppointmentCreation,
 } from "..";
 import UserRole from "../../../types/UserRole";
 import {
@@ -57,6 +60,32 @@ const getAppointmentRequiredFieldsForDoctor = (appointment: any) => ({
 
 export const getDoctorAppointments = async (userId: string, urlQuery: any) =>
   await getAppointments(false, userId, urlQuery);
+
+export const scheduleAFollowUpAppointment = async (
+  doctorId: string,
+  patientId: string,
+  startTime: string,
+  endTime: string
+) => {
+  await validateAppointmentCreation(
+    patientId,
+    doctorId,
+    startTime,
+    endTime,
+    UserRole.DOCTOR
+  );
+
+  const initialAppointment = await findMostRecentCompletedAppointment(
+    doctorId,
+    patientId
+  );
+  if (!initialAppointment || initialAppointment.status !== "completed") {
+    throw new Error(
+      "No recent completed appointment found between the doctor and patient"
+    );
+  }
+  await saveAppointment(doctorId, patientId, startTime, endTime, true);
+};
 
 export const rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers =
   async (appointmentId: string, timePeriod: TimePeriod) => {

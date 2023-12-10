@@ -1,16 +1,13 @@
 import { markNotificationAsRead, storeNotification } from "../common";
-import NotificationTitleDescription from "../../../types/NotificationTitleDescription";
+import NotificationSubjectDescription from "../../../types/NotificationSubjectDescription";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import { findPatientById } from "../../patients";
+import { IPatientModel } from "../../../models/patients/Patient";
 
 export const storeNotificationSentToPatient = async (
-  patientId: string,
-  notification: NotificationTitleDescription
+  patient: IPatientModel,
+  notification: NotificationSubjectDescription
 ) => {
-  const patient = await findPatientById(patientId);
-  if (!patient) {
-    throw new Error(entityIdDoesNotExistError("Patient", patientId));
-  }
   await storeNotification(patient, notification);
 };
 

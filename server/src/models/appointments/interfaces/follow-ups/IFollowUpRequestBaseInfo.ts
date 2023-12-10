@@ -3,8 +3,8 @@ import TimePeriod from "../../../../types/TimePeriod";
 
 interface IFollowUpRequestBaseInfo {
   status: "pending" | "accepted" | "rejected";
-  patientId: Schema.Types.ObjectId;
-  doctorId: Schema.Types.ObjectId;
+  patientId: Schema.Types.ObjectId | string;
+  doctorId: Schema.Types.ObjectId | string;
   timePeriod?: TimePeriod;
   reason?: string;
 }

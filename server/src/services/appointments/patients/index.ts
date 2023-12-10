@@ -8,6 +8,7 @@ import {
 import { getClinicCommission } from "../../../models/clinic/Clinic";
 import { IPatient } from "../../../models/patients/interfaces/IPatient";
 import PaymentMethod from "../../../types/PaymentMethod";
+import TimePeriod from "../../../types/TimePeriod";
 import UserRole from "../../../types/UserRole";
 import { findDoctorById } from "../../doctors";
 import { findHealthPackageById } from "../../health-packages";
@@ -86,7 +87,7 @@ const getDoctorSessionPrice = async (doctorId: string) => {
 };
 
 export const rescheduleAppointmentAsPatientForRegisteredPatientAndNotifyUsers =
-  async (appointmentId: string, timePeriod: any) => {
+  async (appointmentId: string, timePeriod: TimePeriod) => {
     await rescheduleAppointmentForRegisteredPatientAndNotifyUsers(
       appointmentId,
       timePeriod.startTime.toString(),
@@ -96,7 +97,7 @@ export const rescheduleAppointmentAsPatientForRegisteredPatientAndNotifyUsers =
   };
 
 export const rescheduleAppointmentAsPatientForDependentPatientAndNotifyUsers =
-  async (appointmentId: string, timePeriod: any) => {
+  async (appointmentId: string, timePeriod: TimePeriod) => {
     await rescheduleAppointmentForDependentPatientAndNotifyUsers(
       appointmentId,
       timePeriod.startTime.toString(),
