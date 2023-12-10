@@ -19,9 +19,18 @@ const socketEventListeners = (socket: SocketType) => {
     return;
   }
   userIdToSocketIdMap.set(userId, socket.id);
+  console.log("Socket map", userIdToSocketIdMap);
 
   socket.on("disconnect", () => {
     userIdToSocketIdMap.delete(userId);
+  });
+
+  socket.on("error", (err) => {
+    console.log(`Error occurred on socket ${socket.id}: ${err}`);
+  });
+
+  socket.on("message", ({ destinationId, senderName }) => {
+    socket.to(getSocketIdForUserId(destinationId)).emit("message", senderName);
   });
 
   socket.on("appointment_rescheduling_as_doctor_for_registered", (data) =>

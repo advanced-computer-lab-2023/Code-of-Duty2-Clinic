@@ -1,14 +1,16 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import socket from "../../services/Socket";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function Home() {
+  const { user } = useContext(UserContext);
   useEffect(() => {
     socket.on("message", (name) => {
       console.log("message", "message sent from doctor " + name);
     });
     socket.emit("message", {
       destinationId: "65561ebbec181d18d2476592",
-      senderName: "Mahmoud",
+      senderName: user!.name,
     });
 
     return () => {
