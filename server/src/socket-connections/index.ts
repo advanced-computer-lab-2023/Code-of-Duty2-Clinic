@@ -19,7 +19,6 @@ const socketEventListeners = (socket: SocketType) => {
     return;
   }
   userIdToSocketIdMap.set(userId, socket.id);
-  console.log("Socket map", userIdToSocketIdMap);
 
   socket.on("disconnect", () => {
     userIdToSocketIdMap.delete(userId);

@@ -102,7 +102,7 @@ export const subscribeToHealthPackageService = async (
     await performWalletTransaction(payingPatientId, healthPackage.amountToPay);
   }
   patient.subscribedPackage = {
-    packageId: healthPackage._id,
+    packageId: healthPackage._id!,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
     status: "subscribed",
@@ -147,7 +147,7 @@ export async function setSubscribedPackageForDependentService(
   }
 
   dependent.subscribedPackage = {
-    packageId: healthPackage._id,
+    packageId: healthPackage._id!,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
     status: "subscribed",

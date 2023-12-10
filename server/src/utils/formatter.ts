@@ -14,6 +14,5 @@ export const getFormattedTime = (dateTime: string) => {
     minute: "2-digit",
     hour12: true,
   });
-  console.log;
   return formattedTime;
 };
