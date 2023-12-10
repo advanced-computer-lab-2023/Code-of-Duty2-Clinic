@@ -17,6 +17,8 @@ export const storeNotification = async (
   notification.time = new Date();
   user.receivedNotifications.push(notification);
   await user.save();
+
+  return notification;
 };
 
 export const markNotificationAsRead = async (

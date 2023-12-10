@@ -60,6 +60,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
   const navigate = useNavigate();
 
+  const { setUser } = useContext(UserContext);
+
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       (response) => response,
@@ -161,7 +163,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error("Error during logout", error);
     }
     clearAuthorizationHeader();
-    useContext(UserContext).setUser(null);
+    setUser(null);
   };
 
   const refreshAuth = async () => {

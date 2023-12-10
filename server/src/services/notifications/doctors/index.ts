@@ -8,7 +8,7 @@ export const storeNotificationSentToDoctor = async (
   doctor: IDoctorModel,
   notification: NotificationSubjectDescription
 ) => {
-  await storeNotification(doctor, notification);
+  return await storeNotification(doctor, notification);
 };
 
 export const markNotificationAsReadForDoctor = async (

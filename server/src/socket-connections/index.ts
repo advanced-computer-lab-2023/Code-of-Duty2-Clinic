@@ -8,38 +8,38 @@ import {
 } from "../controllers/appointments/doctors";
 
 const addSocketEventListeners = (socket: SocketType) => {
-  const user = socket.handshake.auth as User;
+  const userId = socket.handshake.auth.userId;
 
   socket.on("appointment_rescheduling_as_doctor_for_registered", (data) =>
-    rescheduleAppointmentForRegisteredPatientHandler(data, user.id, socket)
+    rescheduleAppointmentForRegisteredPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_rescheduling_as_doctor_for_dependent", (data) =>
-    rescheduleAppointmentForDependentPatientHandler(data, user.id, socket)
+    rescheduleAppointmentForDependentPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_rescheduling_as_patient_for_registered", (data) =>
-    rescheduleAppointmentForRegisteredPatientHandler(data, user.id, socket)
+    rescheduleAppointmentForRegisteredPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_rescheduling_as_patient_for_dependent", (data) =>
-    rescheduleAppointmentForDependentPatientHandler(data, user.id, socket)
+    rescheduleAppointmentForDependentPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_cancellation_as_doctor_for_registered", (data) =>
-    cancelAppointmentForRegisteredPatientHandler(data, user.id, socket)
+    cancelAppointmentForRegisteredPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_cancellation_as_doctor_for_dependent", (data) =>
-    cancelAppointmentForDependentPatientHandler(data, user.id, socket)
+    cancelAppointmentForDependentPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_cancellation_as_patient_for_registered", (data) =>
-    cancelAppointmentForRegisteredPatientHandler(data, user.id, socket)
+    cancelAppointmentForRegisteredPatientHandler(data, userId, socket)
   );
 
   socket.on("appointment_cancellation_as_patient_for_dependent", (data) =>
-    cancelAppointmentForDependentPatientHandler(data, user.id, socket)
+    cancelAppointmentForDependentPatientHandler(data, userId, socket)
   );
 };
 

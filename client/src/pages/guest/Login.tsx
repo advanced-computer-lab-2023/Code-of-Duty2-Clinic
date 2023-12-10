@@ -28,6 +28,7 @@ import { loginService } from "./loginService";
 import { getErrorMessage } from "../../utils/displayError";
 import { LoginResponse } from "../../types/LoginResponse";
 import { UserContext } from "../../contexts/UserContext";
+import { SocketContext } from "../../contexts/SocketContext";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -47,6 +48,7 @@ export default function Login() {
 
   const { login } = useContext(AuthContext);
   const { setUser } = useContext(UserContext);
+  const { connectToSocket } = useContext(SocketContext);
 
   const navigate = useNavigate();
 
@@ -73,6 +75,7 @@ export default function Login() {
   function handleLoginSuccess(data: LoginResponse) {
     login(data.accessToken, data.role);
     storePatientInfo(data);
+    connectToSocket();
 
     if (
       data.role === UserRole.PATIENT &&

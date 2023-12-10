@@ -3,6 +3,8 @@ import AppRoutes from "./AppRoutes";
 import UserContextProvider from "./contexts/UserContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { AuthProvider } from "./contexts/AuthContext";
+import SocketContextProvider from "./contexts/SocketContext";
+import NotificationContextProvider from "./contexts/NotificationContext";
 
 axios.defaults.withCredentials = true;
 
@@ -19,7 +21,11 @@ export default function App() {
     <UserContextProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <AppRoutes />
+          <NotificationContextProvider>
+            <SocketContextProvider>
+              <AppRoutes />
+            </SocketContextProvider>
+          </NotificationContextProvider>
         </AuthProvider>
       </QueryClientProvider>
     </UserContextProvider>
