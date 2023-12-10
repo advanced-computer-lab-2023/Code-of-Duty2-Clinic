@@ -73,9 +73,11 @@ export default function Login() {
 
   function handleLoginSuccess(data: LoginResponse) {
     login(data.accessToken, data.role);
-    storePatientInfo(data);
+    if (data.role === UserRole.PATIENT) {
+      storePatientInfo(data);
 
-    establishSocketConnection(data.accessToken, data.info!.id);
+      establishSocketConnection(data.accessToken, data.info!.id);
+    }
 
     if (
       data.role === UserRole.PATIENT &&
@@ -107,6 +109,7 @@ export default function Login() {
         : null
     );
   }
+
   return (
     <Container component="main" maxWidth="lg" sx={{ pb: 6 }}>
       <Grid container columnSpacing={7}>
