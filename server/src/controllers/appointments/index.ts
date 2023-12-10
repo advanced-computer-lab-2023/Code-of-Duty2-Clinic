@@ -12,7 +12,7 @@ import { findDependentPatientAppointmentById } from "../../services/appointments
 import { storeNotificationSentToPatient } from "../../services/notifications/patients";
 import { storeNotificationSentToDoctor } from "../../services/notifications/doctors";
 import NotificationSubjectDescription from "../../types/NotificationSubjectDescription";
-import { ByteLengthQueuingStrategy } from "node:stream/web";
+import { getSocketIdForUserId } from "../../socket-connections";
 
 export const getAppointmentsWithAllDoctors = async (
   req: AuthorizedRequest,
@@ -118,9 +118,11 @@ export async function notifyUsersOnSystemForRegisteredAppointments(
     patient!,
     notificationSentToPatient
   );
-  socket.to(patientId).emit(`appointment_${appointment?.status}`, {
-    message: createdNotification,
-  });
+  socket
+    .to(getSocketIdForUserId(patientId))
+    .emit(`appointment_${appointment?.status}`, {
+      message: createdNotification,
+    });
 
   const notificationSentToDoctor: NotificationSubjectDescription = {
     subject: `Your appointment has been ${appointment?.status}`,
@@ -130,7 +132,9 @@ export async function notifyUsersOnSystemForRegisteredAppointments(
     doctor!,
     notificationSentToDoctor
   );
-  socket.to(doctorId).emit(`appointment_${appointment?.status}`, {
-    message: createdNotification,
-  });
+  socket
+    .to(getSocketIdForUserId(doctorId))
+    .emit(`appointment_${appointment?.status}`, {
+      message: createdNotification,
+    });
 }

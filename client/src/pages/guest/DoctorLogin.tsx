@@ -25,7 +25,7 @@ import { getErrorMessage } from "../../utils/displayError";
 import { doctorUnverifiedRoute } from "../../data/routes/unverifiedRoutes";
 import { LoginResponse } from "../../types/LoginResponse";
 import { UserContext } from "../../contexts/UserContext";
-import { SocketContext } from "../../contexts/SocketContext";
+import { establishSocketConnection } from "../../services/Socket";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -45,7 +45,6 @@ export default function DoctorLogin() {
 
   const { login } = useContext(AuthContext);
   const { setUser } = useContext(UserContext);
-  const { connectToSocket } = useContext(SocketContext);
 
   const navigate = useNavigate();
 
@@ -71,7 +70,9 @@ export default function DoctorLogin() {
   function handleLoginSuccess(data: LoginResponse) {
     login(data.accessToken, data.role, data.verificationStatus);
     storeDoctorInfo(data);
-    connectToSocket();
+
+    establishSocketConnection(data.accessToken, data.info!.id);
+
     if (data.role === UserRole.UNVERIFIED_DOCTOR) {
       navigate(doctorUnverifiedRoute.path);
     } else if (

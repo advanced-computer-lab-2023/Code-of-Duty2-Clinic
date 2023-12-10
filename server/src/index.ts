@@ -8,7 +8,7 @@ import path from "path";
 import http from "http";
 import { Server } from "socket.io";
 import { authenticateSocketConnection } from "./middlewares/authentication";
-import addSocketEventListeners from "./socket-connections";
+import socketEventListeners from "./socket-connections";
 
 export const app = express();
 
@@ -37,7 +37,7 @@ const io = new Server(server, {
   cors: config.server.corsOptions,
 });
 io.use(authenticateSocketConnection);
-io.on("connection", addSocketEventListeners);
+io.on("connection", socketEventListeners);
 
 server.listen(config.server.socketPort, () => {
   console.log(`Socket server listening on port ${config.server.socketPort}`);

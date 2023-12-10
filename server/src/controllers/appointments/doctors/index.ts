@@ -55,16 +55,15 @@ export const rescheduleAppointmentForRegisteredPatientHandler = async (
     appointmentId: string;
     timePeriod: TimePeriod;
   },
-  userId: string,
   socket: SocketType
 ) => {
   const { appointmentId, timePeriod } = data;
   if (!appointmentId)
     return socket
-      .to(userId)
+      .to(socket.id)
       .emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
-    return socket.to(userId).emit("error", {
+    return socket.to(socket.id).emit("error", {
       message: "new time period is required",
     });
 
@@ -75,7 +74,7 @@ export const rescheduleAppointmentForRegisteredPatientHandler = async (
     );
     await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
   } catch (error: any) {
-    socket.to(userId).emit("error", { message: error.message });
+    socket.to(socket.id).emit("error", { message: error.message });
   }
 };
 
@@ -84,16 +83,15 @@ export const rescheduleAppointmentForDependentPatientHandler = async (
     appointmentId: string;
     timePeriod: TimePeriod;
   },
-  userId: string,
   socket: SocketType
 ) => {
   const { appointmentId, timePeriod } = data;
   if (!appointmentId)
     return socket
-      .to(userId)
+      .to(socket.id)
       .emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
-    return socket.to(userId).emit("error", {
+    return socket.to(socket.id).emit("error", {
       message: "new time period is required",
     });
 
@@ -104,19 +102,18 @@ export const rescheduleAppointmentForDependentPatientHandler = async (
     );
     await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
   } catch (error: any) {
-    socket.to(userId).emit("error", { message: error.message });
+    socket.to(socket.id).emit("error", { message: error.message });
   }
 };
 
 export const cancelAppointmentForRegisteredPatientHandler = async (
   data: { appointmentId: string },
-  userId: string,
   socket: SocketType
 ) => {
   const { appointmentId } = data;
   if (!appointmentId)
     return socket
-      .to(userId)
+      .to(socket.id)
       .emit("error", { message: "appointmentId is required" });
 
   try {
@@ -126,19 +123,18 @@ export const cancelAppointmentForRegisteredPatientHandler = async (
 
     await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
   } catch (error: any) {
-    socket.to(userId).emit("error", { message: error.message });
+    socket.to(socket.id).emit("error", { message: error.message });
   }
 };
 
 export const cancelAppointmentForDependentPatientHandler = async (
   data: { appointmentId: string },
-  userId: string,
   socket: SocketType
 ) => {
   const { appointmentId } = data;
   if (!appointmentId)
     return socket
-      .to(userId)
+      .to(socket.id)
       .emit("error", { message: "appointmentId is required" });
 
   try {
@@ -148,6 +144,6 @@ export const cancelAppointmentForDependentPatientHandler = async (
 
     await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
   } catch (error: any) {
-    socket.to(userId).emit("error", { message: error.message });
+    socket.to(socket.id).emit("error", { message: error.message });
   }
 };

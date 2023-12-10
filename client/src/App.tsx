@@ -3,8 +3,9 @@ import AppRoutes from "./AppRoutes";
 import UserContextProvider from "./contexts/UserContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { AuthProvider } from "./contexts/AuthContext";
-import SocketContextProvider from "./contexts/SocketContext";
 import NotificationContextProvider from "./contexts/NotificationContext";
+import socket from "./services/Socket";
+import { useEffect } from "react";
 
 axios.defaults.withCredentials = true;
 
@@ -17,14 +18,18 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
+  useEffect(() => {
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <UserContextProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <NotificationContextProvider>
-            <SocketContextProvider>
-              <AppRoutes />
-            </SocketContextProvider>
+            <AppRoutes />
           </NotificationContextProvider>
         </AuthProvider>
       </QueryClientProvider>
