@@ -3,9 +3,18 @@ import axios from "axios";
 import { config } from "../../../configuration";
 import { useQueryParams } from "../../../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography, Paper, Grid } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  Card,
+  CardContent,
+} from "@mui/material";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { healthPackagesOptionsRoute } from "../../../data/routes/patientRoutes";
 import { getFormattedDateTime } from "../../../utils/formatter";
+
 const FamilyMemberPage: React.FC = () => {
   const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
   const queryParams = useQueryParams();
@@ -13,6 +22,7 @@ const FamilyMemberPage: React.FC = () => {
   const type = queryParams.get("type");
   const id = queryParams.get("id");
   let today = new Date();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -86,136 +96,267 @@ const FamilyMemberPage: React.FC = () => {
       console.error("Error cancelling subscription:", error);
     }
   };
-
   const handleSubscribe = async () => {
     navigate(`${healthPackagesOptionsRoute.path}?type=${type}&id=${id}`);
   };
+  function formatPackageDurationInYears(years: number | undefined): string {
+    if (years === undefined) {
+      return "N/A";
+    }
 
+    return `${years} ${years === 1 ? "year" : "years"}`;
+  }
+  function formatAmountInUSD(amount: number | undefined): string {
+    if (amount === undefined) {
+      return "N/A";
+    }
+    const formattedAmount = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+
+    return formattedAmount;
+  }
   return (
-    <Grid container justifyContent="center">
-      <Grid item xs={10}>
-        <Paper elevation={3} style={{ padding: "16px", marginTop: "16px" }}>
-          <Typography variant="h2">Family Member Details</Typography>
+    <Grid
+      container
+      justifyContent="center"
+      style={{ padding: "16px", backgroundColor: "#f0f0f0" }}
+    >
+      <Grid item xs={12} md={8} lg={6}>
+        <Paper
+          elevation={3}
+          style={{
+            padding: "16px",
+            marginTop: "16px",
+            textAlign: "center",
+            background: "#ffffff",
+            color: "#333333",
+          }}
+        >
+          <Typography
+            variant="h4"
+            style={{
+              fontSize: "2rem",
+              fontWeight: "bold",
+              marginBottom: "16px",
+            }}
+          >
+            Family Member Details
+          </Typography>
           {familyMemberData?.subscribedPackage ||
           familyMemberData?.subscribedHealthPackage ? (
-            <div>
-              <Typography variant="h3">Subscribed Health Package</Typography>
-              <Typography>
-                Package ID:{" "}
-                {type == "r"
-                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
-                      .packageId
-                  : familyMemberData.subscribedPackage?.packageId}
-              </Typography>
-              <Typography>
-                Start Date:{" "}
-                {type === "r"
-                  ? getFormattedDateTime(
-                      familyMemberData.subscribedHealthPackage
-                        ?.subscribedPackage.startDate
-                    )
-                  : getFormattedDateTime(
-                      familyMemberData.subscribedPackage?.startDate
-                    )}
-              </Typography>
-              <Typography>
-                End Date:{" "}
-                {type === "r"
-                  ? getFormattedDateTime(
-                      familyMemberData.subscribedHealthPackage
-                        ?.subscribedPackage.endDate
-                    )
-                  : getFormattedDateTime(
-                      familyMemberData.subscribedPackage?.endDate
-                    )}
-              </Typography>
-              <Typography>
-                Status:{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.subscribedPackage
-                      .status
-                  : familyMemberData.subscribedPackage?.status}
-              </Typography>
+            <div style={{ marginBottom: "16px" }}>
+              <Card>
+                <CardContent>
+                  <Typography
+                    variant="h5"
+                    style={{ fontSize: "1.7rem", fontWeight: "bold" }}
+                  >
+                    Health Package Details
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Name:{" "}
+                    {type === "r"
+                      ? familyMemberData.subscribedHealthPackage?.healthPackage
+                          ?.name
+                      : familyMemberData.healthPackage.name}
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Amount To Pay:{" "}
+                    {type === "r"
+                      ? formatAmountInUSD(
+                          familyMemberData.subscribedHealthPackage
+                            ?.healthPackage?.amountToPay
+                        )
+                      : formatAmountInUSD(
+                          familyMemberData.healthPackage.amountToPay
+                        )}
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Package Duration:{" "}
+                    {type === "r"
+                      ? formatPackageDurationInYears(
+                          familyMemberData.subscribedHealthPackage
+                            ?.healthPackage?.packageDurationInYears
+                        )
+                      : formatPackageDurationInYears(
+                          familyMemberData.healthPackage.packageDurationInYears
+                        )}
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Gained Doctor Session Discount:{" "}
+                    <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
+                    {type === "r"
+                      ? familyMemberData.subscribedHealthPackage?.healthPackage
+                          ?.discounts.gainedDoctorSessionDiscount *
+                          100 +
+                        "%"
+                      : familyMemberData.healthPackage?.discounts
+                          .gainedDoctorSessionDiscount *
+                          100 +
+                        "%"}
+                  </Typography>
 
-              <Typography variant="h3">Health Package Details</Typography>
-              <Typography>
-                Name:{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.name
-                  : familyMemberData.healthPackage.name}
-              </Typography>
-              <Typography>
-                Amount To Pay:{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.amountToPay
-                  : familyMemberData.healthPackage?.amountToPay}
-              </Typography>
-              <Typography>
-                Package Duration (Years):{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.packageDurationInYears
-                  : familyMemberData.healthPackage.packageDurationInYears}
-              </Typography>
-              <Typography>
-                Gained Doctor Session Discount:{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.discounts.gainedDoctorSessionDiscount
-                  : familyMemberData.healthPackage?.discounts
-                      .gainedDoctorSessionDiscount}
-              </Typography>
-              <Typography>
-                Gained Pharmacy Medicines Discount:{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.discounts.gainedPharamcyMedicinesDiscount
-                  : familyMemberData.healthPackage.discounts
-                      .gainedPharamcyMedicinesDiscount}
-              </Typography>
-              <Typography>
-                Gained Family Members Discount:{" "}
-                {type === "r"
-                  ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.discounts.gainedFamilyMembersDiscount
-                  : familyMemberData.healthPackage.discounts
-                      .gainedFamilyMembersDiscount}
-              </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Gained Pharmacy Medicines Discount:{" "}
+                    <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
+                    {type === "r"
+                      ? familyMemberData.subscribedHealthPackage?.healthPackage
+                          ?.discounts.gainedPharamcyMedicinesDiscount *
+                          100 +
+                        "%"
+                      : familyMemberData.healthPackage.discounts
+                          .gainedPharamcyMedicinesDiscount *
+                          100 +
+                        "%"}
+                  </Typography>
+
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Gained Family Members Discount:{" "}
+                    <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
+                    {type === "r"
+                      ? familyMemberData.subscribedHealthPackage?.healthPackage
+                          ?.discounts.gainedFamilyMembersDiscount *
+                          100 +
+                        "%"
+                      : familyMemberData.healthPackage.discounts
+                          .gainedFamilyMembersDiscount *
+                          100 +
+                        "%"}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card style={{ marginTop: "16px" }}>
+                <CardContent>
+                  <Typography
+                    variant="h5"
+                    style={{ fontSize: "1.7rem", fontWeight: "bold" }}
+                  >
+                    Subscribed Health Package
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Start Date:{" "}
+                    {type === "r"
+                      ? getFormattedDateTime(
+                          familyMemberData.subscribedHealthPackage
+                            ?.subscribedPackage.startDate
+                        )
+                      : getFormattedDateTime(
+                          familyMemberData.subscribedPackage?.startDate
+                        )}
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    End Date:{" "}
+                    {type === "r"
+                      ? getFormattedDateTime(
+                          familyMemberData.subscribedHealthPackage
+                            ?.subscribedPackage.endDate
+                        )
+                      : getFormattedDateTime(
+                          familyMemberData.subscribedPackage?.endDate
+                        )}
+                  </Typography>
+                  <Typography
+                    style={{
+                      margin: "8px 0",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    Status:{" "}
+                    {type === "r"
+                      ? familyMemberData.subscribedHealthPackage
+                          ?.subscribedPackage.status
+                      : familyMemberData.subscribedPackage?.status}
+                  </Typography>
+                </CardContent>
+              </Card>
             </div>
           ) : (
-            <Typography>No family member details available.</Typography>
+            <Typography style={{ fontSize: "18px", marginBottom: "16px" }}>
+              No family member details available.
+            </Typography>
           )}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCancelSubscription}
-            style={{ marginRight: "16px" }}
-            disabled={
-              !(type === "r"
-                ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
-                    ?.status === "subscribed"
-                : familyMemberData?.subscribedPackage?.status[0] ===
-                  "subscribed")
-            }
-          >
-            Cancel Subscription
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleSubscribe}
-            disabled={
-              type === "r"
-                ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
-                    ?.status === "subscribed"
-                : familyMemberData?.subscribedPackage?.status[0] ===
-                  "subscribed"
-            }
-          >
-            Subscribe
-          </Button>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCancelSubscription}
+              disabled={
+                !(type === "r"
+                  ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
+                      ?.status === "subscribed"
+                  : familyMemberData?.subscribedPackage?.status[0] ===
+                    "subscribed")
+              }
+              style={{ marginRight: "16px" }}
+            >
+              Cancel Subscription
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSubscribe}
+              disabled={
+                type === "r"
+                  ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
+                      ?.status === "subscribed"
+                  : familyMemberData?.subscribedPackage?.status[0] ===
+                    "subscribed"
+              }
+            >
+              Subscribe
+            </Button>
+          </div>
         </Paper>
       </Grid>
     </Grid>
@@ -223,26 +364,3 @@ const FamilyMemberPage: React.FC = () => {
 };
 
 export default FamilyMemberPage;
-/**{
-    "subscribedPackage": {
-        "packageId": "65228d0d033c935b1c137f9c",
-        "startDate": "2023-11-13T20:18:20.416Z",
-        "endDate": "2024-11-12T20:18:20.416Z",
-        "status": [
-            "subscribed"
-        ],
-        "_id": "6552848cd348d55081146225"
-    },
-    "healthPackage": {
-        "discounts": {
-            "gainedDoctorSessionDiscount": 0.8,
-            "gainedPharamcyMedicinesDiscount": 0.7,
-            "gainedFamilyMembersDiscount": 0.2
-        },
-        "_id": "65228d0d033c935b1c137f9c",
-        "name": "Platinum Package",
-        "amountToPay": 19,
-        "packageDurationInYears": 1,
-        "__v": 0
-    }
-} */
