@@ -5,7 +5,7 @@ import { getAllDoctors } from "../../controllers/patients/getAllDoctors";
 import { getPatientById } from "../../controllers/patients/getPatientById";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
 import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
-import { getAppointmentsWithAllDoctors } from "../../controllers/appointments/getAllAppointments";
+import { getAppointmentsWithAllDoctors } from "../../controllers/appointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
@@ -53,9 +53,9 @@ import { cancelSubscriptionR } from "../../controllers/healthPackages/cancelSubs
 import { subscribeToHealthPackageR } from "../../controllers/healthPackages/subscribeForR";
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 import {
-  bookAnAppointmentForADependentFamilyMemberHandler,
-  bookAnAppointmentForARegisteredFamilyMemberHandler,
-  bookAnAppointmentHandler,
+  bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
+  bookAnAppointmentForARegisteredFamilyMemberHandler as bookAppointmentForARegisteredFamilyMemberHandler,
+  bookAnAppointmentHandler as bookAppointmentHandler,
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
@@ -104,14 +104,14 @@ patientRouter
 
   .get("/appointments/:doctorId", getDoctorAppointmentFeesHandler)
 
-  .post("/appointments/:doctorId", bookAnAppointmentHandler)
+  .post("/appointments/:doctorId", bookAppointmentHandler)
   .post(
     "/registered-family-members/:familyMemberId/appointments/:doctorId",
-    bookAnAppointmentForARegisteredFamilyMemberHandler
+    bookAppointmentForARegisteredFamilyMemberHandler
   )
   .post(
     "/dependent-family-members/:dependentNationalId/appointments/:doctorId",
-    bookAnAppointmentForADependentFamilyMemberHandler
+    bookAppointmentForADependentFamilyMemberHandler
   )
 
   .get("/health-records", getPatientHealthRecords)

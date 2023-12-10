@@ -16,13 +16,8 @@ import { patientDashboardRoute } from "../data/routes/patientRoutes";
 import { welcomeRoute } from "../data/routes/guestRoutes";
 import { VerificationStatus } from "../types/enums/VerificationStatus";
 import { UserContext } from "./UserContext";
-
-interface IAuthState {
-  isAuthenticated: boolean;
-  accessToken: string | null;
-  role: UserRole;
-  verificationStatus?: VerificationStatus;
-}
+import { IAuthState } from "../interfaces/IAuthState";
+import socket, { establishSocketConnection } from "../services/Socket";
 
 interface IAuthContext {
   authState: IAuthState;
@@ -59,6 +54,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     role: UserRole.GUEST,
   });
   const navigate = useNavigate();
+
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
@@ -161,7 +158,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error("Error during logout", error);
     }
     clearAuthorizationHeader();
-    useContext(UserContext).setUser(null);
+
+    setUser(null);
+
+    socket.disconnect();
   };
 
   const refreshAuth = async () => {
@@ -176,6 +176,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         response.data.role,
         response.data.verificationStatus
       );
+
+      establishSocketConnection(response.data.accessToken, response.data.id);
+
       return response.data.accessToken;
     } catch (error) {
       logout();

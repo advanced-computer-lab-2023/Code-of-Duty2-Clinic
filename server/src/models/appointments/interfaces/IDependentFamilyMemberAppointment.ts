@@ -1,3 +1,4 @@
+import { Schema } from "mongoose";
 import { IAppointmentBaseInfo } from "./IAppointmentBaseInfo";
 
 export interface IDependentFamilyMemberAppointment

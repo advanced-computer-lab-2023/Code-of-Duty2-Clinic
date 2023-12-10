@@ -7,6 +7,13 @@ import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import { findDoctorById } from "../doctors";
 import { findPatientById } from "../patients";
 import UserRole from "../../types/UserRole";
+import { IRegisteredPatientAppointment } from "../../models/appointments/interfaces/IRegisteredPatientAppointment";
+import { rechargePatientWallet } from "../payments/wallets/patients";
+import { getAppointmentFeesWithADoctor } from "./patients";
+import { IAppointmentBaseInfo } from "../../models/appointments/interfaces/IAppointmentBaseInfo";
+import { IDependentFamilyMemberAppointment } from "../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
+import { sendEmail } from "../../utils/email";
+import { getAppointmentNotificationText } from "../../utils/notificationText";
 
 export const findAppointmentById = async (id: string) =>
   await Appointment.findById(id);
@@ -75,7 +82,7 @@ function getMatchingAppointmentsFields(urlQuery: any) {
   return searchQuery;
 }
 
-export const scheduleAppointment = async (
+export const saveAppointment = async (
   patientId: string,
   doctorId: string,
   startTime: string | Date,
@@ -86,8 +93,6 @@ export const scheduleAppointment = async (
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
 
-  validateChosenTimePeriod(selectedStartTime, selectedEndTime);
-
   const appointment: IAppointmentModel = new Appointment({
     timePeriod: { startTime: selectedStartTime, endTime: selectedEndTime },
     status: "upcoming",
@@ -96,7 +101,6 @@ export const scheduleAppointment = async (
     isAFollowUp: isAFollowUpAppointment,
     payerId,
   });
-  console.log(appointment.payerId);
   return await appointment.save();
 };
 
@@ -120,10 +124,12 @@ export async function validateAppointmentCreation(
 ) {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
+
   validateChosenTimePeriod(selectedStartTime, selectedEndTime);
 
   const doctor = await findDoctorById(doctorId);
   if (!doctor) throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
+
   const patient = await findPatientById(patientId);
   if (!patient)
     throw new Error(entityIdDoesNotExistError("Patient", patientId));
@@ -218,3 +224,107 @@ export const findConflictingDoctorAppointments = async (
     ],
   });
 };
+
+export const rescheduleAppointmentForRegisteredPatientAndNotifyUsers = async (
+  appointmentId: string,
+  startTime: string,
+  endTime: string,
+  appointmentScheduler: UserRole
+) => {
+  const appointment = await findAppointmentById(appointmentId);
+  if (!appointment) throw new Error("Appointment not found");
+  await validateAppointmentCreation(
+    appointment.patientId.toString(),
+    appointment.doctorId.toString(),
+    startTime,
+    endTime,
+    appointmentScheduler
+  );
+  await appointment.updateOne({
+    timePeriod: { startTime, endTime },
+  });
+
+  await notifyConcernedUsers(appointment);
+};
+
+export const cancelAppointmentForRegisteredPatientAndNotifyUsers = async (
+  appointmentId: string,
+  cancellerRole: UserRole
+) => {
+  const appointment = await findAppointmentById(appointmentId);
+
+  if (!appointment) throw new Error("Appointment not found");
+  validateCancellingAppointment(appointment);
+
+  if (toRefundPaidFeesToPayer(appointment, cancellerRole)) {
+    await makeARefund(appointment);
+  }
+  appointment.status = "canceled";
+  await appointment.save();
+
+  await notifyConcernedUsers(appointment);
+};
+
+async function notifyConcernedUsers(
+  appointment: IRegisteredPatientAppointment
+) {
+  const patient = await findPatientById(appointment.patientId.toString());
+  const doctor = await findDoctorById(appointment.doctorId.toString());
+
+  await sendEmail({
+    to: patient!.email,
+    subject: `Your appointment has been ${appointment.status}`,
+    text: getAppointmentNotificationText(appointment, doctor!.name),
+  });
+
+  await sendEmail({
+    to: doctor!.email,
+    subject: `Your appointment has been ${appointment.status}`,
+    text: getAppointmentNotificationText(appointment, patient!.name),
+  });
+}
+
+export function toRefundPaidFeesToPayer(
+  appointment:
+    | IRegisteredPatientAppointment
+    | IDependentFamilyMemberAppointment,
+  cancellerRole: UserRole
+) {
+  return (
+    !appointment.isAFollowUp &&
+    (cancellerRole === UserRole.DOCTOR ||
+      (cancellerRole === UserRole.PATIENT &&
+        willAppointmentStartAfterADay(appointment)))
+  );
+}
+
+const ENTIRE_DAY_TIME = 24 * 60 * 60 * 1000;
+function willAppointmentStartAfterADay(appointment: IAppointmentBaseInfo) {
+  return (
+    appointment.timePeriod.startTime.getTime() - new Date().getTime() >
+    ENTIRE_DAY_TIME
+  );
+}
+
+export async function makeARefund(
+  appointment: IRegisteredPatientAppointment | IDependentFamilyMemberAppointment
+) {
+  const payerId = appointment.payerId.toString();
+  const refund = await getAppointmentFeesWithADoctor(
+    payerId,
+    appointment.doctorId.toString()
+  );
+  if (!refund) throw new Error("Error Calculating Refund");
+  await rechargePatientWallet(payerId.toString(), refund);
+}
+
+export function validateCancellingAppointment(
+  appointment: IRegisteredPatientAppointment | IDependentFamilyMemberAppointment
+) {
+  if (appointment.status === "completed") {
+    throw new Error("Appointment already completed");
+  }
+  if (appointment.status === "canceled") {
+    throw new Error("Appointment already cancelled");
+  }
+}

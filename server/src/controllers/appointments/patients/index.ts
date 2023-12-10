@@ -5,8 +5,22 @@ import { StatusCodes } from "http-status-codes";
 import PaymentMethod from "../../../types/PaymentMethod";
 import {
   bookAnAppointment,
+  cancelAppointmentAsPatientForDependentPatientAndNotifyUsers,
+  cancelAppointmentAsPatientForRegisteredPatientAndNotifyUsers,
   getAppointmentFeesWithADoctor,
+  rescheduleAppointmentAsPatientForDependentPatientAndNotifyUsers,
+  rescheduleAppointmentAsPatientForRegisteredPatientAndNotifyUsers,
 } from "../../../services/appointments/patients";
+import SocketType from "../../../types/SocketType";
+import TimePeriod from "../../../types/TimePeriod";
+import { getAppointmentNotificationText } from "../../../utils/notificationText";
+import { findAppointmentById } from "../../../services/appointments";
+import { findPatientById } from "../../../services/patients";
+import { findDoctorById } from "../../../services/doctors";
+import {
+  notifyUsersOnSystemForDependentAppointments,
+  notifyUsersOnSystemForRegisteredAppointments,
+} from "..";
 
 export const bookAnAppointmentHandler = async (
   req: AuthorizedRequest,
@@ -141,5 +155,107 @@ export const getDoctorAppointmentFeesHandler = async (
     res.status(StatusCodes.OK).send({ fees });
   } catch (error: any) {
     res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
+  }
+};
+
+export const rescheduleAppointmentForRegisteredPatientHandler = async (
+  data: {
+    appointmentId: string;
+    timePeriod: TimePeriod;
+  },
+  userId: string,
+  socket: SocketType
+) => {
+  const { appointmentId, timePeriod } = data;
+  if (!appointmentId)
+    return socket
+      .to(userId)
+      .emit("error", { message: "appointmentId is required" });
+  if (!timePeriod)
+    return socket.to(userId).emit("error", {
+      message: "new time period is required",
+    });
+
+  try {
+    await rescheduleAppointmentAsPatientForRegisteredPatientAndNotifyUsers(
+      appointmentId,
+      timePeriod
+    );
+    await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
+  } catch (error: any) {
+    socket.to(userId).emit("error", { message: error.message });
+  }
+};
+
+export const rescheduleAppointmentForDependentPatientHandler = async (
+  data: {
+    appointmentId: string;
+    timePeriod: TimePeriod;
+  },
+  userId: string,
+  socket: SocketType
+) => {
+  const { appointmentId, timePeriod } = data;
+  if (!appointmentId)
+    return socket
+      .to(userId)
+      .emit("error", { message: "appointmentId is required" });
+  if (!timePeriod)
+    return socket.to(userId).emit("error", {
+      message: "new time period is required",
+    });
+
+  try {
+    await rescheduleAppointmentAsPatientForDependentPatientAndNotifyUsers(
+      appointmentId,
+      timePeriod
+    );
+    await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
+  } catch (error: any) {
+    socket.to(userId).emit("error", { message: error.message });
+  }
+};
+
+export const cancelAppointmentForRegisteredPatientHandler = async (
+  data: { appointmentId: string },
+  userId: string,
+  socket: SocketType
+) => {
+  const { appointmentId } = data;
+  if (!appointmentId)
+    return socket
+      .to(userId)
+      .emit("error", { message: "appointmentId is required" });
+
+  try {
+    await cancelAppointmentAsPatientForRegisteredPatientAndNotifyUsers(
+      appointmentId
+    );
+
+    await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
+  } catch (error: any) {
+    socket.to(userId).emit("error", { message: error.message });
+  }
+};
+
+export const cancelAppointmentForDependentPatientHandler = async (
+  data: { appointmentId: string },
+  userId: string,
+  socket: SocketType
+) => {
+  const { appointmentId } = data;
+  if (!appointmentId)
+    return socket
+      .to(userId)
+      .emit("error", { message: "appointmentId is required" });
+
+  try {
+    await cancelAppointmentAsPatientForDependentPatientAndNotifyUsers(
+      appointmentId
+    );
+
+    await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
+  } catch (error: any) {
+    socket.to(userId).emit("error", { message: error.message });
   }
 };

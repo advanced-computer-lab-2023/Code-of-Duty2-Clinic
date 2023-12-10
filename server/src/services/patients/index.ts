@@ -7,13 +7,9 @@ import HealthPackage from "../../models/health_packages/HealthPackage";
 import { addDays } from "../../utils/addDays";
 import PaymentMethod from "../../types/PaymentMethod";
 import { findHealthPackageDetailsAfterDiscount } from "../health-packages";
-import { performWalletTransaction, rechargePatientWallet } from "../payments/wallets/patients";
-import { IDoctorModel } from "../../models/doctors/Doctor";
+import { performWalletTransaction } from "../payments/wallets/patients";
 import mongoose from "mongoose";
 import Appointment from "../../models/appointments/Appointment";
-import { getDoctorAppointmentFeesHandler } from "../../controllers/appointments/patients";
-import { getAppointmentFeesWithADoctor } from "../appointments/patients";
-import { exec } from "child_process";
 
 export const findAllPatients = async () => await Patient.find();
 export const findPatientById = async (id: string, elementsToSelect?: any) => {
@@ -106,7 +102,7 @@ export const subscribeToHealthPackageService = async (
     await performWalletTransaction(payingPatientId, healthPackage.amountToPay);
   }
   patient.subscribedPackage = {
-    packageId: healthPackage._id,
+    packageId: healthPackage._id!,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
     status: "subscribed",
@@ -151,7 +147,7 @@ export async function setSubscribedPackageForDependentService(
   }
 
   dependent.subscribedPackage = {
-    packageId: healthPackage._id,
+    packageId: healthPackage._id!,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
     status: "subscribed",
@@ -439,24 +435,3 @@ export const getPatientDoctors = async (
   ]);
   return doctors;
 };
-
-export const cancelAppointment = async (appointmentId: string, patientId: string) => {
-  const appointment = await Appointment.findById({ _id: appointmentId});
-  if (!appointment) throw new Error("Appointment not found");
-  if (appointment.status !== "upcoming") {
-    throw new Error("Appointment cannot be cancelled");
-  }
-  if(appointment.timePeriod.startTime.getTime() - new Date().getTime() > 24 * 60 * 60 * 1000){
-  const payerId = appointment.payerId;
-  if (!payerId) throw new Error("Payer not found");
-  const patient = await Patient.findById(patientId).select("+wallet");
-  if (!patient) throw new Error("Patient not found");
-  const refund =  await getAppointmentFeesWithADoctor(patientId, appointment.doctorId.toString());
-  if (!refund) throw new Error("Error Calculating Refund");
-  await rechargePatientWallet(payerId.toString(), refund);
-  await patient.save();
-}
-  appointment.status = "canceled";
-  await appointment.save();
-};
-

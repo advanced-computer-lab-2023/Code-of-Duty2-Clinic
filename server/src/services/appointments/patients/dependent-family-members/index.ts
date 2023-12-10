@@ -4,6 +4,9 @@ import PaymentMethod from "../../../../types/PaymentMethod";
 
 import {
   findConflictingDoctorAppointments,
+  makeARefund,
+  toRefundPaidFeesToPayer,
+  validateCancellingAppointment,
   validateChosenTimePeriod,
 } from "../..";
 import { performWalletTransaction } from "../../../payments/wallets/patients";
@@ -11,6 +14,16 @@ import { findDoctorById } from "../../../doctors";
 import { entityIdDoesNotExistError } from "../../../../utils/ErrorMessages";
 import DependentFamilyMemberAppointment from "../../../../models/appointments/DependentFamilyMemberAppointment";
 import { findPatientById } from "../../../patients";
+import UserRole from "../../../../types/UserRole";
+import { sendEmail } from "../../../../utils/email";
+import { getAppointmentNotificationText } from "../../../../utils/notificationText";
+import { IDependentFamilyMemberAppointment } from "../../../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
+
+export const findDependentPatientAppointmentById = async (
+  appointmentId: string
+) => {
+  return await DependentFamilyMemberAppointment.findById(appointmentId);
+};
 
 export const findPatientDependentFamilyMembersAppointments = async (
   patientId?: string,
@@ -96,7 +109,8 @@ export const bookAnAppointmentForADependentFamilyMember = async (
     dependentNationalId,
     doctorId,
     startTime,
-    endTime
+    endTime,
+    UserRole.PATIENT
   );
   const appointmentFees = await getAppointmentFeesWithADoctor(
     payerId,
@@ -105,7 +119,7 @@ export const bookAnAppointmentForADependentFamilyMember = async (
   if (paymentMethod === PaymentMethod.WALLET) {
     await performWalletTransaction(payerId, appointmentFees);
   }
-  await scheduleAppointmentForADependentFamilyMember(
+  await saveAppointmentForADependentFamilyMember(
     payerId,
     dependentNationalId,
     doctorId,
@@ -114,12 +128,13 @@ export const bookAnAppointmentForADependentFamilyMember = async (
   );
 };
 
-const validateAppointmentCreationForADependentFamilyMember = async (
+export const validateAppointmentCreationForADependentFamilyMember = async (
   payerId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
-  endTime: string
+  endTime: string,
+  appointmentSetter: UserRole
 ) => {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
@@ -155,7 +170,9 @@ const validateAppointmentCreationForADependentFamilyMember = async (
     );
   if (conflictingPatientDependentAppointments > 0) {
     throw new Error(
-      "Your family member has another appointment in the requested time period"
+      appointmentSetter === UserRole.PATIENT
+        ? "Your family member has another appointment in the requested time period"
+        : "The patient is busy during the requested time period"
     );
   }
 
@@ -166,7 +183,9 @@ const validateAppointmentCreationForADependentFamilyMember = async (
   );
   if (conflictingDoctorAppointments > 0) {
     throw new Error(
-      "This doctor has another appointment during the requested time period"
+      appointmentSetter === UserRole.PATIENT
+        ? "This doctor has another appointment during the requested time period"
+        : "You already have another appointment during the requested time period"
     );
   }
 };
@@ -200,26 +219,94 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
   });
 };
 
-const scheduleAppointmentForADependentFamilyMember = async (
-  payerId: string,
+export const saveAppointmentForADependentFamilyMember = async (
+  mainPatientId: string,
   dependentNationalId: string,
   doctorId: string,
   startTime: string,
-  endTime: string
+  endTime: string,
+  isAFollowUpAppointment = false
 ) => {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
 
-  validateChosenTimePeriod(selectedStartTime, selectedEndTime);
-
   const newAppointment = new DependentFamilyMemberAppointment({
-    payerId,
+    payerId: mainPatientId,
     dependentNationalId,
     doctorId,
     timePeriod: {
       startTime: selectedStartTime,
       endTime: selectedEndTime,
     },
+    isAFollowUp: isAFollowUpAppointment,
   });
   await newAppointment.save();
 };
+
+export const rescheduleAppointmentForDependentPatientAndNotifyUsers = async (
+  appointmentId: string,
+  startTime: string,
+  endTime: string,
+  appointmentScheduler: UserRole
+) => {
+  const appointment = await DependentFamilyMemberAppointment.findById(
+    appointmentId
+  );
+  if (!appointment) throw new Error("Appointment not found");
+  await validateAppointmentCreationForADependentFamilyMember(
+    appointment.payerId.toString(),
+    appointment.dependentNationalId.toString(),
+    appointment.doctorId.toString(),
+    startTime,
+    endTime,
+    appointmentScheduler
+  );
+  await appointment.updateOne({
+    timePeriod: { startTime, endTime },
+  });
+};
+
+export const cancelAppointmentForDependentAndNotifyUsers = async (
+  appointmentId: string,
+  cancellerRole: UserRole
+) => {
+  const appointment = await DependentFamilyMemberAppointment.findById(
+    appointmentId
+  );
+
+  if (!appointment) throw new Error("Appointment not found");
+  validateCancellingAppointment(appointment);
+
+  if (toRefundPaidFeesToPayer(appointment, cancellerRole)) {
+    await makeARefund(appointment);
+  }
+  appointment.status = "canceled";
+  await appointment.save();
+
+  await notifyConcernedUsers(appointment);
+};
+
+async function notifyConcernedUsers(
+  appointment: IDependentFamilyMemberAppointment
+) {
+  const patient = await findPatientById(
+    appointment.payerId.toString(),
+    "+dependentFamilyMembers"
+  );
+  const dependent = patient!.dependentFamilyMembers?.find(
+    (dependent) => dependent.nationalId === appointment.dependentNationalId
+  );
+  const doctor = await findDoctorById(appointment.doctorId.toString());
+
+  await sendEmail({
+    to: patient!.email,
+    subject: `Appointment of your family members has been ${appointment.status}`,
+    text: getAppointmentNotificationText(appointment, doctor!.name),
+  });
+
+  await sendEmail({
+    to: doctor!.email,
+    subject: `Your appointment has been ${appointment.status}`,
+    text: getAppointmentNotificationText(appointment, dependent!.name),
+  });
+}
