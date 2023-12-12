@@ -25,6 +25,7 @@ import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/
 import CreateWallet from "../../pages/doctors/wallet/CreateWallet";
 import ChatsView from "../../features/chats/ChatsView";
 import DoctorSchedule from "../../pages/doctors/DoctorSchedule";
+import UserRole from "../../types/enums/UserRole";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
   element: <Home />,
@@ -87,7 +88,7 @@ export const doctorWalletCreationRoute: Route = {
 
 export const doctorChatsRoute: Route = {
   path: "/doctor/chat",
-  element: <ChatsView />,
+  element: <ChatsView role={UserRole.DOCTOR} />,
 };
 
 export const doctorSchedule: Route = {

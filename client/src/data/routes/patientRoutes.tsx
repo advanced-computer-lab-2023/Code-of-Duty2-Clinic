@@ -23,6 +23,7 @@ import AppointmentBooking from "../../pages/patients/appointments/AppointmentBoo
 import AppointmentPayment from "../../pages/patients/appointments/AppointmentsPayment";
 import PatientDoctorsPage from "../../pages/patients/doctor-interactions/ViewPatientDoctors";
 import ChatsView from "../../features/chats/ChatsView";
+import UserRole from "../../types/enums/UserRole";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -142,7 +143,7 @@ export const patientDoctorsRoute: Route = {
 
 export const chatsRoute: Route = {
   path: "/patient/chat",
-  element: <ChatsView />,
+  element: <ChatsView role={UserRole.PATIENT} />,
 };
 
 const routes: Route[] = [

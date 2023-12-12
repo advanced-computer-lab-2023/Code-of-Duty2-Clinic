@@ -60,9 +60,7 @@ const PatientComponent: FC<PatientComponentProps> = ({ patient }) => {
             variant="contained"
             color="secondary"
             component={Link}
-            to={`/doctor/chat?name=${patient.name}&id=${patient.id}${
-              patient.photoUrl ? `&photoUrl=${patient.photoUrl}` : ""
-            }`}
+            to={`/doctor/chat?id=${patient.id}`}
           >
             Chat With Patient
           </RedirectButton>

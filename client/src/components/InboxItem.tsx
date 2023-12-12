@@ -29,9 +29,7 @@ const InboxItem: React.FC<InboxItemProps> = ({ otherData }) => {
       <Button
         variant="contained"
         color="primary"
-        href={`/patient/chat?id=${otherData.id}&name=${otherData.name}${
-          otherData.photoUrl ? `&photoUrl=${otherData.photoUrl}` : ""
-        }`}
+        href={`/patient/chat?id=${otherData.id}`}
       >
         Chat
       </Button>
