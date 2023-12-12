@@ -86,7 +86,7 @@ export const doctorWalletCreationRoute: Route = {
 };
 
 export const doctorChatsRoute: Route = {
-  path: "/doctor/chats",
+  path: "/doctor/chat",
   element: <ChatsView />,
 };
 

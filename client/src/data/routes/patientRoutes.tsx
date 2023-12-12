@@ -141,7 +141,7 @@ export const patientDoctorsRoute: Route = {
 };
 
 export const chatsRoute: Route = {
-  path: "/patient/chats",
+  path: "/patient/chat",
   element: <ChatsView />,
 };
 

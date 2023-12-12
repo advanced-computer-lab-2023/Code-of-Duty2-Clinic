@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import IPatientInfo from "../../interfaces/PatientInfo";
+import UserData from "../../types/UserData";
 
 const PatientItem = styled(Card)({
   display: "flex",
@@ -36,24 +36,21 @@ const RedirectButton = styled(Button)({
   },
 }) as typeof Button;
 type PatientComponentProps = {
-  patient: IPatientInfo;
-  conversationId: string;
+  patient: UserData;
 };
 
-const PatientComponent: FC<PatientComponentProps> = ({
-  patient,
-  conversationId,
-}) => {
+const PatientComponent: FC<PatientComponentProps> = ({ patient }) => {
   const [firstName, lastName] = patient.name.split(" ");
   const getInitials = () => {
     return `${firstName.charAt(0)}${
       !!lastName?.length ? lastName.charAt(0) : ""
     }`;
   };
+
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} key={patient.id}>
       <PatientItem component={Link} to={`/doctor/patient/${patient.id}`}>
-        <PatientImage image={patient.imageUrl || ""} content={getInitials()} />
+        <PatientImage image={patient.photoUrl || ""} content={getInitials()} />
         <CardContent>
           <PatientInfo variant="body1">Name: {patient.name}</PatientInfo>
           <PatientInfo variant="subtitle2">
@@ -63,7 +60,9 @@ const PatientComponent: FC<PatientComponentProps> = ({
             variant="contained"
             color="secondary"
             component={Link}
-            to={`/doctor/chats?conversationId=${conversationId}`}
+            to={`/doctor/chat?name=${patient.name}&id=${patient.id}${
+              patient.photoUrl ? `&photoUrl=${patient.photoUrl}` : ""
+            }`}
           >
             Chat With Patient
           </RedirectButton>
