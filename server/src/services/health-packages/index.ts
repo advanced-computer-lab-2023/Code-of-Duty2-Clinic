@@ -29,7 +29,7 @@ export const findHealthPackageDetailsAfterDiscount = async (
   const allHealthPackagesAfterDiscount =
     await findAllHealthPackagesAfterDiscount(patientId);
   const healthPackage = allHealthPackagesAfterDiscount.find(
-    (healthPackage) => healthPackage._id!.toString() === packageId
+    (healthPackage) => healthPackage.id === packageId
   );
   return healthPackage;
 };
@@ -43,16 +43,18 @@ export const findAllHealthPackagesAfterDiscount = async (patientId: string) => {
   const registeredFamilyMembersHealthPackages =
     await getRegisteredFamilyMembersHealthPackages(patient);
 
+  console.log(registeredFamilyMembersHealthPackages);
   const maxHealthPackagesDiscountPossible = getMaxDiscount(
     registeredFamilyMembersHealthPackages
   );
 
   const allHealthPackages = await findAllHealthPackages();
 
-  return getHealthPackagesDetailsAfterDiscount(
+  const result = getHealthPackagesDetailsAfterDiscount(
     allHealthPackages,
     maxHealthPackagesDiscountPossible
   );
+  return result;
 };
 
 const getHealthPackagesDetailsAfterDiscount = (
@@ -60,20 +62,27 @@ const getHealthPackagesDetailsAfterDiscount = (
   maxDiscount: number
 ) => {
   const healthPackagesDetailsAfterDiscount = [];
-  for (const healthPackage of healthPackages) {
+  for (const packageBeforeDiscount of healthPackages) {
+    const healthPackage = packageBeforeDiscount.toObject();
     const healthPackagePriceAfterDiscount =
       healthPackage.amountToPay - maxDiscount * healthPackage.amountToPay;
 
     let healthPackageDetailsAfterDiscount;
     if (healthPackagePriceAfterDiscount === healthPackage.amountToPay) {
       healthPackageDetailsAfterDiscount = {
-        ...healthPackage,
+        id: healthPackage._id!.toString(),
+        name: healthPackage.name,
+        discounts: healthPackage.discounts,
+        packageDurationInYears: healthPackage.packageDurationInYears,
         amountToPay: healthPackagePriceAfterDiscount,
         amountBeforeDiscount: undefined,
       };
     } else {
       healthPackageDetailsAfterDiscount = {
-        ...healthPackage,
+        id: healthPackage._id!.toString(),
+        name: healthPackage.name,
+        discounts: healthPackage.discounts,
+        packageDurationInYears: healthPackage.packageDurationInYears,
         amountToPay: healthPackagePriceAfterDiscount,
         amountBeforeDiscount: healthPackage.amountToPay,
       };
@@ -103,12 +112,13 @@ const getRegisteredFamilyMembersHealthPackages = async (
         member.id.toString(),
         { subscribedPackage: 1 }
       );
-      if (registeredFamilyMember?.subscribedPackage) {
-        const subscribedPackage = await findHealthPackageById(
-          registeredFamilyMember.subscribedPackage.packageId.toString()
-        );
-        return subscribedPackage;
+      if (!registeredFamilyMember?.subscribedPackage) {
+        return null;
       }
+      const subscribedPackage = await findHealthPackageById(
+        registeredFamilyMember.subscribedPackage.packageId.toString()
+      );
+      return subscribedPackage;
     });
   const result = await Promise.all(registeredFamilyMemberDiscountsPromise);
   return result.filter((package_) => package_ !== null) as IHealthPackage[];
