@@ -67,7 +67,7 @@ const HealthPackagesModal: React.FC<HealthPackagesModalProps> = ({
   };
   const createHealthPackage = async () => {
     const data = prepareNewData();
-    await axios.post(`${config.serverUri}/health-packages`, data);
+    await axios.post(`${config.serverUri}/admins/health-packages`, data);
 
     onSubmit?.(false, true, healthPackage);
     setOpenEditingModal(false);
@@ -77,7 +77,10 @@ const HealthPackagesModal: React.FC<HealthPackagesModalProps> = ({
   const saveHealthPackage = async () => {
     const data = prepareNewData();
     await axios
-      .put(`${config.serverUri}/health-packages/${healthPackage._id}`, data)
+      .put(
+        `${config.serverUri}/admins/health-packages/${healthPackage._id}`,
+        data
+      )
       .then((response) => {
         console.log(response.status);
       });
