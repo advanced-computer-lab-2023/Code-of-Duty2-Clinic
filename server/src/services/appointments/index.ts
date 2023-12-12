@@ -23,7 +23,9 @@ export const getAppointments = async (
   userId: string,
   urlQuery: any
 ) => {
-  const searchQuery = getMatchingAppointmentsFields(urlQuery);
+  const searchQuery =
+    getMatchingAppointmentsFields(urlQuery) || getDefaultFilters();
+
   const user = isPatient ? "patientId" : "doctorId";
   return await Appointment.aggregate([
     { $match: { [user]: new mongoose.Types.ObjectId(userId) } },
@@ -52,6 +54,16 @@ export const getAppointments = async (
     },
   ]);
 };
+
+function getDefaultFilters(): {
+  $or?: { status: string }[];
+  "timePeriod.startTime"?: { $gte: Date };
+} {
+  return {
+    $or: [{ status: "upcoming" }, { status: "rescheduled" }],
+    "timePeriod.startTime": { $gte: new Date() },
+  };
+}
 
 function getMatchingAppointmentsFields(urlQuery: any) {
   const { appointmentTime, status, name } = urlQuery;

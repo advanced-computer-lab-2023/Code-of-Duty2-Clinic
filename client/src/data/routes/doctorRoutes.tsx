@@ -24,6 +24,7 @@ import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
 import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 import CreateWallet from "../../pages/doctors/wallet/CreateWallet";
 import ChatsView from "../../features/chats/ChatsView";
+import DoctorSchedule from "../../pages/doctors/DoctorSchedule";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
   element: <Home />,
@@ -89,6 +90,11 @@ export const doctorChatsRoute: Route = {
   element: <ChatsView />,
 };
 
+export const doctorSchedule: Route = {
+  path: "/doctor/schedule",
+  element: <DoctorSchedule />,
+};
+
 const routes: Route[] = [
   doctorDashboardRoute,
   updateAccountInfoRoute,
@@ -103,6 +109,7 @@ const routes: Route[] = [
   doctorWalletRoute,
   doctorWalletCreationRoute,
   doctorChatsRoute,
+  doctorSchedule,
 ];
 
 export default routes;

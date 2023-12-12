@@ -1,9 +1,12 @@
-import { Schema } from 'mongoose';
-
-
 export interface Appointment {
-  date: Date;
-  status: 'upcoming' | 'completed' | 'canceled' | 'rescheduled';
-  doctorId: Schema.Types.ObjectId;
-  patientId: Schema.Types.ObjectId;
+  appointmentId: string;
+  status: "upcoming" | "completed" | "canceled" | "rescheduled";
+  user: {
+    id: string;
+    name: string;
+  };
+  timePeriod: {
+    startTime: Date;
+    endTime: Date;
+  };
 }
