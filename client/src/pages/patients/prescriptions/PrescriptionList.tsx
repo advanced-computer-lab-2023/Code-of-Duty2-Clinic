@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, MenuItem, InputLabel, FormControl, TextField, Select, Button, Box, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, MenuItem, InputLabel, TextField, Select, Button, Box, Typography } from '@mui/material';
 import useGetPatientPrescriptions from '../../../hooks/useGetPatientPrescriptions';
 import { useNavigate } from 'react-router-dom';
 
@@ -73,8 +73,6 @@ const PrescriptionList: React.FC = () => {
     if (isError) {
         return <div>Error fetching prescriptions</div>;
     }
-
-
 
     const handleRowClick = (prescription: IPrescription) => {
         navigate('/patient/prescriptions/view/info', { state: { prescription: prescription } });

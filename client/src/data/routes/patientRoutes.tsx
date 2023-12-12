@@ -55,7 +55,7 @@ export const viewAllDoctorsRoute: Route = {
   element: <ViewDoctors />,
 };
 export const viewDoctorDetailsRoute: Route = {
-  path: "/patient/doctors/:doctorId",
+  path: "/patient/doctors/details",
   element: <ViewDoctorDetails />,
 };
 export const searchForDoctorsRoute: Route = {

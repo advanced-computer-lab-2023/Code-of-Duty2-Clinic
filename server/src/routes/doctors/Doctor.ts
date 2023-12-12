@@ -41,6 +41,8 @@ doctorRouter
 
   .get("/patients", getDoctorPatientsHandler)
 
+  // .get("/prescriptions", getDoctorPrescriptions)
+
   .get("/patients/:patientId", getRegisteredPatientDetails)
 
   .get("", getDoctorById)
