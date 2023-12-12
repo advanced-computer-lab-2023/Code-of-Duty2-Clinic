@@ -1,9 +1,37 @@
-import React from "react";
-import { Card, CardContent, Grid, Button, Typography, ListItemText, ListItem, List, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import HealthPackageDetails from "./healthPackageCard";
+import { Card, CardContent, Grid, Button,styled } from "@mui/material";
+import axios from "axios";
+import { config } from "../configuration";
 import { useQueryParams } from "../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
 import useGetHealthPackageOptions from "../hooks/useGetHealthPackageOptions";
 
+
+const CenteredButtonContainer = styled('div')({
+  textAlign: 'center',
+  marginTop: '16px', // Adjust the spacing as needed
+});
+
+const WideButton = styled(Button)({
+  width: '40%', // Adjust the width as needed
+  fontFamily: 'Arial, sans-serif', // Change this to your desired font for buttons
+  fontSize: '1.2rem',
+  textTransform: 'none',
+});
+
+
+const fetchHealthPackages = async () => {
+  try {
+    const response = await axios.get(
+      `${config.serverUri}/patients/health-packages`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching health packages:", error);
+    return [];
+  }
+};
 
 const HealthPackageList: React.FC = () => {
   const queryParams = useQueryParams();
@@ -33,37 +61,11 @@ const HealthPackageList: React.FC = () => {
     <Grid container spacing={2}>
       {healthPackages?.map((packageItem: any) => (
         <Grid item xs={12} md={6} lg={4} key={packageItem._id}>
-            <Card>
-      <CardContent>
-        <Typography variant="h4" align="center" sx={{marginBottom: "2rem"}}>{packageItem.name}</Typography>
-            <Typography variant="h6">Price: {packageItem.amountToPay}</Typography>
-
-        
-            <Typography variant="h6">Package Duration (Years): {packageItem.packageDurationInYears}</Typography>
-        
-            <Typography variant="h6">Discounts: </Typography>
-            <List>
-              <ListItem>
-                <ListItemText
-                  primary="Discount on sessions with doctors"
-                  secondary={packageItem.discounts.gainedDoctorSessionDiscount > 0 ? packageItem.discounts.gainedDoctorSessionDiscount  * 100 + "%" : "None"}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Discount on medicines bought from the pharmacy"
-                  secondary={packageItem.discounts.gainedPharamcyMedicinesDiscount > 0 ? packageItem.discounts.gainedPharamcyMedicinesDiscount  * 100 + "%" : "None"}	
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Discount for family members"
-                  secondary={packageItem.discounts.gainedFamilyMembersDiscount * 100 + "%"}
-                />
-              </ListItem>
-            </List>
-              <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-                <Button 
+          <Card>
+            <CardContent>
+              <HealthPackageDetails {...packageItem} />
+              <CenteredButtonContainer>
+                <WideButton
                   variant="contained"
                   color="primary"
                   onClick={() =>
@@ -71,13 +73,14 @@ const HealthPackageList: React.FC = () => {
                   }
                 >
                   Subscribe
-                </Button>
-              </Box>
+                </WideButton>
+              </CenteredButtonContainer>
             </CardContent>
           </Card>
         </Grid>
       ))}
     </Grid>
+
   );
 };
 

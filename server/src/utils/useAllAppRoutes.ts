@@ -1,17 +1,26 @@
-import fs from 'fs';
-import path from 'path';
-import { app } from '..';
+import fs from "fs";
+import path from "path";
+import { app } from "..";
 
-export function useAllAppRoutes(routesPath: string) {
-    fs.readdirSync(routesPath).forEach((folderName) => {
-        const innerRouteFolder = path.join(routesPath, folderName);
-        const applicationEntities = folderName;
-        fs.readdirSync(innerRouteFolder).forEach((routeFileName) => {
-            useFileRouter(innerRouteFolder, routeFileName, applicationEntities);
-        });
-    });
+export function useAllAppRoutes(routesFolderPath: string) {
+  useRoutesOfFolder(path.join(routesFolderPath, "admins"));
+  useRoutesOfFolder(path.join(routesFolderPath, "doctors"));
+  useRoutesOfFolder(path.join(routesFolderPath, "patients"));
+  useRoutesOfFolder(path.join(routesFolderPath, "users"));
+  useRoutesOfFolder(path.join(routesFolderPath, "auth"));
 }
-function useFileRouter(innerRouteFolder: string, routeFileName: string, applicationEntities: string) {
-    const router = require(path.join(innerRouteFolder, routeFileName)).default;
-    app.use(`/api/${applicationEntities}`, router);
+
+export function useRoutesOfFolder(routeFolderPath: string) {
+  const applicationEntities = routeFolderPath.split(path.sep).pop()!;
+  fs.readdirSync(routeFolderPath).forEach((routeFileName) => {
+    useFileRouter(routeFolderPath, routeFileName, applicationEntities);
+  });
+}
+function useFileRouter(
+  innerRouteFolder: string,
+  routeFileName: string,
+  applicationEntities: string
+) {
+  const router = require(path.join(innerRouteFolder, routeFileName)).default;
+  app.use(`/api/${applicationEntities}`, router);
 }

@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import HealthPackage, {
   IHealthPackageModel,
 } from "../../models/health_packages/HealthPackage";
@@ -20,7 +19,7 @@ export const findHealthPackageById = async (healthPackageId: string) => {
 };
 
 export const findAllHealthPackages = async () => {
-  return await HealthPackage.find().lean();
+  return await HealthPackage.find();
 };
 
 export const findHealthPackageDetailsAfterDiscount = async (
@@ -30,7 +29,7 @@ export const findHealthPackageDetailsAfterDiscount = async (
   const allHealthPackagesAfterDiscount =
     await findAllHealthPackagesAfterDiscount(patientId);
   const healthPackage = allHealthPackagesAfterDiscount.find(
-    (healthPackage: any) => healthPackage._id.toString() === packageId
+    (healthPackage) => healthPackage._id!.toString() === packageId
   );
   return healthPackage;
 };
@@ -41,11 +40,11 @@ export const findAllHealthPackagesAfterDiscount = async (patientId: string) => {
   if (!patient) throw new Error("Patient not found");
   if (!patient.registeredFamilyMembers) return await findAllHealthPackages();
 
-  const registeredFamilyMembersDiscounts =
-    await getRegisteredFamilyMembersDiscounts(patient);
+  const registeredFamilyMembersHealthPackages =
+    await getRegisteredFamilyMembersHealthPackages(patient);
 
   const maxHealthPackagesDiscountPossible = getMaxDiscount(
-    registeredFamilyMembersDiscounts
+    registeredFamilyMembersHealthPackages
   );
 
   const allHealthPackages = await findAllHealthPackages();
@@ -56,58 +55,61 @@ export const findAllHealthPackagesAfterDiscount = async (patientId: string) => {
   );
 };
 
-interface HealthPackageDetailsAfterDiscount extends IHealthPackage {
-  _id: ObjectId;
-  amountBeforeDiscount: number | undefined;
-}
 const getHealthPackagesDetailsAfterDiscount = (
-  healthPackages: IHealthPackage[],
+  healthPackages: IHealthPackageModel[],
   maxDiscount: number
-): any => {
-  const healthPackagesDetailsAfterDiscount = healthPackages.map(
-    (healthPackage) => {
-      const healthPackagePriceAfterDiscount =
-        healthPackage.amountToPay - maxDiscount * healthPackage.amountToPay;
+) => {
+  const healthPackagesDetailsAfterDiscount = [];
+  for (const healthPackage of healthPackages) {
+    const healthPackagePriceAfterDiscount =
+      healthPackage.amountToPay - maxDiscount * healthPackage.amountToPay;
 
-      const healthPackageDetailsAfterDiscount: any = {
+    let healthPackageDetailsAfterDiscount;
+    if (healthPackagePriceAfterDiscount === healthPackage.amountToPay) {
+      healthPackageDetailsAfterDiscount = {
         ...healthPackage,
         amountToPay: healthPackagePriceAfterDiscount,
         amountBeforeDiscount: undefined,
       };
-
-      if (healthPackagePriceAfterDiscount !== healthPackage.amountToPay)
-        healthPackageDetailsAfterDiscount.amountBeforeDiscount =
-          healthPackage.amountToPay;
-
-      return healthPackageDetailsAfterDiscount;
+    } else {
+      healthPackageDetailsAfterDiscount = {
+        ...healthPackage,
+        amountToPay: healthPackagePriceAfterDiscount,
+        amountBeforeDiscount: healthPackage.amountToPay,
+      };
     }
-  );
+    healthPackagesDetailsAfterDiscount.push(healthPackageDetailsAfterDiscount);
+  }
   return healthPackagesDetailsAfterDiscount;
 };
 
 const getMaxDiscount = (healthPackages: IHealthPackage[]) => {
   const maxDiscount = healthPackages.reduce((maxDiscount, healthPackage) => {
-    if (healthPackage.discounts.gainedFamilyMembersDiscount > maxDiscount)
-      return healthPackage.discounts.gainedFamilyMembersDiscount;
+    const gainedFamilyMembersDiscount =
+      healthPackage.discounts.gainedFamilyMembersDiscount;
+    if (gainedFamilyMembersDiscount > maxDiscount)
+      return gainedFamilyMembersDiscount;
     return maxDiscount;
   }, 0);
   return maxDiscount;
 };
 
-const getRegisteredFamilyMembersDiscounts = async (patient: IPatientModel) => {
-  const registerdFamilyMemberDiscountsPromise =
+const getRegisteredFamilyMembersHealthPackages = async (
+  patient: IPatientModel
+) => {
+  const registeredFamilyMemberDiscountsPromise =
     patient.registeredFamilyMembers!.map(async (member) => {
       const registeredFamilyMember = await findPatientById(
         member.id.toString(),
         { subscribedPackage: 1 }
       );
-      if (!registeredFamilyMember) return null;
-      if (!registeredFamilyMember.subscribedPackage) return null;
-      const subscribedPackage = await findHealthPackageById(
-        registeredFamilyMember.subscribedPackage.packageId.toString()
-      );
-      return subscribedPackage;
+      if (registeredFamilyMember?.subscribedPackage) {
+        const subscribedPackage = await findHealthPackageById(
+          registeredFamilyMember.subscribedPackage.packageId.toString()
+        );
+        return subscribedPackage;
+      }
     });
-  const result = await Promise.all(registerdFamilyMemberDiscountsPromise);
+  const result = await Promise.all(registeredFamilyMemberDiscountsPromise);
   return result.filter((package_) => package_ !== null) as IHealthPackage[];
 };

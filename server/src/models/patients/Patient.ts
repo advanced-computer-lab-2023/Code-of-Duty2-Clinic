@@ -5,6 +5,7 @@ import { IPatient } from "./interfaces/IPatient";
 import PasswordResetSchema from "../users/PasswordReset";
 import WalletSchema from "../wallets/Wallet";
 import bcrypt from "bcrypt";
+import NotificationSchema from "../notifications/Notification";
 
 enum Relation {
   WIFE = "wife",
@@ -141,6 +142,11 @@ export const PatientSchema = new Schema<IPatientModel>(
     passwordReset: {
       type: PasswordResetSchema,
       select: false,
+    },
+    receivedNotifications: {
+      type: Array<typeof NotificationSchema>,
+      select: false,
+      required: false,
     },
   },
   { timestamps: true }

@@ -2,12 +2,19 @@ import { findDoctorById } from "../../doctors";
 import Appointment from "../../../models/appointments/Appointment";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import {
+  cancelAppointmentForRegisteredPatientAndNotifyUsers as cancelAppointmentForRegisteredPatientAndNotifyUsers,
   findMostRecentCompletedAppointment,
   getAppointments,
-  scheduleAppointment,
+  rescheduleAppointmentForRegisteredPatientAndNotifyUsers,
+  saveAppointment,
+  validateAppointmentCreation,
 } from "..";
-import { validateAppointmentCreation } from "..";
 import UserRole from "../../../types/UserRole";
+import {
+  cancelAppointmentForDependentAndNotifyUsers,
+  rescheduleAppointmentForDependentPatientAndNotifyUsers,
+} from "../patients/dependent-family-members";
+import TimePeriod from "../../../types/TimePeriod";
 
 export const findAppointmentDetailsForDoctor = async (
   doctorId: string,
@@ -77,5 +84,41 @@ export const scheduleAFollowUpAppointment = async (
       "No recent completed appointment found between the doctor and patient"
     );
   }
-  await scheduleAppointment(doctorId, patientId, startTime, endTime);
+  await saveAppointment(doctorId, patientId, startTime, endTime, true);
 };
+
+export const rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers =
+  async (appointmentId: string, timePeriod: TimePeriod) => {
+    await rescheduleAppointmentForRegisteredPatientAndNotifyUsers(
+      appointmentId,
+      timePeriod.startTime.toString(),
+      timePeriod.endTime.toString(),
+      UserRole.DOCTOR
+    );
+  };
+
+export const rescheduleAppointmentAsDoctorForDependentPatientAndNotifyUsers =
+  async (appointmentId: string, timePeriod: TimePeriod) => {
+    await rescheduleAppointmentForDependentPatientAndNotifyUsers(
+      appointmentId,
+      timePeriod.startTime.toString(),
+      timePeriod.endTime.toString(),
+      UserRole.DOCTOR
+    );
+  };
+
+export const cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers =
+  async (appointmentId: string) => {
+    await cancelAppointmentForRegisteredPatientAndNotifyUsers(
+      appointmentId,
+      UserRole.DOCTOR
+    );
+  };
+
+export const cancelAppointmentAsDoctorForDependentPatientAndNotifyUsers =
+  async (appointmentId: string) => {
+    await cancelAppointmentForDependentAndNotifyUsers(
+      appointmentId,
+      UserRole.DOCTOR
+    );
+  };

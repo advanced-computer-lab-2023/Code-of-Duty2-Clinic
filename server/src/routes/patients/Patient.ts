@@ -5,7 +5,7 @@ import { getAllDoctors } from "../../controllers/patients/getAllDoctors";
 import { getPatientById } from "../../controllers/patients/getPatientById";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
 import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
-import { getAppointmentsWithAllDoctors } from "../../controllers/patients/getAllAppointments";
+import { getAppointmentsWithAllDoctors } from "../../controllers/appointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
@@ -21,18 +21,18 @@ import {
 } from "../../controllers/patients/healthRecords";
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
-import { viewHealthPackagesOptions } from "../../controllers/patients/viewHealthPackagesOptions";
-import { subscribeToHealthPackage } from "../../controllers/patients/subscribePackageOfPatient";
-import { setSubscribedPackageForDependent } from "../../controllers/patients/subscribeToPackageForDependent";
-import { viewSubscribedHealthPackage } from "../../controllers/patients/viewSubscribedHealthPackage";
-import { viewSubscribedPackageDetailsForDependent } from "../../controllers/patients/viewPackageDetailsForDependent";
-import { viewHealthCarePackageStatus } from "../../controllers/patients/viewPackageDetails";
-import { viewSubscribedPackage } from "../../controllers/patients/viewHealthPackageIndependent";
-import { cancelSubscription } from "../../controllers/patients/cancelSubscription";
-import { cancelSubscribedForDependent } from "../../controllers/patients/cancelSubForIndependent";
-import { viewSubscribedHealthPackageBenefits } from "../../controllers/patients/viewBenefitsOfPackage";
+import { viewHealthPackagesOptions } from "../../controllers/healthPackages/viewHealthPackagesOptions";
+import { subscribeToHealthPackage } from "../../controllers/healthPackages/subscribePackageOfPatient";
+import { setSubscribedPackageForDependent } from "../../controllers/healthPackages/subscribeToPackageForDependent";
+import { viewSubscribedHealthPackage } from "../../controllers/healthPackages/viewSubscribedHealthPackage";
+import { viewSubscribedPackageDetailsForDependent } from "../../controllers/healthPackages/viewPackageDetailsForDependent";
+import { viewHealthCarePackageStatus } from "../../controllers/healthPackages/viewPackageDetails";
+import { viewSubscribedPackage } from "../../controllers/healthPackages/viewHealthPackageIndependent";
+import { cancelSubscription } from "../../controllers/healthPackages/cancelSubscription";
+import { cancelSubscribedForDependent } from "../../controllers/healthPackages/cancelSubForIndependent";
+import { viewSubscribedHealthPackageBenefits } from "../../controllers/healthPackages/viewBenefitsOfPackage";
 import { getDependentFamilyMembers } from "../../controllers/patients/viewDependentFamilyMembers";
-import { cancelSubscriptionForRegistered } from "../../controllers/patients/cancelSubscriptionForRegistered";
+import { cancelSubscriptionForRegistered } from "../../controllers/healthPackages/cancelSubscriptionForRegistered";
 import UserRole from "../../types/UserRole";
 import {
   addPatientAWalletHandler,
@@ -47,15 +47,15 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler,
 } from "../../controllers/payments/credit-cards";
-import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/patients/viewSubscribedHealthPackageAllDetailsD";
-import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/patients/viewSubscribedHealthPackageAllDetailsR";
-import { cancelSubscriptionR } from "../../controllers/patients/cancelSubscriptionForR";
-import { subscribeToHealthPackageR } from "../../controllers/patients/subscribeForR";
+import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsD";
+import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsR";
+import { cancelSubscriptionR } from "../../controllers/healthPackages/cancelSubscriptionForR";
+import { subscribeToHealthPackageR } from "../../controllers/healthPackages/subscribeForR";
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 import {
-  bookAnAppointmentForADependentFamilyMemberHandler,
-  bookAnAppointmentForARegisteredFamilyMemberHandler,
-  bookAnAppointmentHandler,
+  bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
+  bookAnAppointmentForARegisteredFamilyMemberHandler as bookAppointmentForARegisteredFamilyMemberHandler,
+  bookAnAppointmentHandler as bookAppointmentHandler,
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
@@ -106,14 +106,14 @@ patientRouter
 
   .get("/appointments/:doctorId", getDoctorAppointmentFeesHandler)
 
-  .post("/appointments/:doctorId", bookAnAppointmentHandler)
+  .post("/appointments/:doctorId", bookAppointmentHandler)
   .post(
     "/registered-family-members/:familyMemberId/appointments/:doctorId",
-    bookAnAppointmentForARegisteredFamilyMemberHandler
+    bookAppointmentForARegisteredFamilyMemberHandler
   )
   .post(
     "/dependent-family-members/:dependentNationalId/appointments/:doctorId",
-    bookAnAppointmentForADependentFamilyMemberHandler
+    bookAppointmentForADependentFamilyMemberHandler
   )
 
   .get("/health-records", getPatientHealthRecords)
@@ -200,6 +200,6 @@ patientRouter
 
   .get("/:patientId", getPatientById)
 
-  .get("/health-packages/:packageId", getHealthPackage);
+  .get("/health-packages/:packageId", getHealthPackage)
 
 export default patientRouter;

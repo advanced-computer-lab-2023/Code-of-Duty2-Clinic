@@ -8,7 +8,6 @@ import { addDays } from "../../utils/addDays";
 import PaymentMethod from "../../types/PaymentMethod";
 import { findHealthPackageDetailsAfterDiscount } from "../health-packages";
 import { performWalletTransaction } from "../payments/wallets/patients";
-import { IDoctorModel } from "../../models/doctors/Doctor";
 import mongoose from "mongoose";
 import Appointment from "../../models/appointments/Appointment";
 
@@ -103,7 +102,7 @@ export const subscribeToHealthPackageService = async (
     await performWalletTransaction(payingPatientId, healthPackage.amountToPay);
   }
   patient.subscribedPackage = {
-    packageId: healthPackage._id,
+    packageId: healthPackage._id!,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
     status: "subscribed",
@@ -148,7 +147,7 @@ export async function setSubscribedPackageForDependentService(
   }
 
   dependent.subscribedPackage = {
-    packageId: healthPackage._id,
+    packageId: healthPackage._id!,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
     status: "subscribed",
@@ -434,6 +433,5 @@ export const getPatientDoctors = async (
       },
     },
   ]);
-
   return doctors;
 };

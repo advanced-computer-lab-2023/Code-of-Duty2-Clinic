@@ -41,6 +41,7 @@
     "react-icons": "^4.11.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.16.0",
+    "socket.io-client": "^4.7.2",
     "talkjs": "^0.18.0",
     "uuid": "^9.0.1",
     "yup": "^1.3.2",

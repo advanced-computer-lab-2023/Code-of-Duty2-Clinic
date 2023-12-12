@@ -1,7 +1,9 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IAppointment } from "./interfaces/IAppointment";
+import { IRegisteredPatientAppointment } from "./interfaces/IRegisteredPatientAppointment";
 
-export interface IAppointmentModel extends IAppointment, Document {}
+export interface IAppointmentModel
+  extends IRegisteredPatientAppointment,
+    Document {}
 
 export const AppointmentSchema = new Schema<IAppointmentModel>({
   timePeriod: {
@@ -23,9 +25,14 @@ export const AppointmentSchema = new Schema<IAppointmentModel>({
   patientId: {
     type: Schema.Types.ObjectId,
     ref: "Patient",
-    requred: true,
+    required: true,
     index: true,
   },
+  payerId: {
+    type: Schema.Types.ObjectId,
+    ref: "Patient",
+  },
+  isAFollowUp: { type: Boolean, required: true, default: false },
 });
 
 export default mongoose.model<IAppointmentModel>(

@@ -1,9 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IAppointment } from "./interfaces/IAppointment";
+import { IDependentFamilyMemberAppointment } from "./interfaces/IDependentFamilyMemberAppointment";
 
-interface IDependentFamilyMemberAppointment extends IAppointment {
-  dependentNationalId: string;
-}
 export interface IDependentFamilyMemberAppointmentModel
   extends IDependentFamilyMemberAppointment,
     Document {}
@@ -27,12 +24,13 @@ export const AppointmentSchema =
       required: true,
       index: true,
     },
-    patientId: {
+    payerId: {
       type: Schema.Types.ObjectId,
       ref: "Patient",
-      requred: true,
+      required: true,
       index: true,
     },
+    isAFollowUp: { type: Boolean, required: true, default: false },
   });
 
 export default mongoose.model<IDependentFamilyMemberAppointmentModel>(
