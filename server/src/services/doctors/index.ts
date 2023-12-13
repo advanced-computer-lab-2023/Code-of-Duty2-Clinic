@@ -14,6 +14,7 @@ import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
 import bcrypt from "bcrypt";
 import { rechargePatientWallet } from "../payments/wallets/patients";
 import { getAppointmentFeesWithADoctor } from "../appointments/patients";
+import WeekDay from "../../types/WeekDay";
 
 export const findAllDoctors = async () => await Doctor.find();
 
@@ -124,16 +125,25 @@ export const validateDoctorPassword = async (
   return isPasswordCorrect;
 };
 
-export const addAvailableSlots = async (
-  doctorID: string,
-  startTime: Date,
-  endTime: Date
-) => {
-  const doctor = await findDoctorById(doctorID);
-  if (!doctor) {
-    throw new Error(entityIdDoesNotExistError("doctor", doctorID));
+export const addWorkingSchedule = async (
+  doctorId: string,
+  {
+    daysOff,
+    workingHours,
+  }: {
+    daysOff: string[];
+    workingHours: { startTime: string; endTime: string }[];
   }
-  doctor.availableSlots.push({ startTime, endTime });
+) => {
+  const doctor = await findDoctorById(doctorId);
+  if (!doctor) {
+    throw new Error(entityIdDoesNotExistError("doctor", doctorId));
+  }
+
+  doctor.workingSchedule = {
+    daysOff,
+    dailyWorkingHours: workingHours,
+  };
   await doctor.save();
 };
 

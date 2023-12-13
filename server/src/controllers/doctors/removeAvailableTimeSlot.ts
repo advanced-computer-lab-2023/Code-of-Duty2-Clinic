@@ -25,7 +25,7 @@ export const deleteDoctorAvailableSlots = async (
         .json({ message: "Doctor not found" });
     }
 
-    const existingAvailableSlot = doctor.availableSlots.map(
+    const existingAvailableSlot = doctor.workHours.map(
       (slot) => String(slot.startTime) === startTime
     );
 
@@ -37,7 +37,7 @@ export const deleteDoctorAvailableSlots = async (
 
     await Doctor.updateOne(
       { _id: doctorId },
-      { $pull: { availableSlots: { startTime } } }
+      { $pull: { workHours: { startTime } } }
     );
     return res
       .status(StatusCodes.OK)

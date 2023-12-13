@@ -5,6 +5,7 @@ import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientD
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import UserRole from "../../types/UserRole";
+import { getDoctorSchedule } from "../../controllers/doctors/getSchedule";
 
 const router = Router();
 
@@ -16,6 +17,8 @@ router
 
   .get("/doctors/:doctorId", getDoctorById)
 
-  .get("/patient-doctors", getPatientDoctorsHandler);
+  .get("/patient-doctors", getPatientDoctorsHandler)
+
+  .get("/doctors/:doctorId/schedule", getDoctorSchedule);
 
 export default router;
