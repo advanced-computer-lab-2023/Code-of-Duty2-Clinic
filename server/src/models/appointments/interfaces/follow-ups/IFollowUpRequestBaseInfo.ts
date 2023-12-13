@@ -7,6 +7,7 @@ interface IFollowUpRequestBaseInfo {
   doctorId: Schema.Types.ObjectId | string;
   timePeriod?: TimePeriod;
   reason?: string;
+  patientType?: "registered" | "dependent";
 }
 
 export default IFollowUpRequestBaseInfo;

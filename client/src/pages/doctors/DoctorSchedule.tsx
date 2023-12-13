@@ -13,6 +13,7 @@ import { config } from "../../configuration";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { Appointment } from "../../types";
+import socket from "../../services/Socket";
 
 const getAllAppointments = async () => {
   const response = await axios.get(`${config.serverUri}/doctors/appointments`);
@@ -51,7 +52,7 @@ const DoctorSchedule = () => {
         `Are you sure you want to delete the event '${clickInfo.event.title}'`
       )
     ) {
-      clickInfo.event.remove();
+      socket.emit("")
     }
   };
 
@@ -64,10 +65,7 @@ const DoctorSchedule = () => {
         title: appointment.user.name,
         backgroundColor: "#378006",
         borderColor: "#378006",
-        rendering:
-          // (appointment.status === "upcoming" ||
-          //   appointment.status === "rescheduled") &&
-          "background",
+        rendering: "background",
       };
     }
   );

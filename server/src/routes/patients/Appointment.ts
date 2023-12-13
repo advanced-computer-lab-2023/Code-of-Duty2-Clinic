@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAppointmentsWithAllDoctors } from "../../controllers/appointments";
+import { getAppointmentsWithAllDoctors } from "../../controllers/appointments/patients";
 import { getDoctorAppointmentFeesHandler } from "../../controllers/appointments/patients";
 import {
   bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
