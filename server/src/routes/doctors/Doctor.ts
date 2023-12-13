@@ -10,7 +10,7 @@ import { addDoctorSchedule } from "../../controllers/doctors/addSchedule";
 import { updateDoctorPassword } from "../../controllers/doctors/doctorUpdatePassword";
 import { scheduleFollowUpAppointmentHandler } from "../../controllers/appointments/doctors";
 import { getDoctorSchedule } from "../../controllers/doctors/getSchedule";
-import { deleteDoctorAvailableSlots } from "../../controllers/doctors/removeAvailableTimeSlot";
+import { deleteDoctorWorkingSlot } from "../../controllers/doctors/removeDoctorWorkingSlot";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
@@ -55,7 +55,7 @@ doctorRouter
     scheduleFollowUpAppointmentHandler
   )
 
-  .delete("/available-time-slots/:startTime", deleteDoctorAvailableSlots)
+  .delete("/available-time-slots/:startTime", deleteDoctorWorkingSlot)
 
   .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
 
