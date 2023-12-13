@@ -61,12 +61,16 @@ const DoctorSchedule = () => {
         id: appointment.appointmentId,
         start: new Date(appointment.timePeriod.startTime).toISOString(),
         end: new Date(appointment.timePeriod.endTime).toISOString(),
-        title: `Meeting with ${appointment.user.name}`,
-        backgroundColor: "red",
+        title: appointment.user.name,
+        backgroundColor: "#378006",
+        borderColor: "#378006",
+        rendering:
+          // (appointment.status === "upcoming" ||
+          //   appointment.status === "rescheduled") &&
+          "background",
       };
     }
   );
-  console.log("Rendering ...");
 
   return (
     <div className="demo-app">
@@ -79,6 +83,7 @@ const DoctorSchedule = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           initialView="dayGridMonth"
+          validRange={{ start: new Date() }}
           editable={true}
           selectable={true}
           selectMirror={true}
@@ -103,6 +108,18 @@ const DoctorSchedule = () => {
             daysOfWeek: [0, 1, 2, 3, 4],
             startTime: "10:00",
             endTime: "18:00",
+          }}
+          selectAllow={(selectInfo) => {
+            const start = new Date(selectInfo.startStr);
+            const end = new Date(selectInfo.endStr);
+            const isDuringBusySlot = currentEvents.some((event) => {
+              return (
+                event.rendering === "background" &&
+                start >= event.start! &&
+                end <= event.end!
+              );
+            });
+            return !isDuringBusySlot; // If the selection is during a busy slot, disallow it
           }}
         />
       </div>
