@@ -8,7 +8,7 @@ import {
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, { EventDragStopArg } from "@fullcalendar/interaction";
 import { config } from "../../configuration";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -52,7 +52,7 @@ const DoctorSchedule = () => {
         `Are you sure you want to delete the event '${clickInfo.event.title}'`
       )
     ) {
-      socket.emit("")
+      socket.emit("");
     }
   };
 
@@ -100,6 +100,15 @@ const DoctorSchedule = () => {
           }}
           eventRemove={function (args: EventRemoveArg) {
             console.log("eventRemove");
+          }}
+          eventDragStop={function (args: EventDragStopArg) {
+            console.log("old start: " + args.event.start?.toISOString());
+            console.log("old end: " + args.event.end?.toISOString());
+            console.log("eventDragStop");
+          }}
+          eventDrop={function (args: EventDragStopArg) {
+            console.log("new start: " + args.event.start?.toISOString());
+            console.log("new end: " + args.event.end?.toISOString());
           }}
           allDayContent={() => "all-day"}
           businessHours={{

@@ -68,7 +68,7 @@ export function getDefaultAppointmentFilters(): {
 }
 
 function getMatchingAppointmentsFields(urlQuery: any) {
-  const { appointmentTime, status, name } = urlQuery;
+  const { appointmentTime, status, targetName } = urlQuery;
   const isTimeSet = urlQuery.isTimeSet === "true";
 
   let searchQuery: {
@@ -81,8 +81,8 @@ function getMatchingAppointmentsFields(urlQuery: any) {
   if (status && status !== "") {
     searchQuery.status = status;
   }
-  if (name && name != "") {
-    searchQuery["user.name"] = { $regex: `^${name}`, $options: "i" };
+  if (targetName && targetName !== "") {
+    searchQuery["user.name"] = { $regex: `^${targetName}`, $options: "i" };
   }
 
   if (appointmentTime && appointmentTime !== "") {

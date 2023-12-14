@@ -75,7 +75,7 @@ const getDoctorAppointmentsForDependentPatients = async (
   doctorId: string,
   query: {
     status: "completed" | "upcoming" | "canceled" | "rescheduled";
-    name: string;
+    targetName: string;
   }
 ) => {
   const existingDependentPatientsAppointments =
@@ -104,8 +104,10 @@ const getDoctorAppointmentsForDependentPatients = async (
         member.nationalId === appointment.dependentNationalId.toString()
     )!;
     if (
-      query.name &&
-      !dependentMember.name.toLowerCase().startsWith(query.name.toLowerCase())
+      query.targetName &&
+      !dependentMember.name
+        .toLowerCase()
+        .startsWith(query.targetName.toLowerCase())
     ) {
       continue;
     }
