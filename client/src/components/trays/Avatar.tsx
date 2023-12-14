@@ -65,11 +65,11 @@ const Avatar = () => {
         <Divider sx={{ my: 1, mx: 2 }} />
 
         <MenuItem onClick={() => navigate(welcomeRoute.path)}>
-          <SwitchAccessShortcutIcon />
+          <SwitchAccessShortcutIcon sx={{ mr: 1 }} />
           Switch to Welcome View
         </MenuItem>
         <MenuItem onClick={handleLogout}>
-          <LogoutIcon />
+          <LogoutIcon sx={{ mr: 1 }} />
           Logout
         </MenuItem>
       </Menu>
