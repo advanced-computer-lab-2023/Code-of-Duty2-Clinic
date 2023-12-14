@@ -79,8 +79,10 @@ const ViewDoctorPatients = () => {
                   id: patientData.id,
                   name: patientData.name,
                   email: patientData.email,
+                  gender: patientData.gender as "male" | "female",
                   role: "PATIENT" as "PATIENT",
                   photoUrl: patientData.imageUrl,
+                  supervisingPatientId: patientData.supervisingPatientId,
                 };
                 return <PatientComponent patient={patient} />;
               })

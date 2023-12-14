@@ -23,8 +23,10 @@ export const getAppointments = async (
   userId: string,
   urlQuery: any
 ) => {
-  const searchQuery =
-    getMatchingAppointmentsFields(urlQuery) || getDefaultFilters();
+  const emptyQuery = Object.keys(urlQuery).length === 0;
+  const searchQuery = emptyQuery
+    ? getDefaultAppointmentFilters()
+    : getMatchingAppointmentsFields(urlQuery);
 
   const user = isPatient ? "patientId" : "doctorId";
   return await Appointment.aggregate([
@@ -55,12 +57,12 @@ export const getAppointments = async (
   ]);
 };
 
-function getDefaultFilters(): {
-  $or?: { status: string }[];
+export function getDefaultAppointmentFilters(): {
+  status?: { $in: string[] };
   "timePeriod.startTime"?: { $gte: Date };
 } {
   return {
-    $or: [{ status: "upcoming" }, { status: "rescheduled" }],
+    status: { $in: ["upcoming", "rescheduled"] },
     "timePeriod.startTime": { $gte: new Date() },
   };
 }

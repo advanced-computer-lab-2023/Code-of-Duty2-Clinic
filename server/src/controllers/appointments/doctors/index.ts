@@ -60,11 +60,9 @@ export const rescheduleAppointmentForPatientHandler = async (
 ) => {
   const { appointmentId, timePeriod } = data;
   if (!appointmentId)
-    return socket
-      .to(socket.id)
-      .emit("error", { message: "appointmentId is required" });
+    return socket.emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
-    return socket.to(socket.id).emit("error", {
+    return socket.emit("error", {
       message: "new time period is required",
     });
 
@@ -85,7 +83,7 @@ export const rescheduleAppointmentForPatientHandler = async (
       throw new Error("Patient type is not valid");
     }
   } catch (error: any) {
-    socket.to(socket.id).emit("error", { message: error.message });
+    socket.emit("error", { message: error.message });
   }
 };
 
@@ -98,9 +96,7 @@ export const cancelAppointmentForPatientHandler = async (
 ) => {
   const { appointmentId } = data;
   if (!appointmentId)
-    return socket
-      .to(socket.id)
-      .emit("error", { message: "appointmentId is required" });
+    return socket.emit("error", { message: "appointmentId is required" });
 
   try {
     if (data.appointedPatientType === "registered") {
@@ -119,6 +115,6 @@ export const cancelAppointmentForPatientHandler = async (
       throw new Error("Patient type is not valid");
     }
   } catch (error: any) {
-    socket.to(socket.id).emit("error", { message: error.message });
+    socket.emit("error", { message: error.message });
   }
 };

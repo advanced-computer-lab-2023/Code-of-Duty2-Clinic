@@ -12,9 +12,8 @@ import {
 } from "../../utils/ErrorMessages";
 import { getRequestedTimePeriod } from "../../utils/getRequestedTimePeriod";
 import bcrypt from "bcrypt";
-import { rechargePatientWallet } from "../payments/wallets/patients";
-import { getAppointmentFeesWithADoctor } from "../appointments/patients";
-import WeekDay from "../../types/WeekDay";
+import DependentFamilyMemberAppointment from "../../models/appointments/DependentFamilyMemberAppointment";
+import { findPatientById } from "../patients";
 
 export const findAllDoctors = async () => await Doctor.find();
 
@@ -259,7 +258,23 @@ export const getDoctorPatients = async (
   });
   if (!doctor) throw new Error(entityIdDoesNotExistError("doctor", doctorId));
 
-  const patients = await Appointment.aggregate([
+  const registeredPatients = await getRegisteredDoctorPatients(
+    doctorId,
+    patientName
+  );
+
+  const dependentPatients = await getDependentDoctorPatients(
+    doctorId,
+    patientName
+  );
+  return registeredPatients.concat(dependentPatients);
+};
+
+const getRegisteredDoctorPatients = async (
+  doctorId: string,
+  patientName: string
+) => {
+  return await Appointment.aggregate([
     {
       $match: {
         doctorId: new mongoose.Types.ObjectId(doctorId),
@@ -298,6 +313,50 @@ export const getDoctorPatients = async (
       },
     },
   ]);
+};
 
-  return patients;
+const getDependentDoctorPatients = async (
+  doctorId: string,
+  patientName: string
+) => {
+  const appointments = await DependentFamilyMemberAppointment.find({
+    doctorId,
+  });
+  const result = [];
+  for (const appointment of appointments) {
+    if (appointment.status !== "completed") {
+      continue;
+    }
+    const patient = await findPatientById(
+      appointment.payerId.toString(),
+      "+dependentFamilyMembers"
+    );
+    if (!patient) {
+      throw new Error(
+        entityIdDoesNotExistError("patient", appointment.payerId.toString())
+      );
+    }
+    if (!patient.dependentFamilyMembers) {
+      continue;
+    }
+
+    const dependentMember = patient.dependentFamilyMembers.find(
+      (dependentMember) =>
+        dependentMember.nationalId === appointment.dependentNationalId
+    );
+
+    if (
+      patientName &&
+      !dependentMember?.name.toLowerCase().startsWith(patientName.toLowerCase())
+    ) {
+      continue;
+    }
+    result.push({
+      id: dependentMember?.nationalId,
+      name: dependentMember?.name,
+      gender: dependentMember?.gender,
+      supervisingPatientId: appointment.payerId,
+    });
+  }
+  return result;
 };

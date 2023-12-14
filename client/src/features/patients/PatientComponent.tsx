@@ -49,21 +49,30 @@ const PatientComponent: FC<PatientComponentProps> = ({ patient }) => {
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} key={patient.id}>
-      <PatientItem component={Link} to={`/doctor/patient/${patient.id}`}>
+      <PatientItem
+        component={Link}
+        to={`/doctor/patient/${patient.id}${
+          patient.supervisingPatientId
+            ? `?spId=${patient.supervisingPatientId}`
+            : ""
+        }`}
+      >
         <PatientImage image={patient.photoUrl || ""} content={getInitials()} />
         <CardContent>
           <PatientInfo variant="body1">Name: {patient.name}</PatientInfo>
           <PatientInfo variant="subtitle2">
             Gender: {patient.gender}
           </PatientInfo>
-          <RedirectButton
-            variant="contained"
-            color="secondary"
-            component={Link}
-            to={`/doctor/chat?id=${patient.id}`}
-          >
-            Chat With Patient
-          </RedirectButton>
+          {!patient.supervisingPatientId && (
+            <RedirectButton
+              variant="contained"
+              color="secondary"
+              component={Link}
+              to={`/doctor/chat?id=${patient.id}`}
+            >
+              Chat With Patient
+            </RedirectButton>
+          )}
         </CardContent>
       </PatientItem>
     </Grid>

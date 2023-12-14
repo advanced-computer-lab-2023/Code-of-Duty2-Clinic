@@ -5,6 +5,7 @@ type UserData = {
   photoUrl?: string;
   role?: "DOCTOR" | "PATIENT";
   gender?: "male" | "female";
+  supervisingPatientId?: string;
 };
 
 export default UserData;

@@ -15,6 +15,8 @@ import {
   rescheduleAppointmentForDependentPatientAndNotifyUsers,
 } from "../patients/dependent-family-members";
 import TimePeriod from "../../../types/TimePeriod";
+import DependentFamilyMemberAppointment from "../../../models/appointments/DependentFamilyMemberAppointment";
+import { findPatientById } from "../../patients";
 
 export const findAppointmentDetailsForDoctor = async (
   doctorId: string,
@@ -58,8 +60,68 @@ const getAppointmentRequiredFieldsForDoctor = (appointment: any) => ({
   status: appointment.status,
 });
 
-export const getDoctorAppointments = async (userId: string, urlQuery: any) =>
-  await getAppointments(false, userId, urlQuery);
+export const getDoctorAppointments = async (userId: string, urlQuery: any) => {
+  const registeredPatientsAppointments = await getAppointments(
+    false,
+    userId,
+    urlQuery
+  );
+  const dependentPatientsAppointments =
+    await getDoctorAppointmentsForDependentPatients(userId, urlQuery);
+  return registeredPatientsAppointments.concat(dependentPatientsAppointments);
+};
+
+const getDoctorAppointmentsForDependentPatients = async (
+  doctorId: string,
+  query: {
+    status: "completed" | "upcoming" | "canceled" | "rescheduled";
+    name: string;
+  }
+) => {
+  const existingDependentPatientsAppointments =
+    await DependentFamilyMemberAppointment.find({
+      doctorId: doctorId,
+      status: query.status || { $in: ["rescheduled", "upcoming"] },
+    });
+
+  const result = [];
+  for (const appointment of existingDependentPatientsAppointments) {
+    const patient = await findPatientById(
+      appointment.payerId.toString(),
+      "+dependentFamilyMembers"
+    );
+
+    if (!patient)
+      throw new Error(
+        entityIdDoesNotExistError("Patient", appointment.payerId.toString())
+      );
+
+    if (!patient.dependentFamilyMembers) {
+      continue;
+    }
+    const dependentMember = patient.dependentFamilyMembers.find(
+      (member) =>
+        member.nationalId === appointment.dependentNationalId.toString()
+    )!;
+    if (
+      query.name &&
+      !dependentMember.name.toLowerCase().startsWith(query.name.toLowerCase())
+    ) {
+      continue;
+    }
+    result.push({
+      appointmentId: appointment._id,
+      user: {
+        name: dependentMember.name,
+        id: dependentMember.nationalId,
+      },
+      timePeriod: appointment.timePeriod,
+      status: appointment.status,
+      isForDependent: true,
+    });
+  }
+  return result;
+};
 
 export const scheduleAFollowUpAppointment = async (
   doctorId: string,

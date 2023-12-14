@@ -12,7 +12,7 @@ export const getPatientPrescriptions = async (
 ) => {
   try {
     const allowedUpdateParams = ["updatedAt", "doctorName", "date", "status"];
-    //join patient
+
     const patientId = req.user?.id;
     if (!patientId)
       return res
