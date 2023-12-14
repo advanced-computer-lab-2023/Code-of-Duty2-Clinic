@@ -13,7 +13,8 @@ import {
   ListItemText,
   Collapse,
   ListItem,
-  Divider
+  Divider,
+  Button
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -39,7 +40,8 @@ const UserPanel: React.FC<Props> = ({ sidebarItems }) => {
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
       event.type === "keydown" &&
-      ((event as React.KeyboardEvent).key === "Tab" || (event as React.KeyboardEvent).key === "Shift")
+      ((event as React.KeyboardEvent).key === "Tab" ||
+        (event as React.KeyboardEvent).key === "Shift")
     ) {
       return;
     }
@@ -148,11 +150,11 @@ const UserPanel: React.FC<Props> = ({ sidebarItems }) => {
         <Box sx={{ width: "100%" }} /> // Empty box to reserve space
       )}
       <Box sx={{ marginRight: theme.spacing(1), display: "flex" }}>
-        <IconButton color="inherit" onClick={() => navigate(welcomeRoute.path)}>
+        {/* <IconButton color="inherit" onClick={() => navigate(welcomeRoute.path)}>
           <PublicIcon />
-        </IconButton>
+        </IconButton> */}
 
-        <Divider orientation="vertical" flexItem sx={{ bgcolor: "white", width: "1px", mx: 2 }} />
+        {/* <Divider orientation="vertical" flexItem sx={{ bgcolor: "white", width: "1px", mx: 2 }} /> */}
 
         <UserTray />
       </Box>

@@ -1,7 +1,17 @@
-import { FormControlLabel, IconButton, Menu, MenuItem, Switch } from "@mui/material";
+import {
+  Button,
+  Divider,
+  FormControlLabel,
+  IconButton,
+  Menu,
+  MenuItem,
+  Switch,
+  Typography
+} from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccountCircle, Brightness4, Brightness7, Logout as LogoutIcon } from "@mui/icons-material";
+import SwitchAccessShortcutIcon from "@mui/icons-material/SwitchAccessShortcut";
 
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -48,7 +58,16 @@ const Avatar = () => {
             label={theme === "dark" ? <Brightness4 /> : <Brightness7 />}
           />
         </MenuItem> */}
+        <Typography variant="h6" style={{ padding: "0.5em 1em" }}>
+          What's happening?
+        </Typography>
 
+        <Divider sx={{ my: 1, mx: 2 }} />
+
+        <MenuItem onClick={() => navigate(welcomeRoute.path)}>
+          <SwitchAccessShortcutIcon />
+          Switch to Welcome View
+        </MenuItem>
         <MenuItem onClick={handleLogout}>
           <LogoutIcon />
           Logout

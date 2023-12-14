@@ -12,6 +12,8 @@ import UserTray from "../trays/UserTray";
 import AuthTray from "../trays/AuthTray";
 import el7a2niLogo from "../../assets/el7a2ni_logo.png";
 import UserRole from "../../types/enums/UserRole";
+import { Dashboard } from "@mui/icons-material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const Navbar = () => {
   const { authState, logout } = useContext(AuthContext);
@@ -74,12 +76,17 @@ const Navbar = () => {
                   }
                 }}
               >
-                <HomeOutlinedIcon />
+                <DashboardIcon />
+                <Typography sx={{ pl: 1 }}>Switch to Dashboard</Typography>
               </IconButton>
 
-              <Divider orientation="vertical" flexItem sx={{ bgcolor: "white", width: "1px", mx: 2 }} />
+              {/* <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ bgcolor: "white", width: "1px", mx: 2 }}
+              />
 
-              <UserTray />
+              <UserTray /> */}
             </Box>
           ) : (
             <div style={{ marginLeft: "auto" }}>
