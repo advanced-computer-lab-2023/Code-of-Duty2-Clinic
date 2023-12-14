@@ -21,6 +21,7 @@ The endpoints are grouped herein in a similar way to their grouping in the code.
 - [Doctor](#doctor)
 - [Patient](#patient)
 - [User (Multi-role endpoints)](#user-multi-role-endpoints)
+  - [Unverified Doctor](#unverified-doctor)
 
 ## Authentication
 
@@ -440,6 +441,1074 @@ PUT /api/v1/admins/accept-doctor/:doctorId
 
 ## Doctor
 
+<details>
+<summary>Get Doctor Account</summary>
+
+\`\`\`http
+GET /api/v1/doctors/account
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Update Doctor Account</summary>
+
+\`\`\`http
+PATCH /api/v1/doctors/account
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Doctor's Patients</summary>
+
+\`\`\`http
+GET /api/v1/doctors/patients
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Registered Patient Details</summary>
+
+\`\`\`http
+GET /api/v1/doctors/patients/:patientId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Doctor By ID</summary>
+
+\`\`\`http
+GET /api/v1/doctors
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Doctor Schedule</summary>
+
+\`\`\`http
+GET /api/v1/doctors/schedule
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Add Doctor Schedule</summary>
+
+\`\`\`http
+POST /api/v1/doctors/schedule
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Update Doctor Password</summary>
+
+\`\`\`http
+PATCH /api/v1/doctors/change-password
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Schedule Follow Up Appointment</summary>
+
+\`\`\`http
+POST /api/v1/doctors/appointments/:patientId/follow-up
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Delete Doctor Working Slot</summary>
+
+\`\`\`http
+DELETE /api/v1/doctors/available-time-slots/:startTime
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Add Patient Health Record</summary>
+
+\`\`\`http
+PUT /api/v1/doctors/patients/:patientId/health-records
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get All Appointments</summary>
+
+\`\`\`http
+GET /api/v1/doctors/appointments
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Appointment Details</summary>
+
+\`\`\`http
+GET /api/v1/doctors/appointments/:appointmentId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Doctor By ID</summary>
+
+\`\`\`http
+GET /api/v1/doctors
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Check If Doctor Has Wallet</summary>
+
+\`\`\`http
+GET /api/v1/doctors/wallets/exists
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Validate Wallet Pin Code</summary>
+
+\`\`\`http
+POST /api/v1/doctors/validate-wallet-pin-code
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Add Wallet to Doctor</summary>
+
+\`\`\`http
+POST /api/v1/doctors/wallets
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Get Doctor Wallet</summary>
+
+\`\`\`http
+GET /api/v1/doctors/wallets
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Perform Wallet Transaction</summary>
+
+\`\`\`http
+PATCH /api/v1/doctors/wallet-transactions
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Recharge Doctor Wallet</summary>
+
+\`\`\`http
+PATCH /api/v1/doctors/wallet-recharge
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Configure Credit Card Payment</summary>
+
+\`\`\`http
+GET /api/v1/doctors/credit-card-configuration
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Make Credit Card Payment</summary>
+
+\`\`\`http
+POST /api/v1/doctors/credit-card-payment
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Reject Follow Up Request for Registered</summary>
+
+\`\`\`http
+PATCH /api/v1/doctors/reject-follow-up-request-for-registered
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Accept Follow Up Request for Registered</summary>
+
+\`\`\`http
+POST /api/v1/doctors/accept-follow-up-request-for-registered
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Reject Follow Up Request for Dependent</summary>
+
+\`\`\`http
+PATCH /api/v1/doctors/reject-follow-up-request-for-dependent
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
+<details>
+<summary>Accept Follow Up Request for Dependent</summary>
+
+\`\`\`http
+POST /api/v1/doctors/accept-follow-up-request-for-dependent
+\`\`\`
+
+| Header Parameter | Type     | Description                                                       |
+| :--------------- | :------- | :---------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Doctor. |
+
+</details>
+
 ## Patient
 
+<details>
+<summary>Get Appointments With All Doctors</summary>
+
+\`\`\`http
+GET /api/v1/patients/appointments
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Doctor Appointment Fees</summary>
+
+\`\`\`http
+GET /api/v1/patients/appointments/:doctorId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Book An Appointment</summary>
+
+\`\`\`http
+POST /api/v1/patients/appointments/:doctorId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Book An Appointment For A Registered Family Member</summary>
+
+\`\`\`http
+POST /api/v1/patients/registered-family-members/:familyMemberId/appointments/:doctorId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Book An Appointment For A Dependent Family Member</summary>
+
+\`\`\`http
+POST /api/v1/patients/dependent-family-members/:dependentNationalId/appointments/:doctorId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get All Doctors</summary>
+
+\`\`\`http
+GET /api/v1/patients/doctors
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Doctor By ID</summary>
+
+\`\`\`http
+GET /api/v1/patients/doctors/:doctorId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Doctors</summary>
+
+\`\`\`http
+GET /api/v1/patients/patient-doctors
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Doctor Schedule</summary>
+
+\`\`\`http
+GET /api/v1/patients/doctors/:doctorId/schedule
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Add Family Members</summary>
+
+\`\`\`http
+POST /api/v1/patients/family-members
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Registered Family Member Requests</summary>
+
+\`\`\`http
+GET /api/v1/patients/family-members/requests
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Registered Family Member By ID</summary>
+
+\`\`\`http
+GET /api/v1/patients/family-members/:familyMemberId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Add Patient Registered Family Member</summary>
+
+\`\`\`http
+POST /api/v1/patients/family-members/registered
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Delete Patient Registered Family Member</summary>
+
+\`\`\`http
+DELETE /api/v1/patients/family-members/registered
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Reject Patient Registered Family Member</summary>
+
+\`\`\`http
+POST /api/v1/patients/family-members/requests/:familyMemberId/reject
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Registered Family Members</summary>
+
+\`\`\`http
+GET /api/v1/patients/family-members
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Dependent Family Members</summary>
+
+\`\`\`http
+GET /api/v1/patients/dependent-family-members
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Follow Up Requests For Dependent</summary>
+
+\`\`\`http
+GET /api/v1/patients/follow-up-requests-for-dependent
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Create Follow Up Request For Dependent</summary>
+
+\`\`\`http
+POST /api/v1/patients/follow-up-requests-for-dependent
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Follow Up Requests For Registered</summary>
+
+\`\`\`http
+GET /api/v1/patients/follow-up-requests-for-registered
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Create Follow Up Request For Registered</summary>
+
+\`\`\`http
+POST /api/v1/patients/follow-up-requests-for-registered
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Health Records</summary>
+
+\`\`\`http
+GET /api/v1/patients/health-records
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Add Patient Health Record</summary>
+
+\`\`\`http
+PUT /api/v1/patients/health-records
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Delete Patient Health Record</summary>
+
+\`\`\`http
+DELETE /api/v1/patients/health-records
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Health Packages Options</summary>
+
+\`\`\`http
+GET /api/v1/patients/health-packages
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Subscribe to Health Package</summary>
+
+\`\`\`http
+POST /api/v1/patients/subscribe/:packageId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Subscribe Registered Member to Health Package</summary>
+
+\`\`\`http
+POST /api/v1/patients/registered-members/:patientId/subscribe/:packageId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Subscribe Dependent Member to Health Package</summary>
+
+\`\`\`http
+POST /api/v1/patients/dependent-members/:dependentNid/subscribe/:packageId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Subscribed Health Package</summary>
+
+\`\`\`http
+GET /api/v1/patients/patient-health-package
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Subscribed Package Details for Dependent</summary>
+
+\`\`\`http
+GET /api/v1/patients/package-dependent
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Health Care Package Status</summary>
+
+\`\`\`http
+GET /api/v1/patients/health-care-package-status
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Subscribed Health Package Details for Dependent Family Member</summary>
+
+\`\`\`http
+GET /api/v1/patients/dependent-family-members/:patientNId/health-package
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Subscribed Health Package Details for Registered Family Member</summary>
+
+\`\`\`http
+GET /api/v1/patients/registered-family-members/:patientId/health-package
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Cancel Subscription</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/cancel-subscription
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Cancel Subscription for Registered Family Member</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/cancel-subscription/:patientId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Cancel Subscription for Dependent Family Member</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/cancel-subscription-dependent/:dependentNid
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>View Subscribed Health Package Benefits</summary>
+
+\`\`\`http
+GET /api/v1/patients/package-benefits
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Cancel Subscription for Registered Family</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/registered-family/cancel-subscription
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Health Package</summary>
+
+\`\`\`http
+GET /api/v1/patients/health-packages/:packageId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Info</summary>
+
+\`\`\`http
+GET /api/v1/patients/patient-info
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Change Patient Password</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/change-password
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Check if Patient Has a Wallet</summary>
+
+\`\`\`http
+GET /api/v1/patients/wallets/exists
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Validate Wallet Pin Code</summary>
+
+\`\`\`http
+POST /api/v1/patients/validate-wallet-pin-code
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Add Wallet to Patient</summary>
+
+\`\`\`http
+POST /api/v1/patients/wallets
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient Wallet</summary>
+
+\`\`\`http
+GET /api/v1/patients/wallets
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Perform Wallet Transaction</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/wallet-transactions
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Recharge Patient Wallet</summary>
+
+\`\`\`http
+PATCH /api/v1/patients/wallet-recharge
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Payment Configuration</summary>
+
+\`\`\`http
+GET /api/v1/patients/payments/configuration
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Create Payment Intent</summary>
+
+\`\`\`http
+POST /api/v1/patients/payments/create-payment-intent
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Get Patient by ID</summary>
+
+\`\`\`http
+GET /api/v1/patients/:patientId
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
+<details>
+<summary>Search Patient</summary>
+
+\`\`\`http
+GET /api/v1/patients/search
+\`\`\`
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Get Patient Prescriptions</summary>
+
+\`\`\`http
+GET /api/v1/patients/prescriptions
+\`\`\`
+
+| Header Parameter | Type     | Description                                                        |
+| :--------------- | :------- | :----------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Patient. |
+
+</details>
+
 ## User (Multi-role endpoints)
+
+### Unverified Doctor
+
+<details>
+<summary>Add Doctor Registration Request Files</summary>
+
+\`\`\`http
+PUT /api/v1/users/doctor-registration
+\`\`\`
+
+| Header Parameter | Type     | Description                                                                  |
+| :--------------- | :------- | :--------------------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Unverified Doctor. |
+
+</details>
+
+<details>
+<summary>Accept Doctor Registration Request</summary>
+
+\`\`\`http
+POST /api/v1/users/accept-contract
+\`\`\`
+
+| Header Parameter | Type     | Description                                                                  |
+| :--------------- | :------- | :--------------------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Unverified Doctor. |
+
+</details>
+
+<details>
+<summary>Reject Contract</summary>
+
+\`\`\`http
+POST /api/v1/users/reject-contract
+\`\`\`
+
+| Header Parameter | Type     | Description                                                                  |
+| :--------------- | :------- | :--------------------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Unverified Doctor. |
+
+</details>
+
+<details>
+<summary>Get Doctor Contract</summary>
+
+\`\`\`http
+GET /api/v1/users/contract
+\`\`\`
+
+| Header Parameter | Type     | Description                                                                  |
+| :--------------- | :------- | :--------------------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Unverified Doctor. |
+
+</details>
