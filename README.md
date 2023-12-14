@@ -132,29 +132,9 @@ The system has four user types: **_Guest_**, **_Patient_**, **_Doctor_** and **_
     </summary>
 
 ```typescript
-import { Request, Response } from "express";
-import {
-  deletePasswordResetInfo,
-  sendPasswordResetOTPIfUserExists,
-  validateOTP,
-} from "../../services/auth/reset-password";
-import { StatusCodes } from "http-status-codes";
-import { findUserByEmail, updatePassword } from "../../services/users";
-import {
-  signAndGetPasswordResetToken,
-  verifyAndDecodePasswordResetToken,
-} from "../../utils/jwt";
-import { User } from "../../types/User";
-
-export const resetPasswordRequestHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const resetPasswordRequestHandler = async (req: Request, res: Response) => {
   const { email } = req.body;
-  if (!email)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Email is required" });
+  if (!email) return res.status(StatusCodes.BAD_REQUEST).json({ error: "Email is required" });
   try {
     const userData = await sendPasswordResetOTPIfUserExists(email);
     console.log(userData);
@@ -164,21 +144,13 @@ export const resetPasswordRequestHandler = async (
   }
 };
 
-export const deletePasswordResetInfoHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const deletePasswordResetInfoHandler = async (req: Request, res: Response) => {
   const { email } = req.body;
-  if (!email)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Email is required" });
+  if (!email) return res.status(StatusCodes.BAD_REQUEST).json({ error: "Email is required" });
   try {
     const user = await findUserByEmail(email);
     await deletePasswordResetInfo(user);
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Password reset info deleted successfully" });
+    res.status(StatusCodes.OK).json({ message: "Password reset info deleted successfully" });
   } catch (error: any) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
@@ -186,23 +158,18 @@ export const deletePasswordResetInfoHandler = async (
 
 export const validateOTPHandler = async (req: Request, res: Response) => {
   const { userData, otp } = req.body;
-  if (!userData || !otp)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "UserData and OTP are required" });
+  if (!userData || !otp) return res.status(StatusCodes.BAD_REQUEST).json({ error: "UserData and OTP are required" });
   try {
     const user = await validateOTP(userData, otp);
     const passwordResetToken = signAndGetPasswordResetToken({
       id: user._id,
-      role: userData.role,
+      role: userData.role
     } as User);
     res.cookie("passwordResetToken", passwordResetToken, {
       httpOnly: true,
-      expires: user.passwordReset?.expiryDate,
+      expires: user.passwordReset?.expiryDate
     });
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Password reset OTP is correct" });
+    res.status(StatusCodes.OK).json({ message: "Password reset OTP is correct" });
   } catch (error: any) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
@@ -211,13 +178,9 @@ export const validateOTPHandler = async (req: Request, res: Response) => {
 export const resetPasswordHandler = async (req: Request, res: Response) => {
   const { password, confirmPassword } = req.body;
   if (!password || !confirmPassword)
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Both Password and Confirm password is required" });
+    res.status(StatusCodes.BAD_REQUEST).json({ error: "Both Password and Confirm password is required" });
   if (password !== confirmPassword)
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Password and Confirm password must be same" });
+    res.status(StatusCodes.BAD_REQUEST).json({ error: "Password and Confirm password must be same" });
   try {
     const { passwordResetToken } = req.cookies;
     if (!passwordResetToken) throw new Error("Password reset token not found");
@@ -235,66 +198,541 @@ export const resetPasswordHandler = async (req: Request, res: Response) => {
 
 <details>
     <summary>
-    code example
+    Doctor Add Patient Health Record
     </summary>
 
 ```typescript
+export const doctorAddPatientHealthRecord = async (req: AuthorizedRequest, res: Response) => {
+  if (!req.user?.id) return res.status(StatusCodes.BAD_REQUEST).send("User id is null");
+  const healthRecordAttributes = ["url", "fileType", "recordType", "createdAt"];
+  if (!req.params.patientId || !allAttributesExist(healthRecordAttributes, Object.keys(req.body)))
+    return res.status(StatusCodes.BAD_REQUEST).send("Attributes missing");
 
+  try {
+    res.status(StatusCodes.OK).json(await addHealthRecord(req.params.patientId, req.body));
+  } catch (err) {
+    res.status(StatusCodes.BAD_REQUEST).send(err);
+  }
+};
 ```
 
 </details>
 
 <details>
     <summary>
-    code example
+    Get Doctor Application Data
     </summary>
 
 ```typescript
+const getDoctorRegistrationRequest = async (req: Request, res: Response) => {
+  const email = req.params.email;
+  try {
+    const request = await findDoctorRegistrationRequestByEmail(email);
 
+    if (!request) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Doctor registration request not found" });
+    }
+
+    res.json(request);
+  } catch (error) {
+    console.error("Error fetching doctor registration request:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getDoctorRegistrationRequestById = async (req: Request, res: Response) => {
+  const doctorId = req.params.doctorId;
+  try {
+    const request = await findDoctorRegistrationRequestById(doctorId);
+    if (!request) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Doctor registration request not found" });
+    }
+    res.json(request);
+  } catch (error) {
+    console.error("Error fetching doctor registration request:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+  }
+};
+
+export default getDoctorRegistrationRequest;
 ```
 
 </details>
 
 <details>
     <summary>
-    code example
+    Subscribe to Health Package
     </summary>
 
 ```typescript
-
+export const subscribeToHealthPackage = async (req: AuthorizedRequest, res: Response) => {
+  const packageId = req.params.packageId;
+  const patientId = req.user?.id!;
+  const paymentMethod = req.query?.paymentMethod === "wallet" ? PaymentMethod.WALLET : PaymentMethod.CREDIT_CARD;
+  try {
+    await subscribeToHealthPackageService(patientId, patientId, packageId, paymentMethod);
+    res.status(200).json({ message: "Subscription added successfully" });
+  } catch (error: any) {
+    console.error("Error subscribing to health package:", error);
+    res.status(400).json({ message: error.message });
+  }
+};
 ```
 
 </details>
 
 <details>
     <summary>
-    code example
+    Medical History Page
     </summary>
 
 ```typescript
+export interface IHealthRecord {
+  name: string;
+  url: string;
+  createdAt: string | Date;
+  recordType: string;
+  fileType?: string;
+}
+const MedicalHistory: React.FC = () => {
+  const [files, setFiles] = useState<Array<IHealthRecord>>([]);
+  const [tableLoading, setTableLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [upload, setUpload] = useState(false);
+  const [selected, setSelected] = useState<readonly number[]>([]);
+  const [viewFileModal, setViewFileModal] = useState(false);
+  const [fileType, setFileType] = useState<string>();
+  const [viewFileUrl, setViewFileUrl] = useState<string>();
+  const [viewFileName, setViewFileName] = useState<string>();
 
+  useEffect(() => {
+    getAllFiles();
+  }, []);
+
+  const getAllFiles = () => {
+    try {
+      axios.get(`${config.serverUri}/patients/health-records`).then((res) => {
+        setFiles(res.data);
+        setTableLoading(false);
+      });
+    } catch (error) {}
+  };
+
+  const addFileToTable = async (healthrecord?: IHealthRecord) => {
+    if (healthrecord)
+      setFiles((old) => {
+        return [...old, healthrecord];
+      });
+    setUpload(false);
+  };
+
+  const downloadFile = async (url: string, fileName: string) => {
+    const response = await fetch(url, { mode: "cors" });
+    const blob = await response.blob();
+    saveAs(blob, fileName);
+  };
+
+  const deleteFile = async (fileUrl: string, index: number) => {
+    //setDeleteLoading(true)
+    const refd = ref(storage, fileUrl);
+    try {
+      await deleteObject(refd);
+      await axios.delete(`${config.serverUri}/patients/health-records`, {
+        params: { fileUrl: fileUrl }
+      });
+      setFiles((oldFiles) => {
+        return [...oldFiles.slice(0, index), ...oldFiles.slice(index + 1)];
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    //setDeleteLoading(false)
+  };
+
+  const openViewFileModal = (file: IHealthRecord) => {
+    setViewFileName(file.name);
+    setViewFileUrl(file.url);
+    setViewFileModal(true);
+  };
+
+  return (
+    <Stack position="relative" direction="row" justifyContent="center" sx={{ width: "100%" }}>
+      {upload && <UploadHealthRecordModal openUpload={true} close={addFileToTable} />}
+      <Paper sx={{ mb: 2, width: "80%" }}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          openModal={() => {
+            setUpload(true);
+          }}
+        />
+        <TableContainer>
+          {/* <Box
+            component="img"
+            className="my-img"
+            alt="The house from the offer."
+            src={image}
+            /> */}
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={"medium"}>
+            <TableHead sx={{ backgroundColor: "#103939", color: "white" }}>
+              <TableRow>
+                <TableCell sx={{ color: "white" }}>File Name</TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  Health Record Type
+                </TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  File Type
+                </TableCell>
+                <TableCell sx={{ color: "white" }} align="center">
+                  Upload Date
+                </TableCell>
+                <TableCell sx={{ color: "white" }} id="options" align="right"></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableLoading ? (
+                <TableLoadingSkeleton />
+              ) : (
+                files?.map((file, index) => (
+                  <TableRow
+                    role="checkbox"
+                    hover
+                    onClick={() => openViewFileModal(file)}
+                    tabIndex={-1}
+                    key={index}
+                    sx={{
+                      "&.Mui-selected, &.Mui-selected:hover": {
+                        backgroundColor: "#1039394D", // Change this to your desired color
+                        cursor: "pointer"
+                      }
+                    }}
+                  >
+                    <TableCell id={"enhanced-table-checkbox-" + index} scope="row">
+                      {file.name}
+                    </TableCell>
+                    <TableCell align="center">{file.recordType}</TableCell>
+                    <TableCell align="center">{file.fileType}</TableCell>
+                    <TableCell align="center">{new Date(file.createdAt).toDateString()}</TableCell>
+                    <TableCell>
+                      <Stack
+                        direction="row"
+                        justifyContent="center"
+                        divider={<Divider orientation="vertical" flexItem />}
+                        spacing={2}
+                      >
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            downloadFile(file.url, file.name);
+                          }}
+                        >
+                          <DownloadIcon color="action" sx={{ color: "#103939" }} />
+                        </IconButton>
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteFile(file.url, index);
+                          }}
+                        >
+                          {deleteLoading ? <CircularProgress size={24} /> : <DeleteIcon />}
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+      <Modal
+        open={viewFileModal}
+        onClose={() => {
+          setViewFileModal(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={FileViewModalStyle}>
+          <Typography
+            align="center"
+            color="#103939"
+            fontFamily="Inter"
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
+            {viewFileName}
+          </Typography>
+          <iframe width="500px" height="400px" src={viewFileUrl}></iframe>
+        </Box>
+      </Modal>
+    </Stack>
+  );
+};
+export default MedicalHistory;
 ```
 
 </details>
 
 <details>
     <summary>
-    code example
+    Follow-up Appointment Services
     </summary>
 
 ```typescript
+export const findFollowUpRequestForRegisteredPatientById = async (followUpAppointmentRequestId: string) => {
+  return await FollowUpAppointmentRequestForRegistered.findById(followUpAppointmentRequestId);
+};
 
+export const getFollowUpRequestsForRegisteredPatient = async (patientId: string) => {
+  return await FollowUpAppointmentRequestForRegistered.find({
+    patientId
+  });
+};
+
+export const createFollowUpRequestForRegisteredPatient = async (
+  request: IFollowUpAppointmentRequestForRegisteredPatient
+) => {
+  const followUpAppointmentRequest = new FollowUpAppointmentRequestForRegistered(request);
+  await followUpAppointmentRequest.save();
+};
+
+export const rejectFollowUpRequestForRegisteredPatient = async (followUpAppointmentRequestId: string) => {
+  const followUpAppointmentRequest = await findFollowUpRequestForRegisteredPatientById(followUpAppointmentRequestId);
+  if (!followUpAppointmentRequest) {
+    throw new Error("Follow up appointment request not found");
+  }
+  followUpAppointmentRequest.status = "rejected";
+  await followUpAppointmentRequest.save();
+};
+
+export const acceptFollowUpRequestForRegisteredPatient = async (
+  followUpAppointmentRequestId: string,
+  appointmentTimePeriod?: TimePeriod
+) => {
+  const followUpAppointmentRequest = await findFollowUpRequestForRegisteredPatientById(followUpAppointmentRequestId);
+  if (!followUpAppointmentRequest) {
+    throw new Error("Follow up appointment request not found");
+  }
+  await scheduleAFollowUpAppointment(
+    followUpAppointmentRequest.doctorId.toString(),
+    followUpAppointmentRequest.patientId.toString(),
+    (followUpAppointmentRequest.timePeriod || appointmentTimePeriod)!
+  );
+  followUpAppointmentRequest.status = "accepted";
+  await followUpAppointmentRequest.save();
+};
+
+const scheduleAFollowUpAppointment = async (doctorId: string, patientId: string, timePeriod: TimePeriod) => {
+  const startTime = timePeriod.startTime.toString();
+  const endTime = timePeriod.endTime.toString();
+  await validateAppointmentCreation(patientId, doctorId, startTime, endTime, UserRole.DOCTOR);
+
+  const initialAppointment = await findMostRecentCompletedAppointment(doctorId, patientId);
+  if (!initialAppointment || initialAppointment.status !== "completed") {
+    throw new Error("No recent completed appointment found between the doctor and patient");
+  }
+  await saveAppointment(doctorId, patientId, startTime, endTime, true);
+};
 ```
 
 </details>
 
 <details>
     <summary>
-    code example
+    Patient Database Schema (Mongoose)
     </summary>
 
 ```typescript
+import mongoose, { Document, Schema } from "mongoose";
+import isEmail from "validator/lib/isEmail";
+import isMobileNumber from "validator/lib/isMobilePhone";
+import { IPatient } from "./interfaces/IPatient";
+import PasswordResetSchema from "../users/PasswordReset";
+import WalletSchema from "../wallets/Wallet";
+import bcrypt from "bcrypt";
+import NotificationSchema from "../notifications/Notification";
 
+enum Relation {
+  WIFE = "wife",
+  HUSBAND = "husband",
+  CHILD = "children"
+}
+
+export interface IPatientModel extends IPatient, Document {}
+
+export const PatientSchema = new Schema<IPatientModel>(
+  {
+    username: { type: String, required: true, unique: true, index: true },
+    password: { type: String, required: true, select: false, bcrypt: true },
+    email: {
+      type: String,
+      validate: [isEmail, "invalid email"],
+      unique: true,
+      index: true
+    },
+    name: { type: String, required: true },
+    dateOfBirth: { type: Date, required: true },
+    gender: { type: String, required: true, enum: ["male", "female"] },
+    mobileNumber: { type: String, required: true },
+    emergencyContact: {
+      fullname: { type: String, required: true },
+      mobileNumber: {
+        type: String,
+        required: true,
+        validate: [isMobileNumber, "invalid mobile number"]
+      },
+      relationToPatient: { type: String, required: true }
+    },
+
+    deliveryAddresses: { type: Array<{ type: String }>, select: false },
+    imageUrl: String,
+    healthRecords: {
+      type: Array<{
+        type: {
+          name: { type: String; required: true };
+          url: { type: String; required: true };
+          recordType: { type: String; required: true };
+          fileType: { type: String; required: true };
+          createdAt: { type: Date; immutable: true };
+        };
+      }>,
+      required: false
+    },
+    subscribedPackage: {
+      type: {
+        packageId: {
+          type: Schema.Types.ObjectId,
+          ref: "HealthPackage",
+          required: true
+        },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date, required: true },
+        status: {
+          type: String,
+          enum: ["subscribed", "unsubscribed", "cancelled"],
+          required: true
+        }
+      },
+      required: false,
+      select: false
+    },
+    dependentFamilyMembers: {
+      type: [
+        {
+          name: { type: String, required: true },
+          nationalId: { type: String, required: true, unique: true },
+          dateOfBirth: { type: Date, required: true },
+          gender: { type: String, enum: ["male", "female"], required: true },
+          relation: {
+            type: String,
+            enum: Relation,
+            required: true
+          },
+          subscribedPackage: {
+            type: {
+              packageId: {
+                type: Schema.Types.ObjectId,
+                ref: "HealthPackage",
+                required: true
+              },
+              startDate: { type: Date, required: true },
+              endDate: { type: Date, required: true },
+              status: {
+                type: ["subscribed", "unsubscribed", "cancelled"],
+                required: true
+              }
+            },
+            required: false
+          },
+          healthRecords: {
+            type: Array<{
+              type: {
+                name: { type: String; required: true };
+                url: { type: String; required: true };
+                recordType: { type: String; required: true };
+                fileType: { type: String; required: true };
+                createdAt: { type: Date; immutable: true };
+              };
+            }>,
+            required: false
+          }
+        }
+      ],
+      required: false,
+      select: false
+    },
+    registeredFamilyMembers: {
+      type: [
+        {
+          id: {
+            type: Schema.Types.ObjectId,
+            ref: "Patient",
+            required: true,
+            unique: true
+          },
+          relation: { type: String, enum: Relation, required: true }
+        }
+      ],
+      required: false,
+      select: false
+    },
+    registeredFamilyMemberRequests: {
+      type: [
+        {
+          id: {
+            type: Schema.Types.ObjectId,
+            ref: "Patient",
+            required: true,
+            unique: true
+          },
+          relation: { type: String, enum: Relation, required: true }
+        }
+      ],
+      required: false,
+      select: false
+    },
+    wallet: {
+      type: WalletSchema,
+      select: false,
+      required: false
+    },
+    passwordReset: {
+      type: PasswordResetSchema,
+      select: false
+    },
+    receivedNotifications: {
+      type: Array<typeof NotificationSchema>,
+      select: false,
+      required: false
+    }
+  },
+  { timestamps: true }
+);
+
+PatientSchema.plugin(require("mongoose-bcrypt"), { rounds: 10 });
+
+PatientSchema.methods.verifyPasswordResetOtp = function (otp: string) {
+  return bcrypt.compare(otp, this.passwordReset.otp);
+};
+PatientSchema.methods.verifyWalletPinCode = function (pinCode: string) {
+  return bcrypt.compare(pinCode, this.wallet.pinCode);
+};
+
+PatientSchema.virtual("age").get(function () {
+  let today = new Date();
+  let birthDate: Date = this.dateOfBirth;
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let monthDifference = today.getMonth() - birthDate.getMonth();
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+});
+
+export default mongoose.model<IPatientModel>("Patient", PatientSchema);
+export { Relation };
 ```
 
 </details>
