@@ -4,6 +4,25 @@ import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import WalletIcon from "@mui/icons-material/Wallet";
 import ChatIcon from "@mui/icons-material/Chat";
+import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonAddOutlined from "@mui/icons-material/PersonAddOutlined";
+import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
+import VaccinesIcon from "@mui/icons-material/Vaccines";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import MoreTimeIcon from "@mui/icons-material/MoreTime";
+import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AddCardIcon from "@mui/icons-material/AddCard";
+import ListIcon from "@mui/icons-material/List";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PasswordIcon from "@mui/icons-material/Password";
 
 import {
   addFamilyMemberRoute,
@@ -23,134 +42,141 @@ import {
   addRegisteredFamilyMemberRoute,
   appointmentBookingRoute,
   chatsRoute,
-  patientDoctorsRoute,
+  patientDoctorsRoute
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
   {
     title: "Home",
+    icon: <HomeIcon />,
     items: [
       {
-        title: "Home",
+        title: "Dashboard",
         href: patientDashboardRoute.path,
-        icon: <HomeIcon />,
+        icon: <DashboardIcon />
       },
       {
         title: "My Prescriptions",
         href: patientPrescriptions.path,
-        icon: <HomeIcon />,
-      },
-    ],
+        icon: <LocalPharmacyIcon />
+      }
+    ]
   },
   {
-    title: "My Family Members",
+    title: "My Family",
+    icon: <FamilyRestroomIcon />,
     items: [
       {
-        title: "View my family members",
+        title: "View My Family Members",
         href: familyMembersRoute.path,
-        icon: <PeopleIcon />,
+        icon: <PeopleIcon />
       },
       {
-        title: "View Registered Family Members",
-        href: patientFamilyMembersRoute.path,
-        icon: <PeopleIcon />,
-      },
-      {
-        title: "Add a family member",
+        title: "Add a Family Member",
         href: addFamilyMemberRoute.path,
-        icon: <PeopleIcon />,
+        icon: <PersonAddIcon />
+      },
+      {
+        title: "View My Registered Family Members",
+        href: patientFamilyMembersRoute.path,
+        icon: <PeopleOutlineIcon />
       },
       {
         title: "Add a Registered Family Member",
         href: addRegisteredFamilyMemberRoute.path,
-        icon: <PeopleIcon />,
-      },
-    ],
+        icon: <PersonAddOutlined />
+      }
+    ]
   },
   {
     title: "Interact with Doctors",
+    icon: <VaccinesIcon />,
     items: [
       {
-        title: "View Doctors",
+        title: "All Doctors",
         href: viewAllDoctorsRoute.path,
-        icon: <MedicineIcon />,
+        icon: <MedicineIcon />
       },
       {
-        title: "Book an appointment",
-        href: appointmentBookingRoute.path,
-        icon: <PersonIcon />,
-      },
-      {
-        title: "View my Appointments",
-        href: patientAppointmentsRoute.path,
-        icon: <PersonIcon />,
-      },
-      {
-        title: "View my Doctors",
+        title: "My Doctors",
         href: patientDoctorsRoute.path,
-        icon: <PersonIcon />,
+        icon: <PersonIcon />
       },
       {
         title: "My Chats",
         href: chatsRoute.path,
-        icon: <ChatIcon />,
+        icon: <ChatIcon />
       },
-    ],
+      {
+        title: "My Appointments",
+        href: patientAppointmentsRoute.path,
+        icon: <CalendarMonthIcon />
+      },
+      {
+        title: "Book an Appointment",
+        href: appointmentBookingRoute.path,
+        icon: <MoreTimeIcon />
+      }
+    ]
   },
   {
     title: "Health Packages",
+    icon: <MedicalInformationIcon />,
     items: [
       {
         title: "Health Package Options",
         href: healthPackagesOptionsRoute.path,
-        icon: <PeopleIcon />,
+        icon: <ListIcon />
       },
       {
         title: "My Health Package Status",
         href: cancelSubscriptionRoute.path,
-        icon: <PeopleIcon />,
+        icon: <MoreHorizIcon />
       },
       {
         title: "My Health Package Benefits",
         href: subscribedPackageBenefitsRoute.path,
-        icon: <PeopleIcon />,
-      },
-    ],
+        icon: <AutoAwesomeIcon />
+      }
+    ]
   },
   {
     title: "Wallets",
+    icon: <WalletIcon />,
     items: [
       {
-        title: "View My Wallet",
+        title: "My Wallet",
         href: patientWalletRoute.path,
-        icon: <WalletIcon />,
+        icon: <AccountBalanceWalletIcon />
       },
       {
-        title: "Create A Wallet",
+        title: "Create a Wallet",
         href: createPatientWalletRoute.path,
-        icon: <WalletIcon />,
-      },
-    ],
+        icon: <AddCardIcon />
+      }
+    ]
   },
   {
     title: "Medical History",
+    icon: <MonitorHeartIcon />,
     items: [
       {
-        title: "My Medical History",
+        title: "View My Medical History",
         href: patientMedicalHistoryRoute.path,
-        icon: <PeopleIcon />,
-      },
-    ],
+        icon: <TimelineIcon />
+      }
+    ]
   },
 
   {
     title: "My Account",
+    icon: <ManageAccountsIcon />,
     items: [
       {
-        title: "Update Password",
+        title: "Change Password",
         href: `${patientUpdatePasswordRoute.path}?type=patient`,
-        icon: <PeopleIcon />,
-      },
-    ],
-  },
+        icon: <PasswordIcon />
+      }
+    ]
+  }
 ];
