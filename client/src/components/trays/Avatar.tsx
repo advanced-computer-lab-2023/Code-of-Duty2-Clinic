@@ -62,7 +62,7 @@ const Avatar = () => {
           What's happening?
         </Typography>
 
-        <Divider sx={{ my: 1, mx: 2 }} />
+        <Divider sx={{ my: 1, mx: 1 }} />
 
         <MenuItem onClick={() => navigate(welcomeRoute.path)}>
           <SwitchAccessShortcutIcon sx={{ mr: 1 }} />
