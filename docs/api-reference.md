@@ -209,6 +209,235 @@ Resets the user’s password.
 
 ## Admin
 
+<details>
+<summary>Add Health Package</summary>
+
+```http
+  POST /api/v1/admins/health-packages
+```
+
+Adds a new health package.
+
+| Body Field               | Type     | Description                                                 |
+| :----------------------- | :------- | :---------------------------------------------------------- |
+| `name`                   | `string` | **Required**. The name of the health package.               |
+| `amountToPay`            | `number` | **Required**. The amount to pay for the health package.     |
+| `packageDurationInYears` | `number` | **Required**. The duration of the health package in years.  |
+| `discounts`              | `object` | **Required**. The discounts provided by the health package. |
+
+#### `discounts` object:
+
+| Attribute                         | Type     | Description                                        |
+| :-------------------------------- | :------- | :------------------------------------------------- |
+| `gainedDoctorSessionDiscount`     | `number` | **Required**. The discount for doctor sessions.    |
+| `gainedPharmacyMedicinesDiscount` | `number` | **Required**. The discount for pharmacy medicines. |
+| `gainedFamilyMembersDiscount`     | `number` | **Required**. The discount for family members.     |
+
+</details>
+
+<details>
+<summary>Get All Health Packages</summary>
+
+```http
+GET /api/v1/admins/health-packages
+```
+
+Retrieves all available health packages. No parameters are required for this endpoint.
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Get a Health Package</summary>
+
+```http
+GET /api/v1/admins/health-packages/:id
+```
+
+Retrieves a specific health package by ID.
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Update a Health Package</summary>
+
+```http
+PUT /api/v1/admins/health-packages/:id
+```
+
+Updates a specific health package by ID.
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Delete a Health Package</summary>
+
+```http
+DELETE /api/v1/admins/health-packages/:id
+```
+
+Deletes a specific health package by ID.
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Add Admin</summary>
+
+```http
+POST /api/v1/admins/admin
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Get Doctor Registration Request by Email</summary>
+
+```http
+GET /api/v1/admins/doctor-registration-requests/:email
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Get Doctor Registration Request by ID</summary>
+
+```http
+GET /api/v1/admins/doctor-registration/:doctorId
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Accept Doctor Registration Request by Username</summary>
+
+```http
+POST /api/v1/admins/acceptDoctor/:username
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Reject Doctor Registration Request by Username</summary>
+
+```http
+POST /api/v1/admins/rejectDoctor/:username
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Remove User</summary>
+
+```http
+DELETE /api/v1/admins/users
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>View Users by Type</summary>
+
+```http
+GET /api/v1/admins/users/:Type
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Get All Doctor Registration Requests</summary>
+
+```http
+GET /api/v1/admins/doctor-registration-requests
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Update Admin Password</summary>
+
+```http
+PATCH /api/v1/admins/change-password
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Reject Doctor Registration Request by ID</summary>
+
+```http
+PUT /api/v1/admins/rejectDoctor/:doctorId
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
+<details>
+<summary>Accept Doctor Registration Request</summary>
+
+```http
+PUT /api/v1/admins/accept-doctor/:doctorId
+```
+
+| Header Parameter | Type     | Description                                                      |
+| :--------------- | :------- | :--------------------------------------------------------------- |
+| `Authorization`  | `string` | **Required**. JWT Token signed by a user having a role of Admin. |
+
+</details>
+
 ## Doctor
 
 ## Patient
