@@ -158,7 +158,8 @@ export const deletePasswordResetInfoHandler = async (req: Request, res: Response
 
 export const validateOTPHandler = async (req: Request, res: Response) => {
   const { userData, otp } = req.body;
-  if (!userData || !otp) return res.status(StatusCodes.BAD_REQUEST).json({ error: "UserData and OTP are required" });
+  if (!userData || !otp)
+    return res.status(StatusCodes.BAD_REQUEST).json({ error: "UserData and OTP are required" });
   try {
     const user = await validateOTP(userData, otp);
     const passwordResetToken = signAndGetPasswordResetToken({
@@ -178,9 +179,13 @@ export const validateOTPHandler = async (req: Request, res: Response) => {
 export const resetPasswordHandler = async (req: Request, res: Response) => {
   const { password, confirmPassword } = req.body;
   if (!password || !confirmPassword)
-    res.status(StatusCodes.BAD_REQUEST).json({ error: "Both Password and Confirm password is required" });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Both Password and Confirm password is required" });
   if (password !== confirmPassword)
-    res.status(StatusCodes.BAD_REQUEST).json({ error: "Password and Confirm password must be same" });
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Password and Confirm password must be same" });
   try {
     const { passwordResetToken } = req.cookies;
     if (!passwordResetToken) throw new Error("Password reset token not found");
@@ -230,7 +235,9 @@ const getDoctorRegistrationRequest = async (req: Request, res: Response) => {
     const request = await findDoctorRegistrationRequestByEmail(email);
 
     if (!request) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "Doctor registration request not found" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Doctor registration request not found" });
     }
 
     res.json(request);
@@ -245,7 +252,9 @@ export const getDoctorRegistrationRequestById = async (req: Request, res: Respon
   try {
     const request = await findDoctorRegistrationRequestById(doctorId);
     if (!request) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "Doctor registration request not found" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Doctor registration request not found" });
     }
     res.json(request);
   } catch (error) {
@@ -268,7 +277,8 @@ export default getDoctorRegistrationRequest;
 export const subscribeToHealthPackage = async (req: AuthorizedRequest, res: Response) => {
   const packageId = req.params.packageId;
   const patientId = req.user?.id!;
-  const paymentMethod = req.query?.paymentMethod === "wallet" ? PaymentMethod.WALLET : PaymentMethod.CREDIT_CARD;
+  const paymentMethod =
+    req.query?.paymentMethod === "wallet" ? PaymentMethod.WALLET : PaymentMethod.CREDIT_CARD;
   try {
     await subscribeToHealthPackageService(patientId, patientId, packageId, paymentMethod);
     res.status(200).json({ message: "Subscription added successfully" });
@@ -480,7 +490,9 @@ export default MedicalHistory;
     </summary>
 
 ```typescript
-export const findFollowUpRequestForRegisteredPatientById = async (followUpAppointmentRequestId: string) => {
+export const findFollowUpRequestForRegisteredPatientById = async (
+  followUpAppointmentRequestId: string
+) => {
   return await FollowUpAppointmentRequestForRegistered.findById(followUpAppointmentRequestId);
 };
 
@@ -497,8 +509,12 @@ export const createFollowUpRequestForRegisteredPatient = async (
   await followUpAppointmentRequest.save();
 };
 
-export const rejectFollowUpRequestForRegisteredPatient = async (followUpAppointmentRequestId: string) => {
-  const followUpAppointmentRequest = await findFollowUpRequestForRegisteredPatientById(followUpAppointmentRequestId);
+export const rejectFollowUpRequestForRegisteredPatient = async (
+  followUpAppointmentRequestId: string
+) => {
+  const followUpAppointmentRequest = await findFollowUpRequestForRegisteredPatientById(
+    followUpAppointmentRequestId
+  );
   if (!followUpAppointmentRequest) {
     throw new Error("Follow up appointment request not found");
   }
@@ -510,7 +526,9 @@ export const acceptFollowUpRequestForRegisteredPatient = async (
   followUpAppointmentRequestId: string,
   appointmentTimePeriod?: TimePeriod
 ) => {
-  const followUpAppointmentRequest = await findFollowUpRequestForRegisteredPatientById(followUpAppointmentRequestId);
+  const followUpAppointmentRequest = await findFollowUpRequestForRegisteredPatientById(
+    followUpAppointmentRequestId
+  );
   if (!followUpAppointmentRequest) {
     throw new Error("Follow up appointment request not found");
   }
@@ -523,7 +541,11 @@ export const acceptFollowUpRequestForRegisteredPatient = async (
   await followUpAppointmentRequest.save();
 };
 
-const scheduleAFollowUpAppointment = async (doctorId: string, patientId: string, timePeriod: TimePeriod) => {
+const scheduleAFollowUpAppointment = async (
+  doctorId: string,
+  patientId: string,
+  timePeriod: TimePeriod
+) => {
   const startTime = timePeriod.startTime.toString();
   const endTime = timePeriod.endTime.toString();
   await validateAppointmentCreation(patientId, doctorId, startTime, endTime, UserRole.DOCTOR);
@@ -816,7 +838,14 @@ See `CONTRIBUTING.md` for ways to get started. Please adhere to the `Code of Con
 
 ## Credits
 
-- [Linear Depression Project Repository](https://github.com/Advanced-Computer-Lab-2022/Linear-Depression)
+- Documentation
+  - [ReactJs Documentation](https://react.dev/reference/react)
+  - [Material UI Documentation](https://mui.com/material-ui/getting-started/)
+- Tutorials
+  - [React Stripe.js and the Payment Element](https://www.youtube.com/watch?v=e-whXipfRvg)
+  - [React Tutorial for Beginners](https://www.youtube.com/watch?v=SqcY0GlETPk)
+- Project Repositories
+  - [Linear Depression Project Repository](https://github.com/Advanced-Computer-Lab-2022/Linear-Depression)
 
 ## License
 
