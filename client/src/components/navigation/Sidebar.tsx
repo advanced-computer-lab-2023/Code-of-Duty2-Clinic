@@ -2,14 +2,7 @@ import React, { useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Collapse,
-  ListItemIcon,
-  ListItemButton,
-} from "@mui/material";
+import { List, ListItem, ListItemText, Collapse, ListItemIcon, ListItemButton } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import { Transition } from "react-transition-group";
@@ -46,23 +39,15 @@ const Sidebar: React.FC<Props> = ({ sidebarItems, sidebarWidth }) => {
             color: "white",
             textDecoration: "none",
             padding: 1.5,
+            paddingLeft: 4
           }}
         >
-          {item.icon && (
-            <ListItemIcon sx={{ color: "white" }}>{item.icon}</ListItemIcon>
-          )}
+          {item.icon && <ListItemIcon sx={{ color: "white", marginRight: -2 }}>{item.icon}</ListItemIcon>}
 
-          <ListItemText
-            primary={item.title}
-            sx={{ color: "white", fontWeight: "bold" }}
-          />
+          <ListItemText primary={item.title} sx={{ color: "white", fontWeight: "bold" }} />
 
           {item.items &&
-            (open === item.title ? (
-              <ExpandLess sx={{ color: "white" }} />
-            ) : (
-              <ExpandMore sx={{ color: "white" }} />
-            ))}
+            (open === item.title ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore sx={{ color: "white" }} />)}
         </ListItemButton>
 
         {item.items && (
@@ -85,14 +70,23 @@ const Sidebar: React.FC<Props> = ({ sidebarItems, sidebarWidth }) => {
               minWidth: sidebarWidth,
               maxWidth: sidebarWidth,
               background: (theme) => theme.palette.gradient,
-              ...defaultStyle,
-              ...transitionStyles[state],
               position: "fixed",
               top: 0,
               left: 0,
               bottom: 0,
               right: 0,
               boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
+              ...defaultStyle,
+              ...transitionStyles[state],
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                background: "rgba(0, 0, 0, 0.01)"
+              }
             }}
           >
             <Box>
@@ -107,7 +101,7 @@ const Sidebar: React.FC<Props> = ({ sidebarItems, sidebarWidth }) => {
                       marginTop: "1rem",
                       marginBottom: "1rem",
                       marginLeft: "auto",
-                      marginRight: "auto",
+                      marginRight: "auto"
                     }}
                   />
                 </ListItem>
@@ -142,10 +136,10 @@ const transitionStyles: TransitionStyles = {
   entered: { opacity: 1 },
   exiting: { opacity: 0 },
   exited: { opacity: 0 },
-  unmounted: { opacity: 0 },
+  unmounted: { opacity: 0 }
 };
 
 const defaultStyle = {
   transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 1,
+  opacity: 1
 };

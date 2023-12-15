@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 import Doctor from "../../models/doctors/Doctor";
 
-export const deleteDoctorAvailableSlots = async (
+export const deleteDoctorWorkingSlot = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
@@ -17,7 +17,7 @@ export const deleteDoctorAvailableSlots = async (
         .json({ message: "Unauthorized" });
     }
 
-    const doctor = await Doctor.findById(doctorId).select("+availableSlots");
+    const doctor = await Doctor.findById(doctorId).select("+workingSchedule");
 
     if (!doctor) {
       return res
@@ -25,20 +25,23 @@ export const deleteDoctorAvailableSlots = async (
         .json({ message: "Doctor not found" });
     }
 
-    const existingAvailableSlot = doctor.availableSlots.map(
+    const existingWorkingHours = doctor.workingSchedule.dailyWorkingHours.find(
       (slot) => String(slot.startTime) === startTime
     );
 
-    if (!existingAvailableSlot) {
+    if (!existingWorkingHours) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "This time slot is not found" });
     }
 
-    await Doctor.updateOne(
-      { _id: doctorId },
-      { $pull: { availableSlots: { startTime } } }
+    const updatedWorkingHours = doctor.workingSchedule.dailyWorkingHours.filter(
+      (slot) => String(slot.startTime) !== startTime
     );
+
+    doctor.workingSchedule.dailyWorkingHours = updatedWorkingHours;
+    await doctor.save();
+
     return res
       .status(StatusCodes.OK)
       .json({ message: "Time slot deleted successfully" });

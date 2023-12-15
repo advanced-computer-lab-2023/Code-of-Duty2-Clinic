@@ -50,100 +50,71 @@ export const scheduleFollowUpAppointmentHandler = async (
   }
 };
 
-export const rescheduleAppointmentForRegisteredPatientHandler = async (
+export const rescheduleAppointmentForPatientHandler = async (
   data: {
     appointmentId: string;
     timePeriod: TimePeriod;
+    appointedPatientType: "registered" | "dependent";
   },
   socket: SocketType
 ) => {
   const { appointmentId, timePeriod } = data;
   if (!appointmentId)
-    return socket
-      .to(socket.id)
-      .emit("error", { message: "appointmentId is required" });
+    return socket.emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
-    return socket.to(socket.id).emit("error", {
+    return socket.emit("error", {
       message: "new time period is required",
     });
 
   try {
-    await rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers(
-      appointmentId,
-      timePeriod
-    );
-    await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
+    if (data.appointedPatientType === "registered") {
+      await rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers(
+        appointmentId,
+        timePeriod
+      );
+      await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
+    } else if (data.appointedPatientType === "dependent") {
+      await rescheduleAppointmentAsDoctorForDependentPatientAndNotifyUsers(
+        appointmentId,
+        timePeriod
+      );
+      await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
+    } else {
+      throw new Error("Patient type is not valid");
+    }
   } catch (error: any) {
-    socket.to(socket.id).emit("error", { message: error.message });
+    socket.emit("error", { message: error.message });
   }
 };
 
-export const rescheduleAppointmentForDependentPatientHandler = async (
+export const cancelAppointmentForPatientHandler = async (
   data: {
     appointmentId: string;
-    timePeriod: TimePeriod;
+    appointedPatientType: "registered" | "dependent";
   },
   socket: SocketType
 ) => {
-  const { appointmentId, timePeriod } = data;
-  if (!appointmentId)
-    return socket
-      .to(socket.id)
-      .emit("error", { message: "appointmentId is required" });
-  if (!timePeriod)
-    return socket.to(socket.id).emit("error", {
-      message: "new time period is required",
-    });
-
-  try {
-    await rescheduleAppointmentAsDoctorForDependentPatientAndNotifyUsers(
-      appointmentId,
-      timePeriod
-    );
-    await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
-  } catch (error: any) {
-    socket.to(socket.id).emit("error", { message: error.message });
-  }
-};
-
-export const cancelAppointmentForRegisteredPatientHandler = async (
-  data: { appointmentId: string },
-  socket: SocketType
-) => {
   const { appointmentId } = data;
   if (!appointmentId)
-    return socket
-      .to(socket.id)
-      .emit("error", { message: "appointmentId is required" });
+    return socket.emit("error", { message: "appointmentId is required" });
 
   try {
-    await cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers(
-      appointmentId
-    );
+    if (data.appointedPatientType === "registered") {
+      await cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers(
+        appointmentId
+      );
 
-    await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
+      await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
+    } else if (data.appointedPatientType === "dependent") {
+      await cancelAppointmentAsDoctorForDependentPatientAndNotifyUsers(
+        appointmentId
+      );
+
+      await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
+    } else {
+      throw new Error("Patient type is not valid");
+    }
   } catch (error: any) {
-    socket.to(socket.id).emit("error", { message: error.message });
-  }
-};
-
-export const cancelAppointmentForDependentPatientHandler = async (
-  data: { appointmentId: string },
-  socket: SocketType
-) => {
-  const { appointmentId } = data;
-  if (!appointmentId)
-    return socket
-      .to(socket.id)
-      .emit("error", { message: "appointmentId is required" });
-
-  try {
-    await cancelAppointmentAsDoctorForDependentPatientAndNotifyUsers(
-      appointmentId
-    );
-
-    await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
-  } catch (error: any) {
-    socket.to(socket.id).emit("error", { message: error.message });
+    socket.emit("error", { message: error.message });
   }
 };

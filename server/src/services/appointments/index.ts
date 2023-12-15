@@ -23,7 +23,11 @@ export const getAppointments = async (
   userId: string,
   urlQuery: any
 ) => {
-  const searchQuery = getMatchingAppointmentsFields(urlQuery);
+  const emptyQuery = Object.keys(urlQuery).length === 0;
+  const searchQuery = emptyQuery
+    ? getDefaultAppointmentFilters()
+    : getMatchingAppointmentsFields(urlQuery);
+
   const user = isPatient ? "patientId" : "doctorId";
   return await Appointment.aggregate([
     { $match: { [user]: new mongoose.Types.ObjectId(userId) } },
@@ -53,8 +57,18 @@ export const getAppointments = async (
   ]);
 };
 
+export function getDefaultAppointmentFilters(): {
+  status?: { $in: string[] };
+  "timePeriod.startTime"?: { $gte: Date };
+} {
+  return {
+    status: { $in: ["upcoming", "rescheduled"] },
+    "timePeriod.startTime": { $gte: new Date() },
+  };
+}
+
 function getMatchingAppointmentsFields(urlQuery: any) {
-  const { appointmentTime, status, name } = urlQuery;
+  const { appointmentTime, status, targetName } = urlQuery;
   const isTimeSet = urlQuery.isTimeSet === "true";
 
   let searchQuery: {
@@ -67,8 +81,8 @@ function getMatchingAppointmentsFields(urlQuery: any) {
   if (status && status !== "") {
     searchQuery.status = status;
   }
-  if (name && name != "") {
-    searchQuery["user.name"] = { $regex: `^${name}`, $options: "i" };
+  if (targetName && targetName !== "") {
+    searchQuery["user.name"] = { $regex: `^${targetName}`, $options: "i" };
   }
 
   if (appointmentTime && appointmentTime !== "") {

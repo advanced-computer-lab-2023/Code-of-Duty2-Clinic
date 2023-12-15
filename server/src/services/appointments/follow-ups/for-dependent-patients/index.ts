@@ -11,19 +11,25 @@ import {
 export const findFollowUpRequestForDependentPatientById = async (
   followUpAppointmentRequestId: string
 ) => {
-  return await FollowUpAppointmentRequestForDependentPatient.findById(
+  const result = await FollowUpAppointmentRequestForDependentPatient.findById(
     followUpAppointmentRequestId
   );
+  result!.patientType = "dependent";
+  return result;
 };
 
 export const getFollowUpRequestsForDependentPatient = async (
   patientId: string,
   dependentNationalId: string
 ) => {
-  return await FollowUpAppointmentRequestForDependentPatient.find({
+  const result = await FollowUpAppointmentRequestForDependentPatient.find({
     patientId,
     dependentNationalId,
   });
+  result.forEach((request) => {
+    request.patientType = "dependent";
+  });
+  return result;
 };
 
 export const createFollowUpRequestForDependentPatient = async (

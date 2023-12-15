@@ -1,16 +1,16 @@
 import express from "express";
 import { updateDoctor } from "../../controllers/doctors/updateDoctor";
 import { getDoctor } from "../../controllers/doctors/getDoctor";
-import { getAppointmentsWithAllPatients } from "../../controllers/doctors/getAllAppointments";
+import { getAppointmentsWithAllPatients } from "../../controllers/appointments/doctors/getAllAppointments";
 import { getDoctorPatientsHandler } from "../../controllers/doctors/getDoctorPatients";
-import { getAppointmentDetails } from "../../controllers/doctors/getAppointmentDetails";
+import { getAppointmentDetails } from "../../controllers/appointments/doctors/getAppointmentDetails";
 import { getDoctorById } from "../../controllers/patients/getDoctorById";
 import getRegisteredPatientDetails from "../../controllers/doctors/getRegisteredPatientDetails";
-import { addDoctorAvailableSlots } from "../../controllers/doctors/addAvailableTimeSlots";
+import { addDoctorSchedule } from "../../controllers/doctors/addSchedule";
 import { updateDoctorPassword } from "../../controllers/doctors/doctorUpdatePassword";
 import { scheduleFollowUpAppointmentHandler } from "../../controllers/appointments/doctors";
-import { viewAvailableTimeSlots } from "../../controllers/doctors/getAvailableTimeSlots";
-import { deleteDoctorAvailableSlots } from "../../controllers/doctors/removeAvailableTimeSlot";
+import { getDoctorSchedule } from "../../controllers/doctors/getSchedule";
+import { deleteDoctorWorkingSlot } from "../../controllers/doctors/removeDoctorWorkingSlot";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
@@ -47,7 +47,8 @@ doctorRouter
 
   .get("", getDoctorById)
 
-  .post("/appointments/add-time-slots", addDoctorAvailableSlots)
+  .get("/schedule", getDoctorSchedule)
+  .post("/schedule", addDoctorSchedule)
 
   .patch("/change-password", updateDoctorPassword)
 
@@ -56,9 +57,7 @@ doctorRouter
     scheduleFollowUpAppointmentHandler
   )
 
-  .get("/available-time-slots", viewAvailableTimeSlots)
-
-  .delete("/available-time-slots/:startTime", deleteDoctorAvailableSlots)
+  .delete("/available-time-slots/:startTime", deleteDoctorWorkingSlot)
 
   .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
 
@@ -89,6 +88,6 @@ doctorRouter
   )
 
   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
-  
+
   .post("/credit-card-payment", makeCreditCardPaymentHandler);
 export default doctorRouter;

@@ -27,6 +27,7 @@ import PrescriptionList from "../../pages/patients/prescriptions/PrescriptionLis
 import PrescriptionInfo from "../../pages/patients/prescriptions/PrescriptionInfo";
 import MedicineInfo from "../../pages/patients/prescriptions/MedicineInfo";
 import FamilyMemberInfo from "../../pages/patients/family-members/FamilyMemberInfo";
+import UserRole from "../../types/enums/UserRole";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -165,8 +166,8 @@ export const patientDoctorsRoute: Route = {
 };
 
 export const chatsRoute: Route = {
-  path: "/patient/chats",
-  element: <ChatsView />,
+  path: "/patient/chat",
+  element: <ChatsView role={UserRole.PATIENT} />,
 };
 
 const routes: Route[] = [

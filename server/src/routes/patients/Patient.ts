@@ -1,25 +1,9 @@
 import express from "express";
-import { addFamilyMembers } from "../../controllers/patients/addFamilyMembers";
-import { getDoctorById } from "../../controllers/patients/getDoctorById";
-import { getAllDoctors } from "../../controllers/patients/getAllDoctors";
 import { getPatientById } from "../../controllers/patients/getPatientById";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
 import { getPatientDependentFamilyMembers } from "../../controllers/patients/getPatientDependentFamilyMembers";
 import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
-import { getAppointmentsWithAllDoctors } from "../../controllers/appointments";
-import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
-import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { updatePatientPassword } from "../../controllers/patients/patientUpdatePassword";
-import { addPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
-import { deletePatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
-import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
-import { rejectPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
-import { getPatientRegisteredFamilyMemberRequests } from "../../controllers/patients/getPatientRegisteredFamilyMemberRequests";
-import {
-  addPatientHealthRecord,
-  deletePatientHealthRecord,
-  getPatientHealthRecords,
-} from "../../controllers/patients/healthRecords";
 import { authenticateUser } from "../../middlewares/authentication";
 import { authorizeUser } from "../../middlewares/authorization";
 import { viewHealthPackagesOptions } from "../../controllers/healthPackages/viewHealthPackagesOptions";
@@ -56,10 +40,18 @@ import {
   bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
   bookAnAppointmentForARegisteredFamilyMemberHandler as bookAppointmentForARegisteredFamilyMemberHandler,
   bookAnAppointmentHandler as bookAppointmentHandler,
+  getAppointmentsWithAllDoctors,
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
 import { getPatientDependentFamilyMemberById } from "../../controllers/patients/getPatientDependentFamilyMemberById";
+import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
+import { addPatientRegisteredFamilyMember, deletePatientRegisteredFamilyMember, rejectPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
+import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
+import { getPatientRegisteredFamilyMemberRequests } from "../../controllers/patients/getPatientRegisteredFamilyMemberRequests";
+import { getAllPrescriptions } from "../../controllers/prescriptions/getAllPatientPrescriptions";
+import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
+import { addFamilyMembers } from "../../controllers/patients/addFamilyMembers";
 
 const patientRouter = express.Router();
 
@@ -67,9 +59,6 @@ patientRouter.use(authenticateUser);
 patientRouter.use(authorizeUser(UserRole.PATIENT));
 
 patientRouter
-  .get("/doctors", getAllDoctors)
-
-  .get("/doctors/:doctorId", getDoctorById)
 
   .get("/patient-info", getPatientInfo)
 
@@ -184,6 +173,8 @@ patientRouter
     cancelSubscriptionForRegistered
   )
 
+  .patch("/change-password", updatePatientPassword)
+
   .get("/wallets/exists", doesAPatientHaveAWalletHandler)
 
   .post("/validate-wallet-pin-code", authenticateWalletPatientHandler)
@@ -208,8 +199,6 @@ patientRouter
 
   .post("/payments/create-payment-intent", makeCreditCardPaymentHandler)
 
-  .get("/:patientId", getPatientById)
-
-  .get("/health-packages/:packageId", getHealthPackage)
+  .get("/:patientId", getPatientById);
 
 export default patientRouter;

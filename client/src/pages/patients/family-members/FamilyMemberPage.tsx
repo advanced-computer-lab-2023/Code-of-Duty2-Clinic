@@ -170,9 +170,9 @@ const FamilyMemberPage: React.FC = () => {
                 Gained Pharmacy Medicines Discount:{" "}
                 {type === "r"
                   ? familyMemberData.subscribedHealthPackage?.healthPackage
-                      ?.discounts.gainedPharamcyMedicinesDiscount
+                      ?.discounts.gainedPharmacyMedicinesDiscount
                   : familyMemberData.healthPackage.discounts
-                      .gainedPharamcyMedicinesDiscount}
+                      .gainedPharmacyMedicinesDiscount}
               </Typography>
               <Typography>
                 Gained Family Members Discount:{" "}
@@ -235,7 +235,7 @@ export default FamilyMemberPage;
     "healthPackage": {
         "discounts": {
             "gainedDoctorSessionDiscount": 0.8,
-            "gainedPharamcyMedicinesDiscount": 0.7,
+            "gainedPharmacyMedicinesDiscount": 0.7,
             "gainedFamilyMembersDiscount": 0.2
         },
         "_id": "65228d0d033c935b1c137f9c",
