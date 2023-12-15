@@ -7,7 +7,7 @@ import {
   makeARefund,
   toRefundPaidFeesToPayer,
   validateCancellingAppointment,
-  validateChosenTimePeriod,
+  validateChosenTimePeriod
 } from "../..";
 import { performWalletTransaction } from "../../../payments/wallets/patients";
 import { findDoctorById } from "../../../doctors";
@@ -19,9 +19,7 @@ import { sendEmail } from "../../../../utils/email";
 import { getAppointmentNotificationText } from "../../../../utils/notificationText";
 import { IDependentFamilyMemberAppointment } from "../../../../models/appointments/interfaces/IDependentFamilyMemberAppointment";
 
-export const findDependentPatientAppointmentById = async (
-  appointmentId: string
-) => {
+export const findDependentPatientAppointmentById = async (appointmentId: string) => {
   return await DependentFamilyMemberAppointment.findById(appointmentId);
 };
 
@@ -30,55 +28,54 @@ export const findPatientDependentFamilyMembersAppointments = async (
   dependentNationalId?: string,
   doctorId?: string
 ) => {
-  const dependentFamilyMemberAppointments =
-    await DependentFamilyMemberAppointment.aggregate([
-      {
-        $match: {
-          ...getDependentFamilyMembersAppointmentsMatchingCondition(
-            patientId,
-            dependentNationalId,
-            doctorId
-          ),
-        },
-      },
-      {
-        $lookup: {
-          from: "patients",
-          localField: "patientId",
-          foreignField: "_id",
-          as: "patient",
-        },
-      },
-      {
-        $lookup: {
-          from: "doctors",
-          localField: "doctorId",
-          foreignField: "_id",
-          as: "doctor",
-        },
-      },
-      {
-        $unwind: "$patient",
-      },
-      {
-        $unwind: "$doctor",
-      },
-      {
-        $project: {
+  const dependentFamilyMemberAppointments = await DependentFamilyMemberAppointment.aggregate([
+    {
+      $match: {
+        ...getDependentFamilyMembersAppointmentsMatchingCondition(
+          patientId,
+          dependentNationalId,
+          doctorId
+        )
+      }
+    },
+    {
+      $lookup: {
+        from: "patients",
+        localField: "patientId",
+        foreignField: "_id",
+        as: "patient"
+      }
+    },
+    {
+      $lookup: {
+        from: "doctors",
+        localField: "doctorId",
+        foreignField: "_id",
+        as: "doctor"
+      }
+    },
+    {
+      $unwind: "$patient"
+    },
+    {
+      $unwind: "$doctor"
+    },
+    {
+      $project: {
+        _id: 1,
+        patientId: 1,
+        dependentNationalId: 1,
+        doctorId: 1,
+        timePeriod: 1,
+        status: 1,
+        doctor: {
           _id: 1,
-          patientId: 1,
-          dependentNationalId: 1,
-          doctorId: 1,
-          timePeriod: 1,
-          status: 1,
-          doctor: {
-            _id: 1,
-            name: 1,
-            specialty: 1,
-          },
-        },
-      },
-    ]);
+          name: 1,
+          specialty: 1
+        }
+      }
+    }
+  ]);
   return dependentFamilyMemberAppointments;
 };
 
@@ -89,8 +86,7 @@ const getDependentFamilyMembersAppointmentsMatchingCondition = (
 ) => {
   let matchingCondition = {};
   if (patientId) matchingCondition = { ...matchingCondition, patientId };
-  if (dependentNationalId)
-    matchingCondition = { ...matchingCondition, dependentNationalId };
+  if (dependentNationalId) matchingCondition = { ...matchingCondition, dependentNationalId };
   if (doctorId) matchingCondition = { ...matchingCondition, doctorId };
 
   return matchingCondition;
@@ -112,10 +108,7 @@ export const bookAnAppointmentForADependentFamilyMember = async (
     endTime,
     UserRole.PATIENT
   );
-  const appointmentFees = await getAppointmentFeesWithADoctor(
-    payerId,
-    doctorId
-  );
+  const appointmentFees = await getAppointmentFeesWithADoctor(payerId, doctorId);
   if (paymentMethod === PaymentMethod.WALLET) {
     await performWalletTransaction(payerId, appointmentFees);
   }
@@ -143,23 +136,18 @@ export const validateAppointmentCreationForADependentFamilyMember = async (
   const doctor = await findDoctorById(doctorId);
   if (!doctor) throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
   const patient = await findPatientById(payerId, {
-    dependentFamilyMembers: 1,
+    dependentFamilyMembers: 1
   });
   if (!patient) throw new Error(entityIdDoesNotExistError("Patient", payerId));
 
-  if (
-    !patient.dependentFamilyMembers ||
-    patient.dependentFamilyMembers.length === 0
-  )
+  if (!patient.dependentFamilyMembers || patient.dependentFamilyMembers.length === 0)
     throw new Error("Patient has no dependent family members");
 
   const dependentFamilyMember = patient.dependentFamilyMembers.find(
     (familyMember) => familyMember.nationalId === dependentNationalId
   );
   if (!dependentFamilyMember)
-    throw new Error(
-      "Patient has no dependent family member with this national id"
-    );
+    throw new Error("Patient has no dependent family member with this national id");
 
   const conflictingPatientDependentAppointments =
     await findConflictingPatientDependentFamilyMemberAppointments(
@@ -206,16 +194,16 @@ const findConflictingPatientDependentFamilyMemberAppointments = (
       {
         $and: [
           { "timePeriod.startTime": { $lte: chosenStartTime } },
-          { "timePeriod.endTime": { $gte: chosenStartTime } },
-        ],
+          { "timePeriod.endTime": { $gte: chosenStartTime } }
+        ]
       },
       {
         $and: [
           { "timePeriod.startTime": { $lte: chosenEndTime } },
-          { "timePeriod.endTime": { $gte: chosenEndTime } },
-        ],
-      },
-    ],
+          { "timePeriod.endTime": { $gte: chosenEndTime } }
+        ]
+      }
+    ]
   });
 };
 
@@ -236,9 +224,9 @@ export const saveAppointmentForADependentFamilyMember = async (
     doctorId,
     timePeriod: {
       startTime: selectedStartTime,
-      endTime: selectedEndTime,
+      endTime: selectedEndTime
     },
-    isAFollowUp: isAFollowUpAppointment,
+    isAFollowUp: isAFollowUpAppointment
   });
   await newAppointment.save();
 };
@@ -249,9 +237,7 @@ export const rescheduleAppointmentForDependentPatientAndNotifyUsers = async (
   endTime: string,
   appointmentScheduler: UserRole
 ) => {
-  const appointment = await DependentFamilyMemberAppointment.findById(
-    appointmentId
-  );
+  const appointment = await DependentFamilyMemberAppointment.findById(appointmentId);
   if (!appointment) throw new Error("Appointment not found");
   await validateAppointmentCreationForADependentFamilyMember(
     appointment.payerId.toString(),
@@ -262,17 +248,18 @@ export const rescheduleAppointmentForDependentPatientAndNotifyUsers = async (
     appointmentScheduler
   );
   await appointment.updateOne({
-    timePeriod: { startTime, endTime },
+    status: "rescheduled",
+    timePeriod: { startTime, endTime }
   });
+  console.log(appointment);
+  await notifyConcernedUsers(appointment);
 };
 
 export const cancelAppointmentForDependentAndNotifyUsers = async (
   appointmentId: string,
   cancellerRole: UserRole
 ) => {
-  const appointment = await DependentFamilyMemberAppointment.findById(
-    appointmentId
-  );
+  const appointment = await DependentFamilyMemberAppointment.findById(appointmentId);
 
   if (!appointment) throw new Error("Appointment not found");
   validateCancellingAppointment(appointment);
@@ -286,13 +273,8 @@ export const cancelAppointmentForDependentAndNotifyUsers = async (
   await notifyConcernedUsers(appointment);
 };
 
-async function notifyConcernedUsers(
-  appointment: IDependentFamilyMemberAppointment
-) {
-  const patient = await findPatientById(
-    appointment.payerId.toString(),
-    "+dependentFamilyMembers"
-  );
+async function notifyConcernedUsers(appointment: IDependentFamilyMemberAppointment) {
+  const patient = await findPatientById(appointment.payerId.toString(), "+dependentFamilyMembers");
   const dependent = patient!.dependentFamilyMembers?.find(
     (dependent) => dependent.nationalId === appointment.dependentNationalId
   );
@@ -301,12 +283,12 @@ async function notifyConcernedUsers(
   await sendEmail({
     to: patient!.email,
     subject: `Appointment of your family members has been ${appointment.status}`,
-    text: getAppointmentNotificationText(appointment, doctor!.name),
+    text: getAppointmentNotificationText(appointment, doctor!.name, true)
   });
 
   await sendEmail({
     to: doctor!.email,
     subject: `Your appointment has been ${appointment.status}`,
-    text: getAppointmentNotificationText(appointment, dependent!.name),
+    text: getAppointmentNotificationText(appointment, dependent!.name)
   });
 }

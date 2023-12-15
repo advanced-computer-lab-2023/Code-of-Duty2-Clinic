@@ -12,15 +12,22 @@ axios.defaults.withCredentials = true;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3,
-    },
-  },
+      retry: 3
+    }
+  }
 });
 
 export default function App() {
   useEffect(() => {
+    socket.on("error", ({ message }) => {
+      console.log(message);
+    });
+    socket.on("message", (message) => {
+      console.log(message);
+    });
+    socket.emit("message", "hello");
     return () => {
-      socket.disconnect();
+      if (socket.connected) socket.disconnect();
     };
   }, []);
 

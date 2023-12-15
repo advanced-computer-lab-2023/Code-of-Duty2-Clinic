@@ -1,6 +1,6 @@
 import connectToDB from "./utils/database";
 import config from "./configurations";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { useAllAppRoutes } from "./utils/useAllAppRoutes";
 import cookieParser from "cookie-parser";
@@ -34,7 +34,7 @@ app.listen(config.server.port, async () => {
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: config.server.corsOptions,
+  cors: config.server.corsOptions
 });
 io.use(authenticateSocketConnection);
 io.on("connection", socketEventListeners);

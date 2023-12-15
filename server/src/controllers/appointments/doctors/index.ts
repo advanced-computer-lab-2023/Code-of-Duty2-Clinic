@@ -6,37 +6,28 @@ import {
   cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers,
   rescheduleAppointmentAsDoctorForDependentPatientAndNotifyUsers,
   rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers,
-  scheduleAFollowUpAppointment,
+  scheduleAFollowUpAppointment
 } from "../../../services/appointments/doctors";
 import {
   notifyUsersOnSystemForDependentAppointments,
-  notifyUsersOnSystemForRegisteredAppointments,
+  notifyUsersOnSystemForRegisteredAppointments
 } from "..";
 import SocketType from "../../../types/SocketType";
 import TimePeriod from "../../../types/TimePeriod";
 
-export const scheduleFollowUpAppointmentHandler = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
+export const scheduleFollowUpAppointmentHandler = async (req: AuthorizedRequest, res: Response) => {
   try {
     const { startTime, endTime } = req.body;
     if (!startTime)
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Start time is required" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Start time is required" });
     if (!endTime)
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "End time is required" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "End time is required" });
 
     const doctorId = req.user?.id!;
 
     const { patientId } = req.params;
     if (!patientId)
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Patient id is required" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Patient id is required" });
 
     await scheduleAFollowUpAppointment(doctorId, patientId, startTime, endTime);
     return res
@@ -45,7 +36,7 @@ export const scheduleFollowUpAppointmentHandler = async (
   } catch (error: any) {
     console.error(error);
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -59,11 +50,10 @@ export const rescheduleAppointmentForPatientHandler = async (
   socket: SocketType
 ) => {
   const { appointmentId, timePeriod } = data;
-  if (!appointmentId)
-    return socket.emit("error", { message: "appointmentId is required" });
+  if (!appointmentId) return socket.emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
     return socket.emit("error", {
-      message: "new time period is required",
+      message: "new time period is required"
     });
 
   try {
@@ -83,6 +73,7 @@ export const rescheduleAppointmentForPatientHandler = async (
       throw new Error("Patient type is not valid");
     }
   } catch (error: any) {
+    console.error(error);
     socket.emit("error", { message: error.message });
   }
 };
@@ -95,20 +86,15 @@ export const cancelAppointmentForPatientHandler = async (
   socket: SocketType
 ) => {
   const { appointmentId } = data;
-  if (!appointmentId)
-    return socket.emit("error", { message: "appointmentId is required" });
+  if (!appointmentId) return socket.emit("error", { message: "appointmentId is required" });
 
   try {
     if (data.appointedPatientType === "registered") {
-      await cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers(
-        appointmentId
-      );
+      await cancelAppointmentAsDoctorForRegisteredPatientAndNotifyUsers(appointmentId);
 
       await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
     } else if (data.appointedPatientType === "dependent") {
-      await cancelAppointmentAsDoctorForDependentPatientAndNotifyUsers(
-        appointmentId
-      );
+      await cancelAppointmentAsDoctorForDependentPatientAndNotifyUsers(appointmentId);
 
       await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
     } else {

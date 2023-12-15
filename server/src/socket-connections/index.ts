@@ -1,13 +1,13 @@
 import SocketType from "../types/SocketType";
 import {
   rescheduleAppointmentForPatientHandler,
-  cancelAppointmentForPatientHandler,
+  cancelAppointmentForPatientHandler
 } from "../controllers/appointments/doctors";
 import {
   cancelAppointmentForDependentPatientHandler,
   cancelAppointmentForRegisteredPatientHandler,
   rescheduleAppointmentForDependentPatientHandler,
-  rescheduleAppointmentForRegisteredPatientHandler,
+  rescheduleAppointmentForRegisteredPatientHandler
 } from "../controllers/appointments/patients";
 
 const userIdToSocketIdMap: Map<string, string> = new Map();
@@ -23,6 +23,10 @@ const socketEventListeners = (socket: SocketType) => {
   }
   userIdToSocketIdMap.set(userId, socket.id);
 
+  socket.on("connect", () => {
+    userIdToSocketIdMap.set(userId, socket.id);
+  });
+
   socket.on("disconnect", () => {
     userIdToSocketIdMap.delete(userId);
   });
@@ -32,7 +36,7 @@ const socketEventListeners = (socket: SocketType) => {
   });
 
   socket.on("message", ({ destinationId, senderName }) => {
-    socket.to(getSocketIdForUserId(destinationId)).emit("message", senderName);
+    socket.emit("message", "Hello from server");
   });
 
   socket.on("appointment_rescheduling_as_doctor", (data) =>

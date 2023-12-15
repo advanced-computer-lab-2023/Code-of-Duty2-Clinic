@@ -10,27 +10,22 @@ import {
   getAppointmentFeesWithADoctor,
   getPatientAppointments,
   rescheduleAppointmentAsPatientForDependentPatientAndNotifyUsers,
-  rescheduleAppointmentAsPatientForRegisteredPatientAndNotifyUsers,
+  rescheduleAppointmentAsPatientForRegisteredPatientAndNotifyUsers
 } from "../../../services/appointments/patients";
 import SocketType from "../../../types/SocketType";
 import TimePeriod from "../../../types/TimePeriod";
 import { findPatientById } from "../../../services/patients";
 import {
   notifyUsersOnSystemForDependentAppointments,
-  notifyUsersOnSystemForRegisteredAppointments,
+  notifyUsersOnSystemForRegisteredAppointments
 } from "..";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 
-export const bookAnAppointmentHandler = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
+export const bookAnAppointmentHandler = async (req: AuthorizedRequest, res: Response) => {
   const patientId = req.user?.id!;
   const doctorId = req.params.doctorId;
   if (!doctorId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "doctorId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).send({ message: "doctorId is required" });
 
   const { startTime, endTime } = req.body;
   if (!startTime || !endTime)
@@ -39,18 +34,9 @@ export const bookAnAppointmentHandler = async (
       .send({ message: "startTime and endTime are required" });
 
   const paymentMethod =
-    req.query.paymentMethod === "wallet"
-      ? PaymentMethod.WALLET
-      : PaymentMethod.CREDIT_CARD;
+    req.query.paymentMethod === "wallet" ? PaymentMethod.WALLET : PaymentMethod.CREDIT_CARD;
   try {
-    await bookAnAppointment(
-      patientId,
-      patientId,
-      doctorId,
-      startTime,
-      endTime,
-      paymentMethod
-    );
+    await bookAnAppointment(patientId, patientId, doctorId, startTime, endTime, paymentMethod);
     res.status(StatusCodes.CREATED).send({ message: "Appointment booked" });
   } catch (error: any) {
     res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
@@ -64,13 +50,9 @@ export const bookAnAppointmentForARegisteredFamilyMemberHandler = async (
   const patientId = req.user?.id!;
   const { familyMemberId, doctorId } = req.params;
   if (!familyMemberId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "familyMemberId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).send({ message: "familyMemberId is required" });
   if (!doctorId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "doctorId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).send({ message: "doctorId is required" });
 
   const { startTime, endTime } = req.body;
   if (!startTime || !endTime)
@@ -79,9 +61,7 @@ export const bookAnAppointmentForARegisteredFamilyMemberHandler = async (
       .send({ message: "startTime and endTime are required" });
 
   const paymentMethod =
-    req.query.paymentMethod === "wallet"
-      ? PaymentMethod.WALLET
-      : PaymentMethod.CREDIT_CARD;
+    req.query.paymentMethod === "wallet" ? PaymentMethod.WALLET : PaymentMethod.CREDIT_CARD;
 
   try {
     await bookAnAppointment(
@@ -105,13 +85,9 @@ export const bookAnAppointmentForADependentFamilyMemberHandler = async (
   const patientId = req.user?.id!;
   const { dependentNationalId, doctorId } = req.params;
   if (!dependentNationalId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "dependentNationalId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).send({ message: "dependentNationalId is required" });
   if (!doctorId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "doctorId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).send({ message: "doctorId is required" });
 
   const { startTime, endTime } = req.body;
   if (!startTime || !endTime)
@@ -120,9 +96,7 @@ export const bookAnAppointmentForADependentFamilyMemberHandler = async (
       .send({ message: "startTime and endTime are required" });
 
   const paymentMethod =
-    req.query.paymentMethod === "wallet"
-      ? PaymentMethod.WALLET
-      : PaymentMethod.CREDIT_CARD;
+    req.query.paymentMethod === "wallet" ? PaymentMethod.WALLET : PaymentMethod.CREDIT_CARD;
   try {
     await bookAnAppointmentForADependentFamilyMember(
       patientId,
@@ -138,16 +112,11 @@ export const bookAnAppointmentForADependentFamilyMemberHandler = async (
   }
 };
 
-export const getDoctorAppointmentFeesHandler = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
+export const getDoctorAppointmentFeesHandler = async (req: AuthorizedRequest, res: Response) => {
   const patientId = req.user?.id!;
   const doctorId = req.params.doctorId;
   if (!doctorId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "doctorId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).send({ message: "doctorId is required" });
 
   try {
     const fees = await getAppointmentFeesWithADoctor(patientId, doctorId);
@@ -165,11 +134,10 @@ export const rescheduleAppointmentForRegisteredPatientHandler = async (
   socket: SocketType
 ) => {
   const { appointmentId, timePeriod } = data;
-  if (!appointmentId)
-    return socket.emit("error", { message: "appointmentId is required" });
+  if (!appointmentId) return socket.emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
     return socket.emit("error", {
-      message: "new time period is required",
+      message: "new time period is required"
     });
 
   try {
@@ -191,11 +159,10 @@ export const rescheduleAppointmentForDependentPatientHandler = async (
   socket: SocketType
 ) => {
   const { appointmentId, timePeriod } = data;
-  if (!appointmentId)
-    return socket.emit("error", { message: "appointmentId is required" });
+  if (!appointmentId) return socket.emit("error", { message: "appointmentId is required" });
   if (!timePeriod)
     return socket.emit("error", {
-      message: "new time period is required",
+      message: "new time period is required"
     });
 
   try {
@@ -214,13 +181,10 @@ export const cancelAppointmentForRegisteredPatientHandler = async (
   socket: SocketType
 ) => {
   const { appointmentId } = data;
-  if (!appointmentId)
-    return socket.emit("error", { message: "appointmentId is required" });
+  if (!appointmentId) return socket.emit("error", { message: "appointmentId is required" });
 
   try {
-    await cancelAppointmentAsPatientForRegisteredPatientAndNotifyUsers(
-      appointmentId
-    );
+    await cancelAppointmentAsPatientForRegisteredPatientAndNotifyUsers(appointmentId);
 
     await notifyUsersOnSystemForRegisteredAppointments(appointmentId, socket);
   } catch (error: any) {
@@ -233,35 +197,22 @@ export const cancelAppointmentForDependentPatientHandler = async (
   socket: SocketType
 ) => {
   const { appointmentId } = data;
-  if (!appointmentId)
-    return socket.emit("error", { message: "appointmentId is required" });
+  if (!appointmentId) return socket.emit("error", { message: "appointmentId is required" });
 
   try {
-    await cancelAppointmentAsPatientForDependentPatientAndNotifyUsers(
-      appointmentId
-    );
+    await cancelAppointmentAsPatientForDependentPatientAndNotifyUsers(appointmentId);
 
     await notifyUsersOnSystemForDependentAppointments(appointmentId, socket);
   } catch (error: any) {
     socket.emit("error", { message: error.message });
   }
 };
-export const getAppointmentsWithAllDoctors = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
+export const getAppointmentsWithAllDoctors = async (req: AuthorizedRequest, res: Response) => {
   const patientId = req.user?.id;
   if (!patientId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "patientId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "patientId is required" });
 
-  const allowedQueryParameters = [
-    "status",
-    "appointmentTime",
-    "isTimeSet",
-    "targetName",
-  ];
+  const allowedQueryParameters = ["status", "appointmentTime", "isTimeSet", "targetName"];
 
   if (
     Object.keys(req.query).length > allowedQueryParameters.length ||
@@ -269,9 +220,7 @@ export const getAppointmentsWithAllDoctors = async (
   ) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json(
-        "only doctorName, appointment status or time slot must be provided"
-      );
+      .json("only doctorName, appointment status or time slot must be provided");
   }
 
   if (

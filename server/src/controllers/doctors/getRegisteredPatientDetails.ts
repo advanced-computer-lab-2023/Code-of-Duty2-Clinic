@@ -10,10 +10,7 @@ import { findPatientById } from "../../services/patients";
 import { nodeModuleNameResolver } from "typescript";
 import Patient from "../../models/patients/Patient";
 
-export default async function getRegisteredPatientDetails(
-  req: AuthorizedRequest,
-  res: Response
-) {
+export default async function getRegisteredPatientDetails(req: AuthorizedRequest, res: Response) {
   try {
     const doctorId = req.user?.id;
     const { patientId } = req.params; // Extract patientId from request parameters
@@ -22,9 +19,7 @@ export default async function getRegisteredPatientDetails(
 
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Doctor not found" });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Doctor not found" });
     }
 
     let patient;
@@ -35,9 +30,7 @@ export default async function getRegisteredPatientDetails(
         .lean();
 
       if (!supervisingPatient?.dependentFamilyMembers) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "Supervising patient not found" });
+        return res.status(StatusCodes.NOT_FOUND).json({ message: "Supervising patient not found" });
       }
       supervisingPatientName = supervisingPatient.name;
 
@@ -54,27 +47,25 @@ export default async function getRegisteredPatientDetails(
           healthRecords: 1,
           dateOfBirth: 1,
           mobileNumber: 1,
-          imageUrl: 1,
+          imageUrl: 1
         })
         .lean();
     }
 
     if (!patient) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Patient not found" });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "Patient not found" });
     }
     const appointment = supervisingPatientId
       ? await DependentFamilyMemberAppointment.findOne({
           doctorId,
           dependentNationalId: patientId,
           payerId: supervisingPatientId,
-          status: "completed",
+          status: "completed"
         })
       : await Appointment.findOne({
           doctorId,
           patientId,
-          status: "completed",
+          status: "completed"
         });
 
     if (!appointment) {
@@ -87,21 +78,19 @@ export default async function getRegisteredPatientDetails(
       ? await DependentPrescription.find({
           patientNationalId: patientId,
           supervisingPatientId,
-          doctorId,
+          doctorId
         })
       : await PrescriptionModel.find({
           patientId,
-          doctorId,
+          doctorId
         });
 
     return res.status(StatusCodes.OK).json({
       patientInfo: { ...patient, supervisingPatientName },
-      prescriptions: prescriptions,
+      prescriptions: prescriptions
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Server error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Server error" });
   }
 }

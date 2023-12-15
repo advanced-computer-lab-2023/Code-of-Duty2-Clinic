@@ -21,13 +21,14 @@ import {
   doesADoctorHaveAWalletHandler,
   getDoctorWalletHandler,
   performAWalletTransactionHandler,
-  rechargeDoctorWalletHandler,
+  rechargeDoctorWalletHandler
 } from "../../controllers/payments/wallets/Doctor";
 import { authenticateWalletUser } from "../../middlewares/walletAuthentication";
 import {
   configureCreditCardPaymentHandler,
-  makeCreditCardPaymentHandler,
+  makeCreditCardPaymentHandler
 } from "../../controllers/payments/credit-cards";
+import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/notifications";
 
 const doctorRouter = express.Router();
 
@@ -50,10 +51,7 @@ doctorRouter
 
   .patch("/change-password", updateDoctorPassword)
 
-  .post(
-    "/appointments/:patientId/follow-up",
-    scheduleFollowUpAppointmentHandler
-  )
+  .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
 
   .delete("/available-time-slots/:startTime", deleteDoctorWorkingSlot)
 
@@ -73,19 +71,14 @@ doctorRouter
 
   .get("/wallets", authenticateWalletUser, getDoctorWalletHandler)
 
-  .patch(
-    "/wallet-transactions",
-    authenticateWalletUser,
-    performAWalletTransactionHandler
-  )
+  .patch("/wallet-transactions", authenticateWalletUser, performAWalletTransactionHandler)
 
-  .patch(
-    "/wallet-recharge",
-    authenticateWalletUser,
-    rechargeDoctorWalletHandler
-  )
+  .patch("/wallet-recharge", authenticateWalletUser, rechargeDoctorWalletHandler)
 
   .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
-  .post("/credit-card-payment", makeCreditCardPaymentHandler);
+  .post("/credit-card-payment", makeCreditCardPaymentHandler)
+
+  .get("/notifications", getAllNotificationsForDoctorHandler);
+
 export default doctorRouter;
