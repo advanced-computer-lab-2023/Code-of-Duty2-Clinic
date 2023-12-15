@@ -174,6 +174,11 @@ console.log(doctor);
 
 
       </div>
+      <Box display="flex" justifyContent="center" marginBottom="2rem">
+        <Button variant="contained" color="primary" onClick={() => navigate('')}>
+          Book Appointment
+        </Button>
+      </Box>
       </Box>
     </Paper>
     <Box display="flex" justifyContent="center" marginBottom="2rem">

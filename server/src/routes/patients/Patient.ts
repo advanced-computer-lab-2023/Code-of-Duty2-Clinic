@@ -4,6 +4,7 @@ import { getDoctorById } from "../../controllers/patients/getDoctorById";
 import { getAllDoctors } from "../../controllers/patients/getAllDoctors";
 import { getPatientById } from "../../controllers/patients/getPatientById";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
+import { getPatientDependentFamilyMembers } from "../../controllers/patients/getPatientDependentFamilyMembers";
 import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
 import { getAppointmentsWithAllDoctors } from "../../controllers/appointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
@@ -27,7 +28,6 @@ import { setSubscribedPackageForDependent } from "../../controllers/healthPackag
 import { viewSubscribedHealthPackage } from "../../controllers/healthPackages/viewSubscribedHealthPackage";
 import { viewSubscribedPackageDetailsForDependent } from "../../controllers/healthPackages/viewPackageDetailsForDependent";
 import { viewHealthCarePackageStatus } from "../../controllers/healthPackages/viewPackageDetails";
-import { viewSubscribedPackage } from "../../controllers/healthPackages/viewHealthPackageIndependent";
 import { cancelSubscription } from "../../controllers/healthPackages/cancelSubscription";
 import { cancelSubscribedForDependent } from "../../controllers/healthPackages/cancelSubForIndependent";
 import { viewSubscribedHealthPackageBenefits } from "../../controllers/healthPackages/viewBenefitsOfPackage";
@@ -59,6 +59,7 @@ import {
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
+import { getPatientDependentFamilyMemberById } from "../../controllers/patients/getPatientDependentFamilyMemberById";
 
 const patientRouter = express.Router();
 
@@ -88,7 +89,16 @@ patientRouter
 
   .get("/family-members/requests", getPatientRegisteredFamilyMemberRequests)
 
-  .get("/family-members/:familyMemberId", getPatientRegisteredFamilyMemberById)
+  .get("/family-members/registered", getPatientRegisteredFamilyMembers)
+
+  .get("/family-members/dependent", getPatientDependentFamilyMembers)
+
+  .get("/family-members/registered/member", getPatientRegisteredFamilyMemberById)
+
+  .get("/family-members/dependent/member", getPatientDependentFamilyMemberById)
+
+
+
 
   .patch("/change-password", updatePatientPassword)
 

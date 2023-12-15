@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
 import HealthPackageDetails from "./healthPackageCard";
 import { Card, CardContent, Grid, Button,styled } from "@mui/material";
-import axios from "axios";
-import { config } from "../configuration";
 import { useQueryParams } from "../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
 import useGetHealthPackageOptions from "../hooks/useGetHealthPackageOptions";
@@ -19,19 +16,6 @@ const WideButton = styled(Button)({
   fontSize: '1.2rem',
   textTransform: 'none',
 });
-
-
-const fetchHealthPackages = async () => {
-  try {
-    const response = await axios.get(
-      `${config.serverUri}/patients/health-packages`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching health packages:", error);
-    return [];
-  }
-};
 
 const HealthPackageList: React.FC = () => {
   const queryParams = useQueryParams();

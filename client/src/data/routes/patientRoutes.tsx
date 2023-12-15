@@ -1,4 +1,4 @@
-import PatientRegisteredFamilyMembers from "../../pages/patients/RegisteredFamilyMembers/PatientRegisteredFamilyMembers";
+import PatientRegisteredFamilyMembers from "../../pages/patients/family-members/RegisteredFamilyMembers/PatientRegisteredFamilyMembers";
 import PrescriptionsPage from "../../pages/patients/prescriptions/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/family-members/AddFamilyMember";
 import Home from "../../pages/patients/Home";
@@ -26,6 +26,7 @@ import ChatsView from "../../features/chats/ChatsView";
 import PrescriptionList from "../../pages/patients/prescriptions/PrescriptionList";
 import PrescriptionInfo from "../../pages/patients/prescriptions/PrescriptionInfo";
 import MedicineInfo from "../../pages/patients/prescriptions/MedicineInfo";
+import FamilyMemberInfo from "../../pages/patients/family-members/FamilyMemberInfo";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -40,6 +41,11 @@ export const familyMemberPageRoute: Route = {
 export const familyMembersRoute: Route = {
   path: "/patient/all-family-members",
   element: <FamilyMembersComponent />,
+};
+
+export const patientFamilyMemberInfoRoute: Route = {
+  path: "/patient/family-member-info",
+  element: <FamilyMemberInfo />,
 };
 
 export const cancelSubscriptionRoute: Route = {
@@ -171,6 +177,7 @@ const routes: Route[] = [
   addFamilyMemberRoute,
   addRegisteredFamilyMemberRoute,
   patientFamilyMembersRoute,
+  patientFamilyMemberInfoRoute,
   patientAppointmentsRoute,
   patientDoctorAppointmentDetailsRoute,
   patientPrescriptions,

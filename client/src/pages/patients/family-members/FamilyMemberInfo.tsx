@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { config } from "../../../configuration";
+import { useQueryParams } from "../../../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Paper, Grid } from "@mui/material";
 import { healthPackagesOptionsRoute } from "../../../data/routes/patientRoutes";
 import { getFormattedDateTime } from "../../../utils/formatter";
-const FamilyMemberPage: React.FC = () => {
+
+const FamilyMemberInfo: React.FC = () => {
   const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
+  const queryParams = useQueryParams();
   const navigate = useNavigate();
-  const query = useQueryParams(); // Use the useQueryParams hook to access query parameters
-  const type = query.get("type"); // Get the value of the "type" query parameter
-  const id = query.get("id"); // Get the value of the "id" query parameter
+  const type = queryParams.get("type");
+  const id = queryParams.get("id");
   const today = new Date();
   useEffect(() => {
     const fetchData = async () => {
@@ -221,27 +223,4 @@ const FamilyMemberPage: React.FC = () => {
   );
 };
 
-export default FamilyMemberPage;
-/**{
-    "subscribedPackage": {
-        "packageId": "65228d0d033c935b1c137f9c",
-        "startDate": "2023-11-13T20:18:20.416Z",
-        "endDate": "2024-11-12T20:18:20.416Z",
-        "status": [
-            "subscribed"
-        ],
-        "_id": "6552848cd348d55081146225"
-    },
-    "healthPackage": {
-        "discounts": {
-            "gainedDoctorSessionDiscount": 0.8,
-            "gainedPharamcyMedicinesDiscount": 0.7,
-            "gainedFamilyMembersDiscount": 0.2
-        },
-        "_id": "65228d0d033c935b1c137f9c",
-        "name": "Platinum Package",
-        "amountToPay": 19,
-        "packageDurationInYears": 1,
-        "__v": 0
-    }
-} */
+export default FamilyMemberInfo;
