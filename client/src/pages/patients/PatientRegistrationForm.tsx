@@ -5,6 +5,12 @@ import axios from "axios";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { patientDashboardRoute } from "../../data/routes/patientRoutes";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { MenuItem } from "@mui/material";
 
 interface FormData {
   username: string;
@@ -18,7 +24,7 @@ interface FormData {
     fullname: string;
     mobileNumber: string;
     relationToPatient: string;
-  }; // ... (other attributes)
+  };
 }
 
 const PatientRegistrationForm: React.FC = () => {
@@ -42,7 +48,9 @@ const PatientRegistrationForm: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleGenderChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleGenderChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -67,6 +75,7 @@ const PatientRegistrationForm: React.FC = () => {
   const [error, setError] = useState("");
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -87,120 +96,145 @@ const PatientRegistrationForm: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Patient Registration</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username*: </label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            placeholder="Enter Your Username"
-            required
-          />
-        </div>
-        <div>
-          <label>Password*: </label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Enter Your Password"
-            required
-          />
-        </div>
-        <div>
-          <label>Email*: </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="Enter Your Email"
-            required
-          />
-        </div>
-        <div>
-          <label>Name*: </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="Enter Your Full Name"
-            required
-          />
-        </div>
-        <div>
-          <label>Date of Birth*: </label>
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Gender*: </label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleGenderChange}
-            required
-          >
-            <option value="choose your gender">choose your gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-        <div>
-          <label>Mobile Number*: </label>
-          <input
-            type="number"
-            name="mobileNumber"
-            min="0"
-            value={formData.mobileNumber}
-            onChange={handleInputChange}
-            placeholder="Enter Your Mobile Number"
-            required
-          />
-        </div>
-        <div>
-          <label>Emergency Contact*: </label>
-          <input
-            type="text"
-            name="emergencyContact.fullname"
-            value={formData.emergencyContact.fullname}
-            onChange={handleEmergencyContactChange}
-            placeholder="Full Name"
-            required
-          />
-          <input
-            type="number"
-            name="emergencyContact.mobileNumber"
-            value={formData.emergencyContact.mobileNumber}
-            onChange={handleEmergencyContactChange}
-            placeholder="Mobile Number"
-            required
-          />
-          <input
-            type="text"
-            name="emergencyContact.relationToPatient"
-            value={formData.emergencyContact.relationToPatient}
-            onChange={handleEmergencyContactChange}
-            placeholder="Relation to Patient"
-            required
-          />
-        </div>
-        <div>
-          <button type="submit">Register</button>
-        </div>
-      </form>
-      <p style={{ color: "red" }}>{error}</p>
+    <div className="registration-container">
+      <Card sx={{ minWidth: 275, textAlign: "center" }}>
+        <CardContent>
+          <Typography variant="h5" color="primary" fontSize="1.8rem" fontWeight="bold" gutterBottom>
+            Patient Registration Form
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              label="Username"
+              placeholder="Enter Your Username"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              label="Password"
+              placeholder="Enter Your Password"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              label="Email"
+              placeholder="Enter Your Email"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              label="Name"
+              placeholder="Enter Your Full Name"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleInputChange}
+              label="Date of Birth"
+              fullWidth
+              required
+              InputLabelProps={{
+                shrink: true,
+              }}
+              margin="normal"
+            />
+            <TextField
+              select
+              name="gender"
+              value={formData.gender}
+              onChange={handleGenderChange}
+              label="Gender"
+              fullWidth
+              required
+              margin="normal"
+            >
+              <MenuItem value="" disabled>
+                Choose your gender
+              </MenuItem>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </TextField>
+            <TextField
+              type="number"
+              name="mobileNumber"
+              inputProps={{ min: "0" }}
+              value={formData.mobileNumber}
+              onChange={handleInputChange}
+              label="Mobile Number"
+              placeholder="Enter Your Mobile Number"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="text"
+              name="emergencyContact.fullname"
+              value={formData.emergencyContact.fullname}
+              onChange={handleEmergencyContactChange}
+              label="Emergency Contact Full Name"
+              placeholder="Full Name"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="number"
+              name="emergencyContact.mobileNumber"
+              value={formData.emergencyContact.mobileNumber}
+              onChange={handleEmergencyContactChange}
+              label="Emergency Contact Mobile Number"
+              placeholder="Mobile Number"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <TextField
+              type="text"
+              name="emergencyContact.relationToPatient"
+              value={formData.emergencyContact.relationToPatient}
+              onChange={handleEmergencyContactChange}
+              label="Emergency Contact Relation to Patient"
+              placeholder="Relation to Patient"
+              fullWidth
+              required
+              margin="normal"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 20, width: "50%" }}
+            >
+              Register
+            </Button>
+          </form>
+          <Typography variant="body2" color="error" style={{ marginTop: 10 }}>
+            {error}
+          </Typography>
+        </CardContent>
+      </Card>
     </div>
   );
 };

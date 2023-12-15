@@ -51,7 +51,7 @@ interface HealthPackageDetailsProps {
   amountToPay: number;
   discounts: {
     gainedDoctorSessionDiscount: number;
-    gainedPharamcyMedicinesDiscount: number;
+    gainedPharmacyMedicinesDiscount: number;
     gainedFamilyMembersDiscount: number;
   };
   packageDurationInYears: number;
@@ -113,7 +113,7 @@ const HealthPackageDetails: React.FC<HealthPackageDetailsProps> = ({
                       primary={
                         <DiscountTypography variant="body1">
                           <DiscountIcon />
-                          Pharmacy Medicines Discount: {discounts.gainedPharamcyMedicinesDiscount * 100}%
+                          Pharmacy Medicines Discount: {discounts.gainedPharmacyMedicinesDiscount * 100}%
                         </DiscountTypography>
                       }
                     />

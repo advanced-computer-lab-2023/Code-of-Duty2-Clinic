@@ -26,6 +26,19 @@ const ExistingWalletComponent: React.FC<ExistingWalletComponentProps> = ({
     validatePinMutation.mutate(pinCodeDigits?.concat().join(""));
   };
 
+  const CustomBackdrop = () => (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
+      }}
+    />
+  );
+
   if (getWalletDetailsQuery.isLoading) return <></>;
   const currentPageLocation = useLocation().pathname;
   return (
@@ -36,9 +49,15 @@ const ExistingWalletComponent: React.FC<ExistingWalletComponentProps> = ({
             currentPageLocation === doctorWalletRoute.path) &&
           (getWalletDetailsQuery.isError || validatePinMutation.isError)
         }
-        sx={{ backgroundColor: "white" }}
+        sx={{
+          backgroundColor: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        BackdropComponent={CustomBackdrop}
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} aria-label="Pin Code Form">
           <Typography variant="h6">Enter Wallet Pin</Typography>
           <WalletPasswordInput
             pinCodeDigits={pinCodeDigits}
@@ -49,7 +68,15 @@ const ExistingWalletComponent: React.FC<ExistingWalletComponentProps> = ({
               {getErrorMessage(validatePinMutation.error)}
             </Typography>
           )}
-          <Button type="submit">Submit</Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ marginTop: 2 }}
+            disabled={pinCodeDigits.some((digit) => digit === "")}
+          >
+            Submit
+          </Button>
         </form>
       </Modal>
       {getWalletDetailsQuery.isSuccess && (

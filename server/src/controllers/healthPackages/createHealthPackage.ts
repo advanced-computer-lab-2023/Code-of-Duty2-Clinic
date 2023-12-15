@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 const  HealthPackageAttributes = ['name','amountToPay','discounts','packageDurationInYears']
-const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
+const  discountAttributes = ['gainedDoctorSessionDiscount','gainedPharmacyMedicinesDiscount','gainedFamilyMembersDiscount']
 import checkIfIncludes from '../../utils/attributeExistanceChecker'
 import { StatusCodes } from "http-status-codes";
 import { createHealthPackage } from "../../services/health-packages";

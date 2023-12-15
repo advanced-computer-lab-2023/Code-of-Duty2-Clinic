@@ -12,7 +12,9 @@ import SubscribedPackageCard from "../../../components/healthPackageStatusCard";
 import { config } from "../../../configuration";
 
 const YourPage: React.FC = () => {
-  const [subscribedHealthPackage, setSubscribedHealthPackage] = useState<any | null>(null);
+  const [subscribedHealthPackage, setSubscribedHealthPackage] = useState<
+    any | null
+  >(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

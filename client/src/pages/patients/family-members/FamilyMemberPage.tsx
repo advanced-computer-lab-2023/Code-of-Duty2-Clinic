@@ -233,11 +233,11 @@ const FamilyMemberPage: React.FC = () => {
                     <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
                     {type === "r"
                       ? familyMemberData.subscribedHealthPackage?.healthPackage
-                          ?.discounts.gainedPharamcyMedicinesDiscount *
+                          ?.discounts.gainedPharmacyMedicinesDiscount *
                           100 +
                         "%"
                       : familyMemberData.healthPackage.discounts
-                          .gainedPharamcyMedicinesDiscount *
+                          .gainedPharmacyMedicinesDiscount *
                           100 +
                         "%"}
                   </Typography>

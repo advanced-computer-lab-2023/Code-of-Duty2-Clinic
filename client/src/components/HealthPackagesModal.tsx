@@ -25,7 +25,7 @@ interface IHealthPackage {
   amountToPay: number;
   discounts: {
     gainedDoctorSessionDiscount: number;
-    gainedPharamcyMedicinesDiscount: number;
+    gainedPharmacyMedicinesDiscount: number;
     gainedFamilyMembersDiscount: number;
   };
   packageDurationInYears: number;
@@ -54,8 +54,8 @@ const HealthPackagesModal: React.FC<HealthPackagesModalProps> = ({
       discounts: {
         gainedDoctorSessionDiscount:
           healthPackage.discounts.gainedDoctorSessionDiscount,
-        gainedPharamcyMedicinesDiscount:
-          healthPackage.discounts.gainedPharamcyMedicinesDiscount,
+        gainedPharmacyMedicinesDiscount:
+          healthPackage.discounts.gainedPharmacyMedicinesDiscount,
         gainedFamilyMembersDiscount:
           healthPackage.discounts.gainedFamilyMembersDiscount,
       },
@@ -74,8 +74,8 @@ const HealthPackagesModal: React.FC<HealthPackagesModalProps> = ({
       discounts: {
         gainedDoctorSessionDiscount:
           healthPackage.discounts.gainedDoctorSessionDiscount,
-        gainedPharamcyMedicinesDiscount:
-          healthPackage.discounts.gainedPharamcyMedicinesDiscount,
+        gainedPharmacyMedicinesDiscount:
+          healthPackage.discounts.gainedPharmacyMedicinesDiscount,
         gainedFamilyMembersDiscount:
           healthPackage.discounts.gainedFamilyMembersDiscount,
       },
@@ -164,11 +164,11 @@ const HealthPackagesModal: React.FC<HealthPackagesModalProps> = ({
               type="number"
               size="small"
               onChange={(ev) =>
-                (healthPackage.discounts.gainedPharamcyMedicinesDiscount =
+                (healthPackage.discounts.gainedPharmacyMedicinesDiscount =
                   Number(ev.target.value) / 100)
               }
               defaultValue={
-                healthPackage?.discounts.gainedPharamcyMedicinesDiscount * 100
+                healthPackage?.discounts.gainedPharmacyMedicinesDiscount * 100
               }
             />
 

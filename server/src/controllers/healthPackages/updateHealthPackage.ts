@@ -4,7 +4,7 @@ import { Request,Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 const  HEALTH_PACKAGE_ATTRIBUTES = ['name','amountToPay','discounts','packageDurationInYears']
-const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharamcyMedicinesDiscount','gainedFamilyMembersDiscount']
+const  DISCOUNT_ATTRIBUTES = ['gainedDoctorSessionDiscount','gainedPharmacyMedicinesDiscount','gainedFamilyMembersDiscount']
 
 
 //helps checking for attributes existance 
