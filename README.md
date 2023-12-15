@@ -65,6 +65,7 @@ Jira was used as our main issue tracking and project management tool for creatin
 
 ![Jira](docs/screenshots/jira/jira1.png)
 ![Jira](docs/screenshots/jira/jira2.png)
+![Jira](docs/screenshots/jira/jira3.png)
 
 ## Screenshots
 
