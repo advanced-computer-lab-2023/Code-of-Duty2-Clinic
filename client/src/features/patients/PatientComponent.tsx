@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardMedia, Grid, Typography, styled } from "@mui/material";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import IPatientInfo from "../../interfaces/PatientInfo";
+import UserData from "../../types/UserData";
 
 const PatientItem = styled(Card)({
    display: "flex",
@@ -28,43 +28,47 @@ const RedirectButton = styled(Button)({
    },
 }) as typeof Button;
 type PatientComponentProps = {
-   patient: IPatientInfo;
-   conversationId: string;
+  patient: UserData;
 };
 
-const PatientComponent: FC<PatientComponentProps> = ({ patient, conversationId }) => {
-   const [firstName, lastName] = patient.name.split(" ");
-   const getInitials = () => {
-      return `${firstName.charAt(0)}${!!lastName?.length ? lastName.charAt(0) : ""}`;
-   };
-   return (
-      <Grid item xs={12} sm={6} md={4} lg={3} key={patient.id}>
-         <PatientItem
-            component={Link}
-            to={`/doctor/patient/${patient.id}`}
-            sx={{
-              width: '200px',
-              height: '200px',
-              borderRadius: '10%',
-              background: 'linear-gradient(90deg, rgba(0,241,96,1) 0%, rgba(2,188,11,1) 100%)',
-            }}
-         >
-            <PatientImage image={patient.imageUrl || ""} content={getInitials()} />
-            <CardContent>
-               <PatientInfo variant="body1">Name: {patient.name}</PatientInfo>
-               <PatientInfo variant="subtitle2">Gender: {patient.gender}</PatientInfo>
-               <RedirectButton
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to={`/doctor/chats?conversationId=${conversationId}`}
-               >
-                  Chat With Patient
-               </RedirectButton>
-            </CardContent>
-         </PatientItem>
-      </Grid>
-   );
+const PatientComponent: FC<PatientComponentProps> = ({ patient }) => {
+  const [firstName, lastName] = patient.name.split(" ");
+  const getInitials = () => {
+    return `${firstName.charAt(0)}${
+      !!lastName?.length ? lastName.charAt(0) : ""
+    }`;
+  };
+
+  return (
+    <Grid item xs={12} sm={6} md={4} lg={3} key={patient.id}>
+      <PatientItem
+        component={Link}
+        to={`/doctor/patient/${patient.id}${
+          patient.supervisingPatientId
+            ? `?spId=${patient.supervisingPatientId}`
+            : ""
+        }`}
+      >
+        <PatientImage image={patient.photoUrl || ""} content={getInitials()} />
+        <CardContent>
+          <PatientInfo variant="body1">Name: {patient.name}</PatientInfo>
+          <PatientInfo variant="subtitle2">
+            Gender: {patient.gender}
+          </PatientInfo>
+          {!patient.supervisingPatientId && (
+            <RedirectButton
+              variant="contained"
+              color="secondary"
+              component={Link}
+              to={`/doctor/chat?id=${patient.id}`}
+            >
+              Chat With Patient
+            </RedirectButton>
+          )}
+        </CardContent>
+      </PatientItem>
+    </Grid>
+  );
 };
 
 export default PatientComponent;

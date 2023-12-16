@@ -4,9 +4,6 @@ import { config } from "../../configuration";
 import axios from "axios";
 import PatientComponent from "../../features/patients/PatientComponent";
 import IPatientInfo from "../../interfaces/PatientInfo";
-import Talk from "talkjs";
-import { useSession } from "@talkjs/react";
-import { createConversation } from "../../utils/createConversation";
 
 const ViewDoctorPatients = () => {
   const [filteredPatients, setFilteredPatients] = useState<
@@ -15,29 +12,6 @@ const ViewDoctorPatients = () => {
 
   const [patientName, setPatientName] = useState("");
   const [error, setError] = useState("");
-
-  const [conversationIds, setConversationIds] = useState<string[]>([]);
-  const session = useSession()!;
-
-  const createConversationsAndGetTheirIds = () => {
-    if (!filteredPatients) return [];
-    return filteredPatients.map(({ id, name, imageUrl }) => {
-      const patientData = {
-        id,
-        name,
-        role: "PATIENT",
-        photoUrl: imageUrl,
-      };
-
-      const patient = new Talk.User(patientData);
-
-      const conversationId = Talk.oneOnOneId(session.me, patient);
-
-      createConversation(session, conversationId, patient);
-
-      return conversationId;
-    });
-  };
 
   const handleChangePatientName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -58,13 +32,6 @@ const ViewDoctorPatients = () => {
   useEffect(() => {
     getAllPatients();
   }, []);
-
-  useEffect(() => {
-    if (filteredPatients && session) {
-      const userConversations = createConversationsAndGetTheirIds();
-      setConversationIds(userConversations);
-    }
-  }, [filteredPatients, session]);
 
   const handleFilterChange = async () => {
     try {
@@ -107,12 +74,18 @@ const ViewDoctorPatients = () => {
         {filteredPatients
           ? filteredPatients.length === 0
             ? "No Patients Found"
-            : filteredPatients.map((patient, index) => (
-                <PatientComponent
-                  patient={patient}
-                  conversationId={conversationIds[index]}
-                />
-              ))
+            : filteredPatients.map((patientData) => {
+                const patient = {
+                  id: patientData.id,
+                  name: patientData.name,
+                  email: patientData.email,
+                  gender: patientData.gender as "male" | "female",
+                  role: "PATIENT" as "PATIENT",
+                  photoUrl: patientData.imageUrl,
+                  supervisingPatientId: patientData.supervisingPatientId,
+                };
+                return <PatientComponent patient={patient} />;
+              })
           : "Loading ...."}
       </Grid>
       <p style={{ color: "red" }}>{error}</p>

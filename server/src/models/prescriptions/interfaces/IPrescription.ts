@@ -13,3 +13,5 @@ export interface IPrescription {
       quantity: number;
    }>;
 }
+
+export default IPrescription;

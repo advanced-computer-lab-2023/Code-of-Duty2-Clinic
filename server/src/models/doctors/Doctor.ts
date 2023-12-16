@@ -2,8 +2,10 @@ import mongoose, { Document, Schema } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import { IDoctor } from "./interfaces/IDoctor";
 import bcrypt from "bcrypt";
-import { DotctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
+import { DoctorWalletSchema as DoctorWalletSchema } from "../wallets/Wallet";
 import PasswordResetSchema from "../users/PasswordReset";
+import NotificationSchema from "../notifications/Notification";
+import WeekDay from "../../types/WeekDay";
 
 export interface IDoctorModel extends IDoctor, Document {}
 
@@ -25,9 +27,40 @@ export const DoctorSchema = new Schema<IDoctorModel>(
     affiliation: { type: String, required: true },
     educationalBackground: { type: String, required: true },
     speciality: { type: String, required: true },
-    availableSlots: {
-      type: [{ startTime: Date, endTime: Date }],
-      default: [],
+    workingSchedule: {
+      type: {
+        daysOff: {
+          type: [String],
+          required: true,
+          enum: [
+            "sunday",
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+          ],
+        },
+        dailyWorkingHours: {
+          type: [
+            {
+              startTime: { type: String, required: true },
+              endTime: { type: String, required: true },
+            },
+          ],
+          required: true,
+        },
+      },
+      default: {
+        daysOff: ["friday", "saturday"],
+        dailyWorkingHours: [
+          {
+            startTime: "09:00:00.000Z",
+            endTime: "18:00:00.000Z",
+          },
+        ],
+      },
       select: false,
     },
     imageUrl: String,
@@ -50,6 +83,11 @@ export const DoctorSchema = new Schema<IDoctorModel>(
     passwordReset: {
       type: PasswordResetSchema,
       select: false,
+    },
+    receivedNotifications: {
+      type: Array<typeof NotificationSchema>,
+      select: false,
+      required: false,
     },
   },
   { timestamps: true }

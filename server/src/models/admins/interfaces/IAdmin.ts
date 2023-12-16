@@ -1,4 +1,5 @@
 import UserRole from "../../../types/UserRole";
+import { INotification } from "../../notifications/interfaces/INotification";
 
 export interface IAdmin {
   role?: UserRole.ADMIN;
@@ -8,6 +9,7 @@ export interface IAdmin {
     otp: string;
     expiryDate: Date;
   };
+  receivedNotifications?: INotification[];
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
   verifyPassword?: (password: string) => Promise<boolean>;
 }

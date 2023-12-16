@@ -7,10 +7,7 @@ import Navbar from "../components/navigation/Navbar";
 import UserPanel from "../components/navigation/UserPanel";
 import Sidebar from "../components/navigation/Sidebar";
 import Footer from "../components/navigation/Footer";
-import {
-  patientSignUpRoute,
-  doctorSignUpRoute,
-} from "../data/routes/guestRoutes";
+import { patientSignUpRoute, doctorSignUpRoute } from "../data/routes/guestRoutes";
 import useFirstPath from "../hooks/useFirstPath";
 import getRequiredSidebarItems from "../utils/getRequiredSidebarItems";
 import { loginRoute, doctorLoginRoute } from "../data/routes/loginRoutes";
@@ -39,8 +36,6 @@ const Layout: React.FC<Props> = ({ children }) => {
   const firstPath = useFirstPath();
 
   const currentUser = useContext(UserContext).user;
-
-  console.log("currentUser: ", currentUser);
 
   const createUser = useCallback(() => {
     return new Talk.User(currentUser as Talk.UserOptions);
@@ -99,7 +94,7 @@ const Layout: React.FC<Props> = ({ children }) => {
     return (
       <>
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </>
     );
   }
@@ -115,7 +110,7 @@ const MainUserLayout: React.FC<MainUserLayoutProps> = ({
   sidebarItems,
   sidebarWidth,
   marginLeft = "0",
-  children,
+  children
 }) => {
   return (
     <Box display="flex">
@@ -124,12 +119,12 @@ const MainUserLayout: React.FC<MainUserLayoutProps> = ({
         sx={{
           marginLeft,
           transition: "margin-left 0.2s ease-in-out",
-          flexGrow: 1,
+          flexGrow: 1
         }}
       >
         <UserPanel sidebarItems={sidebarItems} />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Box>
   );

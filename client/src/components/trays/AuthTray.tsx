@@ -10,10 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { ButtonColor } from "../../types";
 import { aboutRoute, contactUsRoute } from "../../data/routes/guestRoutes";
 import { NavLink } from "react-router-dom";
-import {
-  loginRoute,
-  doctorLoginRoute,
-} from "../../data/routes/loginRoutes";
+import { loginRoute, doctorLoginRoute } from "../../data/routes/loginRoutes";
 
 const AuthTray = () => {
   const theme = useTheme();
@@ -25,14 +22,14 @@ const AuthTray = () => {
   };
 
   const buttons: { color: ButtonColor; children: string; href: string }[] = [
-    { color: "inherit", children: "About", href: aboutRoute.path },
-    { color: "inherit", children: "Contact Us", href: contactUsRoute.path },
+    // { color: "inherit", children: "About", href: aboutRoute.path },
+    // { color: "inherit", children: "Contact Us", href: contactUsRoute.path },
     {
       color: "inherit",
       children: "For Doctors",
-      href: doctorLoginRoute.path,
+      href: doctorLoginRoute.path
     },
-    { color: "inherit", children: "Login", href: loginRoute.path },
+    { color: "inherit", children: "Login", href: loginRoute.path }
   ];
 
   const drawerContent = (

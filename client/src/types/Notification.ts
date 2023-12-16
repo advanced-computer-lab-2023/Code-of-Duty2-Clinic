@@ -1,8 +1,7 @@
-
 export interface Notification {
-    email: string;
-    title: string;
-    description: string;
-    dateTime: Date;
-    methods: { method: 'SMS' | 'email'; }[];
+  _id: string;
+  email: string;
+  subject: string;
+  description: string;
+  time: Date;
 }

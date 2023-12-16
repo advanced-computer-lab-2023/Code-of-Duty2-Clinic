@@ -1,11 +1,5 @@
 import axios, { HttpStatusCode } from "axios";
-import {
-  createContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useContext,
-} from "react";
+import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 
 import UserRole from "../types/enums/UserRole";
 import { config } from "../configuration";
@@ -16,22 +10,13 @@ import { patientDashboardRoute } from "../data/routes/patientRoutes";
 import { welcomeRoute } from "../data/routes/guestRoutes";
 import { VerificationStatus } from "../types/enums/VerificationStatus";
 import { UserContext } from "./UserContext";
-
-interface IAuthState {
-  isAuthenticated: boolean;
-  accessToken: string | null;
-  role: UserRole;
-  verificationStatus?: VerificationStatus;
-}
+import { IAuthState } from "../interfaces/IAuthState";
+import socket, { establishSocketConnection } from "../services/Socket";
 
 interface IAuthContext {
   authState: IAuthState;
   updateVerificationStatus: (verificationStatus: VerificationStatus) => void;
-  login: (
-    accessToken: string,
-    role: UserRole,
-    verificationStatus?: VerificationStatus
-  ) => void;
+  login: (accessToken: string, role: UserRole, verificationStatus?: VerificationStatus) => void;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<string>;
 }
@@ -40,12 +25,12 @@ const AuthContext = createContext<IAuthContext>({
   authState: {
     isAuthenticated: false,
     accessToken: null,
-    role: UserRole.GUEST,
+    role: UserRole.GUEST
   },
   updateVerificationStatus: () => {},
   login: () => {},
   logout: () => Promise.resolve(),
-  refreshAuth: () => Promise.resolve(""),
+  refreshAuth: () => Promise.resolve("")
 });
 
 interface AuthProviderProps {
@@ -56,9 +41,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authState, setAuthState] = useState<IAuthState>({
     isAuthenticated: false,
     accessToken: null,
-    role: UserRole.GUEST,
+    role: UserRole.GUEST
   });
   const navigate = useNavigate();
+
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
@@ -82,10 +69,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (isRefreshTokenExpired(error, originalRequest)) {
               await logout();
             } else {
-              return await resendRequestWithNewAccessToken(
-                refreshAuth,
-                originalRequest
-              );
+              return await resendRequestWithNewAccessToken(refreshAuth, originalRequest);
             }
             break;
 
@@ -123,23 +107,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [authState]);
 
-  const login = (
-    accessToken: string,
-    role: UserRole,
-    verificationStatus?: VerificationStatus
-  ) => {
+  const login = (accessToken: string, role: UserRole, verificationStatus?: VerificationStatus) => {
     if (role === UserRole.UNVERIFIED_DOCTOR && verificationStatus) {
       setAuthState({
         isAuthenticated: true,
         accessToken,
         role,
-        verificationStatus,
+        verificationStatus
       });
     } else {
       setAuthState({
         isAuthenticated: true,
         accessToken,
-        role,
+        role
       });
     }
     setAuthorizationHeader(accessToken);
@@ -148,20 +128,21 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthState({
       isAuthenticated: false,
       accessToken: null,
-      role: UserRole.GUEST,
+      role: UserRole.GUEST
     });
 
     try {
-      await axios.post(
-        `${config.serverUri}/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(`${config.serverUri}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
       console.error("Error during logout", error);
     }
     clearAuthorizationHeader();
-    useContext(UserContext).setUser(null);
+
+    setUser(null);
+
+    if (socket.connected) {
+      socket.disconnect();
+    }
   };
 
   const refreshAuth = async () => {
@@ -171,11 +152,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         {},
         { withCredentials: true }
       );
-      login(
-        response.data.accessToken,
-        response.data.role,
-        response.data.verificationStatus
-      );
+      login(response.data.accessToken, response.data.role, response.data.verificationStatus);
+
+      establishSocketConnection(response.data.accessToken, response.data.id);
+
       return response.data.accessToken;
     } catch (error) {
       logout();
@@ -185,7 +165,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updateVerificationStatus = (verificationStatus: VerificationStatus) => {
     setAuthState({
       ...authState,
-      verificationStatus,
+      verificationStatus
     });
   };
 
@@ -196,7 +176,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         updateVerificationStatus,
         login,
         logout,
-        refreshAuth,
+        refreshAuth
       }}
     >
       {children}

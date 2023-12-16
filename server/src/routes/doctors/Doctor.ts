@@ -1,16 +1,16 @@
 import express from "express";
 import { updateDoctor } from "../../controllers/doctors/updateDoctor";
 import { getDoctor } from "../../controllers/doctors/getDoctor";
-import { getAppointmentsWithAllPatients } from "../../controllers/doctors/getAllAppointments";
+import { getAppointmentsWithAllPatients } from "../../controllers/appointments/doctors/getAllAppointments";
 import { getDoctorPatientsHandler } from "../../controllers/doctors/getDoctorPatients";
-import { getAppointmentDetails } from "../../controllers/doctors/getAppointmentDetails";
+import { getAppointmentDetails } from "../../controllers/appointments/doctors/getAppointmentDetails";
 import { getDoctorById } from "../../controllers/patients/getDoctorById";
 import getRegisteredPatientDetails from "../../controllers/doctors/getRegisteredPatientDetails";
-import { addDoctorAvailableSlots } from "../../controllers/doctors/addAvailableTimeSlots";
+import { addDoctorSchedule } from "../../controllers/doctors/addSchedule";
 import { updateDoctorPassword } from "../../controllers/doctors/doctorUpdatePassword";
 import { scheduleFollowUpAppointmentHandler } from "../../controllers/appointments/doctors";
-import { viewAvailableTimeSlots } from "../../controllers/doctors/getAvailableTimeSlots";
-import { deleteDoctorAvailableSlots } from "../../controllers/doctors/removeAvailableTimeSlot";
+import { getDoctorSchedule } from "../../controllers/doctors/getSchedule";
+import { deleteDoctorWorkingSlot } from "../../controllers/doctors/removeDoctorWorkingSlot";
 import UserRole from "../../types/UserRole";
 import { authorizeUser } from "../../middlewares/authorization";
 import { authenticateUser } from "../../middlewares/authentication";
@@ -34,6 +34,8 @@ import { addMedicineToPatientPrescriptionHandler } from "../../controllers/docto
 import { getPatientPrescriptionsHandler } from "../../controllers/doctors/getPatientPrescriptionsHandler";
 import { submitPrescriptionHandler } from "../../controllers/doctors/submitPrescription";
 
+import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/notifications";
+
 const doctorRouter = express.Router();
 
 doctorRouter.use(authenticateUser);
@@ -50,15 +52,17 @@ doctorRouter
 
    .get("", getDoctorById)
 
-   .post("/appointments/add-time-slots", addDoctorAvailableSlots)
+  .get("/schedule", getDoctorSchedule)
+  .post("/schedule", addDoctorSchedule)
 
    .patch("/change-password", updateDoctorPassword)
 
    .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
 
-   .get("/available-time-slots", viewAvailableTimeSlots)
 
-   .delete("/available-time-slots/:startTime", deleteDoctorAvailableSlots)
+  .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
+
+  .delete("/available-time-slots/:startTime", deleteDoctorWorkingSlot)
 
    .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
 
@@ -76,9 +80,9 @@ doctorRouter
 
    .get("/wallets", authenticateWalletUser, getDoctorWalletHandler)
 
-   .patch("/wallet-transactions", authenticateWalletUser, performAWalletTransactionHandler)
+  .patch("/wallet-transactions", authenticateWalletUser, performAWalletTransactionHandler)
 
-   .patch("/wallet-recharge", authenticateWalletUser, rechargeDoctorWalletHandler)
+  .patch("/wallet-recharge", authenticateWalletUser, rechargeDoctorWalletHandler)
 
    .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
@@ -92,6 +96,8 @@ doctorRouter
 
    .put("/prescriptions/:prescriptionId/", addMedicineToPatientPrescriptionHandler)
 
-   .put("/prescriptions/:prescriptionId/submit", submitPrescriptionHandler);
+   .put("/prescriptions/:prescriptionId/submit", submitPrescriptionHandler)
+
+  .get("/notifications", getAllNotificationsForDoctorHandler);
 
 export default doctorRouter;

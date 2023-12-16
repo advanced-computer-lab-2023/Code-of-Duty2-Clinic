@@ -3,7 +3,7 @@ export interface HealthPackage {
   amountToPay: number;
   discounts: {
     gainedDoctorSessionDiscount: number;
-    gainedPharamcyMedicinesDiscount: number;
+    gainedPharmacyMedicinesDiscount: number;
     gainedFamilyMembersDiscount: number;
   };
   packageDurationInYears: number;

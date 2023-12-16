@@ -6,6 +6,7 @@ import { IEmergencyContact } from "./IEmergencyContact";
 import UserRole from "../../../types/UserRole";
 import { IWallet } from "../../wallets/interfaces/IWallet";
 import { IPasswordResetInfo } from "../../users/interfaces/IPasswordReset";
+import { INotification } from "../../notifications/interfaces/INotification";
 
 export interface IPatient extends IUserBaseInfo {
   role?: UserRole.PATIENT;
@@ -18,6 +19,7 @@ export interface IPatient extends IUserBaseInfo {
   registeredFamilyMemberRequests?: IRegisteredFamilyMember[];
   wallet?: IWallet;
   passwordReset?: IPasswordResetInfo;
+  receivedNotifications?: INotification[];
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
   verifyWalletPinCode?: (pinCode: string) => Promise<boolean>;
   verifyPassword?: (password: string) => Promise<boolean>;

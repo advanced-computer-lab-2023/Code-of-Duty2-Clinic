@@ -1,8 +1,7 @@
 import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { findDoctorById, updatePasswordById } from "../../services/doctors";
+import { findDoctorById } from "../../services/doctors";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
-import bcrypt from "bcrypt";
 
 export const updateDoctorPassword = async (
   req: AuthorizedRequest,
