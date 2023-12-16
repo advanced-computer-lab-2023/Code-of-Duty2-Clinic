@@ -894,4 +894,4 @@ See `CONTRIBUTING.md` for ways to get started. Please adhere to the `Code of Con
 
 ## License
 
-This software currently has no license in place.
+This project is licensed under the terms of the Apache 2.0 license. For more details, see the LICENSE file in the root of this repository.
