@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Box, Button, IconButton } from "@mui/material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import "typeface-montserrat";
 
 import { AuthContext } from "../../contexts/AuthContext";
@@ -11,7 +12,6 @@ import { welcomeRoute } from "../../data/routes/guestRoutes";
 import AuthTray from "../trays/AuthTray";
 import el7a2niLogo from "../../assets/el7a2ni_logo.png";
 import UserRole from "../../types/enums/UserRole";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const Navbar = () => {
   const { authState, logout } = useContext(AuthContext);
