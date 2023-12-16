@@ -1,106 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import './userList.css'
-import axios from 'axios';
-import { config } from '../../configuration';
+import React, { useState } from 'react';
+import { Box, Button, TextField } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
+  _id: string;
   username: string;
   name: string;
-  userType: string; // You can use this property to distinguish between Patients, Doctors, and Admins
+  createdAt: string;
 }
 
-const UserList: React.FC = () => {
-  const[deletedAlert,setdeletedAlert] = useState(false);
-  const [patients, setPatients] = useState<User[]>([]);
-  const [doctors, setDoctors] = useState<User[]>([]);
-  const [admins, setAdmins] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+interface UserListProps {
+  title: string;
+  users: User[];
+  onRowClick?: (user: User) => void;
+}
 
-  useEffect(() => {
-    // Fetch patients
-    fetchUsersByType('Patient').then((data) => setPatients(data));
 
-    // Fetch doctors
-    fetchUsersByType('Doctor').then((data) => setDoctors(data));
+const UserList: React.FC<UserListProps> = ({ title, users, onRowClick }) => {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
-    // Fetch admins
-    fetchUsersByType('Admin').then((data) => setAdmins(data));
-  }, []);
-
-  const fetchUsersByType = async (userType: string): Promise<User[]> => {
-    try {
-      const response = await axios.get(`${config.serverUri}/admins/users/${userType}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error:', error);
-      return [];
+  const handleRowClick = (user: User) => {
+    if (onRowClick) {
+      onRowClick(user);
     }
   };
 
-  const handleRemoveUser = async (username: string, Type: string) => {
-    const data = {
-      username: username,
-      Type: Type,
-    };
-    try {
-     await axios.delete(`${config.serverUri}/admins/users`,{data})   
-      switch(Type){
-        case 'Admin': setAdmins(previous => previous.filter(user=> user.username != username)); break;
-        case 'Doctor': setDoctors(previous => previous.filter(user=> user.username != username)); break;
-        case 'Patient': setPatients(previous => previous.filter(user=> user.username != username)); break;
-        default:console.log('invalidType');
-      } 
-    } catch (error) {
-      
-    } 
-  };
-  
+  const filteredUsers = users.filter(
+    (user) =>
+      user.username.toLowerCase().includes(search.toLowerCase()) ||
+      user.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="user-container">
-    <h2 className="user-heading">User List</h2>
-
-    <h3 className="user-subheading">Patients</h3>
-    <ul className="user-list">
-      {patients.map((patient) => (
-        <li key={patient.username} className="user-item">
-          {patient.name}
-          <button className="user-button" onClick={() => setSelectedUser(patient)}>View</button>
-          <button className="user-button" onClick={() => handleRemoveUser(patient.username, 'Patient')}>Remove</button>
-        </li>
-      ))}
-    </ul>
-
-    <h3 className="user-subheading">Doctors</h3>
-    <ul className="user-list">
-      {doctors.map((doctor) => (
-        <li key={doctor.username} className="user-item">
-          {doctor.name}
-          <button className="user-button" onClick={() => setSelectedUser(doctor)}>View</button>
-          <button className="user-button" onClick={() => handleRemoveUser(doctor.username, 'Doctor')}>Remove</button>
-        </li>
-      ))}
-    </ul>
-
-    <h3 className="user-subheading">Admins</h3>
-    <ul className="user-list">
-      {admins.map((admin) => (
-        <li key={admin.username} className="user-item">
-          {admin.name}
-          <button className="user-button" onClick={() => setSelectedUser(admin)}>View</button>
-          <button className="user-button" onClick={() => handleRemoveUser(admin.username, 'Admin')}>Remove</button>
-        </li>
-      ))}
-    </ul>
-
-    {selectedUser && (
-      <div className="selected-user">
-        <h3 className="selected-user-heading">Selected User</h3>
-        <p className="selected-user-details">Username: {selectedUser.username}</p>
-      </div>
-    )}
-    {deletedAlert&& <p>Username ${selectedUser?.username} has been removed</p>}
-  </div>
+    <Box>
+      <Typography variant="h4" align="center" gutterBottom>
+        {title}
+            </Typography>
+            <Box display="flex" justifyContent="center" margin={'2%'}>
+        <TextField
+          label="Search by name or username"
+          variant="outlined"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          sx={{width: '50%'}}
+        />
+</Box>
+    <TableContainer sx={{width: '90%', margin: '5%'}}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Username</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Created At</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filteredUsers.map((user) => (
+            <TableRow
+              key={user._id}
+              onClick={() => handleRowClick(user)}
+              onMouseEnter={() => setHoveredRow(user._id)}
+              onMouseLeave={() => setHoveredRow(null)}
+              style={{
+                cursor: 'pointer',
+                backgroundColor: hoveredRow === user._id ? 'lightgrey' : undefined,
+              }}
+            >
+              <TableCell>{user.username}</TableCell>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>         
+              </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <Box display="flex" justifyContent="center">
+          <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate("/admin/dashboard")}
+        sx={{ margin: 2, marginTop: -8 }}
+      >
+        Back to Home
+      </Button>
+</Box>
+    </Box>
   );
 };
 

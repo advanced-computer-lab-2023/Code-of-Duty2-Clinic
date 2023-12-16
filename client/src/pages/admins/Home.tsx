@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Grid, Card, CardContent, Button, Divider } from '@mui/material';
 import { PieChart } from '@mui/x-charts';
 import useGetAdminUsersByType from '../../hooks/useGetAdminUsersByType';
+import axios from 'axios';
+import { config } from '../../configuration';
+
 
 const Home: React.FC = () => {
 
@@ -33,13 +36,13 @@ const Home: React.FC = () => {
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
             <Grid container spacing={2} justifyContent={'center'}>
             <UserCountInfoCard title="Patients" count={totalPatients} onClick={ () => {
-                navigate('/admin/users');
+                navigate('/admin/users/patients');
             }} />
             <UserCountInfoCard title="Doctors" count={totalDoctors} onClick={ () => {
-                navigate('/admin/users');
+                navigate('/admin/users/doctors');
             }}/>
             <UserCountInfoCard title="Admins" count={totalAdmins} onClick={ () => {
-                navigate('/admin/users');
+                navigate('/admin/users/admins');
             }}/>
             </Grid>
         </Box>
@@ -101,5 +104,17 @@ const UserCountInfoCard: React.FC<UserCountInfoCardProps> = ({ title, count, onC
         </Card>
     );
 };
+export const handleRemoveUser = async (username: string, type: string, navigate: ReturnType<typeof useNavigate>) => {
+    const data = {
+      username: username,
+      type: type,
+    };
+    try {
+        await axios.delete(`${config.serverUri}/admins/users`, {data})   
+        navigate("/admin/users/remove/success");
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
 export default Home;

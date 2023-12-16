@@ -38,12 +38,12 @@ export const findAllUsersByType = async (Type: string) => {
   }
 };
 
-export const removeUser = async (username: string, Type: string) => {
-  const user = await findUserByUsername(username, Type);
+export const removeUser = async (username: string, type: string) => {
+  const user = await findUserByUsername(username, type);
 
   if (!user) throw new Error("User not found");
 
-  switch (Type.toLowerCase()) {
+  switch (type.toLowerCase()) {
     case "patient":
       await deletePatientById(user._id);
       break;

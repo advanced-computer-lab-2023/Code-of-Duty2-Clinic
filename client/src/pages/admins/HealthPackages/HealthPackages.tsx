@@ -15,6 +15,8 @@ import Button from "@mui/material/Button";
 import HealthPackagesModal from "./components/HealthPackagesModal";
 import { config } from "../../../configuration";
 import DeletePackageModal from "./components/DeletePackagesModal";
+import { Box } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 interface IHealthPackage {
   _id?: string;
@@ -40,6 +42,7 @@ const HealthPackageResetter = {
   packageDurationInYears: 0,
 };
 const HealthPackagesPage: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedHealthPackage, setSelectedHealthPackage] =
     useState<IHealthPackage>(HealthPackageResetter);
   const [selectedHealthPackageIndex, setSelectedHealthPackageIndex] =
@@ -203,6 +206,18 @@ const HealthPackagesPage: React.FC = () => {
           id={selectedHealthPackage._id}
         />
       )}
+
+<Box display="flex" justifyContent="center">
+          <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate("/admin/dashboard")}
+        sx={{ margin: 2}}
+      >
+        Back to Home
+      </Button>
+</Box>
+
     </div>
   );
 };

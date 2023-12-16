@@ -8,5 +8,5 @@ export default interface Medicine {
     description: { type: string },
     usages: { type: [string] },
     isOverTheCounter: { type: boolean },
-    isArchived: { type: boolean }
+    isArchived: { type: boolean, required: true }
 }
