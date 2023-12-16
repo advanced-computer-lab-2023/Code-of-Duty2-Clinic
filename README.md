@@ -108,13 +108,82 @@ The system has four user types: **_Guest_**, **_Patient_**, **_Doctor_** and **_
 
  <summary> Patient features </summary>
 
-- </details>
+- **Account Management:**
+
+  - Login, logout, change password, and reset forgotten password via email OTP.
+
+- **Family Management:**
+
+  - Link, view, add family members with details.
+
+- **Doctor Interaction:**
+
+  - View and interact with doctors (list, search, filter, select).
+  - View doctor details.
+
+- **Prescription Handling:**
+
+  - View, filter, and select prescriptions.
+  - Upload/remove medical documents.
+  - Pay for appointments and health packages.
+
+- **Appointment Management:**
+
+  - View, filter, and select appointments.
+  - Pay for appointments and health packages.
+
+- **Health Records:**
+
+  - View uploaded health records.
+
+- **Health Package Subscription:**
+
+  - Subscribe, view details, view status, and cancel subscriptions.
+
+- **Wallet Management:**
+
+  - View wallet balance.
+  - Receive refunds.
+
+- **Communication:**
+  - Initiate/end video calls.
+  - Engage in a chat with doctors.
+
+</details>
 
 <details>
 
  <summary> Doctors features </summary>
 
--
+- **Account Management:**
+
+  - Login, logout, change password, and reset forgotten password via email OTP.
+
+- **Profile Management:**
+
+  - Edit/update profile details.
+
+- **Patient Interaction:**
+
+  - View patient information, patient list, and search/filter patients.
+  - Select and manage patients.
+
+- **Appointment Handling:**
+
+  - View, receive notifications, reschedule, and cancel appointments.
+  - Filter and manage appointments.
+
+- **Time Slot Management:**
+
+  - Add, view, and delete available time slots.
+
+- **Health Records:**
+
+  - Access uploaded health records.
+
+- **Wallet and Prescription Management:**
+  - View wallet balance, prescriptions, and manage prescriptions.
+  - Initiate/end video calls and chat with patients.
 
 </details>
 
@@ -122,7 +191,25 @@ The system has four user types: **_Guest_**, **_Patient_**, **_Doctor_** and **_
 
  <summary> Admin features </summary>
 
--
+- **Account Management:**
+
+  - Login, logout, change password, and reset forgotten password via email OTP.
+
+- **Admin Management:**
+
+  - Add another admin with a set username and password.
+  - Remove user accounts (doctor, patient, or admin) from the system.
+
+- **Information Handling:**
+
+  - View uploaded information submitted by doctors for platform entry.
+
+- **Health Package Management:**
+
+  - Manage health packages: add, update, or delete with different price ranges (silver, gold, platinum).
+
+- **Doctor Join Requests:**
+  - Accept or reject doctor join requests to join the platform.
 
 </details>
 
