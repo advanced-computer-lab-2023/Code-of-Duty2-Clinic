@@ -1,8 +1,5 @@
 import Patient, { IPatientModel } from "../../models/patients/Patient";
-import {
-  entityEmailDoesNotExistError,
-  entityIdDoesNotExistError,
-} from "../../utils/ErrorMessages";
+import { entityEmailDoesNotExistError, entityIdDoesNotExistError } from "../../utils/ErrorMessages";
 import HealthPackage from "../../models/health_packages/HealthPackage";
 import { addDays } from "../../utils/addDays";
 import PaymentMethod from "../../types/PaymentMethod";
@@ -10,42 +7,27 @@ import { findHealthPackageDetailsAfterDiscount } from "../health-packages";
 import { performWalletTransaction } from "../payments/wallets/patients";
 import mongoose from "mongoose";
 import Appointment from "../../models/appointments/Appointment";
+import DependentFamilyMemberAppointment from "../../models/appointments/DependentFamilyMemberAppointment";
+import { findDoctorById } from "../doctors";
 
 export const findAllPatients = async () => await Patient.find();
 export const findPatientById = async (id: string, elementsToSelect?: any) => {
-  const PromisedPatient = Patient.findById(id);
-  if (!elementsToSelect)
-    return await PromisedPatient.select({ _id: 1, password: 1 });
-  return await PromisedPatient.select(elementsToSelect);
+  return await Patient.findById(id).select(elementsToSelect || { _id: 1, password: 1 });
 };
-export const findPatientByUsername = async (
-  username: string,
-  elementsToSelect?: any
-) =>
-  await Patient.findOne({ username }).select(
-    elementsToSelect || { _id: 1, password: 1 }
-  );
+export const findPatientByUsername = async (username: string, elementsToSelect?: any) =>
+  await Patient.findOne({ username }).select(elementsToSelect || { _id: 1, password: 1 });
 
-export const findPatientByEmail = async (
-  email: string,
-  elementsToSelect?: any
-) =>
-  Patient.findOne({ email }).select(
-    elementsToSelect || { _id: 1, password: 1 }
-  );
+export const findPatientByEmail = async (email: string, elementsToSelect?: any) =>
+  Patient.findOne({ email }).select(elementsToSelect || { _id: 1, password: 1 });
 
-export const deletePatientById = async (id: string) =>
-  await Patient.findByIdAndDelete(id);
+export const deletePatientById = async (id: string) => await Patient.findByIdAndDelete(id);
 
 export const createNewPatient = async (username: string, password: string) => {
   const newPatient = new Patient({ username, password });
   await newPatient.save();
 };
 
-export const updatePatientPasswordByEmail = async (
-  email: string,
-  newPassword: string
-) => {
+export const updatePatientPasswordByEmail = async (email: string, newPassword: string) => {
   const patient = await findPatientByEmail(email);
   if (!patient) {
     throw new Error(entityEmailDoesNotExistError("patient", email));
@@ -53,10 +35,7 @@ export const updatePatientPasswordByEmail = async (
   await updatePatientPassword(patient, newPassword);
 };
 
-export const updatePasswordById = async (
-  patientId: string,
-  newPassword: string
-) => {
+export const updatePasswordById = async (patientId: string, newPassword: string) => {
   const patient = await findPatientById(patientId);
   if (!patient) {
     throw new Error(entityIdDoesNotExistError("patient", patientId));
@@ -64,10 +43,7 @@ export const updatePasswordById = async (
   await updatePatientPassword(patient, newPassword);
 };
 
-export const updatePatientPassword = async (
-  patient: IPatientModel,
-  newPassword: string
-) => {
+export const updatePatientPassword = async (patient: IPatientModel, newPassword: string) => {
   patient.password = newPassword;
   await patient.save();
 };
@@ -87,14 +63,9 @@ export const subscribeToHealthPackageService = async (
   packageId: string,
   paymentMethod: PaymentMethod
 ) => {
-  const patient = await Patient.findById(paidPatientId).select(
-    "+subscribedPackage"
-  );
+  const patient = await Patient.findById(paidPatientId).select("+subscribedPackage");
   if (!patient) throw new Error("Patient not found");
-  const healthPackage = await findHealthPackageDetailsAfterDiscount(
-    paidPatientId,
-    packageId
-  );
+  const healthPackage = await findHealthPackageDetailsAfterDiscount(paidPatientId, packageId);
   if (!healthPackage) throw new Error("Health package not found");
   const today = new Date();
 
@@ -102,10 +73,10 @@ export const subscribeToHealthPackageService = async (
     await performWalletTransaction(payingPatientId, healthPackage.amountToPay);
   }
   patient.subscribedPackage = {
-    packageId: healthPackage._id!,
+    packageId: healthPackage.id,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
-    status: "subscribed",
+    status: "subscribed"
   };
 
   await patient.save();
@@ -119,22 +90,16 @@ export async function setSubscribedPackageForDependentService(
   packageId: string,
   paymentMethod: PaymentMethod
 ) {
-  const patient = await Patient.findById(patientId).select(
-    "+dependentFamilyMembers"
-  );
+  const patient = await Patient.findById(patientId).select("+dependentFamilyMembers");
 
   if (!patient) throw new Error("Patient not found");
-  const healthPackage = await findHealthPackageDetailsAfterDiscount(
-    patientId,
-    packageId
-  );
+  const healthPackage = await findHealthPackageDetailsAfterDiscount(patientId, packageId);
 
   if (!healthPackage) throw new Error("Health package not found");
 
   const today = new Date();
 
-  if (!patient.dependentFamilyMembers)
-    throw new Error("Dependent family members not found");
+  if (!patient.dependentFamilyMembers) throw new Error("Dependent family members not found");
 
   const dependent = patient.dependentFamilyMembers.find(
     (dependentFamilyMember) => dependentFamilyMember.nationalId === dependentNid
@@ -147,10 +112,10 @@ export async function setSubscribedPackageForDependentService(
   }
 
   dependent.subscribedPackage = {
-    packageId: healthPackage._id!,
+    packageId: healthPackage.id,
     startDate: today,
     endDate: addDays(today, healthPackage.packageDurationInYears * 365),
-    status: "subscribed",
+    status: "subscribed"
   };
 
   await patient.save();
@@ -161,13 +126,10 @@ export const viewSubscribedPackageForDependentService = async (
   dependentNid: string
 ) => {
   // Find the patient by ID
-  const patient = await Patient.findById(patientId).select(
-    "+dependentFamilyMembers"
-  );
+  const patient = await Patient.findById(patientId).select("+dependentFamilyMembers");
   if (patient) {
     const dependent = patient.dependentFamilyMembers?.find(
-      (dependentFamilyMembers) =>
-        dependentFamilyMembers.nationalId === dependentNid
+      (dependentFamilyMembers) => dependentFamilyMembers.nationalId === dependentNid
     );
 
     if (dependent) {
@@ -183,9 +145,7 @@ export const viewSubscribedPackageForDependentService = async (
 
 export const viewHealthCarePackageStatusService = async (patientId: string) => {
   // Find the patient by ID
-  const patient = await Patient.findById(patientId).select(
-    "+subscribedPackage"
-  );
+  const patient = await Patient.findById(patientId).select("+subscribedPackage");
   if (!patient) {
     throw new Error("Patient not found");
   }
@@ -198,7 +158,7 @@ export const viewHealthCarePackageStatusService = async (patientId: string) => {
   const subscriptionStatus = {
     status: subscribedPackage.status,
     renewalDate: subscribedPackage.startDate,
-    endDate: subscribedPackage.endDate,
+    endDate: subscribedPackage.endDate
   };
 
   return subscriptionStatus;
@@ -208,9 +168,7 @@ export const viewHealthCarePackageStatusForDependentService = async (
   patientId: string,
   dependentNid: string
 ) => {
-  const patient = await Patient.findById(patientId).select(
-    "+dependentFamilyMembers"
-  );
+  const patient = await Patient.findById(patientId).select("+dependentFamilyMembers");
   if (!patient) {
     throw new Error("Patient not found");
   }
@@ -228,15 +186,13 @@ export const viewHealthCarePackageStatusForDependentService = async (
   const subscriptionStatus = {
     status: dependent.subscribedPackage?.status,
     renewalDate: dependent.subscribedPackage?.startDate,
-    endDate: dependent.subscribedPackage?.endDate,
+    endDate: dependent.subscribedPackage?.endDate
   };
   return subscriptionStatus;
 };
 
 export const viewSubscribedHealthPackageService = async (patientId: string) => {
-  const patient = await Patient.findById(patientId).select(
-    "+subscribedPackage"
-  );
+  const patient = await Patient.findById(patientId).select("+subscribedPackage");
 
   if (!patient) {
     throw new Error("Patient not found");
@@ -250,19 +206,13 @@ export const viewSubscribedHealthPackageService = async (patientId: string) => {
   return subscribedHealthPackage;
 };
 
-export const viewSubscribedHealthPackageBenefitsService = async (
-  patientId: string
-) => {
-  const patient = await Patient.findById(patientId).select(
-    "+subscribedPackage"
-  );
+export const viewSubscribedHealthPackageBenefitsService = async (patientId: string) => {
+  const patient = await Patient.findById(patientId).select("+subscribedPackage");
 
   if (!patient) {
     throw new Error("Patient not found");
   }
-  const subscribedHealthPackage = HealthPackage.findById(
-    patient.subscribedPackage?.packageId
-  );
+  const subscribedHealthPackage = HealthPackage.findById(patient.subscribedPackage?.packageId);
 
   if (!subscribedHealthPackage) {
     throw new Error("Patient has no subscribed package");
@@ -272,9 +222,7 @@ export const viewSubscribedHealthPackageBenefitsService = async (
 };
 
 export const cancelSubscriptionService = async (patientId: string) => {
-  const patient = await Patient.findById(patientId).select(
-    "+subscribedPackage"
-  );
+  const patient = await Patient.findById(patientId).select("+subscribedPackage");
 
   if (!patient) {
     throw new Error("Patient not found");
@@ -292,9 +240,7 @@ export const cancelSubscribedForDependentService = async (
   patientId: string,
   dependentNid: string
 ) => {
-  const patient = await Patient.findById(patientId).select(
-    "+dependentFamilyMembers"
-  );
+  const patient = await Patient.findById(patientId).select("+dependentFamilyMembers");
 
   if (!patient) {
     throw new Error("Patient not found");
@@ -305,8 +251,7 @@ export const cancelSubscribedForDependentService = async (
   }
 
   const dependent = patient.dependentFamilyMembers.find(
-    (dependentFamilyMembers) =>
-      dependentFamilyMembers.nationalId === dependentNid
+    (dependentFamilyMembers) => dependentFamilyMembers.nationalId === dependentNid
   );
 
   if (!dependent) {
@@ -320,9 +265,7 @@ export const cancelSubscribedForDependentService = async (
   await patient.save();
 };
 export const viewDependentFamilyMembersService = async (patientId: string) => {
-  const patient = await Patient.findById(patientId).select(
-    "+dependentFamilyMembers"
-  );
+  const patient = await Patient.findById(patientId).select("+dependentFamilyMembers");
   if (!patient) {
     throw new Error("Patient not found");
   }
@@ -331,16 +274,10 @@ export const viewDependentFamilyMembersService = async (patientId: string) => {
   }
   return patient.dependentFamilyMembers;
 };
-export const viewSubscribedHealthPackageAllDetailsServiceR = async (
-  patientId: string
-) => {
-  const patient = await Patient.findById(patientId).select(
-    "+subscribedPackage"
-  );
+export const viewSubscribedHealthPackageAllDetailsServiceR = async (patientId: string) => {
+  const patient = await Patient.findById(patientId).select("+subscribedPackage");
   const subscribedPackage = patient?.subscribedPackage;
-  const healthPackage = await HealthPackage.findById(
-    patient?.subscribedPackage?.packageId
-  );
+  const healthPackage = await HealthPackage.findById(patient?.subscribedPackage?.packageId);
   if (!patient) {
     throw new Error("Patient not found");
   }
@@ -349,7 +286,7 @@ export const viewSubscribedHealthPackageAllDetailsServiceR = async (
   }
   return {
     subscribedPackage,
-    healthPackage,
+    healthPackage
   };
 };
 
@@ -357,9 +294,7 @@ export const viewSubscribedHealthPackageAllDetailsServiceD = async (
   patientId: string,
   patientNId: string
 ) => {
-  const patient = await Patient.findById(patientId).select(
-    "+dependentFamilyMembers"
-  );
+  const patient = await Patient.findById(patientId).select("+dependentFamilyMembers");
   if (!patient) {
     throw new Error("Patient not found");
   }
@@ -368,51 +303,44 @@ export const viewSubscribedHealthPackageAllDetailsServiceD = async (
   }
 
   const dependent = patient.dependentFamilyMembers.find(
-    (dependentFamilyMember) =>
-      dependentFamilyMember.nationalId.toString() === patientNId
+    (dependentFamilyMember) => dependentFamilyMember.nationalId.toString() === patientNId
   );
   if (!dependent) {
     throw new Error("Dependent family member not found");
   }
 
   const subscribedPackage = dependent?.subscribedPackage!;
-  const healthPackage = await HealthPackage.findById(
-    dependent?.subscribedPackage?.packageId
-  );
+  const healthPackage = await HealthPackage.findById(dependent?.subscribedPackage?.packageId);
 
   return {
     subscribedPackage,
-    healthPackage,
+    healthPackage
   };
 };
 
-export const getPatientDoctors = async (
-  patientId: string,
-  doctorName: string
-) => {
+export const getPatientDoctors = async (patientId: string, doctorName: string) => {
   const patient = await findPatientById(patientId);
-  if (!patient)
-    throw new Error(entityIdDoesNotExistError("patient", patientId));
+  if (!patient) throw new Error(entityIdDoesNotExistError("patient", patientId));
 
   const doctors = await Appointment.aggregate([
     {
       $match: {
         patientId: new mongoose.Types.ObjectId(patientId),
-        status: "completed",
-      },
+        status: "completed"
+      }
     },
     {
       $lookup: {
         from: "doctors",
         localField: "doctorId",
         foreignField: "_id",
-        as: "doctor",
-      },
+        as: "doctor"
+      }
     },
     {
       $match: {
-        ["doctor.name"]: { $regex: `^${doctorName}`, $options: "i" },
-      },
+        ["doctor.name"]: { $regex: `^${doctorName}`, $options: "i" }
+      }
     },
     { $unwind: "$doctor" },
     {
@@ -420,8 +348,8 @@ export const getPatientDoctors = async (
         _id: "$doctor._id",
         name: { $first: "$doctor.name" },
         email: { $first: "$doctor.email" },
-        imageUrl: { $first: "$doctor.imageUrl" },
-      },
+        imageUrl: { $first: "$doctor.imageUrl" }
+      }
     },
     {
       $project: {
@@ -429,9 +357,40 @@ export const getPatientDoctors = async (
         id: "$_id",
         name: 1,
         gender: 1,
-        imageUrl: 1,
-      },
-    },
+        imageUrl: 1
+      }
+    }
   ]);
   return doctors;
+};
+
+export const getDependentPatientDoctors = async (
+  patientId: string,
+  dependentNid: string,
+  doctorName: string
+) => {
+  const completedAppointments = await DependentFamilyMemberAppointment.find({
+    payerId: patientId,
+    dependentNationalId: dependentNid,
+    status: "completed"
+  });
+
+  const doctors = await Promise.all(
+    completedAppointments.map(async (appointment) => {
+      const doctor = await findDoctorById(appointment.doctorId.toString(), "name");
+      if (!doctor) throw new Error("Doctor not found");
+      return {
+        id: doctor.id,
+        name: doctor.name
+      };
+    })
+  );
+
+  const uniqueDoctors = Array.from(new Set(doctors.map((a) => a.id))).map((id) => {
+    return doctors.find((a) => a.id === id);
+  });
+
+  return uniqueDoctors.filter(
+    (doctor) => doctor?.name.toLowerCase().includes(doctorName.toLowerCase())
+  );
 };

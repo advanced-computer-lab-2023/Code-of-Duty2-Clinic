@@ -23,7 +23,7 @@ export const markNotificationAsReadForPatient = async (
 };
 
 export const getAllNotificationsForPatient = async (patientId: string) => {
-  const patient = await findPatientById(patientId);
+  const patient = await findPatientById(patientId, "receivedNotifications");
   if (!patient) {
     throw new Error(entityIdDoesNotExistError("Patient", patientId));
   }

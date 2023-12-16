@@ -1,11 +1,14 @@
-import { User } from "../types/User";
 import SocketType from "../types/SocketType";
 import {
-  rescheduleAppointmentForRegisteredPatientHandler,
-  rescheduleAppointmentForDependentPatientHandler,
+  rescheduleAppointmentForPatientHandler,
+  cancelAppointmentForPatientHandler
+} from "../controllers/appointments/doctors";
+import {
   cancelAppointmentForDependentPatientHandler,
   cancelAppointmentForRegisteredPatientHandler,
-} from "../controllers/appointments/doctors";
+  rescheduleAppointmentForDependentPatientHandler,
+  rescheduleAppointmentForRegisteredPatientHandler
+} from "../controllers/appointments/patients";
 
 const userIdToSocketIdMap: Map<string, string> = new Map();
 
@@ -20,6 +23,10 @@ const socketEventListeners = (socket: SocketType) => {
   }
   userIdToSocketIdMap.set(userId, socket.id);
 
+  socket.on("connect", () => {
+    userIdToSocketIdMap.set(userId, socket.id);
+  });
+
   socket.on("disconnect", () => {
     userIdToSocketIdMap.delete(userId);
   });
@@ -29,15 +36,11 @@ const socketEventListeners = (socket: SocketType) => {
   });
 
   socket.on("message", ({ destinationId, senderName }) => {
-    socket.to(getSocketIdForUserId(destinationId)).emit("message", senderName);
+    socket.emit("message", "Hello from server");
   });
 
-  socket.on("appointment_rescheduling_as_doctor_for_registered", (data) =>
-    rescheduleAppointmentForRegisteredPatientHandler(data, socket)
-  );
-
-  socket.on("appointment_rescheduling_as_doctor_for_dependent", (data) =>
-    rescheduleAppointmentForDependentPatientHandler(data, socket)
+  socket.on("appointment_rescheduling_as_doctor", (data) =>
+    rescheduleAppointmentForPatientHandler(data, socket)
   );
 
   socket.on("appointment_rescheduling_as_patient_for_registered", (data) =>
@@ -48,12 +51,8 @@ const socketEventListeners = (socket: SocketType) => {
     rescheduleAppointmentForDependentPatientHandler(data, socket)
   );
 
-  socket.on("appointment_cancellation_as_doctor_for_registered", (data) =>
-    cancelAppointmentForRegisteredPatientHandler(data, socket)
-  );
-
-  socket.on("appointment_cancellation_as_doctor_for_dependent", (data) =>
-    cancelAppointmentForDependentPatientHandler(data, socket)
+  socket.on("appointment_cancellation_as_doctor", (data) =>
+    cancelAppointmentForPatientHandler(data, socket)
   );
 
   socket.on("appointment_cancellation_as_patient_for_registered", (data) =>

@@ -3,14 +3,15 @@ import { getFormattedDate, getFormattedTime } from "./formatter";
 
 export function getAppointmentNotificationText(
   appointment: IAppointmentBaseInfo,
-  name: string
+  name: string,
+  isForDependent: boolean = false
 ): string {
-  return `Your appointment on ${getFormattedDate(
-    appointment.timePeriod.startTime.toString()
-  )} 
-     from ${getFormattedTime(
-       appointment.timePeriod.startTime.toString()
-     )} to ${getFormattedTime(appointment.timePeriod.endTime.toString())}
+  return `${
+    isForDependent ? "An Appointment of your family members" : "Your appointment"
+  } on ${getFormattedDate(appointment.timePeriod.startTime.toString())} 
+     from ${getFormattedTime(appointment.timePeriod.startTime.toString())} to ${getFormattedTime(
+       appointment.timePeriod.endTime.toString()
+     )}
     with ${name} has been ${appointment.status}.
     `;
 }

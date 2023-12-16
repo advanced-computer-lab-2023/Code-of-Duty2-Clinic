@@ -3,8 +3,9 @@ import IFollowUpAppointmentRequestForRegisteredPatient from "../../../../models/
 import {
   acceptFollowUpRequestForRegisteredPatient,
   createFollowUpRequestForRegisteredPatient,
+  deleteFollowUpRequestForRegisteredPatient,
   getFollowUpRequestsForRegisteredPatient,
-  rejectFollowUpRequestForRegisteredPatient,
+  rejectFollowUpRequestForRegisteredPatient
 } from "../../../../services/appointments/follow-ups/for-registered-patients";
 import { AuthorizedRequest } from "../../../../types/AuthorizedRequest";
 import { Response } from "express";
@@ -13,12 +14,26 @@ export const getFollowUpRequestsForRegisteredHandler = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const patientId = req.body.registeredFamilyMemberId || req.user!.id;
+  const patientId = req.user!.id;
   try {
-    const followUpRequests = await getFollowUpRequestsForRegisteredPatient(
-      patientId
-    );
+    const followUpRequests = await getFollowUpRequestsForRegisteredPatient(patientId as string);
     res.status(StatusCodes.OK).json(followUpRequests);
+  } catch (error: any) {
+    res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
+  }
+};
+
+export const deleteFollowUpRequestForRegisteredHandler = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
+  const { followUpRequestId } = req.params;
+  if (!followUpRequestId) {
+    res.status(StatusCodes.BAD_REQUEST).send({ message: "Missing required fields" });
+  }
+  try {
+    await deleteFollowUpRequestForRegisteredPatient(followUpRequestId);
+    res.status(StatusCodes.OK).send();
   } catch (error: any) {
     res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
   }
@@ -28,19 +43,17 @@ export const createFollowUpRequestForRegisteredHandler = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const patientId = req.body.patientId || req.user!.id;
+  const patientId = req.body.registeredFamilyMemberId || req.user!.id;
   const { doctorId, timePeriod, reason } = req.body;
   if (!patientId || !doctorId || !timePeriod || !reason) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "Missing required fields" });
+    res.status(StatusCodes.BAD_REQUEST).send({ message: "Missing required fields" });
   }
   try {
     await createFollowUpRequestForRegisteredPatient({
       patientId,
       doctorId,
       timePeriod,
-      reason,
+      reason
     } as IFollowUpAppointmentRequestForRegisteredPatient);
     res.status(StatusCodes.CREATED).send();
   } catch (error: any) {
@@ -54,9 +67,7 @@ export const rejectFollowUpRequestForRegisteredHandler = async (
 ) => {
   const { followUpRequestId } = req.params;
   if (!followUpRequestId) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "Missing required fields" });
+    res.status(StatusCodes.BAD_REQUEST).send({ message: "Missing required fields" });
   }
   try {
     await rejectFollowUpRequestForRegisteredPatient(followUpRequestId);
@@ -72,9 +83,7 @@ export const acceptFollowUpRequestForRegisteredHandler = async (
 ) => {
   const { followUpRequestId } = req.params;
   if (!followUpRequestId) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "Missing required fields" });
+    res.status(StatusCodes.BAD_REQUEST).send({ message: "Missing required fields" });
   }
   try {
     await acceptFollowUpRequestForRegisteredPatient(followUpRequestId);
