@@ -5,7 +5,13 @@ import { IDoctorBaseInfo } from "./IDoctorBaseInfo";
 
 export interface IDoctor extends IDoctorBaseInfo {
   speciality?: string;
-  availableSlots: [{ startTime: Date; endTime: Date }];
+  workingSchedule: {
+    daysOff: string[];
+    dailyWorkingHours: {
+      startTime: string;
+      endTime: string;
+    }[];
+  };
   identificationUrl?: string;
   medicalLicenseUrl?: string;
   medicalDegreeUrl?: string;

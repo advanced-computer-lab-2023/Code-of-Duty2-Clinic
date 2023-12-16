@@ -48,12 +48,14 @@ export const authenticateSocketConnection = (
   next: (err?: ExtendedError | undefined) => void
 ) => {
   const token = socket.handshake.auth.token;
-  const userId = socket.handshake.auth.userId;
+  if (!token) {
+    return next(new Error("Authentication error"));
+  }
   try {
     verifyAndDecodeAccessToken(token);
-    socket.join(userId);
     return next();
   } catch (error) {
+    console.log(error);
     return next(new Error("Authentication error"));
   }
 };

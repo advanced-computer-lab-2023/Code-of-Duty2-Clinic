@@ -1,23 +1,17 @@
 import { markNotificationAsRead, storeNotification } from "../common";
-import NotificationTitleDescription from "../../../types/NotificationTitleDescription";
+import NotificationSubjectDescription from "../../../types/NotificationSubjectDescription";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import { findDoctorById } from "../../doctors";
+import { IDoctorModel } from "../../../models/doctors/Doctor";
 
 export const storeNotificationSentToDoctor = async (
-  doctorId: string,
-  notification: NotificationTitleDescription
+  doctor: IDoctorModel,
+  notification: NotificationSubjectDescription
 ) => {
-  const doctor = await findDoctorById(doctorId);
-  if (!doctor) {
-    throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
-  }
-  await storeNotification(doctor, notification);
+  return await storeNotification(doctor, notification);
 };
 
-export const markNotificationAsReadForDoctor = async (
-  doctorId: string,
-  notificationId: string
-) => {
+export const markNotificationAsReadForDoctor = async (doctorId: string, notificationId: string) => {
   const doctor = await findDoctorById(doctorId);
   if (!doctor) {
     throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
@@ -26,7 +20,7 @@ export const markNotificationAsReadForDoctor = async (
 };
 
 export const getAllNotificationsForDoctor = async (doctorId: string) => {
-  const doctor = await findDoctorById(doctorId);
+  const doctor = await findDoctorById(doctorId, "receivedNotifications");
   if (!doctor) {
     throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
   }

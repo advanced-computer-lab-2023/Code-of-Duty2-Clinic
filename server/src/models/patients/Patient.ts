@@ -76,7 +76,7 @@ export const PatientSchema = new Schema<IPatientModel>(
         {
           name: { type: String, required: true },
           nationalId: { type: String, required: true, unique: true },
-          birthdate: { type: Date, required: true },
+          dateOfBirth: { type: Date, required: true },
           gender: { type: String, enum: ["male", "female"], required: true },
           relation: {
             type: String,
@@ -97,6 +97,18 @@ export const PatientSchema = new Schema<IPatientModel>(
                 required: true,
               },
             },
+            required: false,
+          },
+          healthRecords: {
+            type: Array<{
+              type: {
+                name: { type: String; required: true };
+                url: { type: String; required: true };
+                recordType: { type: String; required: true };
+                fileType: { type: String; required: true };
+                createdAt: { type: Date; immutable: true };
+              };
+            }>,
             required: false,
           },
         },

@@ -7,6 +7,6 @@ export interface IAppointmentBaseInfo {
   };
   status: "upcoming" | "completed" | "canceled" | "rescheduled";
   doctorId: Schema.Types.ObjectId;
-  payerId?: Schema.Types.ObjectId;
+  payerId: Schema.Types.ObjectId;
   isAFollowUp: boolean;
 }

@@ -1,113 +1,75 @@
-import { Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { entityIdDoesNotExistError } from "../../utils/ErrorMessages";
-import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 import { findPatientById } from "../../services/patients";
-import { getPatientAppointments } from "../../services/appointments/patients";
-import { datacatalog } from "googleapis/build/src/apis/datacatalog";
-import Appointment from "../../models/appointments/Appointment";
 import SocketType from "../../types/SocketType";
+import { findAppointmentById } from "../../services/appointments";
+import { findDoctorById } from "../../services/doctors";
+import { getAppointmentNotificationText } from "../../utils/notificationText";
+import { findDependentPatientAppointmentById } from "../../services/appointments/patients/dependent-family-members";
+import { storeNotificationSentToPatient } from "../../services/notifications/patients";
+import { storeNotificationSentToDoctor } from "../../services/notifications/doctors";
+import NotificationSubjectDescription from "../../types/NotificationSubjectDescription";
+import { getSocketIdForUserId } from "../../socket-connections";
 
-export const getAppointmentsWithAllDoctors = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
-  const patientId = req.user?.id;
-  if (!patientId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "patientId is required" });
+export async function notifyUsersOnSystemForDependentAppointments(
+  appointmentId: string,
+  socket: SocketType
+) {
+  const appointment = await findDependentPatientAppointmentById(appointmentId);
+  const mainPatientId = appointment!.payerId.toString();
+  const patient = await findPatientById(mainPatientId, "+receivedNotifications");
+  const doctorId = appointment!.doctorId.toString();
+  const doctor = await findDoctorById(doctorId, "+receivedNotifications");
 
-  const allowedQueryParameters = [
-    "status",
-    "appointmentTime",
-    "isTimeSet",
-    "targetName",
-  ];
+  const notificationSentToPatient: NotificationSubjectDescription = {
+    subject: `Appointment of your family members has been ${appointment?.status}`,
+    description: getAppointmentNotificationText(appointment!, doctor!.name, true)
+  };
+  let createdNotification = await storeNotificationSentToPatient(
+    patient!,
+    notificationSentToPatient
+  );
+  socket.to(getSocketIdForUserId(mainPatientId)).emit("notification", {
+    message: createdNotification
+  });
 
-  if (
-    Object.keys(req.query).length > allowedQueryParameters.length ||
-    Object.keys(req.query).some((key) => !allowedQueryParameters.includes(key))
-  ) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json(
-        "only doctorName, appointment status or time slot must be provided"
-      );
-  }
+  const notificationSentToDoctor: NotificationSubjectDescription = {
+    subject: `Your appointment has been ${appointment?.status}`,
+    description: getAppointmentNotificationText(appointment!, patient!.name)
+  };
 
-  if (
-    (req.query.appointmentTime && !req.query.isTimeSet) ||
-    (req.query.isTimeSet && !req.query.appointmentTime)
-  ) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json("isTimeSet and appointmentTime must be provided together");
-  }
+  createdNotification = await storeNotificationSentToDoctor(doctor!, notificationSentToDoctor);
+  socket.to(getSocketIdForUserId(doctorId)).emit("notification", {
+    message: createdNotification
+  });
+}
 
-  try {
-    const patient = await findPatientById(patientId);
-    if (!patient)
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: entityIdDoesNotExistError("Patient", patientId) });
+export async function notifyUsersOnSystemForRegisteredAppointments(
+  appointmentId: string,
+  socket: SocketType
+) {
+  const appointment = await findAppointmentById(appointmentId);
+  const patientId = appointment!.patientId.toString();
+  const patient = await findPatientById(patientId, "+receivedNotifications +name");
+  const doctorId = appointment!.doctorId.toString();
+  const doctor = await findDoctorById(doctorId, "+receivedNotifications +name");
 
-    const appointments = await getPatientAppointments(patientId, req.query);
-    res.status(StatusCodes.OK).json(appointments);
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
-  }
-};
+  const notificationSentToPatient: NotificationSubjectDescription = {
+    subject: `Your appointment has been ${appointment?.status}`,
+    description: getAppointmentNotificationText(appointment!, doctor!.name)
+  };
+  let createdNotification = await storeNotificationSentToPatient(
+    patient!,
+    notificationSentToPatient
+  );
+  socket.to(getSocketIdForUserId(patientId)).emit("notification", {
+    message: createdNotification
+  });
 
-export const rescheduleAppointmentHandler = async (
-  socket: SocketType,
-  data: {
-    appointmentId: string;
-    newTime: {
-      startTime: string;
-      endTime: string;
-    };
-  }
-) => {
-  const patientId = socket.handshake.auth.user.id;
-  const appointmentId = data.appointmentId;
-  const newTime = data.newTime;
-
-  if (!patientId || !appointmentId || !newTime) {
-    return socket.emit("reschedule_appointment_error", {
-      message:
-        "patientId, appointmentId, appointmentTime and isTimeSet are required",
-    });
-  }
-
-  try {
-    const patient = await findPatientById(patientId);
-    if (!patient) {
-      return socket.emit("reschedule_appointment_error", {
-        message: entityIdDoesNotExistError("Patient", patientId),
-      });
-    }
-
-    const appointment = await Appointment.findOne({
-      _id: appointmentId,
-      patientId,
-    });
-    if (!appointment) {
-      return socket.emit("reschedule_appointment_error", {
-        message: entityIdDoesNotExistError("Appointment", appointmentId),
-      });
-    }
-
-    if (appointment.status !== "upcoming") {
-      return socket.emit("reschedule_appointment_error", {
-        message: "Appointment cannot be rescheduled",
-      });
-    }
-
-    const updatedAppointment = {};
-
-    socket.emit("reschedule_appointment_success", updatedAppointment);
-  } catch (error: any) {
-    socket.emit("reschedule_appointment_error", { message: error.message });
-  }
-};
+  const notificationSentToDoctor: NotificationSubjectDescription = {
+    subject: `Your appointment has been ${appointment?.status}`,
+    description: getAppointmentNotificationText(appointment!, patient!.name)
+  };
+  createdNotification = await storeNotificationSentToDoctor(doctor!, notificationSentToDoctor);
+  socket.to(getSocketIdForUserId(doctorId)).emit("notification", {
+    message: createdNotification
+  });
+}

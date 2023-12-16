@@ -5,39 +5,31 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import UserData from "../types/UserData";
 
 type InboxItemProps = {
-  name: string;
-  photoUrl?: string;
-  conversationId: string;
+  otherData: UserData;
 };
-const InboxItem: React.FC<InboxItemProps> = ({
-  name,
-  photoUrl,
-  conversationId,
-}) => {
-  const navigate = useNavigate();
-
-  const handleChatButtonClick = () => {
-    navigate(`/patient/chats?conversationId=${conversationId}`);
-  };
-
-  const [firstName, lastName] = name.split(" ");
+const InboxItem: React.FC<InboxItemProps> = ({ otherData }) => {
+  const [firstName, lastName] = otherData.name.split(" ");
   const getInitials = () => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`;
+    return `${firstName?.length > 0 ? firstName.charAt(0) : ""}${
+      lastName?.length > 0 ? lastName.charAt(0) : ""
+    }`;
   };
 
   return (
     <ListItem>
       <ListItemAvatar>
-        <Avatar src={photoUrl}>{!photoUrl && getInitials()}</Avatar>
+        <Avatar src={otherData.photoUrl}>
+          {!otherData.photoUrl && getInitials()}
+        </Avatar>
       </ListItemAvatar>
-      <ListItemText primary={`${firstName} ${lastName}`} />
+      <ListItemText primary={`${firstName || ""} ${lastName || ""}`} />
       <Button
         variant="contained"
         color="primary"
-        onClick={handleChatButtonClick}
+        href={`/patient/chat?id=${otherData.id}`}
       >
         Chat
       </Button>

@@ -16,19 +16,19 @@ export const HealthPackageSchema = new Schema<IHealthPackageModel>({
   discounts: {
     gainedDoctorSessionDiscount: {
       type: Number,
-      min: [0, "The mininum value is 0"],
+      min: [0, "The minimum value is 0"],
       max: [1, "The maximum value is 1"],
       required: true,
     },
-    gainedPharamcyMedicinesDiscount: {
+    gainedPharmacyMedicinesDiscount: {
       type: Number,
-      min: [0, "The mininum value is 0"],
+      min: [0, "The minimum value is 0"],
       max: [1, "The maximum value is 1"],
       required: true,
     },
     gainedFamilyMembersDiscount: {
       type: Number,
-      min: [0, "The mininum value is 0"],
+      min: [0, "The minimum value is 0"],
       max: [1, "The maximum value is 1"],
       required: true,
     },

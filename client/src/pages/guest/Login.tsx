@@ -28,6 +28,7 @@ import { loginService } from "./loginService";
 import { getErrorMessage } from "../../utils/displayError";
 import { LoginResponse } from "../../types/LoginResponse";
 import { UserContext } from "../../contexts/UserContext";
+import { establishSocketConnection } from "../../services/Socket";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />
@@ -72,7 +73,11 @@ export default function Login() {
 
   function handleLoginSuccess(data: LoginResponse) {
     login(data.accessToken, data.role);
-    storePatientInfo(data);
+    if (data.role === UserRole.PATIENT) {
+      storePatientInfo(data);
+
+      establishSocketConnection(data.accessToken, data.info!.id);
+    }
 
     if (
       data.role === UserRole.PATIENT &&
@@ -104,6 +109,7 @@ export default function Login() {
         : null
     );
   }
+
   return (
     <Container component="main" maxWidth="lg" sx={{ pb: 6 }}>
       <Grid container columnSpacing={7}>

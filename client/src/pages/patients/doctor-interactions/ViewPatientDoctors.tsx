@@ -1,13 +1,10 @@
-import { useSession } from "@talkjs/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import Talk from "talkjs";
 import { config } from "../../../configuration";
 import { Box, Container, Typography } from "@mui/material";
 import { getErrorMessage } from "../../../utils/displayError";
 import InboxItem from "../../../components/InboxItem";
-import { createConversation } from "../../../utils/createConversation";
+import UserData from "../../../types/UserData";
 
 type DoctorInfo = {
   id: string;
@@ -21,50 +18,8 @@ const getPatientDoctors = async (): Promise<DoctorInfo[]> => {
   return res.data;
 };
 
-type DoctorData = {
-  id: string;
-  name: string;
-  email: string | null;
-  photoUrl?: string;
-  role?: "DOCTOR";
-};
-
 const PatientDoctorsPage = () => {
-  const session = useSession()!;
-
-  const [conversationIds, setConversationIds] = useState<string[]>([]);
-
   const patientDoctorsQuery = useQuery(["patientDoctors"], getPatientDoctors);
-
-  const createConversationsAndGetTheirIds = () => {
-    if (patientDoctorsQuery.isLoading) return [];
-    if (patientDoctorsQuery.isError) return [];
-
-    return patientDoctorsQuery.data!.map(({ id, email, name, imageUrl }) => {
-      const doctorData: DoctorData = {
-        id,
-        name,
-        email,
-        role: "DOCTOR",
-        photoUrl: imageUrl,
-      };
-
-      const doctor = new Talk.User(doctorData);
-
-      const conversationId = Talk.oneOnOneId(session.me, doctor);
-
-      createConversation(session, conversationId, doctor);
-
-      return conversationId;
-    });
-  };
-
-  useEffect(() => {
-    if (patientDoctorsQuery.isSuccess && session) {
-      const userConversations = createConversationsAndGetTheirIds();
-      setConversationIds(userConversations);
-    }
-  }, [patientDoctorsQuery.isSuccess, session]);
 
   return (
     <Container>
@@ -80,14 +35,15 @@ const PatientDoctorsPage = () => {
         )}
         {patientDoctorsQuery.isSuccess && (
           <div>
-            {patientDoctorsQuery.data?.map((doctor, index) => {
-              return (
-                <InboxItem
-                  key={doctor.id}
-                  {...doctor}
-                  conversationId={conversationIds[index]}
-                />
-              );
+            {patientDoctorsQuery.data?.map((doctor) => {
+              const doctorData: UserData = {
+                id: doctor.id,
+                name: doctor.name,
+                email: doctor.email,
+                role: "DOCTOR",
+                photoUrl: doctor.imageUrl,
+              };
+              return <InboxItem key={doctor.id} otherData={doctorData} />;
             })}
           </div>
         )}

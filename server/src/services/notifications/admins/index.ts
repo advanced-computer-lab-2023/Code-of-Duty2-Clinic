@@ -1,11 +1,11 @@
 import { markNotificationAsRead, storeNotification } from "../common";
-import NotificationTitleDescription from "../../../types/NotificationTitleDescription";
+import NotificationSubjectDescription from "../../../types/NotificationSubjectDescription";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
 import { findAdminById } from "../../admins";
 
 export const storeNotificationSentToAdmin = async (
   adminId: string,
-  notification: NotificationTitleDescription
+  notification: NotificationSubjectDescription
 ) => {
   const admin = await findAdminById(adminId);
   if (!admin) {

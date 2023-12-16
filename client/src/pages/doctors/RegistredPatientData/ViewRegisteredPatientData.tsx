@@ -29,6 +29,7 @@ import { useMutation } from "react-query";
 import { Slots } from "../../../types/Slots";
 import SlotsRangeModal from "../../../components/SlotsRangeModal";
 import { getErrorMessage } from "../../../utils/displayError";
+import { useQueryParams } from "../../../hooks/useQueryParams";
 
 interface FollowUpAppointment extends Slots {
   patientId: string;
@@ -66,10 +67,17 @@ const ViewRegisteredPatientData: React.FC = () => {
   const [patientData, setPatientData] = useState<any>(null);
 
   const patientId = useParams().patientId!;
+
+  const supervisingPatientId = useQueryParams().get("spId");
+
   const fetchPatientData = async () => {
     try {
       const response = await axios.get(
-        `${config.serverUri}/doctors/patients/${patientId}`
+        `${config.serverUri}/doctors/patients/${patientId}${
+          supervisingPatientId
+            ? `?supervisingPatientId=${supervisingPatientId}`
+            : ""
+        }`
       );
       setPatientData(response.data);
       setTableFiles(response.data.patientInfo.healthRecords);
@@ -79,11 +87,11 @@ const ViewRegisteredPatientData: React.FC = () => {
     }
   };
 
-  const addFileToTable = async (healthrecord?: IHealthRecord) => {
-    console.log(healthrecord);
-    if (healthrecord)
+  const addFileToTable = async (healthRecord?: IHealthRecord) => {
+    console.log(healthRecord);
+    if (healthRecord)
       setTableFiles((old) => {
-        return [...old, healthrecord];
+        return [...old, healthRecord];
       });
     setUpload(false);
   };
@@ -111,9 +119,6 @@ const ViewRegisteredPatientData: React.FC = () => {
 
       <div className="display-patient-data">
         <p>
-          <strong>Username:</strong> {patientData.patientInfo.username}
-        </p>
-        <p>
           <strong>Email:</strong> {patientData.patientInfo.email}
         </p>
         <p>
@@ -123,148 +128,169 @@ const ViewRegisteredPatientData: React.FC = () => {
           <strong>Gender:</strong> {patientData.patientInfo.gender}
         </p>
         <p>
-          <strong>Mobile Number:</strong> {patientData.patientInfo.mobileNumber}
+          <strong>Mobile number:</strong>{" "}
+          {patientData.patientInfo.mobileNumber || "Not provided"}
         </p>
         <p>
-          <strong>Date of Birth:</strong>{" "}
+          <strong>Date of birth:</strong>{" "}
           {new Date(patientData.patientInfo.dateOfBirth).toLocaleDateString()}
         </p>
-        <p>
-          <strong>Emergency Contact:</strong>{" "}
-          {patientData.patientInfo.emergencyContact.fullname}
-        </p>
-        <p>
-          <strong>Relation to Patient:</strong>{" "}
-          {patientData.patientInfo.emergencyContact.relationToPatient}
-        </p>
+        {patientData.patientInfo.emergencyContact ? (
+          <p>
+            <strong>Emergency contact:</strong>{" "}
+            {patientData.patientInfo.emergencyContact.fullname} {"   "}
+            <strong>Relation to patient:</strong>{" "}
+            {patientData.patientInfo.emergencyContact.relationToPatient}
+          </p>
+        ) : (
+          <p>
+            <strong>
+              Supervising Patient:{" "}
+              {patientData.patientInfo.supervisingPatientName}
+            </strong>
+          </p>
+        )}
+        <p></p>
         <div>
-          <h3>Health Records:</h3>
-          <Stack
-            position="relative"
-            direction="row"
-            justifyContent="center"
-            sx={{ width: "100%" }}
-          >
-            {upload && (
-              <UploadNotesModal openUpload={true} close={addFileToTable} />
-            )}
-            <Paper sx={{ mb: 2, width: "80%" }}>
-              <EnhancedTableToolbar
-                numSelected={selected.length}
-                openModal={() => {
-                  setUpload(true);
-                }}
-              />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={"medium"}
-                >
-                  <TableHead
-                    sx={{ backgroundColor: "#103939", color: "white" }}
-                  >
-                    <TableRow>
-                      <TableCell sx={{ color: "white" }}>File Name</TableCell>
-                      <TableCell sx={{ color: "white" }} align="center">
-                        Health Record Type
-                      </TableCell>
-                      <TableCell sx={{ color: "white" }} align="center">
-                        File Type
-                      </TableCell>
-                      <TableCell sx={{ color: "white" }} align="center">
-                        Upload Date
-                      </TableCell>
-                      <TableCell
-                        sx={{ color: "white" }}
-                        id="options"
-                        align="right"
-                      ></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {tableLoading ? (
-                      <TableLoadingSkeleton />
-                    ) : (
-                      TableFiles?.map((file: IHealthRecord, index: number) => (
-                        <TableRow
-                          role="checkbox"
-                          hover
-                          onClick={() => openViewFileModal(file)}
-                          tabIndex={-1}
-                          key={index}
-                          sx={{
-                            "&.Mui-selected, &.Mui-selected:hover": {
-                              backgroundColor: "#1039394D", // Change this to your desired color
-                              cursor: "pointer",
-                            },
-                          }}
-                        >
-                          <TableCell
-                            id={"enhanced-table-checkbox-" + index}
-                            scope="row"
-                          >
-                            {file.name}
-                          </TableCell>
-                          <TableCell align="center">
-                            {file.recordType}
-                          </TableCell>
-                          <TableCell align="center">{file.fileType}</TableCell>
-                          <TableCell align="center">
-                            {new Date(file.createdAt).toDateString()}
-                          </TableCell>
-                          <TableCell>
-                            <Stack
-                              direction="row"
-                              justifyContent="center"
-                              divider={
-                                <Divider orientation="vertical" flexItem />
-                              }
-                              spacing={2}
-                            >
-                              <IconButton
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  downloadFile(file.url, file.name);
-                                }}
-                              >
-                                <DownloadIcon
-                                  color="action"
-                                  sx={{ color: "#103939" }}
-                                />
-                              </IconButton>
-                            </Stack>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
-            <Modal
-              open={viewFileModal}
-              onClose={() => {
-                setViewFileModal(false);
-              }}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
+          <h3>Health records:</h3>
+          {!patientData?.prescriptions.length ? (
+            <div>This patient has no health records</div>
+          ) : (
+            <Stack
+              position="relative"
+              direction="row"
+              justifyContent="center"
+              sx={{ width: "100%" }}
             >
-              <Box sx={FileViewModalStyle}>
-                <Typography
-                  align="center"
-                  color="#103939"
-                  fontFamily="Inter"
-                  id="modal-modal-title"
-                  variant="h6"
-                  component="h2"
-                >
-                  {viewFileName}
-                </Typography>
-                <iframe width="500px" height="400px" src={viewFileUrl}></iframe>
-              </Box>
-            </Modal>
-          </Stack>
+              {upload && (
+                <UploadNotesModal openUpload={true} close={addFileToTable} />
+              )}
+              <Paper sx={{ mb: 2, width: "80%" }}>
+                <EnhancedTableToolbar
+                  numSelected={selected.length}
+                  openModal={() => {
+                    setUpload(true);
+                  }}
+                />
+                <TableContainer>
+                  <Table
+                    sx={{ minWidth: 750 }}
+                    aria-labelledby="tableTitle"
+                    size={"medium"}
+                  >
+                    <TableHead
+                      sx={{ backgroundColor: "#103939", color: "white" }}
+                    >
+                      <TableRow>
+                        <TableCell sx={{ color: "white" }}>File Name</TableCell>
+                        <TableCell sx={{ color: "white" }} align="center">
+                          Health Record Type
+                        </TableCell>
+                        <TableCell sx={{ color: "white" }} align="center">
+                          File Type
+                        </TableCell>
+                        <TableCell sx={{ color: "white" }} align="center">
+                          Upload Date
+                        </TableCell>
+                        <TableCell
+                          sx={{ color: "white" }}
+                          id="options"
+                          align="right"
+                        ></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tableLoading ? (
+                        <TableLoadingSkeleton />
+                      ) : (
+                        TableFiles?.map(
+                          (file: IHealthRecord, index: number) => (
+                            <TableRow
+                              role="checkbox"
+                              hover
+                              onClick={() => openViewFileModal(file)}
+                              tabIndex={-1}
+                              key={index}
+                              sx={{
+                                "&.Mui-selected, &.Mui-selected:hover": {
+                                  backgroundColor: "#1039394D", // Change this to your desired color
+                                  cursor: "pointer",
+                                },
+                              }}
+                            >
+                              <TableCell
+                                id={"enhanced-table-checkbox-" + index}
+                                scope="row"
+                              >
+                                {file.name}
+                              </TableCell>
+                              <TableCell align="center">
+                                {file.recordType}
+                              </TableCell>
+                              <TableCell align="center">
+                                {file.fileType}
+                              </TableCell>
+                              <TableCell align="center">
+                                {new Date(file.createdAt).toDateString()}
+                              </TableCell>
+                              <TableCell>
+                                <Stack
+                                  direction="row"
+                                  justifyContent="center"
+                                  divider={
+                                    <Divider orientation="vertical" flexItem />
+                                  }
+                                  spacing={2}
+                                >
+                                  <IconButton
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      downloadFile(file.url, file.name);
+                                    }}
+                                  >
+                                    <DownloadIcon
+                                      color="action"
+                                      sx={{ color: "#103939" }}
+                                    />
+                                  </IconButton>
+                                </Stack>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+              <Modal
+                open={viewFileModal}
+                onClose={() => {
+                  setViewFileModal(false);
+                }}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={FileViewModalStyle}>
+                  <Typography
+                    align="center"
+                    color="#103939"
+                    fontFamily="Inter"
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                  >
+                    {viewFileName}
+                  </Typography>
+                  <iframe
+                    width="500px"
+                    height="400px"
+                    src={viewFileUrl}
+                  ></iframe>
+                </Box>
+              </Modal>
+            </Stack>
+          )}
         </div>
       </div>
       <Box>

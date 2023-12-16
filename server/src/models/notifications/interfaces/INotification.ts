@@ -1,6 +1,6 @@
 export interface INotification {
   _id?: string;
-  title: string;
+  subject: string;
   description: string;
   time: Date;
   isRead: boolean;

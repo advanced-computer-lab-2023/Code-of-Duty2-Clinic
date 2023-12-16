@@ -25,7 +25,7 @@ const getDoctorRegistrationRequest = async (req: Request, res: Response) => {
   }
 };
 
-export const getDoctorRegistrationRequestbyId = async (
+export const getDoctorRegistrationRequestById = async (
   req: Request,
   res: Response
 ) => {
