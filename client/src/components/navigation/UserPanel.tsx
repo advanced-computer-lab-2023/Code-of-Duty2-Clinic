@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   Box,
   IconButton,
@@ -11,19 +11,14 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Collapse,
-  ListItem,
-  Divider,
-  Button
+  Collapse
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import PublicIcon from "@mui/icons-material/Public";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import { SidebarItem } from "../../types";
-import { welcomeRoute } from "../../data/routes/guestRoutes";
-import el7a2niLogo from "../../assets/el7a2ni_logo.png";
+// import el7a2niLogo from "../../assets/el7a2ni_logo.png";
 import UserTray from "../trays/UserTray";
 
 interface Props {
@@ -35,7 +30,6 @@ const UserPanel: React.FC<Props> = ({ sidebarItems }) => {
   const [open, setOpen] = useState<string>(""); // For expandable sidebar items with sub-items
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const navigate = useNavigate();
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -127,7 +121,7 @@ const UserPanel: React.FC<Props> = ({ sidebarItems }) => {
                   <CloseIcon />
                 </IconButton>
                 <List>
-                  <ListItem>
+                  {/* <ListItem>
                     <img
                       src={el7a2niLogo}
                       alt="El7a2ni Logo"
@@ -139,7 +133,7 @@ const UserPanel: React.FC<Props> = ({ sidebarItems }) => {
                         marginRight: "auto"
                       }}
                     />
-                  </ListItem>
+                  </ListItem> */}
                   {renderSidebarItems(sidebarItems)}
                 </List>
               </Stack>
