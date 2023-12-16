@@ -849,14 +849,48 @@ See `CONTRIBUTING.md` for ways to get started. Please adhere to the `Code of Con
 
 ## Credits
 
-- Documentation
-  - [ReactJs Documentation](https://react.dev/reference/react)
-  - [Material UI Documentation](https://mui.com/material-ui/getting-started/)
-- Tutorials
-  - [React Stripe.js and the Payment Element](https://www.youtube.com/watch?v=e-whXipfRvg)
-  - [React Tutorial for Beginners](https://www.youtube.com/watch?v=SqcY0GlETPk)
-- Project Repositories
-  - [Linear Depression Project Repository](https://github.com/Advanced-Computer-Lab-2022/Linear-Depression)
+#### Documentation
+
+- [ReactJs Docs](https://react.dev/reference/react)
+- [Material UI Docs](https://mui.com/material-ui/getting-started/)
+- [MongoDB Atlas Docs](https://www.mongodb.com/docs/atlas/)
+- [Stripe Docs](https://stripe.com/docs)
+- [Stripe Web Elements Docs](https://stripe.com/docs/payments/elements)
+
+#### Tutorials
+
+- [React Stripe.js and the Payment Element](https://www.youtube.com/watch?v=e-whXipfRvg)
+- [React Tutorial for Beginners](https://www.youtube.com/watch?v=SqcY0GlETPk)
+- [JWT Authentication Tutorial - Node.js](https://www.youtube.com/watch?v=mbsmsi7l3r4)
+- [Junior vs Senior React Folder Structure - How To Organize React Projects](https://youtu.be/UUga4-z7b6s?si=pgbJMR4J_-I-ogfh)
+- [Jira Training | Jira Tutorial for Beginners | Jira Course | Intellipaat](https://youtu.be/uM_m6EzMg3k?si=JD7ZLabGg7hEsqEd)
+- [Typescript Tutorial for Beginners](https://www.youtube.com/watch?v=d56mG7DezGs&t=986s)
+
+#### Websites and Tools
+
+- [readme.so](https://readme.so/)
+- [dillinger.io](https://dillinger.io/)
+
+#### Courses
+
+- [Meta APIs Course](https://www.coursera.org/learn/apis)
+- [Meta React Basics Course](https://www.coursera.org/programs/shell-2-5p9mb/learn/react-basics?specialization=meta-front-end-developer)
+- [Meta Advanced React Course](https://www.coursera.org/learn/advanced-react)
+
+#### Articles
+
+- [Structuring Folders in Your Backend Project: Best Practices](https://www.linkedin.com/pulse/structuring-folders-your-backend-project-best-practices-lokesh-sharma/)
+- [Building with Patterns: The Extended Reference Pattern](https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern)
+- [README File – Everything you Need to Know](https://www.mygreatlearning.com/blog/readme-file/)
+
+#### Books
+
+- [Clean Code: A Handbook of Agile Software Craftsmanship](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)
+- [Clean Architecture: A Craftsman’s Guide to Software Structure and Design](https://www.oreilly.com/library/view/clean-architecture-a/9780134494272/)
+
+#### Project Repositories
+
+- [Linear Depression Project Repository](https://github.com/Advanced-Computer-Lab-2022/Linear-Depression)
 
 ## License
 
