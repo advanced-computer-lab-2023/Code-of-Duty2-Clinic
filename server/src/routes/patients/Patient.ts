@@ -59,6 +59,8 @@ import {
   getDoctorAppointmentFeesHandler,
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
+import { getPatientPrescription } from "../../controllers/prescriptions/getPatientPrescription";
+import {createOrderFromPrescription } from "../../controllers/orders/createOrder";
 
 const patientRouter = express.Router();
 
@@ -198,6 +200,10 @@ patientRouter
 
   .get("/:patientId", getPatientById)
 
-  .get("/health-packages/:packageId", getHealthPackage);
+  .get("/health-packages/:packageId", getHealthPackage)
+
+  .get( '/prescription/:prescriptionId',getPatientPrescription)
+
+  .post( '/prescription/:prescriptionId/pay',createOrderFromPrescription);
 
 export default patientRouter;

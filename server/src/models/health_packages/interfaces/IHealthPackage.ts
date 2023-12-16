@@ -1,12 +1,12 @@
 // Define the interface for HealthPackage
 
 export interface IHealthPackage {
-  name: string;
-  amountToPay: number;
-  discounts: {
-    gainedDoctorSessionDiscount: number;
-    gainedPharamcyMedicinesDiscount: number;
-    gainedFamilyMembersDiscount: number;
-  };
-  packageDurationInYears: number;
+   name: string;
+   amountToPay: number;
+   discounts: {
+      gainedDoctorSessionDiscount: number;
+      gainedPharmacyMedicinesDiscount: number;
+      gainedFamilyMembersDiscount: number;
+   };
+   packageDurationInYears: number;
 }

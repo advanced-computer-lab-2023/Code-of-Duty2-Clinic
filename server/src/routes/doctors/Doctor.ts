@@ -31,6 +31,8 @@ import {
 import { createPatientPrescriptionHandler } from "../../controllers/doctors/createPatientPrescription";
 import { updateMedicineAndDosageHandler } from "../../controllers/doctors/updateDosageInPatentPrescription";
 import { addMedicineToPatientPrescriptionHandler } from "../../controllers/doctors/addMedicineToPatientPrescription";
+import { getPatientPrescriptionsHandler } from "../../controllers/doctors/getPatientPrescriptionsHandler";
+import { submitPrescriptionHandler } from "../../controllers/doctors/submitPrescription";
 
 const doctorRouter = express.Router();
 
@@ -52,10 +54,7 @@ doctorRouter
 
    .patch("/change-password", updateDoctorPassword)
 
-   .post(
-      "/appointments/:patientId/follow-up",
-      scheduleFollowUpAppointmentHandler
-   )
+   .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
 
    .get("/available-time-slots", viewAvailableTimeSlots)
 
@@ -77,32 +76,22 @@ doctorRouter
 
    .get("/wallets", authenticateWalletUser, getDoctorWalletHandler)
 
-   .patch(
-      "/wallet-transactions",
-      authenticateWalletUser,
-      performAWalletTransactionHandler
-   )
+   .patch("/wallet-transactions", authenticateWalletUser, performAWalletTransactionHandler)
 
-   .patch(
-      "/wallet-recharge",
-      authenticateWalletUser,
-      rechargeDoctorWalletHandler
-   )
+   .patch("/wallet-recharge", authenticateWalletUser, rechargeDoctorWalletHandler)
 
    .get("/credit-card-configuration", configureCreditCardPaymentHandler)
 
    .post("/credit-card-payment", makeCreditCardPaymentHandler)
 
+   .get("/patient/:patientId/prescription", getPatientPrescriptionsHandler)
+
    .post("/patient/:patientId/prescription", createPatientPrescriptionHandler)
 
-   .put(
-      "/prescriptions/:prescriptionId/:medicineId",
-      updateMedicineAndDosageHandler
-   )
+   .put("/prescriptions/:prescriptionId/medicine/:medicineId", updateMedicineAndDosageHandler)
 
-   .put(
-      "/prescriptions/:prescriptionId/",
-      addMedicineToPatientPrescriptionHandler
-   );
+   .put("/prescriptions/:prescriptionId/", addMedicineToPatientPrescriptionHandler)
+
+   .put("/prescriptions/:prescriptionId/submit", submitPrescriptionHandler);
 
 export default doctorRouter;

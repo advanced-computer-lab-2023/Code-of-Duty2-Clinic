@@ -7,7 +7,6 @@ import { BrowserRouter } from "react-router-dom";
 import { CustomThemeProvider } from "./contexts/ThemeContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
     <BrowserRouter>
       <CustomThemeProvider>
         <CssBaseline>
@@ -15,5 +14,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </CssBaseline>
       </CustomThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
 );

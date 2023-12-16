@@ -1,11 +1,9 @@
-import { Schema } from 'mongoose';
-
-
+import PrescribedMedicine from "./PrescribedMedicine";
 
 export interface Prescription {
-    date: Date;
-    doctorId: Schema.Types.ObjectId;
-    patientId: Schema.Types.ObjectId;
-    status: 'filled' | 'unfilled';
-    medicines: { medicineId: Schema.Types.ObjectId; dosage: string; }[];
+   date: Date;
+   doctorId: string;
+   patientId: string;
+   status: "filled" | "unfilled";
+   medicines: Array<PrescribedMedicine>;
 }

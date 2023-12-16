@@ -437,3 +437,14 @@ export const getPatientDoctors = async (
 
   return doctors;
 };
+
+
+export const getPatientNameMobile= async (patientId:string)=>{
+  const patientInfo  = await Patient.findById(patientId).select({name:1,mobileNumber:1})
+  return patientInfo
+}
+
+export const getPatientNameMobilePackage= async (patientId:string)=>{
+  const patientInfo  = await Patient.findById(patientId).select({name:1,mobileNumber:1,'subscribedPackage':1})
+  return patientInfo
+}
