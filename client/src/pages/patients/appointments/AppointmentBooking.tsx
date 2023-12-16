@@ -7,7 +7,7 @@ import {
   Autocomplete,
   TextField,
   Button,
-  Container,
+  Container
 } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
@@ -18,10 +18,10 @@ import { Doctor } from "../../../types";
 import SlotsRangeModal from "../../../components/SlotsRangeModal";
 import { useNavigate } from "react-router-dom";
 
-const enum AppointmentBookingOption {
+export const enum AppointmentBookingOption {
   SELF = "SELF",
   REGISTERED_FAMILY_MEMBER = "REGISTERED_FAMILY_MEMBER",
-  DEPENDENT_FAMILY_MEMBER = "DEPENDENT_FAMILY_MEMBER",
+  DEPENDENT_FAMILY_MEMBER = "DEPENDENT_FAMILY_MEMBER"
 }
 
 const getAllAvailableDoctors = async () => {
@@ -30,20 +30,16 @@ const getAllAvailableDoctors = async () => {
 };
 
 const getRegisteredFamilyMembers = async () => {
-  const response = await axios.get(
-    `${config.serverUri}/patients/family-members`
-  );
+  const response = await axios.get(`${config.serverUri}/patients/family-members`);
   return response.data.members;
 };
 
 const getDependentFamilyMembers = async () => {
-  const response = await axios.get(
-    `${config.serverUri}/patients/dependent-family-members`
-  );
+  const response = await axios.get(`${config.serverUri}/patients/dependent-family-members`);
   return response.data;
 };
 
-type BookingAppointmentParams = {
+export type BookingAppointmentParams = {
   bookingOption: AppointmentBookingOption;
   doctorId: string;
   patientId?: string;
@@ -51,10 +47,28 @@ type BookingAppointmentParams = {
   endTime: Date;
 };
 
+export const getNavigationLinkToPayment = ({
+  bookingOption,
+  doctorId,
+  patientId,
+  startTime,
+  endTime
+}: BookingAppointmentParams) => {
+  switch (bookingOption) {
+    case AppointmentBookingOption.SELF:
+      return `/patient/appointments/${doctorId}/payment?st=${startTime.toISOString()}&et=${endTime.toISOString()}`;
+
+    case AppointmentBookingOption.REGISTERED_FAMILY_MEMBER:
+      return `/patient/appointments/${doctorId}/payment?id=${patientId}&type=r&st=${startTime.toISOString()}&et=${endTime.toISOString()}`;
+    case AppointmentBookingOption.DEPENDENT_FAMILY_MEMBER:
+      return `/patient/appointments/${doctorId}/payment?id=${patientId}&type=d&st=${startTime.toISOString()}&et=${endTime.toISOString()}`;
+    default:
+      return "/patient/appointments";
+  }
+};
+
 const AppointmentBooking = () => {
-  const [appointmentOption, setAppointmentOption] = useState(
-    AppointmentBookingOption.SELF
-  );
+  const [appointmentOption, setAppointmentOption] = useState(AppointmentBookingOption.SELF);
   const [doctorId, setDoctorId] = useState("");
   const [patientId, setPatientId] = useState<string | undefined>();
 
@@ -64,44 +78,12 @@ const AppointmentBooking = () => {
   const [slotsModalOpen, setSlotsModalOpen] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAppointmentOption(
-      (event.target as HTMLInputElement).value as AppointmentBookingOption
-    );
+    setAppointmentOption((event.target as HTMLInputElement).value as AppointmentBookingOption);
   };
 
   const navigate = useNavigate();
-  const handleNavigateToPayment = ({
-    bookingOption,
-    doctorId,
-    patientId,
-    startTime,
-    endTime,
-  }: BookingAppointmentParams) => {
-    switch (bookingOption) {
-      case AppointmentBookingOption.SELF:
-        navigate(
-          `/patient/appointments/${doctorId}/payment?st=${startTime.toISOString()}&et=${endTime.toISOString()}`
-        );
-        break;
-      case AppointmentBookingOption.REGISTERED_FAMILY_MEMBER:
-        navigate(
-          `/patient/appointments/${doctorId}/payment?id=${patientId}&type=r&st=${startTime.toISOString()}&et=${endTime.toISOString()}`
-        );
-        break;
-      case AppointmentBookingOption.DEPENDENT_FAMILY_MEMBER:
-        navigate(
-          `/patient/appointments/${doctorId}/payment?id=${patientId}&type=d&st=${startTime.toISOString()}&et=${endTime.toISOString()}`
-        );
-        break;
-      default:
-        break;
-    }
-  };
 
-  const getAllAvailableDoctorsQuery = useQuery(
-    ["doctors"],
-    getAllAvailableDoctors
-  );
+  const getAllAvailableDoctorsQuery = useQuery(["doctors"], getAllAvailableDoctors);
 
   const getAllRegisteredFamilyMembersQuery = useQuery(
     ["registeredFamilyMembers"],
@@ -156,56 +138,42 @@ const AppointmentBooking = () => {
               options={getAllAvailableDoctorsQuery.data || []}
               getOptionLabel={(option: Doctor) => option.name}
               onChange={(_, value: any) => setDoctorId(value._id || "")}
-              renderInput={(params) => (
-                <TextField {...params} label="Select a Doctor" />
-              )}
+              renderInput={(params) => <TextField {...params} label="Select a Doctor" />}
             />
           </div>
         )}
 
         <div>
-          {appointmentOption ===
-            AppointmentBookingOption.REGISTERED_FAMILY_MEMBER && (
+          {appointmentOption === AppointmentBookingOption.REGISTERED_FAMILY_MEMBER && (
             <div>
               <h4>Registered Family Members: </h4>
               {getAllRegisteredFamilyMembersQuery.isLoading ? (
                 <div>Loading...</div>
               ) : getAllRegisteredFamilyMembersQuery.isError ? (
-                <div>
-                  {getErrorMessage(getAllRegisteredFamilyMembersQuery.error)}
-                </div>
+                <div>{getErrorMessage(getAllRegisteredFamilyMembersQuery.error)}</div>
               ) : (
                 <Autocomplete
                   options={getAllRegisteredFamilyMembersQuery.data || []}
                   getOptionLabel={(option: any) => option.name}
                   onChange={(_, member: any) => setPatientId(member.id || "")}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select a Patient" />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="Select a Patient" />}
                 />
               )}
             </div>
           )}
-          {appointmentOption ===
-            AppointmentBookingOption.DEPENDENT_FAMILY_MEMBER && (
+          {appointmentOption === AppointmentBookingOption.DEPENDENT_FAMILY_MEMBER && (
             <div>
               <h4>Dependent Family Members: </h4>
               {getAllDependentFamilyMembersQuery.isLoading ? (
                 <div>Loading...</div>
               ) : getAllDependentFamilyMembersQuery.isError ? (
-                <div>
-                  {getErrorMessage(getAllDependentFamilyMembersQuery.error)}
-                </div>
+                <div>{getErrorMessage(getAllDependentFamilyMembersQuery.error)}</div>
               ) : (
                 <Autocomplete
                   options={getAllDependentFamilyMembersQuery.data || []}
                   getOptionLabel={(option: any) => option.name}
-                  onChange={(_, member: any) =>
-                    setPatientId(member.nationalId || "")
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select a Patient" />
-                  )}
+                  onChange={(_, member: any) => setPatientId(member.nationalId || "")}
+                  renderInput={(params) => <TextField {...params} label="Select a Patient" />}
                 />
               )}
             </div>
@@ -228,23 +196,25 @@ const AppointmentBooking = () => {
         selectedEndTime={selectedEndTime}
         setSelectedEndTime={setSelectedEndTime}
         handleSaveTimeSlot={() => {
-          handleNavigateToPayment({
-            doctorId,
-            patientId,
-            startTime: selectedStartTime!,
-            endTime: selectedEndTime!,
-            bookingOption: appointmentOption,
-          });
+          navigate(
+            getNavigationLinkToPayment({
+              doctorId,
+              patientId,
+              startTime: selectedStartTime!,
+              endTime: selectedEndTime!,
+              bookingOption: appointmentOption
+            })
+          );
           setSlotsModalOpen(false);
         }}
         errorMessage={
           !selectedStartTime
             ? "Start time must be selected"
             : !selectedEndTime
-            ? "End time must be selected"
-            : selectedStartTime > selectedEndTime
-            ? "Start time cannot be greater than end time"
-            : ""
+              ? "End time must be selected"
+              : selectedStartTime > selectedEndTime
+                ? "Start time cannot be greater than end time"
+                : ""
         }
       />
     </Container>

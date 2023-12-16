@@ -25,6 +25,7 @@ import PatientDoctorsPage from "../../pages/patients/doctor-interactions/ViewPat
 import ChatsView from "../../features/chats/ChatsView";
 import UserRole from "../../types/enums/UserRole";
 import FollowUpRequestsPage from "../../pages/patients/appointments/FollowUpRequests";
+import AppointmentsSchedule from "../../features/appointments/AppointmentsSchedule";
 
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
@@ -152,6 +153,11 @@ export const followUpRequestsRoute: Route = {
   element: <FollowUpRequestsPage />
 };
 
+export const patientAppointmentSchedulingRoute: Route = {
+  path: "/patient/appointment-scheduling",
+  element: <AppointmentsSchedule />
+};
+
 const routes: Route[] = [
   patientDashboardRoute,
   viewAllDoctorsRoute,
@@ -181,7 +187,8 @@ const routes: Route[] = [
   appointmentPaymentRoute,
   patientDoctorsRoute,
   chatsRoute,
-  followUpRequestsRoute
+  followUpRequestsRoute,
+  patientAppointmentSchedulingRoute
 ];
 
 export default routes;

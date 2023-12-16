@@ -92,7 +92,7 @@ export const acceptFollowUpRequestForDependentPatient = async (
   await followUpAppointmentRequest.save();
 };
 
-const scheduleAFollowUpAppointmentForDependent = async (
+export const scheduleAFollowUpAppointmentForDependent = async (
   mainPatientId: string,
   dependentNationalId: string,
   doctorId: string,

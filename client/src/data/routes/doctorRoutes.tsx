@@ -24,7 +24,7 @@ import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
 import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 import CreateWallet from "../../pages/doctors/wallet/CreateWallet";
 import ChatsView from "../../features/chats/ChatsView";
-import DoctorSchedule from "../../pages/doctors/DoctorSchedule";
+import DoctorSchedule from "../../features/appointments/AppointmentsSchedule";
 import UserRole from "../../types/enums/UserRole";
 import FollowUpRequestsPage from "../../pages/doctors/FollowUpRequests";
 export const doctorDashboardRoute: Route = {
