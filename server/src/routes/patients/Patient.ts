@@ -62,6 +62,8 @@ patientRouter.use(authorizeUser(UserRole.PATIENT));
 
 patientRouter
 
+  .get("/family-members/dependent/prescriptions", getPatientDependentFamilyMemberPrescriptions)
+
   .get("/patient-info", getPatientInfo)
 
   .get("/patient-doctors", getPatientDoctorsHandler)
@@ -78,22 +80,10 @@ patientRouter
 
   .get("/appointments", getAppointmentsWithAllDoctors)
 
-  .get("/family-members/requests", getPatientRegisteredFamilyMemberRequests)
-
-  .get("/family-members/registered", getPatientRegisteredFamilyMembers)
-
-  .get("/family-members/dependent", getPatientDependentFamilyMembers)
-
-  .get("/family-members/registered/member", getPatientRegisteredFamilyMemberById)
-
-  .get("/family-members/dependent/member", getPatientDependentFamilyMemberById)
-
-  .get("family-members/dependent/prescriptions", getPatientDependentFamilyMemberPrescriptions)
-
-
   .patch("/change-password", updatePatientPassword)
 
   .get("/health-records", getPatientHealthRecords)
+
   .post("/family-members/registered", addPatientRegisteredFamilyMember)
 
   .delete("/family-members/registered", deletePatientRegisteredFamilyMember)

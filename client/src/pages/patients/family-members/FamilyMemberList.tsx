@@ -1,4 +1,5 @@
 import { Box, Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import { DependentFamilyMember, RegisteredFamilyMember } from "../../../types";
 
 
 

@@ -7,10 +7,14 @@ import { Response } from "express";
 import DependentPrescription from "../../models/prescriptions/DependentPrescription";
 
 export const getPatientDependentFamilyMemberPrescriptions = async (req: AuthorizedRequest, res: Response) => {
-    const nationalId = req.params.id;
+    const nationalId = req.query.nationalId;
+    console.log(nationalId);
+    if (!nationalId) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Missing nationalId parameter' });
+    }
     try {
         const prescriptions = await DependentPrescription 
-            .find({ nationalId: nationalId })
+            .find({ patientNationalId: nationalId })
             .populate({
                 path: 'doctorId',
                 select: 'name -_id', // replace 'name' with the actual field name for the doctor's name
