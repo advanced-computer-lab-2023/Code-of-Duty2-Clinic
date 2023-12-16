@@ -6,7 +6,7 @@ import { Box, useMediaQuery } from "@mui/material";
 import Navbar from "../components/navigation/Navbar";
 import UserPanel from "../components/navigation/UserPanel";
 import Sidebar from "../components/navigation/Sidebar";
-// import Footer from "../components/navigation/Footer";
+import Footer from "../components/navigation/Footer";
 import { patientSignUpRoute, doctorSignUpRoute } from "../data/routes/guestRoutes";
 import useFirstPath from "../hooks/useFirstPath";
 import getRequiredSidebarItems from "../utils/getRequiredSidebarItems";
@@ -87,7 +87,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       <>
         <Navbar />
         {children}
-        {/* <Footer /> */}
+        <Footer />
       </>
     );
   } else {
