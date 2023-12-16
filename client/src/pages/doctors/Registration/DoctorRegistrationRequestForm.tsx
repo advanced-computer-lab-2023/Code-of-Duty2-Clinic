@@ -1,46 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
-  Card,
-  CardContent,
-  Container,
-  Stack,
-  Step,
-  StepLabel,
-  Stepper,
+  TextField,
+  Grid,
+  Paper,
   Typography,
+  Container,
+  InputLabel,
+  Select,
+  MenuItem,
+  InputAdornment
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { config } from "../../../configuration";
-import StepOneForm from "./components/stepOne";
-import StepTwoForm from "./components/stepTwo";
-import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "../../../utils/displayError";
 
-export interface IFormOneData {
-  username: string;
-  password: string;
-  email: string;
-  name: string;
-  gender: string;
-  mobileNumber: string;
-  dateOfBirth: string;
-}
-export interface IFormTwoData {
-  hourlyRate: string;
-  affiliation: string;
-  educationalBackground: string;
-  medicalDegree: string;
-  speciality?: string;
-}
-
-export interface IExperienceFile {
-  url: string;
-  DocumentType: string;
-  name: string;
-}
-
-interface FormData {
+interface IFormData {
   username: string;
   password: string;
   email: string;
@@ -52,129 +28,218 @@ interface FormData {
   affiliation: string;
   educationalBackground: string;
   medicalDegree: string;
-  speciality?: string;
+  speciality: string;
   status: string;
 }
 
 const DoctorRegistrationRequestForm: React.FC = () => {
-  const [activeStep, setActiveStep] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const stepOneData = useRef<IFormOneData>(null!);
-  const stepTwoData = useRef<IFormTwoData>(null!);
+  const [formValid, setFormValid] = useState<boolean>(false);
+  const [formData, setFormData] = useState<IFormData>({
+    username: "",
+    password: "",
+    email: "",
+    name: "",
+    gender: "",
+    mobileNumber: "",
+    dateOfBirth: "",
+    hourlyRate: "",
+    affiliation: "",
+    educationalBackground: "",
+    medicalDegree: "",
+    speciality: "",
+    status: "pending documents upload"
+  });
 
+  const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
   const navigate = useNavigate();
 
-  function handleStepOneData(formData: IFormOneData) {
-    stepOneData.current = formData;
-  }
+  const handleChange = (field: keyof IFormData, value: string) => {
+    setFormData((prevData) => ({ ...prevData, [field]: value }));
+    validateForm(); // Validate the form on each field change
+  };
 
-  function handleStepTwoData(formData: IFormTwoData) {
-    stepTwoData.current = formData;
-  }
+  const validateForm = () => {
+    const isPasswordValid = strongPasswordRegex.test(formData.password);
+    const isEmailValid = /\S+@\S+\.\S+/.test(formData.email);
+    const isHourlyRateValid = parseFloat(formData.hourlyRate) >= 0;
 
-  async function submitRequest() {
-    const formData: FormData = {
-      ...stepOneData.current,
-      ...stepTwoData.current,
-      status: "pending documents upload",
-    };
+    const isValid =
+      Object.values(formData).every((field) => field !== "") &&
+      isPasswordValid &&
+      isEmailValid &&
+      isHourlyRateValid;
+
+    setFormValid(isValid);
+  };
+
+  const handleSubmit = async () => {
+    console.log("Submit Request:", formData);
+
     try {
-      await axios.post(
-        `${config.serverUri}/auth/doctor-registration`,
-        formData
-      );
+      await axios.post(`${config.serverUri}/auth/doctor-registration`, formData);
       navigate("/login/doctor");
     } catch (error: any) {
       setErrorMessage(getErrorMessage(error));
     }
-  }
-
-  const steps = ["Personal Info", "Experience"];
-
-  const handleNext = () => {
-    setActiveStep((activeStep) => activeStep + 1);
   };
 
-  const handleBack = () => {
-    setActiveStep((activeStep) => activeStep - 1);
-  };
+  useEffect(() => {
+    validateForm();
+  }, []);
 
   return (
-    <Card sx={{ maxWidth: 450, margin: "auto" }}>
-      <CardContent>
-        <Stack
-          minWidth={"300px"}
-          margin={"auto"}
-          sx={{ backgroundColor: "white" }}
-          direction={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Typography fontSize={20} fontWeight={500} textAlign={"center"}>
-            Doctor Registration Request
-          </Typography>
-          <Container>
-            <Stepper
-              sx={{ marginTop: 5, marginBottom: 2 }}
-              activeStep={activeStep}
+    <Container
+      component="main"
+      maxWidth="md"
+      style={{
+        height: "80vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <Paper elevation={3} style={{ padding: 20, width: "100%" }}>
+        <Typography variant="h5" align="center" fontSize="1.9rem" fontWeight="bold" gutterBottom>
+          Doctor Registration Request
+        </Typography>
+
+        <Grid container spacing={2}>
+          {/* Personal Information */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Username"
+              fullWidth
+              value={formData.username}
+              onChange={(e) => handleChange("username", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              value={formData.password}
+              onChange={(e) => handleChange("password", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Full Name"
+              fullWidth
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <InputLabel>Gender</InputLabel>
+            <Select
+              fullWidth
+              value={formData.gender}
+              onChange={(e) => handleChange("gender", e.target.value as string)}
             >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item xs={12} sm={6} style={{ marginTop: 25 }}>
+            <TextField
+              label="Date of Birth"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true
+              }}
+              value={formData.dateOfBirth}
+              onChange={(e) => handleChange("dateOfBirth", e.target.value)}
+            />
+          </Grid>
 
-            <div>
-              {activeStep === 0 && (
-                <StepOneForm
-                  key={activeStep}
-                  passFormDataToParent={(data: IFormOneData) =>
-                    handleStepOneData(data)
-                  }
-                />
-              )}
-              {activeStep === 1 && (
-                <StepTwoForm
-                  key={activeStep}
-                  passFormDataToParent={(data: IFormTwoData) =>
-                    handleStepTwoData(data)
-                  }
-                />
-              )}
+          {/* Contact Information */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Email"
+              fullWidth
+              value={formData.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="number"
+              label="Mobile Number"
+              fullWidth
+              value={formData.mobileNumber}
+              onChange={(e) => handleChange("mobileNumber", e.target.value)}
+            />
+          </Grid>
 
-              <Stack
-                direction={"row"}
-                justifyContent={"space-between"}
-                marginBottom={7}
-              >
-                <Button disabled={activeStep === 0} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  onClick={
-                    activeStep === steps.length - 1 ? submitRequest : handleNext
-                  }
-                >
-                  {activeStep === steps.length - 1 ? "Submit Request" : "Next"}
-                </Button>
-              </Stack>
-            </div>
-          </Container>
-          <Typography
-            fontSize={15}
-            fontWeight={350}
-            textAlign={"center"}
-            color="red"
-          >
+          {/* Professional Information */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Hourly Rate In USD"
+              fullWidth
+              type="number"
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>
+              }}
+              value={formData.hourlyRate}
+              onChange={(e) => handleChange("hourlyRate", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Affiliation"
+              fullWidth
+              value={formData.affiliation}
+              onChange={(e) => handleChange("affiliation", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Educational Background"
+              fullWidth
+              value={formData.educationalBackground}
+              onChange={(e) => handleChange("educationalBackground", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Medical Degree"
+              fullWidth
+              value={formData.medicalDegree}
+              onChange={(e) => handleChange("medicalDegree", e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Speciality"
+              fullWidth
+              value={formData.speciality}
+              onChange={(e) => handleChange("speciality", e.target.value)}
+            />
+          </Grid>
+        </Grid>
+
+        {errorMessage && (
+          <Typography color="error" align="center">
             {errorMessage}
           </Typography>
-        </Stack>
-      </CardContent>
-    </Card>
+        )}
+
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+          <Button
+            style={{ width: "30%" }}
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            disabled={!formValid}
+          >
+            Submit
+          </Button>
+        </div>
+      </Paper>
+    </Container>
   );
 };
 
