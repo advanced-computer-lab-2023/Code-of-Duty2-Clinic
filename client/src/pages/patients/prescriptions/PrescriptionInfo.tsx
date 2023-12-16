@@ -28,7 +28,7 @@ const PrescriptionInfo: React.FC = () => {
     const navigate = useNavigate();
 
     const handleClick = (medicine: IMedicine) => {
-      navigate('/patient/prescriptions/view/info/medicine', { state: { medicine: medicine } });
+      navigate('/patient/prescriptions/info/medicine', { state: { medicine: medicine } });
     }
 
     const handleBack = () => {

@@ -75,7 +75,7 @@ const PrescriptionList: React.FC = () => {
     }
 
     const handleRowClick = (prescription: IPrescription) => {
-        navigate('/patient/prescriptions/view/info', { state: { prescription: prescription } });
+        navigate('/patient/prescriptions/info', { state: { prescription: prescription } });
     };
 
     return (

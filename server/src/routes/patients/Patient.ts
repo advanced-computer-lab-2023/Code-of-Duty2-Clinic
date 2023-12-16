@@ -52,6 +52,7 @@ import { getPatientRegisteredFamilyMemberRequests } from "../../controllers/pati
 import { getAllPrescriptions } from "../../controllers/prescriptions/getAllPatientPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { addFamilyMembers } from "../../controllers/patients/addFamilyMembers";
+import { getPatientDependentFamilyMemberPrescriptions } from "../../controllers/prescriptions/getPatientDependentFamilyMemberPrescriptions";
 
 const patientRouter = express.Router();
 
@@ -86,7 +87,7 @@ patientRouter
 
   .get("/family-members/dependent/member", getPatientDependentFamilyMemberById)
 
-
+  .get("family-members/dependent/prescriptions", getPatientDependentFamilyMemberPrescriptions)
 
 
   .patch("/change-password", updatePatientPassword)

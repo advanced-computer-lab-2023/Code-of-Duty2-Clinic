@@ -63,7 +63,6 @@ const navigate = useNavigate();
         }
         label="Show Registered Family Members"
       />
-<Paper elevation={2} sx={{padding: '1vw'}}>
       {showRegisteredMembers && (
         <div>
           <FamilyMemberList 
@@ -86,7 +85,6 @@ const navigate = useNavigate();
         />
       )
       }
-      </Paper>   
     </div>
     
   );

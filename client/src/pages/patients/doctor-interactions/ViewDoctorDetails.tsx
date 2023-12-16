@@ -164,11 +164,33 @@ console.log(doctor);
             component="span"
             style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
           >
+            <SchoolIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Days Off:
+            </Typography>{" "}
+            {doctor._id}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
             <DateRangeIcon fontSize="small" />{" "}
             <Typography variant="body2" component="span" color="textSecondary">
               Available Slots:
             </Typography>{" "}
-            {doctor.availabilityTime}
+            {doctor.availableSlots.map((slot) => (
+              <div className="patientInfoDetail">
+                <Typography
+                  variant="h6"
+                  style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+                >
+                  {new Date(slot.startTime).toLocaleDateString('us-US')} {new Date(slot.startTime).toLocaleTimeString('en-US')} - {new Date(slot.endTime).toLocaleTimeString('en-US')}
+                 </Typography>
+              </div>
+            ))}
           </Typography>
         </div>
 
