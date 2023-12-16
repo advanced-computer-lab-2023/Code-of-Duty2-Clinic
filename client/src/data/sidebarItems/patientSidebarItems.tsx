@@ -23,6 +23,7 @@ import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PasswordIcon from "@mui/icons-material/Password";
+import RequestIcon from "@mui/icons-material/Reviews";
 
 import {
   addFamilyMemberRoute,
@@ -42,7 +43,8 @@ import {
   addRegisteredFamilyMemberRoute,
   appointmentBookingRoute,
   chatsRoute,
-  patientDoctorsRoute
+  patientDoctorsRoute,
+  followUpRequestsRoute
 } from "../routes/patientRoutes";
 
 export const patientSidebarItems = [
@@ -111,6 +113,11 @@ export const patientSidebarItems = [
         title: "My Appointments",
         href: patientAppointmentsRoute.path,
         icon: <CalendarMonthIcon />
+      },
+      {
+        title: "My Follow Up Requests",
+        href: followUpRequestsRoute.path,
+        icon: <RequestIcon />
       },
       {
         title: "Book an Appointment",
