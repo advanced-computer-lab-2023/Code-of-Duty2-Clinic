@@ -23,13 +23,13 @@ import {
   authenticateWalletPatientHandler,
   doesAPatientHaveAWalletHandler,
   getPatientWalletHandler,
-  rechargePatientWalletHandler,
+  rechargePatientWalletHandler
 } from "../../controllers/payments/wallets/Patient";
 import { performAWalletTransactionHandler } from "../../controllers/payments/wallets/Patient";
 import { authenticateWalletUser } from "../../middlewares/walletAuthentication";
 import {
   configureCreditCardPaymentHandler,
-  makeCreditCardPaymentHandler,
+  makeCreditCardPaymentHandler
 } from "../../controllers/payments/credit-cards";
 import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsD";
 import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsR";
@@ -53,6 +53,7 @@ import { getAllPrescriptions } from "../../controllers/prescriptions/getAllPatie
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
 import { addFamilyMembers } from "../../controllers/patients/addFamilyMembers";
 import { getPatientDependentFamilyMemberPrescriptions } from "../../controllers/prescriptions/getPatientDependentFamilyMemberPrescriptions";
+import { getAllNotificationsForPatientHandler } from "../../controllers/patients/notifications";
 
 const patientRouter = express.Router();
 
@@ -184,21 +185,15 @@ patientRouter
 
   .get("/wallets", authenticateWalletUser, getPatientWalletHandler)
 
-  .patch(
-    "/wallet-transactions",
-    authenticateWalletUser,
-    performAWalletTransactionHandler
-  )
+  .patch("/wallet-transactions", authenticateWalletUser, performAWalletTransactionHandler)
 
-  .patch(
-    "/wallet-recharge",
-    authenticateWalletUser,
-    rechargePatientWalletHandler
-  )
+  .patch("/wallet-recharge", authenticateWalletUser, rechargePatientWalletHandler)
 
   .get("/payments/configuration", configureCreditCardPaymentHandler)
 
   .post("/payments/create-payment-intent", makeCreditCardPaymentHandler)
+
+  .get("/notifications", getAllNotificationsForPatientHandler)
 
   .get("/:patientId", getPatientById);
 

@@ -15,32 +15,30 @@ export async function notifyUsersOnSystemForDependentAppointments(
 ) {
   const appointment = await findDependentPatientAppointmentById(appointmentId);
   const mainPatientId = appointment!.payerId.toString();
-  const patient = await findPatientById(mainPatientId);
+  const patient = await findPatientById(mainPatientId, "+receivedNotifications");
   const doctorId = appointment!.doctorId.toString();
-  const doctor = await findDoctorById(doctorId);
+  const doctor = await findDoctorById(doctorId, "+receivedNotifications");
 
   const notificationSentToPatient: NotificationSubjectDescription = {
     subject: `Appointment of your family members has been ${appointment?.status}`,
-    description: getAppointmentNotificationText(appointment!, doctor!.name),
+    description: getAppointmentNotificationText(appointment!, doctor!.name, true)
   };
   let createdNotification = await storeNotificationSentToPatient(
     patient!,
     notificationSentToPatient
   );
-  socket.to(mainPatientId).emit(`appointment_${appointment?.status}`, {
-    message: createdNotification,
+  socket.to(getSocketIdForUserId(mainPatientId)).emit("notification", {
+    message: createdNotification
   });
 
   const notificationSentToDoctor: NotificationSubjectDescription = {
     subject: `Your appointment has been ${appointment?.status}`,
-    description: getAppointmentNotificationText(appointment!, patient!.name),
+    description: getAppointmentNotificationText(appointment!, patient!.name)
   };
-  createdNotification = await storeNotificationSentToDoctor(
-    doctor!,
-    notificationSentToDoctor
-  );
-  socket.to(doctorId).emit(`appointment_${appointment?.status}`, {
-    message: createdNotification,
+
+  createdNotification = await storeNotificationSentToDoctor(doctor!, notificationSentToDoctor);
+  socket.to(getSocketIdForUserId(doctorId)).emit("notification", {
+    message: createdNotification
   });
 }
 
@@ -50,35 +48,28 @@ export async function notifyUsersOnSystemForRegisteredAppointments(
 ) {
   const appointment = await findAppointmentById(appointmentId);
   const patientId = appointment!.patientId.toString();
-  const patient = await findPatientById(patientId);
+  const patient = await findPatientById(patientId, "+receivedNotifications +name");
   const doctorId = appointment!.doctorId.toString();
-  const doctor = await findDoctorById(doctorId);
+  const doctor = await findDoctorById(doctorId, "+receivedNotifications +name");
 
   const notificationSentToPatient: NotificationSubjectDescription = {
     subject: `Your appointment has been ${appointment?.status}`,
-    description: getAppointmentNotificationText(appointment!, doctor!.name),
+    description: getAppointmentNotificationText(appointment!, doctor!.name)
   };
   let createdNotification = await storeNotificationSentToPatient(
     patient!,
     notificationSentToPatient
   );
-  socket
-    .to(getSocketIdForUserId(patientId))
-    .emit(`appointment_${appointment?.status}`, {
-      message: createdNotification,
-    });
+  socket.to(getSocketIdForUserId(patientId)).emit("notification", {
+    message: createdNotification
+  });
 
   const notificationSentToDoctor: NotificationSubjectDescription = {
     subject: `Your appointment has been ${appointment?.status}`,
-    description: getAppointmentNotificationText(appointment!, patient!.name),
+    description: getAppointmentNotificationText(appointment!, patient!.name)
   };
-  createdNotification = await storeNotificationSentToDoctor(
-    doctor!,
-    notificationSentToDoctor
-  );
-  socket
-    .to(getSocketIdForUserId(doctorId))
-    .emit(`appointment_${appointment?.status}`, {
-      message: createdNotification,
-    });
+  createdNotification = await storeNotificationSentToDoctor(doctor!, notificationSentToDoctor);
+  socket.to(getSocketIdForUserId(doctorId)).emit("notification", {
+    message: createdNotification
+  });
 }

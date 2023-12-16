@@ -4,10 +4,16 @@ import { getDoctorAppointmentFeesHandler } from "../../controllers/appointments/
 import {
   bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
   bookAnAppointmentForARegisteredFamilyMemberHandler as bookAppointmentForARegisteredFamilyMemberHandler,
-  bookAnAppointmentHandler as bookAppointmentHandler,
+  bookAnAppointmentHandler as bookAppointmentHandler
 } from "../../controllers/appointments/patients";
+import { authenticateUser } from "../../middlewares/authentication";
+import { authorizeUser } from "../../middlewares/authorization";
+import UserRole from "../../types/UserRole";
 
 const router = Router();
+
+router.use(authenticateUser);
+router.use(authorizeUser(UserRole.PATIENT));
 
 router
   .get("/appointments", getAppointmentsWithAllDoctors)

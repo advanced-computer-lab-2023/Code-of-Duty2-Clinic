@@ -31,18 +31,15 @@ type PaymentConfirmationComponentProps = {
   paymentPageTitle?: string;
   children: React.ReactNode;
 };
-const PaymentConfirmationComponent: React.FC<
-  PaymentConfirmationComponentProps
-> = ({
+const PaymentConfirmationComponent: React.FC<PaymentConfirmationComponentProps> = ({
   priceToPay,
   walletPaymentApiFunction,
   creditCardPaymentApiFunction,
   paymentPageTitle,
-  children,
+  children
 }) => {
   const [loading, setLoading] = useState(true);
-  const [stripePromise, setStripePromise] =
-    useState<null | Promise<Stripe | null>>(null);
+  const [stripePromise, setStripePromise] = useState<null | Promise<Stripe | null>>(null);
   const [clientSecret, setClientSecret] = useState<string>("");
   const [activeStage, setActiveStage] = useState(0);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -63,9 +60,7 @@ const PaymentConfirmationComponent: React.FC<
   };
 
   const fetchStripePublishableKey = async () => {
-    const response = await axios.get(
-      `${config.serverUri}/patients/payments/configuration`
-    );
+    const response = await axios.get(`${config.serverUri}/patients/payments/configuration`);
     const publishableKey = response.data.publishableKey;
     setStripePromise(loadStripe(publishableKey));
   };
@@ -108,12 +103,7 @@ const PaymentConfirmationComponent: React.FC<
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="70vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="70vh">
         <CircularProgress />
       </Box>
     );
@@ -125,7 +115,7 @@ const PaymentConfirmationComponent: React.FC<
         totalPriceToPay: priceToPay,
         handleWalletPayment,
         handleCreditCardPayment,
-        handleNext,
+        handleNext
       }}
     >
       <Container component="main" sx={{ mb: 4 }}>
@@ -147,8 +137,8 @@ const PaymentConfirmationComponent: React.FC<
               Thank you for Trust.
             </Typography>
             <Typography variant="subtitle1">
-              Your payment has been proccessed successfully. Wait for a
-              confirmation email for the receipt :')
+              Your payment has been processed successfully. Wait for a confirmation email for the
+              receipt :')
             </Typography>
             <Snackbar
               open={openSnackbar}
@@ -156,10 +146,7 @@ const PaymentConfirmationComponent: React.FC<
               onClose={() => setOpenSnackbar(false)}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             >
-              <AlertRef
-                onClose={() => setOpenSnackbar(false)}
-                severity="success"
-              >
+              <AlertRef onClose={() => setOpenSnackbar(false)} severity="success">
                 Payment placed successfully!
               </AlertRef>
             </Snackbar>

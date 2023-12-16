@@ -9,4 +9,5 @@ export interface Appointment {
     startTime: Date;
     endTime: Date;
   };
+  isForDependent?: boolean;
 }

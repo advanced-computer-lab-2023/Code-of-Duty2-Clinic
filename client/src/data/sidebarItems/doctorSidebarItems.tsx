@@ -9,10 +9,13 @@ import {
   addDoctorAvailableTimeSlotsRoute,
   doctorWalletRoute,
   doctorWalletCreationRoute,
+  followUpRequestsRoute
 } from "../routes/doctorRoutes";
 import PeopleIcon from "@mui/icons-material/People";
 import PlusIcon from "@mui/icons-material/AddBox";
+import RequestIcon from "@mui/icons-material/Reviews";
 import WalletIcon from "@mui/icons-material/AccountBalanceWallet";
+
 export const doctorSidebarItems = [
   {
     title: "Home",
@@ -20,9 +23,9 @@ export const doctorSidebarItems = [
       {
         title: "Home",
         href: doctorDashboardRoute.path,
-        icon: <HomeIcon />,
-      },
-    ],
+        icon: <HomeIcon />
+      }
+    ]
   },
   {
     title: "My Account",
@@ -30,14 +33,14 @@ export const doctorSidebarItems = [
       {
         title: "Update my account info",
         href: updateAccountInfoRoute.path,
-        icon: <PersonIcon />,
+        icon: <PersonIcon />
       },
       {
         title: "Update my password",
         href: `${doctorUpdatePasswordRoute.path}?type=doctor`,
-        icon: <PersonIcon />,
-      },
-    ],
+        icon: <PersonIcon />
+      }
+    ]
   },
   {
     title: "Wallets",
@@ -45,14 +48,14 @@ export const doctorSidebarItems = [
       {
         title: "View my wallet",
         href: doctorWalletRoute.path,
-        icon: <WalletIcon />,
+        icon: <WalletIcon />
       },
       {
         title: "Create a wallet",
         href: doctorWalletCreationRoute.path,
-        icon: <WalletIcon />,
-      },
-    ],
+        icon: <WalletIcon />
+      }
+    ]
   },
   {
     title: "Patients",
@@ -60,23 +63,23 @@ export const doctorSidebarItems = [
       {
         title: "View my patients",
         href: doctorRegisteredPatientsRoute.path,
-        icon: <PeopleIcon />,
+        icon: <PeopleIcon />
       },
       {
         title: "View my appointments",
         href: doctorAppointmentsRoute.path,
-        icon: <PeopleIcon />,
+        icon: <PeopleIcon />
       },
       {
-        title: "Search for Patient",
-        href: "/doctor/:doctorId/patient/search",
-        icon: <PeopleIcon />,
+        title: "Follow up requests",
+        href: followUpRequestsRoute.path,
+        icon: <RequestIcon />
       },
       {
         title: "Add Available Time Slots",
         href: addDoctorAvailableTimeSlotsRoute.path,
-        icon: <PlusIcon />,
-      },
-    ],
-  },
+        icon: <PlusIcon />
+      }
+    ]
+  }
 ];

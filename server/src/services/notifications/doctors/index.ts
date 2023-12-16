@@ -11,10 +11,7 @@ export const storeNotificationSentToDoctor = async (
   return await storeNotification(doctor, notification);
 };
 
-export const markNotificationAsReadForDoctor = async (
-  doctorId: string,
-  notificationId: string
-) => {
+export const markNotificationAsReadForDoctor = async (doctorId: string, notificationId: string) => {
   const doctor = await findDoctorById(doctorId);
   if (!doctor) {
     throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
@@ -23,7 +20,7 @@ export const markNotificationAsReadForDoctor = async (
 };
 
 export const getAllNotificationsForDoctor = async (doctorId: string) => {
-  const doctor = await findDoctorById(doctorId);
+  const doctor = await findDoctorById(doctorId, "receivedNotifications");
   if (!doctor) {
     throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
   }

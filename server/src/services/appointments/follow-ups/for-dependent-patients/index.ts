@@ -3,9 +3,11 @@ import FollowUpAppointmentRequestForDependentPatient from "../../../../models/ap
 import IFollowUpAppointmentRequestForDependentPatient from "../../../../models/appointments/interfaces/follow-ups/IFollowUpAppointmentRequestForDependentPatient";
 import TimePeriod from "../../../../types/TimePeriod";
 import UserRole from "../../../../types/UserRole";
+import { entityIdDoesNotExistError } from "../../../../utils/ErrorMessages";
+import { findDoctorById } from "../../../doctors";
 import {
   saveAppointmentForADependentFamilyMember,
-  validateAppointmentCreationForADependentFamilyMember,
+  validateAppointmentCreationForADependentFamilyMember
 } from "../../patients/dependent-family-members";
 
 export const findFollowUpRequestForDependentPatientById = async (
@@ -18,35 +20,51 @@ export const findFollowUpRequestForDependentPatientById = async (
   return result;
 };
 
-export const getFollowUpRequestsForDependentPatient = async (
-  patientId: string,
-  dependentNationalId: string
-) => {
-  const result = await FollowUpAppointmentRequestForDependentPatient.find({
+export const getFollowUpRequestsForDependentPatient = async (patientId: string) => {
+  const requests = await FollowUpAppointmentRequestForDependentPatient.find({
     patientId,
-    dependentNationalId,
+    status: "pending"
   });
-  result.forEach((request) => {
-    request.patientType = "dependent";
-  });
-  return result;
+  return await Promise.all(
+    requests.map(async (request) => {
+      const doctorId = request.doctorId.toString();
+      const doctor = await findDoctorById(doctorId, "name");
+      if (!doctor) throw new Error(entityIdDoesNotExistError("Doctor", doctorId));
+      return {
+        id: request._id,
+        user: {
+          id: doctorId,
+          name: doctor.name
+        },
+        timePeriod: request.timePeriod,
+        status: request.status,
+        reason: request.reason
+      };
+    })
+  );
+};
+
+export const deleteFollowUpRequestForDependentPatient = async (
+  followUpAppointmentRequestId: string
+) => {
+  await FollowUpAppointmentRequestForDependentPatient.findByIdAndDelete(
+    followUpAppointmentRequestId
+  );
 };
 
 export const createFollowUpRequestForDependentPatient = async (
   request: IFollowUpAppointmentRequestForDependentPatient
 ) => {
-  const followUpAppointmentRequest =
-    new FollowUpAppointmentRequestForDependentPatient(request);
+  const followUpAppointmentRequest = new FollowUpAppointmentRequestForDependentPatient(request);
   await followUpAppointmentRequest.save();
 };
 
 export const rejectFollowUpRequestForDependentPatient = async (
   followUpAppointmentRequestId: string
 ) => {
-  const followUpAppointmentRequest =
-    await findFollowUpRequestForDependentPatientById(
-      followUpAppointmentRequestId
-    );
+  const followUpAppointmentRequest = await findFollowUpRequestForDependentPatientById(
+    followUpAppointmentRequestId
+  );
   if (!followUpAppointmentRequest) {
     throw new Error("Follow up appointment request not found");
   }
@@ -58,10 +76,9 @@ export const acceptFollowUpRequestForDependentPatient = async (
   followUpAppointmentRequestId: string,
   appointmentTimePeriod: TimePeriod | undefined
 ) => {
-  const followUpAppointmentRequest =
-    await findFollowUpRequestForDependentPatientById(
-      followUpAppointmentRequestId
-    );
+  const followUpAppointmentRequest = await findFollowUpRequestForDependentPatientById(
+    followUpAppointmentRequestId
+  );
   if (!followUpAppointmentRequest) {
     throw new Error("Follow up appointment request not found");
   }
@@ -92,12 +109,11 @@ const scheduleAFollowUpAppointmentForDependent = async (
     UserRole.DOCTOR
   );
 
-  const initialAppointment =
-    await findMostRecentCompletedAppointmentForDependent(
-      doctorId,
-      mainPatientId,
-      dependentNationalId
-    );
+  const initialAppointment = await findMostRecentCompletedAppointmentForDependent(
+    doctorId,
+    mainPatientId,
+    dependentNationalId
+  );
   if (!initialAppointment || initialAppointment.status !== "completed") {
     throw new Error(
       "No recent completed appointment found between the doctor and dependent patient"
@@ -122,6 +138,6 @@ const findMostRecentCompletedAppointmentForDependent = async (
     doctorId,
     payerId,
     dependentNationalId,
-    status: "completed",
+    status: "completed"
   });
 };
