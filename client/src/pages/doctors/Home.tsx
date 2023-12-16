@@ -1,6 +1,8 @@
 import { useContext, useEffect } from "react";
 import socket from "../../services/Socket";
 import { UserContext } from "../../contexts/UserContext";
+import UpcomingAppointmentsCard from "../../components/upcomingAppointmentsDash";
+import AvailableAppointmentsToday from "../../components/viewAvaialbleTimeSlots";
 
 const Home = () => {
   const { user } = useContext(UserContext);
@@ -19,9 +21,16 @@ const Home = () => {
     };
   }, []);
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <>
+      <div style={{ width: "40%", marginLeft: "10%" }}>
+        <UpcomingAppointmentsCard isPatient={false} />
+      </div>
+      <div>
+        <div style={{ marginLeft: "60%", width: "30%" }}>
+          <AvailableAppointmentsToday />
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -24,9 +24,10 @@ import AppointmentPayment from "../../pages/patients/appointments/AppointmentsPa
 import PatientDoctorsPage from "../../pages/patients/doctor-interactions/ViewPatientDoctors";
 import ChatsView from "../../features/chats/ChatsView";
 
+
 export const patientDashboardRoute: Route = {
   path: "/patient/dashboard",
-  element: <Home />,
+  element: <Home/>
 };
 
 export const familyMemberPageRoute: Route = {

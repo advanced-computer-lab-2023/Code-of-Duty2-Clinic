@@ -4,7 +4,7 @@ import { getDoctorById } from "../../controllers/patients/getDoctorById";
 import { getAllDoctors } from "../../controllers/patients/getAllDoctors";
 import { getPatientById } from "../../controllers/patients/getPatientById";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
-import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
+import { getPatientInfo, getPatientInfoDashController } from "../../controllers/patients/getPatientInfo";
 import { getAppointmentsWithAllDoctors } from "../../controllers/appointments";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getPrescriptions";
 import { getPatientPrescriptions } from "../../controllers/prescriptions/getPatientPrescriptions";
@@ -72,6 +72,8 @@ patientRouter
 
   .get("/patient-info", getPatientInfo)
 
+  .get("/patient-info-dash", getPatientInfoDashController)
+  
   .get("/patient-doctors", getPatientDoctorsHandler)
 
   .post("/family-members", addFamilyMembers)
