@@ -5,22 +5,12 @@ import { findDoctorById } from "../../../services/doctors";
 import { AuthorizedRequest } from "../../../types/AuthorizedRequest";
 import { getDoctorAppointments } from "../../../services/appointments/doctors";
 
-export const getAppointmentsWithAllPatients = async (
-  req: AuthorizedRequest,
-  res: Response
-) => {
+export const getAppointmentsWithAllPatients = async (req: AuthorizedRequest, res: Response) => {
   const doctorId = req.user?.id;
   if (!doctorId)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "doctorId is required" });
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "doctorId is required" });
 
-  const allowedQueryParameters = [
-    "status",
-    "appointmentTime",
-    "isTimeSet",
-    "targetName",
-  ];
+  const allowedQueryParameters = ["status", "appointmentTime", "isTimeSet", "targetName"];
 
   if (
     Object.keys(req.query).length > allowedQueryParameters.length ||
@@ -28,9 +18,7 @@ export const getAppointmentsWithAllPatients = async (
   ) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json(
-        "only patient name, appointment status or time slot must be provided"
-      );
+      .json("only patient name, appointment status or time slot must be provided");
   }
 
   if (
@@ -53,8 +41,6 @@ export const getAppointmentsWithAllPatients = async (
 
     res.status(StatusCodes.OK).json(appointments);
   } catch (error: any) {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send({ message: error.message });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 };

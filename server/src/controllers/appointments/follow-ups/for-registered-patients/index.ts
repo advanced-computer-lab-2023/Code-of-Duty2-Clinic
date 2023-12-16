@@ -43,7 +43,7 @@ export const createFollowUpRequestForRegisteredHandler = async (
   req: AuthorizedRequest,
   res: Response
 ) => {
-  const patientId = req.body.registeredFamilyMemberId || req.user!.id;
+  const patientId = req.query.registeredFamilyMemberId || req.user!.id;
   const { doctorId, timePeriod, reason } = req.body;
   if (!patientId || !doctorId || !timePeriod || !reason) {
     res.status(StatusCodes.BAD_REQUEST).send({ message: "Missing required fields" });
