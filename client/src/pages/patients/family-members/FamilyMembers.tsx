@@ -73,7 +73,8 @@ const FamilyMembersComponent: React.FC = () => {
     return members.map((member, index) => (
       <Card key={index} style={{ margin: "8px" }}>
         <CardContent>
-          <Typography variant="h6">{member.name}</Typography>
+          <Typography variant="h6" style={{fontWeight:"normal"}}>Name:{" "}{member.name}</Typography>
+          <Typography variant="h6" style={{fontWeight:"normal"}}>Relation:{" "}{member.relation}</Typography>
           <Link
             to={{
               pathname: familyMemberPageRoute.path,
@@ -90,7 +91,8 @@ const FamilyMembersComponent: React.FC = () => {
     return members.map((member, index) => (
       <Card key={index} style={{ margin: "8px" }}>
         <CardContent>
-          <Typography variant="h6">{member.name}</Typography>
+          <Typography variant="h6" style={{fontWeight:"normal"}}>Name:{" "}{member.name}</Typography>
+          <Typography variant="h6" style={{fontWeight:"normal"}}>Relation:{" "}{member.relation}</Typography>
           <Link
             to={{
               pathname: familyMemberPageRoute.path,

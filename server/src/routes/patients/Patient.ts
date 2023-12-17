@@ -51,6 +51,6 @@ patientRouter
 
   .get("/notifications", getAllNotificationsForPatientHandler)
 
-  .get("/:patientId", getPatientById);
+  //.get("/:patientId", getPatientById);
 
 export default patientRouter;

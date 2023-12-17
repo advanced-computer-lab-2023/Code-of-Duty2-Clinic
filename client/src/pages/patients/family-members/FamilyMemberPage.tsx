@@ -3,20 +3,13 @@ import axios from "axios";
 import { config } from "../../../configuration";
 import { useQueryParams } from "../../../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Typography,
-  Paper,
-  Grid,
-  Card,
-  CardContent,
-} from "@mui/material";
+import { Button, Typography, Paper, Grid, Card, CardContent } from "@mui/material";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { healthPackagesOptionsRoute } from "../../../data/routes/patientRoutes";
 import { getFormattedDateTime } from "../../../utils/formatter";
 
 const FamilyMemberPage: React.FC = () => {
-  const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
+  const [familyMemberData, setFamilyMemberData] = useState<any | null>("");
   const queryParams = useQueryParams();
   const navigate = useNavigate();
   const type = queryParams.get("type");
@@ -27,7 +20,7 @@ const FamilyMemberPage: React.FC = () => {
     const fetchData = async () => {
       try {
         let healthPackageResponse;
-
+  
         if (type === "r") {
           healthPackageResponse = await axios.get<any>(
             `${config.serverUri}/patients/registered-family-members/${id}/health-package`
@@ -37,58 +30,52 @@ const FamilyMemberPage: React.FC = () => {
             `${config.serverUri}/patients/dependent-family-members/${id}/health-package`
           );
         }
-
+  
         if (!healthPackageResponse || !healthPackageResponse.data) {
-          console.log(
-            "No health package found for the selected family member."
-          );
+          console.log("No health package found for the selected family member.");
           return;
         }
-
+  
+        console.log("Health package data:", healthPackageResponse.data);
         setFamilyMemberData(healthPackageResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, [type, id]);
+  
 
   const handleCancelSubscription = async () => {
     try {
       // Make a PATCH request to cancel the subscription
 
       if (type === "r") {
-        await axios.patch<any>(
-          `${config.serverUri}/patients/cancel-subscription/${id}`
-        );
+        await axios.patch<any>(`${config.serverUri}/patients/cancel-subscription/${id}`);
       } else if (type === "d") {
-        await axios.patch<any>(
-          `${config.serverUri}/patients/cancel-subscription-dependent/${id}`
-        );
+        await axios.patch<any>(`${config.serverUri}/patients/cancel-subscription-dependent/${id}`);
       }
       setFamilyMemberData(
         type === "r"
-          ? (prevState: {
-              subscribedHealthPackage: { subscribedPackage: any };
-            }) => ({
+          ? (prevState: { subscribedHealthPackage: { subscribedPackage: any } }) => ({
               ...prevState,
               subscribedHealthPackage: {
                 ...prevState.subscribedHealthPackage,
                 subscribedPackage: {
                   ...prevState.subscribedHealthPackage.subscribedPackage,
                   endDate: today.toString(),
-                  status: "cancelled",
-                },
-              },
+                  status: "cancelled"
+                }
+              }
             })
           : (prevState: { subscribedPackage: any }) => ({
               ...prevState,
               subscribedPackage: {
                 ...prevState.subscribedPackage,
                 endDate: today.toString(),
-                status: "cancelled",
-              },
+                status: "cancelled"
+              }
             })
       );
       console.log("Subscription cancelled successfully.");
@@ -112,17 +99,13 @@ const FamilyMemberPage: React.FC = () => {
     }
     const formattedAmount = new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "USD"
     }).format(amount);
 
     return formattedAmount;
   }
   return (
-    <Grid
-      container
-      justifyContent="center"
-      style={{ padding: "16px", backgroundColor: "#f0f0f0" }}
-    >
+    <Grid container justifyContent="center" style={{ padding: "16px", backgroundColor: "#f0f0f0" }}>
       <Grid item xs={12} md={8} lg={6}>
         <Paper
           elevation={3}
@@ -131,7 +114,7 @@ const FamilyMemberPage: React.FC = () => {
             marginTop: "16px",
             textAlign: "center",
             background: "#ffffff",
-            color: "#333333",
+            color: "#333333"
           }}
         >
           <Typography
@@ -139,183 +122,172 @@ const FamilyMemberPage: React.FC = () => {
             style={{
               fontSize: "2rem",
               fontWeight: "bold",
-              marginBottom: "16px",
+              marginBottom: "16px"
             }}
           >
             Family Member Details
           </Typography>
-          {familyMemberData?.subscribedPackage ||
-          familyMemberData?.subscribedHealthPackage ? (
+          {familyMemberData?.subscribedPackage || familyMemberData?.subscribedHealthPackage ? (
             <div style={{ marginBottom: "16px" }}>
               <Card>
                 <CardContent>
-                  <Typography
-                    variant="h5"
-                    style={{ fontSize: "1.7rem", fontWeight: "bold" }}
-                  >
+                  <Typography variant="h5" style={{ fontSize: "1.7rem", fontWeight: "bold" }}>
                     Health Package Details
                   </Typography>
-                  <Typography
-                    style={{
-                      margin: "8px 0",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Name:{" "}
-                    {type === "r"
-                      ? familyMemberData.subscribedHealthPackage?.healthPackage
-                          ?.name
-                      : familyMemberData.healthPackage.name}
-                  </Typography>
-                  <Typography
-                    style={{
-                      margin: "8px 0",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Amount To Pay:{" "}
-                    {type === "r"
-                      ? formatAmountInUSD(
-                          familyMemberData.subscribedHealthPackage
-                            ?.healthPackage?.amountToPay
-                        )
-                      : formatAmountInUSD(
-                          familyMemberData.healthPackage.amountToPay
-                        )}
-                  </Typography>
-                  <Typography
-                    style={{
-                      margin: "8px 0",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Package Duration:{" "}
-                    {type === "r"
-                      ? formatPackageDurationInYears(
-                          familyMemberData.subscribedHealthPackage
-                            ?.healthPackage?.packageDurationInYears
-                        )
-                      : formatPackageDurationInYears(
-                          familyMemberData.healthPackage.packageDurationInYears
-                        )}
-                  </Typography>
-                  <Typography
-                    style={{
-                      margin: "8px 0",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Gained Doctor Session Discount:{" "}
-                    <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
-                    {type === "r"
-                      ? familyMemberData.subscribedHealthPackage?.healthPackage
-                          ?.discounts.gainedDoctorSessionDiscount *
-                          100 +
-                        "%"
-                      : familyMemberData.healthPackage?.discounts
-                          .gainedDoctorSessionDiscount *
-                          100 +
-                        "%"}
-                  </Typography>
 
-                  <Typography
-                    style={{
-                      margin: "8px 0",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Gained Pharmacy Medicines Discount:{" "}
-                    <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
-                    {type === "r"
-                      ? familyMemberData.subscribedHealthPackage?.healthPackage
-                          ?.discounts.gainedPharmacyMedicinesDiscount *
-                          100 +
-                        "%"
-                      : familyMemberData.healthPackage.discounts
-                          .gainedPharmacyMedicinesDiscount *
-                          100 +
-                        "%"}
-                  </Typography>
+                  {familyMemberData?.subscribedHealthPackage?.healthPackage ? (
+                    <>
+                      <Typography
+                        style={{
+                          margin: "8px 0",
+                          fontWeight: "bold",
+                          fontSize: "20px"
+                        }}
+                      >
+                        Name:{" "}
+                        {type === "r"
+                          ? familyMemberData.subscribedHealthPackage?.healthPackage?.name || "N/A"
+                          : familyMemberData.healthPackage?.name || "N/A"}
+                      </Typography>
+                      <Typography
+                        style={{
+                          margin: "8px 0",
+                          fontWeight: "bold",
+                          fontSize: "20px"
+                        }}
+                      >
+                        Amount To Pay:{" "}
+                        {type === "r"
+                          ? formatAmountInUSD(
+                              familyMemberData.subscribedHealthPackage?.healthPackage?.amountToPay
+                            )
+                          : formatAmountInUSD(familyMemberData.healthPackage?.amountToPay)}
+                      </Typography>
+                      <Typography
+                        style={{
+                          margin: "8px 0",
+                          fontWeight: "bold",
+                          fontSize: "20px"
+                        }}
+                      >
+                        Package Duration:{" "}
+                        {type === "r"
+                          ? formatPackageDurationInYears(
+                              familyMemberData.subscribedHealthPackage?.healthPackage
+                                ?.packageDurationInYears
+                            )
+                          : formatPackageDurationInYears(
+                              familyMemberData.healthPackage?.packageDurationInYears
+                            )}
+                      </Typography>
+                      <Typography
+                        style={{
+                          margin: "8px 0",
+                          fontWeight: "bold",
+                          fontSize: "20px"
+                        }}
+                      >
+                        Gained Doctor Session Discount:{" "}
+                        <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
+                        {type === "r"
+                          ? familyMemberData.subscribedHealthPackage?.healthPackage?.discounts
+                              .gainedDoctorSessionDiscount *
+                              100 +
+                              "%" || "N/A"
+                          : familyMemberData.healthPackage?.discounts.gainedDoctorSessionDiscount *
+                              100 +
+                              "%" || "N/A"}
+                      </Typography>
 
-                  <Typography
-                    style={{
-                      margin: "8px 0",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    Gained Family Members Discount:{" "}
-                    <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
-                    {type === "r"
-                      ? familyMemberData.subscribedHealthPackage?.healthPackage
-                          ?.discounts.gainedFamilyMembersDiscount *
-                          100 +
-                        "%"
-                      : familyMemberData.healthPackage.discounts
-                          .gainedFamilyMembersDiscount *
-                          100 +
-                        "%"}
-                  </Typography>
+                      <Typography
+                        style={{
+                          margin: "8px 0",
+                          fontWeight: "bold",
+                          fontSize: "20px"
+                        }}
+                      >
+                        Gained Pharmacy Medicines Discount:{" "}
+                        <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
+                        {type === "r"
+                          ? familyMemberData.subscribedHealthPackage?.healthPackage?.discounts
+                              .gainedPharmacyMedicinesDiscount *
+                              100 +
+                              "%" || "N/A"
+                          : familyMemberData.healthPackage?.discounts
+                              .gainedPharmacyMedicinesDiscount *
+                              100 +
+                              "%" || "N/A"}
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          margin: "8px 0",
+                          fontWeight: "bold",
+                          fontSize: "20px"
+                        }}
+                      >
+                        Gained Family Members Discount:{" "}
+                        <LocalOfferIcon style={{ fontSize: 20, marginRight: 5 }} />
+                        {type === "r"
+                          ? familyMemberData.subscribedHealthPackage?.healthPackage?.discounts
+                              .gainedFamilyMembersDiscount *
+                              100 +
+                              "%" || "N/A"
+                          : familyMemberData.healthPackage?.discounts.gainedFamilyMembersDiscount *
+                              100 +
+                              "%" || "N/A"}
+                      </Typography>
+                    </>
+                  ) : (
+                    <Typography style={{ fontSize: "18px", margin: "8px 0" }}>
+                      No health package details available.
+                    </Typography>
+                  )}
                 </CardContent>
               </Card>
               <Card style={{ marginTop: "16px" }}>
                 <CardContent>
-                  <Typography
-                    variant="h5"
-                    style={{ fontSize: "1.7rem", fontWeight: "bold" }}
-                  >
+                  <Typography variant="h5" style={{ fontSize: "1.7rem", fontWeight: "bold" }}>
                     Subscribed Health Package
                   </Typography>
                   <Typography
                     style={{
                       margin: "8px 0",
                       fontWeight: "bold",
-                      fontSize: "20px",
+                      fontSize: "20px"
                     }}
                   >
                     Start Date:{" "}
                     {type === "r"
                       ? getFormattedDateTime(
-                          familyMemberData.subscribedHealthPackage
-                            ?.subscribedPackage.startDate
+                          familyMemberData.subscribedHealthPackage?.subscribedPackage.startDate
                         )
-                      : getFormattedDateTime(
-                          familyMemberData.subscribedPackage?.startDate
-                        )}
+                      : getFormattedDateTime(familyMemberData.subscribedPackage?.startDate)}
                   </Typography>
                   <Typography
                     style={{
                       margin: "8px 0",
                       fontWeight: "bold",
-                      fontSize: "20px",
+                      fontSize: "20px"
                     }}
                   >
                     End Date:{" "}
                     {type === "r"
                       ? getFormattedDateTime(
-                          familyMemberData.subscribedHealthPackage
-                            ?.subscribedPackage.endDate
+                          familyMemberData.subscribedHealthPackage?.subscribedPackage.endDate
                         )
-                      : getFormattedDateTime(
-                          familyMemberData.subscribedPackage?.endDate
-                        )}
+                      : getFormattedDateTime(familyMemberData.subscribedPackage?.endDate)}
                   </Typography>
                   <Typography
                     style={{
                       margin: "8px 0",
                       fontWeight: "bold",
-                      fontSize: "20px",
+                      fontSize: "20px"
                     }}
                   >
                     Status:{" "}
                     {type === "r"
-                      ? familyMemberData.subscribedHealthPackage
-                          ?.subscribedPackage.status
+                      ? familyMemberData.subscribedHealthPackage?.subscribedPackage.status
                       : familyMemberData.subscribedPackage?.status}
                   </Typography>
                 </CardContent>
@@ -333,10 +305,9 @@ const FamilyMemberPage: React.FC = () => {
               onClick={handleCancelSubscription}
               disabled={
                 !(type === "r"
-                  ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
-                      ?.status === "subscribed"
-                  : familyMemberData?.subscribedPackage?.status[0] ===
-                    "subscribed")
+                  ? familyMemberData?.subscribedHealthPackage?.subscribedPackage?.status ===
+                    "subscribed"
+                  : familyMemberData?.subscribedPackage?.status[0] === "subscribed")
               }
               style={{ marginRight: "16px" }}
             >
@@ -348,10 +319,9 @@ const FamilyMemberPage: React.FC = () => {
               onClick={handleSubscribe}
               disabled={
                 type === "r"
-                  ? familyMemberData?.subscribedHealthPackage?.subscribedPackage
-                      ?.status === "subscribed"
-                  : familyMemberData?.subscribedPackage?.status[0] ===
+                  ? familyMemberData?.subscribedHealthPackage?.subscribedPackage?.status ===
                     "subscribed"
+                  : familyMemberData?.subscribedPackage?.status[0] === "subscribed"
               }
             >
               Subscribe
