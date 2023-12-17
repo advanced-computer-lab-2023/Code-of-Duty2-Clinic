@@ -86,6 +86,90 @@ Jira was used as our main issue tracking and project management tool for creatin
 
 </details>
 
+<details>
+<summary>Patient dashboard</summary>
+
+![Patient dashboard](docs/screenshots/demo/Patient_Dashboard.png)
+
+</details>
+
+<details>
+<summary>Book an appointment</summary>
+
+![Book an appointment](docs/screenshots/demo/Book_An_Appointment.png)
+
+</details>
+
+<details>
+<summary>View the appointment</summary>
+
+![View the appointment](docs/screenshots/demo/View_Appointments.png)
+
+</details>
+
+<details>
+<summary>Request a follow up</summary>
+
+![Request a follow up](docs/screenshots/demo/Request_An_Appointment_Follow_Up.png)
+
+</details>
+
+<details>
+<summary>View all doctors</summary>
+
+![PView all doctors](docs/screenshots/demo/View_Doctors.png)
+
+</details>
+
+<details>
+<summary>My doctors</summary>
+
+![My doctors](docs/screenshots/demo/My_Doctors.png)
+
+</details>
+
+<details>
+<summary>Chat with doctor</summary>
+
+![Chat with doctor](docs/screenshots/demo/Chat_with_Doctor.png)
+
+</details>
+
+<details>
+<summary>Family members</summary>
+
+![Family members](docs/screenshots/demo/Family_Members.png)
+
+</details>
+
+<details>
+<summary>Family members details</summary>
+
+![Family members details](docs/screenshots/demo/Family_Member_Details.png)
+
+</details>
+
+<details>
+<summary>Add register family member</summary>
+
+![Add register family member](docs/screenshots/demo/Add_Registered_Family_Member.png)
+
+</details>
+
+<details>
+<summary>Wallet</summary>
+
+![Wallet](docs/screenshots/demo/Wallet.png)
+
+</details>
+
+<details>
+<summary>Doctor login</summary>
+
+![Doctor login](docs/screenshots/demo/Doctor_Login.png)
+
+</details>
+
 ## Tech/Framework used
 
 This software uses the `MERN` technology stack. Here is a more comprehensive list of used technologies in this software:
