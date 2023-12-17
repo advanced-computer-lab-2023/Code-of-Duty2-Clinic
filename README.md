@@ -73,7 +73,9 @@ Jira was used as our main issue tracking and project management tool for creatin
 <details>
 <summary>Welcome page</summary>
 
-![Welcome page]()
+![Welcome page](docs/screenshots/demo/Welcome_Page_1.png)
+![Welcome page](docs/screenshots/demo/Welcome_Page_2.png)
+![Welcome page](docs/screenshots/demo/Welcome_Page_3.png)
 
 </details>
 
