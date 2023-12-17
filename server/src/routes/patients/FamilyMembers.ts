@@ -12,6 +12,9 @@ import {
 } from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
 import { getDependentFamilyMembers } from "../../controllers/patients/viewDependentFamilyMembers";
+import { getPatientDependentFamilyMembers } from "../../controllers/patients/getPatientDependentFamilyMembers";
+import { getPatientDependentFamilyMemberById } from "../../controllers/patients/getPatientDependentFamilyMemberById";
+import { getPatientDependentFamilyMemberPrescriptions } from "../../controllers/prescriptions/getPatientDependentFamilyMemberPrescriptions";
 
 const router = Router();
 
@@ -22,8 +25,6 @@ router
   .post("/family-members", addFamilyMembers)
 
   .get("/family-members/requests", getPatientRegisteredFamilyMemberRequests)
-
-  .get("/family-members/:familyMemberId", getPatientRegisteredFamilyMemberById)
 
   .post("/family-members/registered", addPatientRegisteredFamilyMember)
 
@@ -36,6 +37,21 @@ router
 
   .get("/family-members", getPatientRegisteredFamilyMembers)
 
-  .get("/dependent-family-members", getDependentFamilyMembers);
+  // .get("/dependent-family-members", getDependentFamilyMembers);
+
+  
+  .get("/family-members/requests", getPatientRegisteredFamilyMemberRequests)
+
+  .get("/family-members/registered", getPatientRegisteredFamilyMembers)
+
+  .get("/family-members/dependent", getPatientDependentFamilyMembers)
+
+  .get("/family-members/registered/member", getPatientRegisteredFamilyMemberById)
+
+  .get("/family-members/dependent/member", getPatientDependentFamilyMemberById)
+
+  .get("family-members/dependent/prescriptions", getPatientDependentFamilyMemberPrescriptions)
+
+  .get("/family-members/:familyMemberId", getPatientRegisteredFamilyMemberById)
 
 export default router;

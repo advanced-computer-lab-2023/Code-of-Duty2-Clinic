@@ -1,5 +1,4 @@
 import { useState,useEffect } from "react"
-import {  useLocation } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,7 +17,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InfoIcon from '@mui/icons-material/Info';
 import { FormControl, FormLabel } from '@mui/material';
 import axios, { AxiosResponse } from "axios";
-import { config } from "../../configuration";
+import { config } from "../../../configuration";
 
 const searchstyle = {
 

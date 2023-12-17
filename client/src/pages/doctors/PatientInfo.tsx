@@ -8,7 +8,7 @@ import { Person, Cake, Wc, Email, Phone } from "@mui/icons-material";
 export default function PatientInfo() {
   const patientId = useParams().patientId;
   const patient = useGetPatient(patientId!).data;
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   // Only load when the patient info is fetched
   if (!patient) {
@@ -29,10 +29,10 @@ export default function PatientInfo() {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button
           variant="contained"
-          onClick={() => history("/patients")}
+          onClick={() => navigate(-1)}
           style={{ marginTop: "1rem" }}
         >
-          Back to Patient List
+          Back
         </Button>
       </div>
     </div>

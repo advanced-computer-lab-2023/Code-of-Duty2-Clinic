@@ -1,59 +1,214 @@
-import axios from "axios";
-import { DoctorDetails } from "../../../types";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { config } from "../../../configuration";
-import { getFormattedDateTime } from "../../../utils/formatter";
+import { AttachMoney, Email, Person, Phone} from "@mui/icons-material";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import WorkIcon from '@mui/icons-material/Work';
+import BadgeIcon from '@mui/icons-material/Badge';
+import useGetDoctor from "../../../hooks/useGetDoctor";
+import { DateRangeIcon } from "@mui/x-date-pickers";
+import SchoolIcon from '@mui/icons-material/School';
 
 const ViewDoctorDetails: React.FC = () => {
-  const [doctor, setDoctor] = useState<DoctorDetails>({} as DoctorDetails);
-  const { doctorId } = useParams();
-  if (!doctorId) return <p>Invalid doctor id</p>;
-  const fetchDoctor = async () => {
-    try {
-      const response = await axios.get(
-        `${config.serverUri}/patients/doctors/${doctorId}`
-      );
-      console.log(response);
-      setDoctor(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDoctor();
-  }, []);
+const navigate = useNavigate();
+const location = useLocation();
+const doctorId = location.state?.doctorId;
+const doctor = useGetDoctor(doctorId).data;
+console.log(doctor);
 
   if (!doctor) return <p>Loading... </p>;
 
   return (
-    <div>
-      <h1>View Doctor Details</h1>
-      <ul>
-        <li>Name: {doctor?.name}</li>
-        <li>Speciality: {doctor?.speciality}</li>
-        <li>Session price: {doctor?.sessionPrice}</li>
-        <li>Email: {doctor?.email}</li>
-        <li>Mobile Number: {doctor?.mobileNumber}</li>
-        <li>Affiliation: {doctor?.affiliation}</li>
-        <li>Educational Background: {doctor?.educationalBackground}</li>
-        <li>
-          Available time slots:
-          <ul>
-            {doctor?.availableSlots &&
-              doctor?.availableSlots.map(
-                (slot: { startTime: string; endTime: string }, index) => (
-                  <li key={index}>
-                    {getFormattedDateTime(slot.startTime)} to{" "}
-                    {getFormattedDateTime(slot.endTime)}
-                  </li>
-                )
-              )}
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+  <Box marginBottom="2rem">
+    <Typography variant="h5" sx={{ fontSize: "2rem", marginBottom: "1rem" }}>
+      <Person fontSize="large" /> {doctor.name}
+    </Typography>
+  </Box>
+    <Paper elevation={1} sx={{ width: '90%', marginBottom: '2rem'}}>
+      <Box sx={{ margin: '2rem' }}>
+      <Box display="flex" justifyContent="center" marginBottom="2rem">
+  <BadgeIcon fontSize="large" />{" "}
+  <Typography variant="h5" sx={{ fontSize: "2rem", marginBottom: "1rem" }}>
+   Personal Details
+  </Typography>
+</Box>
+      <Typography
+        variant="h6"
+        component="span"
+        style={{ fontSize: "1.5rem", lineHeight: "2rem" }}
+      >
+      </Typography>
+      <div className="patientInfoDetails">
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Person fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Name:
+            </Typography>{" "}
+            {doctor.name}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Email fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Email:
+            </Typography>{" "}
+            {doctor.email}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Phone fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Mobile Number:
+            </Typography>{" "}
+            {doctor.mobileNumber}
+          </Typography>
+        </div>
+      </div>
+      </Box>
+    </Paper>
+
+    <Paper elevation={3} sx={{ width: '90%', marginBottom: '2rem'}}>
+
+        <Box sx={{ margin: '2rem' }}>
+      <Box display="flex" justifyContent="center" marginBottom="2rem">
+        <WorkIcon fontSize="large" />{" "}
+  <Typography variant="h5" sx={{ fontSize: "2rem", marginBottom: "1rem"}}>
+   Professional Details
+  </Typography>
+</Box>
+      <Typography
+        variant="h6"
+        component="span"
+        style={{ fontSize: "1.5rem", lineHeight: "2rem" }}
+      >
+      </Typography>
+      <div className="patientInfoDetails">
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+
+            <WorkIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Speciality:
+            </Typography>{" "}
+            {doctor.speciality}
+          </Typography>
+        </div>
+        <div>
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+           <AttachMoney fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Hourly Rate:
+            </Typography>{" "}
+            {doctor.hourlyRate}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Email fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Affiliation:
+            </Typography>{" "}
+            {doctor.affiliation}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <SchoolIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Educational Background:
+            </Typography>{" "}
+            {doctor.educationalBackground}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <SchoolIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Days Off:
+            </Typography>{" "}
+            {doctor._id}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <DateRangeIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Available Slots:
+            </Typography>{" "}
+            {doctor.availableSlots.map((slot) => (
+              <div className="patientInfoDetail">
+                <Typography
+                  variant="h6"
+                  style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+                >
+                  {new Date(slot.startTime).toLocaleDateString('us-US')} {new Date(slot.startTime).toLocaleTimeString('en-US')} - {new Date(slot.endTime).toLocaleTimeString('en-US')}
+                 </Typography>
+              </div>
+            ))}
+          </Typography>
+        </div>
+
+
+      </div>
+      <Box display="flex" justifyContent="center" marginBottom="2rem">
+        <Button variant="contained" color="primary" onClick={() => navigate('')}>
+          Book Appointment
+        </Button>
+      </Box>
+      </Box>
+    </Paper>
+    <Box display="flex" justifyContent="center" marginBottom="2rem">
+          <Button variant="contained" color="primary" onClick={() => navigate(-1)}>
+            Back to Doctors
+          </Button>
+        </Box>
+    </Box>
   );
 };
 
