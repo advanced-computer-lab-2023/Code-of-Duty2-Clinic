@@ -4,14 +4,12 @@ import { config } from '../configuration';
 import { RegisteredFamilyMember } from '../types';
 
 const getPatientRegisteredFamilyMembers = async (): Promise<RegisteredFamilyMember[]> => {
-    const { data } = await axios.get<RegisteredFamilyMember[]>(`${config.serverUri}/patients/family-members`);
-    return data;
+    const { data } = await axios.get(`${config.serverUri}/patients/family-members`);
+    return data.members;
 };
 
-
 const useGetPatientRegisteredFamilyMembers = () => {
-    return useQuery<RegisteredFamilyMember[]>(['patientFamilyMembers'], () => getPatientRegisteredFamilyMembers());
+    return useQuery<RegisteredFamilyMember[], Error>('patientFamilyMembers', getPatientRegisteredFamilyMembers);
 }
 
 export default useGetPatientRegisteredFamilyMembers;
-

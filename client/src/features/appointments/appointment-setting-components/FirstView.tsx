@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { UserContext } from "../../../contexts/UserContext";
 import UserRole from "../../../types/enums/UserRole";
+import BackIcon from "@mui/icons-material/ArrowBackOutlined";
 
 type Patient = {
   id: string;
@@ -42,8 +43,7 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
   });
 
   const getMyDoctorsQuery = useQuery(["myDoctors"], getAllMyDoctors, {
-    enabled:
-      (option === "set-up-appointment" || option === "follow-up-request") && viewOptionIndex === 0
+    enabled: option === "follow-up-request" && viewOptionIndex === 0
   });
 
   const getDoctorPatientsQuery = useQuery(["doctorPatients"], getDoctorPatients, {
@@ -55,8 +55,8 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
     getRegisteredFamilyMembers,
     {
       enabled:
-        (option === "set-up-appointment" || option === "follow-up-request") &&
-        (viewOptionIndex === 2 || viewOptionIndex === 4)
+        (option === "set-up-appointment" && (viewOptionIndex === 2 || viewOptionIndex === 4)) ||
+        (option === "follow-up-request" && viewOptionIndex === 4)
     }
   );
   const getAllDependentFamilyMembersQuery = useQuery(
@@ -64,8 +64,9 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
     getDependentFamilyMembers,
     {
       enabled:
-        (option === "set-up-appointment" || option === "follow-up-request") &&
-        (viewOptionIndex === 3 || viewOptionIndex === 5)
+        (option === "set-up-appointment" && (viewOptionIndex === 3 || viewOptionIndex === 5)) ||
+        option === "follow-up-request" ||
+        viewOptionIndex === 5
     }
   );
 
@@ -80,7 +81,7 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
   const handleRedirectToCalendarPage = () => {
     const pagePathname =
       userRole === UserRole.PATIENT
-        ? `/patient/schedule?doctorId=${doctorId}&${
+        ? `/patient/appointment-scheduling?doctorId=${doctorId}&${
             registeredMemberId ? `regId=${registeredMemberId}` : `depId=${dependentMemberId}`
           }`
         : `/doctor/schedule?patientId=${
@@ -98,71 +99,134 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
       <div style={{ fontWeight: "bold", padding: "1%" }}>{titles.firstViewTitle}</div>
       {viewOptionIndex === 4 || viewOptionIndex === 5 ? (
         <div>
-          <Button onClick={() => context.setCurrentView(2)}>For myself</Button>
-          <Button onClick={() => context.setCurrentView(2)}>For my dependent family member</Button>
-          <Button onClick={() => context.setCurrentView(2)}>For my registered family member</Button>
+          {context.currentView === 2 && <BackIcon onClick={() => context.setCurrentView(1)} />}
+          <Button
+            onClick={() => {
+              context.setViewIndex(0);
+            }}
+          >
+            For myself
+          </Button>
+          <Button
+            onClick={() => {
+              context.setCurrentView(2);
+              context.setViewIndex(5);
+            }}
+          >
+            For my dependent family member
+          </Button>
+          <Button
+            onClick={() => {
+              context.setCurrentView(2);
+              context.setViewIndex(4);
+            }}
+          >
+            For my registered family member
+          </Button>
         </div>
       ) : viewOptionIndex === 0 ? (
         option === "follow-up-request" ? (
-          <Autocomplete
-            options={getMyDoctorsQuery.data || []}
-            getOptionLabel={(option: Doctor) => option.name}
-            onChange={(_, value: any) => context.setDoctorId(value._id || null)}
-            renderInput={(params) => <TextField {...params} label="Select a Doctor" />}
-          />
+          <AllMyDoctors />
         ) : (
-          <Autocomplete
-            options={getAllAvailableDoctorsQuery.data || []}
-            getOptionLabel={(option: Doctor) => option.name}
-            onChange={(_, value: any) => context.setDoctorId(value._id || null)}
-            renderInput={(params) => <TextField {...params} label="Select a Doctor" />}
-          />
+          <AllAvailableDoctors />
         )
       ) : viewOptionIndex === 1 ? (
-        <Autocomplete
-          options={getDoctorPatientsQuery.data || []}
-          getOptionLabel={(option: Patient) => option.name}
-          onChange={(_, value: any) => context.setRegisteredMemberId(value.id || null)}
-          renderInput={(params) => <TextField {...params} label="Select a Patient" />}
-        />
+        <DoctorRegisteredPatients />
       ) : viewOptionIndex === 2 ? (
         option === "follow-up-request" ? (
-          <Autocomplete
-            options={getDoctorPatientsQuery.data || []}
-            getOptionLabel={(option: Patient) => option.name}
-            onChange={(_, value: any) =>
-              !value.supervisingPatientId ?? context.setRegisteredMemberId(value.id || null)
-            }
-            renderInput={(params) => <TextField {...params} label="Select a Patient" />}
-          />
+          <DoctorRegisteredPatients />
         ) : (
-          <Autocomplete
-            options={getAllRegisteredFamilyMembersQuery.data || []}
-            getOptionLabel={(option: Patient) => option.name}
-            onChange={(_, value: any) => context.setRegisteredMemberId(value.id || null)}
-            renderInput={(params) => <TextField {...params} label="Select a Patient" />}
-          />
+          <AllRegisteredPatients />
         )
       ) : option === "follow-up-request" ? (
-        <Autocomplete
-          options={getDoctorPatientsQuery.data || []}
-          getOptionLabel={(option: Patient) => option.name}
-          onChange={(_, value: any) =>
-            value.supervisingPatientId ?? context.setDependentMemberId(value.id || null)
-          }
-          renderInput={(params) => <TextField {...params} label="Select a Patient" />}
-        />
+        <DoctorDependentPatients />
       ) : (
-        <Autocomplete
-          options={getAllDependentFamilyMembersQuery.data || []}
-          getOptionLabel={(option: Patient) => option.name}
-          onChange={(_, value: any) => context.setDependentMemberId(value.id || null)}
-          renderInput={(params) => <TextField {...params} label="Select a Patient" />}
-        />
+        <AllDependentFamilyMembers />
       )}
-      <Button onClick={handleRedirectToCalendarPage}>Schedule time for this</Button>
+      {viewOptionIndex !== null && viewOptionIndex < 4 && (
+        <Button onClick={handleRedirectToCalendarPage}>Schedule time for this</Button>
+      )}
     </Box>
   );
+
+  function AllMyDoctors() {
+    return (
+      <Autocomplete
+        options={getMyDoctorsQuery.data || []}
+        getOptionLabel={(option: Doctor) => option.name}
+        onChange={(_, value: any) => context.setDoctorId(value.id || null)}
+        renderInput={(params) => <TextField {...params} label="Select a Doctor" />}
+      />
+    );
+  }
+
+  function AllAvailableDoctors() {
+    return (
+      <Autocomplete
+        options={getAllAvailableDoctorsQuery.data || []}
+        getOptionLabel={(option: Doctor) => option.name}
+        onChange={(_, value: any) => context.setDoctorId(value.id || null)}
+        renderInput={(params) => <TextField {...params} label="Select a Doctor" />}
+      />
+    );
+  }
+
+  function DoctorRegisteredPatients() {
+    return (
+      <Autocomplete
+        options={getDoctorPatientsQuery.data || []}
+        getOptionLabel={(option: Patient) => option.name}
+        onChange={(_, value: any) => {
+          console.log(value);
+          !value.supervisingPatientId
+            ? context.setRegisteredMemberId(value.id || null)
+            : context.setDependentMemberId(value.id || null);
+        }}
+        renderInput={(params) => <TextField {...params} label="Select a Patient" />}
+      />
+    );
+  }
+
+  function AllRegisteredPatients() {
+    return (
+      <Autocomplete
+        options={getAllRegisteredFamilyMembersQuery.data || []}
+        getOptionLabel={(option: Patient) => option.name}
+        onChange={(_, value: any) => {
+          console.log("value: ", value);
+          context.setRegisteredMemberId(value.id || null);
+        }}
+        renderInput={(params) => <TextField {...params} label="Select a Patient" />}
+      />
+    );
+  }
+
+  function DoctorDependentPatients() {
+    return (
+      <Autocomplete
+        options={getDoctorPatientsQuery.data || []}
+        getOptionLabel={(option: Patient) => option.name}
+        onChange={(_, value: any) =>
+          value.supervisingPatientId ?? context.setDependentMemberId(value.id || null)
+        }
+        renderInput={(params) => <TextField {...params} label="Select a Patient" />}
+      />
+    );
+  }
+
+  function AllDependentFamilyMembers() {
+    return (
+      <Autocomplete
+        options={getAllDependentFamilyMembersQuery.data || []}
+        getOptionLabel={(option: Patient) => option.name}
+        onChange={(_, value: any) => {
+          console.log(value);
+          context.setDependentMemberId(value.nationalId || null);
+        }}
+        renderInput={(params) => <TextField {...params} label="Select a Patient" />}
+      />
+    );
+  }
 };
 
 export default FirstView;

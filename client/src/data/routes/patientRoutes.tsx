@@ -1,5 +1,3 @@
-import PatientRegisteredFamilyMembers from "../../pages/patients/RegisteredFamilyMembers/PatientRegisteredFamilyMembers";
-import PrescriptionsPage from "../../pages/patients/ViewPrescriptions";
 import AddFamilyMember from "../../pages/patients/family-members/AddFamilyMember";
 import Home from "../../pages/patients/Home";
 import SearchForDoctors from "../../pages/patients/doctor-interactions/SearchForDoctors";
@@ -23,8 +21,14 @@ import AppointmentBooking from "../../pages/patients/appointments/AppointmentBoo
 import AppointmentPayment from "../../pages/patients/appointments/AppointmentsPayment";
 import PatientDoctorsPage from "../../pages/patients/doctor-interactions/ViewPatientDoctors";
 import ChatsView from "../../features/chats/ChatsView";
-import UserRole from "../../types/enums/UserRole";
 import FollowUpRequestsPage from "../../pages/patients/appointments/FollowUpRequests";
+import DependentFamilyMemberPrescriptions from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptions";
+import DependentFamilyMemberPrescriptionInfo from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptionInfo";
+import AppointmentsSchedule from "../../features/appointments/AppointmentsSchedule";
+import FamilyMemberInfo from "../../pages/patients/family-members/FamilyMemberInfo";
+import PrescriptionInfo from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptionInfo";
+import PrescriptionList from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptions";
+import MedicineInfo from "../../pages/patients/prescriptions/MedicineInfo";
 
 
 export const patientDashboardRoute: Route = {
@@ -42,6 +46,11 @@ export const familyMembersRoute: Route = {
   element: <FamilyMembersComponent />
 };
 
+export const patientFamilyMemberInfoRoute: Route = {
+  path: "/patient/family-member-info",
+  element: <FamilyMemberInfo />
+};
+
 export const cancelSubscriptionRoute: Route = {
   path: "/patient/CancelSubscription",
   element: <YourPage />
@@ -55,7 +64,7 @@ export const viewAllDoctorsRoute: Route = {
   element: <ViewDoctors />
 };
 export const viewDoctorDetailsRoute: Route = {
-  path: "/patient/doctors/:doctorId",
+  path: "/patient/doctors/details",
   element: <ViewDoctorDetails />
 };
 export const searchForDoctorsRoute: Route = {
@@ -72,10 +81,6 @@ export const addRegisteredFamilyMemberRoute: Route = {
   element: <AddRegisteredFamilyMember />
 };
 
-export const patientFamilyMembersRoute: Route = {
-  path: "/patient/family-members",
-  element: <PatientRegisteredFamilyMembers />
-};
 export const patientAppointmentsRoute: Route = {
   path: "/patient/appointments",
   element: <ViewAppointments />
@@ -87,7 +92,27 @@ export const patientDoctorAppointmentDetailsRoute: Route = {
 
 export const patientPrescriptions: Route = {
   path: "/patient/prescriptions",
-  element: <PrescriptionsPage />
+  element: <PrescriptionList /> // Previously: PrescriptionPage
+};
+
+export const patientPrescriptionInfo: Route = {
+  path: "/patient/prescriptions/info",
+  element: <PrescriptionInfo />
+};
+
+export const patientPrescriptionMedicineInfo: Route = {
+  path: "/patient/prescriptions/info/medicine",
+  element: <MedicineInfo />
+};
+
+export const patientDependentFamilyMemberPrescriptions: Route = {
+  path: "/patient/family-members/dependent/prescriptions",
+  element: <DependentFamilyMemberPrescriptions />
+};
+
+export const patientDependentFamilyMemberPrescriptionInfo: Route = {
+  path: "/patient/family-members/dependent/prescriptions/info",
+  element: <DependentFamilyMemberPrescriptionInfo />
 };
 
 export const patientMedicalHistoryRoute: Route = {
@@ -145,12 +170,17 @@ export const patientDoctorsRoute: Route = {
 
 export const chatsRoute: Route = {
   path: "/patient/chat",
-  element: <ChatsView role={UserRole.PATIENT} />
+  element: <ChatsView />
 };
 
 export const followUpRequestsRoute: Route = {
   path: "/patient/follow-up-requests",
   element: <FollowUpRequestsPage />
+};
+
+export const patientAppointmentSchedulingRoute: Route = {
+  path: "/patient/appointment-scheduling",
+  element: <AppointmentsSchedule />
 };
 
 const routes: Route[] = [
@@ -160,13 +190,16 @@ const routes: Route[] = [
   searchForDoctorsRoute,
   addFamilyMemberRoute,
   addRegisteredFamilyMemberRoute,
-  patientFamilyMembersRoute,
+  patientFamilyMemberInfoRoute,
   patientAppointmentsRoute,
   patientDoctorAppointmentDetailsRoute,
   patientPrescriptions,
+  patientDependentFamilyMemberPrescriptions,
+  patientDependentFamilyMemberPrescriptionInfo,
+  patientPrescriptionInfo,
+  patientPrescriptionMedicineInfo,
   patientMedicalHistoryRoute,
   patientUpdatePasswordRoute,
-  patientPrescriptions,
   patientMedicalHistoryRoute,
   healthPackagesOptionsRoute,
   cancelSubscriptionRoute,
@@ -182,7 +215,8 @@ const routes: Route[] = [
   appointmentPaymentRoute,
   patientDoctorsRoute,
   chatsRoute,
-  followUpRequestsRoute
+  followUpRequestsRoute,
+  patientAppointmentSchedulingRoute
 ];
 
 export default routes;

@@ -29,6 +29,7 @@ import {
   makeCreditCardPaymentHandler
 } from "../../controllers/payments/credit-cards";
 import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/notifications";
+import { scheduleFollowUpAppointmentForDependentHandler } from "../../controllers/appointments/follow-ups/for-dependent-patients";
 
 const doctorRouter = express.Router();
 
@@ -42,6 +43,8 @@ doctorRouter
 
   .get("/patients", getDoctorPatientsHandler)
 
+  // .get("/prescriptions", getDoctorPrescriptions)
+
   .get("/patients/:patientId", getRegisteredPatientDetails)
 
   .get("", getDoctorById)
@@ -52,6 +55,7 @@ doctorRouter
   .patch("/change-password", updateDoctorPassword)
 
   .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
+  .post("/appointments/dependent-follow-up", scheduleFollowUpAppointmentForDependentHandler)
 
   .delete("/available-time-slots/:startTime", deleteDoctorWorkingSlot)
 

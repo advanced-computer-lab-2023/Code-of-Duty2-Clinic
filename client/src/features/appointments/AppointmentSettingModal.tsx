@@ -1,7 +1,6 @@
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import FirstView from "./appointment-setting-components/FirstView";
 import SecondView from "./appointment-setting-components/SecondView";
 import { AppointmentSettingContext } from "./AppointmentSettingContext";
@@ -34,24 +33,18 @@ export default function AppointmentSettingModal({
 }: Props) {
   const context = useContext(AppointmentSettingContext);
 
-  context.setOpen(true);
-  context.setViewIndex(viewIndex);
-  context.setOption(option);
-  context.setRegisteredMemberId(registeredPatientId);
-  context.setDependentMemberId(dependentNationalId);
-  context.setDoctorId(doctorId);
-
-  const navigate = useNavigate();
-
-  const handleClose = () => {
-    context.setOpen(false);
-    navigate("/newPage");
-  };
+  useEffect(() => {
+    context.setOpen(true);
+    context.setViewIndex(viewIndex);
+    context.setOption(option);
+    context.setRegisteredMemberId(registeredPatientId);
+    context.setDependentMemberId(dependentNationalId);
+    context.setDoctorId(doctorId);
+  }, [viewIndex, option, registeredPatientId, dependentNationalId, doctorId]);
 
   return (
     <Modal
       open={context.open}
-      onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

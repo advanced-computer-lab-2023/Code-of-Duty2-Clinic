@@ -6,7 +6,8 @@ import {
   createFollowUpRequestForDependentPatient,
   deleteFollowUpRequestForDependentPatient,
   getFollowUpRequestsForDependentPatient,
-  rejectFollowUpRequestForDependentPatient
+  rejectFollowUpRequestForDependentPatient,
+  scheduleAFollowUpAppointmentForDependent
 } from "../../../../services/appointments/follow-ups/for-dependent-patients";
 import IFollowUpAppointmentRequestForDependentPatient from "../../../../models/appointments/interfaces/follow-ups/IFollowUpAppointmentRequestForDependentPatient";
 
@@ -89,6 +90,30 @@ export const acceptFollowUpRequestForDependentHandler = async (
   }
   try {
     await acceptFollowUpRequestForDependentPatient(followUpRequestId, timePeriod);
+    res.status(StatusCodes.OK).send();
+  } catch (error: any) {
+    res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
+  }
+};
+
+export const scheduleFollowUpAppointmentForDependentHandler = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
+  const doctorId = req.user!.id;
+
+  const { supervisingPatientId, dependentNationalId, timePeriod } = req.body;
+
+  if (!supervisingPatientId || !dependentNationalId || !timePeriod) {
+    res.status(StatusCodes.BAD_REQUEST).send({ message: "Missing required fields" });
+  }
+  try {
+    await scheduleAFollowUpAppointmentForDependent(
+      supervisingPatientId,
+      dependentNationalId,
+      doctorId,
+      timePeriod
+    );
     res.status(StatusCodes.OK).send();
   } catch (error: any) {
     res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });

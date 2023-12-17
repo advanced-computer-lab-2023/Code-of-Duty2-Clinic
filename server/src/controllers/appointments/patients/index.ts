@@ -1,6 +1,9 @@
 import { Response } from "express";
 import { AuthorizedRequest } from "../../../types/AuthorizedRequest";
-import { bookAnAppointmentForADependentFamilyMember } from "../../../services/appointments/patients/dependent-family-members";
+import {
+  bookAnAppointmentForADependentFamilyMember,
+  findPatientDependentFamilyMembersAppointments
+} from "../../../services/appointments/patients/dependent-family-members";
 import { StatusCodes } from "http-status-codes";
 import PaymentMethod from "../../../types/PaymentMethod";
 import {
@@ -20,6 +23,7 @@ import {
   notifyUsersOnSystemForRegisteredAppointments
 } from "..";
 import { entityIdDoesNotExistError } from "../../../utils/ErrorMessages";
+import { getDoctorAppointments } from "../../../services/appointments/doctors";
 
 export const bookAnAppointmentHandler = async (req: AuthorizedRequest, res: Response) => {
   const patientId = req.user?.id!;
@@ -208,11 +212,17 @@ export const cancelAppointmentForDependentPatientHandler = async (
   }
 };
 export const getAppointmentsWithAllDoctors = async (req: AuthorizedRequest, res: Response) => {
-  const patientId = req.user?.id;
+  const patientId = req.query.registeredPatientId || req.user?.id;
   if (!patientId)
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "patientId is required" });
 
-  const allowedQueryParameters = ["status", "appointmentTime", "isTimeSet", "targetName"];
+  const allowedQueryParameters = [
+    "status",
+    "appointmentTime",
+    "isTimeSet",
+    "targetName",
+    "registeredPatientId"
+  ];
 
   if (
     Object.keys(req.query).length > allowedQueryParameters.length ||
@@ -233,15 +243,53 @@ export const getAppointmentsWithAllDoctors = async (req: AuthorizedRequest, res:
   }
 
   try {
-    const patient = await findPatientById(patientId);
+    const patient = await findPatientById(patientId as string);
     if (!patient)
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: entityIdDoesNotExistError("Patient", patientId) });
+        .json({ message: entityIdDoesNotExistError("Patient", patientId as string) });
 
-    const appointments = await getPatientAppointments(patientId, req.query);
+    const appointments = await getPatientAppointments(patientId as string, req.query);
     res.status(StatusCodes.OK).json(appointments);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+  }
+};
+
+export const getAllAppointmentsForDependentPatientHandler = async (
+  req: AuthorizedRequest,
+  res: Response
+) => {
+  const supervisingPatientId = req.user?.id;
+  const dependentNationalId = req.params.dependentNationalId;
+  if (!dependentNationalId)
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "dependentNationalId is required" });
+
+  try {
+    const appointments = await findPatientDependentFamilyMembersAppointments(
+      supervisingPatientId!,
+      dependentNationalId
+    );
+    res.status(StatusCodes.OK).json(appointments);
+  } catch (error: any) {
+    res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
+  }
+};
+
+export const getAllDoctorAppointmentsTimings = async (req: AuthorizedRequest, res: Response) => {
+  const patientId = req.user?.id;
+  const doctorId = req.params.doctorId;
+  if (!doctorId)
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "doctorId is required" });
+
+  try {
+    const appointments = await getDoctorAppointments(doctorId, {});
+    const timings = appointments.map((appointment) => ({
+      startTime: appointment.timePeriod.startTime,
+      endTime: appointment.timePeriod.endTime
+    }));
+    res.status(StatusCodes.OK).json(timings);
+  } catch (error: any) {
+    res.status(StatusCodes.BAD_REQUEST).send({ message: error.message });
   }
 };

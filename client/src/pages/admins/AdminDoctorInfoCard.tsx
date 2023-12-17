@@ -1,0 +1,220 @@
+import { AttachMoney, Email, Person, Phone} from "@mui/icons-material";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import WorkIcon from '@mui/icons-material/Work';
+import BadgeIcon from '@mui/icons-material/Badge';
+import { DateRangeIcon } from "@mui/x-date-pickers";
+import SchoolIcon from '@mui/icons-material/School';
+import { handleRemoveUser } from "./Home";
+
+const AdminDoctorInfoCard: React.FC = () => {
+const navigate = useNavigate();
+const location = useLocation();
+const doctor = location.state.user;
+console.log(doctor);
+
+  if (!doctor) return <p>Loading... </p>;
+
+  return (
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+  <Box marginBottom="2rem">
+    <Typography variant="h5" sx={{ fontSize: "2rem", marginBottom: "1rem" }}>
+      <Person fontSize="large" /> {doctor.name}
+    </Typography>
+  </Box>
+    <Paper elevation={1} sx={{ width: '90%', marginBottom: '2rem'}}>
+      <Box sx={{ margin: '2rem' }}>
+      <Box display="flex" justifyContent="center" marginBottom="2rem">
+  <BadgeIcon fontSize="large" />{" "}
+  <Typography variant="h5" sx={{ fontSize: "2rem", marginBottom: "1rem" }}>
+   Personal Details
+  </Typography>
+</Box>
+      <Typography
+        variant="h6"
+        component="span"
+        style={{ fontSize: "1.5rem", lineHeight: "2rem" }}
+      >
+      </Typography>
+      <div className="patientInfoDetails">
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Person fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Name:
+            </Typography>{" "}
+            {doctor.name}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Email fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Email:
+            </Typography>{" "}
+            {doctor.email}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Phone fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Mobile Number:
+            </Typography>{" "}
+            {doctor.mobileNumber}
+          </Typography>
+        </div>
+      </div>
+      </Box>
+    </Paper>
+
+    <Paper elevation={3} sx={{ width: '90%', marginBottom: '2rem'}}>
+
+        <Box sx={{ margin: '2rem' }}>
+      <Box display="flex" justifyContent="center" marginBottom="2rem">
+        <WorkIcon fontSize="large" />{" "}
+  <Typography variant="h5" sx={{ fontSize: "2rem", marginBottom: "1rem"}}>
+   Professional Details
+  </Typography>
+</Box>
+      <Typography
+        variant="h6"
+        component="span"
+        style={{ fontSize: "1.5rem", lineHeight: "2rem" }}
+      >
+      </Typography>
+      <div className="patientInfoDetails">
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+
+            <WorkIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Speciality:
+            </Typography>{" "}
+            {doctor.speciality}
+          </Typography>
+        </div>
+        <div>
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+           <AttachMoney fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Hourly Rate:
+            </Typography>{" "}
+            {doctor.hourlyRate}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <Email fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Affiliation:
+            </Typography>{" "}
+            {doctor.affiliation}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <SchoolIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Educational Background:
+            </Typography>{" "}
+            {doctor.educationalBackground}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <SchoolIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Days Off:
+            </Typography>{" "}
+            {doctor._id}
+          </Typography>
+        </div>
+        <div className="patientInfoDetail">
+          <Typography
+            variant="h6"
+            component="span"
+            style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+          >
+            <DateRangeIcon fontSize="small" />{" "}
+            <Typography variant="body2" component="span" color="textSecondary">
+              Available Slots:
+            </Typography>{" "}
+            {doctor.availableSlots.map((slot: any) => (
+              <div className="patientInfoDetail">
+                <Typography
+                  variant="h6"
+                  style={{ fontSize: "1.2rem", lineHeight: "2rem" }}
+                >
+                  {new Date(slot.startTime).toLocaleDateString('us-US')} {new Date(slot.startTime).toLocaleTimeString('en-US')} - {new Date(slot.endTime).toLocaleTimeString('en-US')}
+                 </Typography>
+              </div>
+            ))}
+          </Typography>
+        </div>
+
+
+      </div>
+      </Box>
+    </Paper>
+    <Box display="flex" flexDirection="column" gap={1}>
+  <Button
+    variant="contained"
+    onClick={() => 
+    handleRemoveUser(doctor.username, 'doctor', navigate)}
+    color="error"
+  >
+    Remove User
+  </Button>
+  <Button
+    variant="contained"
+    onClick={() => navigate(-1)}
+  >
+    Back
+  </Button>
+</Box>
+    </Box>
+  );
+};
+
+export default AdminDoctorInfoCard;

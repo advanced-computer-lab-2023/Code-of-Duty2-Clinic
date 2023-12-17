@@ -23,6 +23,7 @@ type Patient = {
   id: string;
   name: string;
   isDependent?: boolean;
+  nationalId?: string;
 };
 
 type Doctor = {
@@ -47,9 +48,11 @@ const SecondView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
     enabled: option === "set-up-appointment" && (viewOptionIndex === 4 || viewOptionIndex === 5)
   });
 
+  const context = useContext(AppointmentSettingContext);
+
   const getPatientDoctorsQuery = useQuery(
     ["patientDoctors"],
-    () => getRegisteredPatientDoctors(""),
+    () => getRegisteredPatientDoctors(context.registeredMemberId!),
     {
       enabled: option === "follow-up-request" && viewOptionIndex === 4
     }
@@ -57,7 +60,7 @@ const SecondView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
 
   const getDependentPatientDoctorsQuery = useQuery(
     ["dependentPatientDoctors"],
-    () => getDependentPatientDoctors(""),
+    () => getDependentPatientDoctors(context.dependentMemberId!),
     {
       enabled: option === "follow-up-request" && viewOptionIndex === 5
     }
@@ -85,7 +88,6 @@ const SecondView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
   const navigate = useNavigate();
   const userRole = useContext(AuthContext).authState.role;
   const userId = useContext(UserContext).user?.id!;
-  const context = useContext(AppointmentSettingContext);
 
   const { doctorId, registeredMemberId, dependentMemberId } = context;
 
@@ -158,7 +160,7 @@ const SecondView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
             <Autocomplete
               options={getAllDependentFamilyMembersQuery.data || []}
               getOptionLabel={(option: Patient) => option.name}
-              onChange={(_event, value) => context.setDependentMemberId(value?.id || null)}
+              onChange={(_event, value) => context.setDependentMemberId(value?.nationalId || null)}
               renderInput={(params) => <TextField {...params} label="Family member" />}
             />
           </div>
@@ -180,7 +182,7 @@ const SecondView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
             <Autocomplete
               options={getAllDependentFamilyMembersQuery.data || []}
               getOptionLabel={(option: Patient) => option.name}
-              onChange={(_event, value) => context.setDependentMemberId(value?.id || null)}
+              onChange={(_event, value) => context.setDependentMemberId(value?.nationalId || null)}
               renderInput={(params) => <TextField {...params} label="Family member" />}
             />
           </div>

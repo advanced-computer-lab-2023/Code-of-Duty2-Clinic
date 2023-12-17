@@ -4,7 +4,11 @@ import IFollowUpAppointmentRequestForDependentPatient from "../../../../models/a
 import TimePeriod from "../../../../types/TimePeriod";
 import UserRole from "../../../../types/UserRole";
 import { entityIdDoesNotExistError } from "../../../../utils/ErrorMessages";
+import { sendEmail } from "../../../../utils/email";
 import { findDoctorById } from "../../../doctors";
+import { storeNotificationSentToDoctor } from "../../../notifications/doctors";
+import { storeNotificationSentToPatient } from "../../../notifications/patients";
+import { findPatientById } from "../../../patients";
 import {
   saveAppointmentForADependentFamilyMember,
   validateAppointmentCreationForADependentFamilyMember
@@ -92,7 +96,7 @@ export const acceptFollowUpRequestForDependentPatient = async (
   await followUpAppointmentRequest.save();
 };
 
-const scheduleAFollowUpAppointmentForDependent = async (
+export const scheduleAFollowUpAppointmentForDependent = async (
   mainPatientId: string,
   dependentNationalId: string,
   doctorId: string,
@@ -127,6 +131,43 @@ const scheduleAFollowUpAppointmentForDependent = async (
     endTime,
     true
   );
+
+  const patient = await findPatientById(
+    mainPatientId,
+    "name email receivedNotifications dependentFamilyMembers"
+  );
+  const doctor = await findDoctorById(doctorId, "name email receivedNotifications");
+  const dependent = patient?.dependentFamilyMembers?.find(
+    (dependent) => dependent.nationalId === dependentNationalId
+  );
+
+  await sendEmail({
+    to: patient!.email,
+    subject: `Follow-up appointment scheduled`,
+    text: `Your family member ${dependent!.name} follow-up appointment with Dr. ${
+      doctor!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
+  await sendEmail({
+    to: doctor!.email,
+    subject: `Follow-up appointment scheduled`,
+    text: `Your follow-up appointment with ${
+      dependent!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
+
+  await storeNotificationSentToPatient(patient!, {
+    subject: "Follow-up appointment scheduled",
+    description: `Your family member ${dependent!.name} follow-up appointment with Dr. ${
+      doctor!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
+  await storeNotificationSentToDoctor(doctor!, {
+    subject: "Follow-up appointment scheduled",
+    description: `Your follow-up appointment with ${
+      dependent!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
 };
 
 const findMostRecentCompletedAppointmentForDependent = async (

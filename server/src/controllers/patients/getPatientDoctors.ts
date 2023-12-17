@@ -8,7 +8,7 @@ export const getPatientDoctorsHandler = async (req: AuthorizedRequest, res: Resp
   if (!patientId)
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "patientId is required" });
 
-  const allowedQueryParameters = ["doctorName"];
+  const allowedQueryParameters = ["doctorName", "registeredPatientId"];
   if (
     Object.keys(req.query).length > allowedQueryParameters.length ||
     Object.keys(req.query).some((key) => !allowedQueryParameters.includes(key))
@@ -32,7 +32,7 @@ export const getDependentPatientDoctorsHandler = async (req: AuthorizedRequest, 
 
   const dependentNationalId = req.query.dependentNationalId;
 
-  const allowedQueryParameters = ["doctorName"];
+  const allowedQueryParameters = ["doctorName", "dependentNationalId"];
   if (
     Object.keys(req.query).length > allowedQueryParameters.length ||
     Object.keys(req.query).some((key) => !allowedQueryParameters.includes(key))

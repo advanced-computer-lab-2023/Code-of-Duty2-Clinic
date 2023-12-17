@@ -30,7 +30,9 @@ const Notifications = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {notifications?.map((notification) => <MenuItem>{notification.subject}</MenuItem>)}
+        {notifications?.map((notification, index) => (
+          <MenuItem key={index}>{notification.subject}</MenuItem>
+        ))}
       </Menu>
     </div>
   );

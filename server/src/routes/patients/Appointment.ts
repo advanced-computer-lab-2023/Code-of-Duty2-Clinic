@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { getAppointmentsWithAllDoctors } from "../../controllers/appointments/patients";
+import {
+  getAllDoctorAppointmentsTimings,
+  getAppointmentsWithAllDoctors
+} from "../../controllers/appointments/patients";
 import { getDoctorAppointmentFeesHandler } from "../../controllers/appointments/patients";
 import {
   bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
@@ -28,6 +31,7 @@ router
   .post(
     "/dependent-family-members/:dependentNationalId/appointments/:doctorId",
     bookAppointmentForADependentFamilyMemberHandler
-  );
+  )
+  .get("/doctors/:doctorId/appointments", getAllDoctorAppointmentsTimings);
 
 export default router;

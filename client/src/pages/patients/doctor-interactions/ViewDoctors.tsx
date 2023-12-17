@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { styled } from "@mui/material/styles";
 import { DoctorDetails } from "../../../types";
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import WorkIcon from "@mui/icons-material/Work";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import {
   DatePicker,
   LocalizationProvider,
@@ -21,31 +20,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { config } from "../../../configuration";
 import { getQueriedDateTime } from "../../../utils/formatter";
 import { filterParams } from "../../../utils/filterer";
-
-const DoctorItem = styled(Card)({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  padding: 16,
-  cursor: "pointer",
-  textDecoration: "none",
-}) as typeof Card;
-
-const DoctorImage = styled(CardMedia)({
-  width: 120,
-  height: 120,
-  borderRadius: "50%",
-}) as typeof CardMedia;
-
-const DoctorInfo = styled(Typography)({
-  fontWeight: "bold",
-  textAlign: "center",
-}) as typeof Typography;
-
-const DoctorPrice = styled(Typography)({
-  color: "#4caf50",
-  textAlign: "center",
-}) as typeof Typography;
+import { useNavigate } from "react-router-dom";
 
 const ViewDoctors = () => {
   const [filteredDoctors, setFilteredDoctors] = useState<
@@ -60,6 +35,8 @@ const ViewDoctors = () => {
   const [time, setTime] = useState<Dayjs | null>(null);
 
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const fetchDoctors = async () => {
     try {
@@ -126,7 +103,12 @@ const ViewDoctors = () => {
       <Typography variant="h4" sx={{ textAlign: "center", marginBottom: 2 }}>
         View Doctors
       </Typography>
-      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+      <Box sx={{ 
+          display: "flex", 
+          flexDirection: { xs: 'column', sm: 'row' }, 
+          justifyContent: "center", 
+          marginBottom: 4 
+        }}>     
         <TextField
           label="Name"
           value={filterOptions.name}
@@ -162,37 +144,41 @@ const ViewDoctors = () => {
           Search
         </Button>
       </Box>
+    <Box sx={{ padding: 4 }}>
+      <Box>
+        <Grid container spacing={3}>
+          {filteredDoctors?.map((doctor) => (
+            <Grid item xs={12} sm={6} md={4} key={doctor._id}>
+              <Card>
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h5">{doctor.name}</Typography>
+                  <Typography variant="h6">
+                  <WorkIcon fontSize="small" sx={{marginRight: '1%'}} />
+                    Specialty: {doctor.speciality}
+                  </Typography>
+                  <Typography variant="h6">
+                    <AttachMoneyIcon fontSize="small" />
+                    Session Price: {doctor.sessionPrice}
+                  </Typography>
 
-      <Grid container spacing={2}>
-        {filteredDoctors
-          ? filteredDoctors.length === 0
-            ? "No Doctors Found"
-            : filteredDoctors.map((doctor) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={doctor._id}>
-                  <DoctorItem
-                    component={Link}
-                    to={`/patient/doctors/${doctor._id}`}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ marginTop: 2 }}
+                    onClick={() => navigate('/patient/doctors/details', { state: { doctorId: doctor._id.toString() } })}
                   >
-                    <DoctorImage image={doctor.imageUrl || ""} />
-                    <CardContent>
-                      <DoctorInfo variant="subtitle1">
-                        Name: {doctor.name}
-                      </DoctorInfo>
-                      <DoctorInfo variant="subtitle2">
-                        Specialty: {doctor.speciality}
-                      </DoctorInfo>
-                      <DoctorPrice variant="body1">
-                        Session Price: {doctor.sessionPrice}
-                      </DoctorPrice>
-                    </CardContent>
-                  </DoctorItem>
-                </Grid>
-              ))
-          : "Loading ...."}
-      </Grid>
-      <p style={{ color: "red" }}>{error}</p>
+                    View More Details
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </Box>
     </Box>
   );
 };
+
 
 export default ViewDoctors;
