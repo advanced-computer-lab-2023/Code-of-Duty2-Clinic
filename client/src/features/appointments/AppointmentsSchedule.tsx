@@ -78,6 +78,7 @@ const AppointmentsSchedule = () => {
       handleConfirm: () => {
         if (isAFollowUpAppointment()) {
           executeProperApiFollowUpAction(selectInfo.startStr, selectInfo.endStr);
+          navigate("/patient/follow-up-requests");
         } else {
           if (isASelfPatientAction()) {
             navigate(
@@ -258,7 +259,7 @@ const AppointmentsSchedule = () => {
   };
 
   useEffect(() => {
-    getAllAppointments().then((appointments) => {
+    getAllAppointments(doctorId).then((appointments) => {
       setEvents(
         appointments.map((appointment: Appointment) => {
           return {
