@@ -1,7 +1,7 @@
 import { Inbox } from "@talkjs/react";
 import { Box } from "@mui/material";
 import { useQueryParams } from "../../hooks/useQueryParams";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useContext } from "react";
 import Talk from "talkjs";
 import { createConversation } from "../../utils/createConversation";
 import { Session } from "talkjs/all";
@@ -9,32 +9,40 @@ import UserRole from "../../types/enums/UserRole";
 import axios from "axios";
 import { config } from "../../configuration";
 import { useQuery } from "react-query";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const getOtherUserData = async ({
   id,
-  role,
+  receiverRole,
+  senderRole
 }: {
   id: string | null;
-  role: UserRole;
+  receiverRole: UserRole;
+  senderRole: UserRole;
 }) => {
   if (!id) return null;
-  const sender = role === UserRole.DOCTOR ? "doctors" : "patients";
-  const receiver = role === UserRole.DOCTOR ? "patients" : "doctors";
-  const response = await axios.get(
-    `${config.serverUri}/${sender}/${receiver}/${id}`
-  );
+  const sender = senderRole === UserRole.PATIENT ? "patients" : "doctors";
+  const receiver =
+    receiverRole === UserRole.PATIENT ? "patients" : UserRole.DOCTOR ? "doctors" : "pharmacists";
+  const response = await axios.get(`${config.serverUri}/${sender}/${receiver}/${id}`);
 
-  return role === UserRole.PATIENT ? response.data : response.data.patientInfo;
+  return receiverRole === UserRole.PATIENT ? response.data : response.data.patientInfo;
 };
 
-type Props = {
-  role: UserRole;
-};
-const ChatsView: FC<Props> = ({ role }) => {
+const ChatsView = () => {
   const id = useQueryParams().get("id")!;
+  const role = useQueryParams().get("role");
+  const receiverRole =
+    role === "patient"
+      ? UserRole.PATIENT
+      : role === "doctor"
+        ? UserRole.DOCTOR
+        : UserRole.PHARMACIST;
+
+  const currentUserRole = useContext(AuthContext).authState.role;
 
   const otherUserDataQuery = useQuery(["otherUserData", id, role], () =>
-    getOtherUserData({ id, role })
+    getOtherUserData({ id, receiverRole, senderRole: currentUserRole })
   );
 
   const initiateConversation = useCallback(
@@ -44,7 +52,7 @@ const ChatsView: FC<Props> = ({ role }) => {
         name: otherUserDataQuery.data?.name || "Unknown",
         email: otherUserDataQuery.data?.email || "Unknown",
         photoUrl: otherUserDataQuery.data?.imageUrl,
-        role: role === UserRole.DOCTOR ? "PATIENT" : "DOCTOR",
+        role: role?.toUpperCase()
       };
       const other = new Talk.User(otherData);
       const conversationId = Talk.oneOnOneId(session.me, other);
@@ -60,13 +68,13 @@ const ChatsView: FC<Props> = ({ role }) => {
           messageField={{
             placeholder: "Write a message..",
             enterSendsMessage: true,
-            autofocus: "smart",
+            autofocus: "smart"
           }}
           showChatHeader={true}
           loadingComponent={<span>LOADING....</span>}
           style={{
             width: 550,
-            height: 600,
+            height: 600
           }}
         />
       </Box>
@@ -78,14 +86,14 @@ const ChatsView: FC<Props> = ({ role }) => {
         messageField={{
           placeholder: "Write a message..",
           enterSendsMessage: true,
-          autofocus: "smart",
+          autofocus: "smart"
         }}
         syncConversation={initiateConversation}
         showChatHeader={true}
         loadingComponent={<span>LOADING....</span>}
         style={{
           width: 550,
-          height: 600,
+          height: 600
         }}
       />
     </Box>
