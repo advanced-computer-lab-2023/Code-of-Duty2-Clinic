@@ -74,7 +74,9 @@ const FamilyMembersComponent: React.FC = () => {
           >
             View Details
           </Link>
+          <div>
           <Button
+          style={{ marginTop: "8px"}}
             variant="contained"
             color="primary"
             onClick={() =>
@@ -85,13 +87,14 @@ const FamilyMembersComponent: React.FC = () => {
           >
             View Prescriptions
           </Button>
+          </div>
         </CardContent>
       </Card>
     ));
   };
   const renderMemberCardsD = (members: any[], type: "r" | "d") => {
     return members.map((member, index) => (
-      <Card key={index} style={{ margin: "8px" }}>
+      <Card key={index} style={{ margin: "8px",alignContent:'center' }}>
         <CardContent>
           <Typography variant="h6">{member.name}</Typography>
           <Typography variant="h6" style={{ fontWeight: "normal" }}>
@@ -108,6 +111,7 @@ const FamilyMembersComponent: React.FC = () => {
           >
             View Details
           </Link>
+          <div>
           <Button
             variant="contained"
             color="primary"
@@ -119,6 +123,7 @@ const FamilyMembersComponent: React.FC = () => {
           >
             View Prescriptions
           </Button>
+          </div>
         </CardContent>
       </Card>
     ));
