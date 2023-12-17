@@ -220,7 +220,7 @@ const Prescriptions: React.FC = () => {
                       {!prescription.isSubmitted ? (
                         <Button
                           onClick={() => sumbitPrescriptionToPharamcy(prescription._id)}
-                          disabled={prescription.medicines.length>0}
+                          disabled={prescription.medicines.length<0}
                           sx={{
                             marginBottom: 4,
                             color: " white",
