@@ -81,7 +81,7 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
   const handleRedirectToCalendarPage = () => {
     const pagePathname =
       userRole === UserRole.PATIENT
-        ? `/patient/schedule?doctorId=${doctorId}&${
+        ? `/patient/appointment-scheduling?doctorId=${doctorId}&${
             registeredMemberId ? `regId=${registeredMemberId}` : `depId=${dependentMemberId}`
           }`
         : `/doctor/schedule?patientId=${
