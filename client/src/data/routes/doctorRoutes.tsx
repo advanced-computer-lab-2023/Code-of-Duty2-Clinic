@@ -24,6 +24,7 @@ import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
 import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 import CreateWallet from "../../pages/doctors/wallet/CreateWallet";
 import ChatsView from "../../features/chats/ChatsView";
+import PrescriptionList from "../../pages/patients/prescriptions/PrescriptionList";
 import DoctorSchedule from "../../features/appointments/AppointmentsSchedule";
 import UserRole from "../../types/enums/UserRole";
 import FollowUpRequestsPage from "../../pages/doctors/FollowUpRequests";
@@ -40,6 +41,11 @@ export const updateAccountInfoRoute: Route = {
 export const doctorAppointmentsRoute: Route = {
   path: "/doctor/appointments",
   element: <ViewAppointments />
+};
+
+export const doctorPrescriptionList: Route = {
+  path: "/doctor/prescriptions/view",
+  element: <PrescriptionList />,
 };
 
 export const doctorAppointmentDetailsRoute: Route = {
@@ -107,6 +113,7 @@ const routes: Route[] = [
   updateAccountInfoRoute,
   doctorAppointmentsRoute,
   doctorAppointmentDetailsRoute,
+  doctorPrescriptionList,
   doctorRegisteredPatientsRoute,
   doctorRegisteredPatientDetailsRoute,
   patientSearchRoute,

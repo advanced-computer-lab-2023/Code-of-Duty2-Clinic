@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { config } from "../../../configuration";
-import { useQueryParams } from "../../../hooks/useQueryParams";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Paper, Grid } from "@mui/material";
 import { healthPackagesOptionsRoute } from "../../../data/routes/patientRoutes";
 import { getFormattedDateTime } from "../../../utils/formatter";
 const FamilyMemberPage: React.FC = () => {
   const [familyMemberData, setFamilyMemberData] = useState<any | null>(null);
-  const queryParams = useQueryParams();
   const navigate = useNavigate();
-  const type = queryParams.get("type");
-  const id = queryParams.get("id");
-  let today = new Date();
+  const query = useQueryParams(); // Use the useQueryParams hook to access query parameters
+  const type = query.get("type"); // Get the value of the "type" query parameter
+  const id = query.get("id"); // Get the value of the "id" query parameter
+  const today = new Date();
   useEffect(() => {
     const fetchData = async () => {
       try {

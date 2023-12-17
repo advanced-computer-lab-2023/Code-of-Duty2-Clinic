@@ -62,9 +62,14 @@ const BasicRequestDetails: FC<props> = ({ requestStatus }) => {
     await axios.put(
       `${config.serverUri}/admins/rejectDoctor/${doctorRequest._id}`
     );
-    navigate("");
-    //axios reject
   }
+
+  async function acceptRequest() {
+    await axios.put(
+      `${config.serverUri}/admins/acceptDoctor/${doctorRequest._id}`
+    );
+  }
+
   return (
     <div>
       {doctorRequest && (
@@ -87,13 +92,23 @@ const BasicRequestDetails: FC<props> = ({ requestStatus }) => {
             subheader={doctorRequest.speciality || " Professional Doctor "}
           ></CardHeader>
           {requestStatus !== "rejected" && requestStatus !== "accepted" && (
+            <div>
             <Button
               sx={{ ...buttonStyle }}
               color="primary"
               onClick={() => rejectRequest()}
             >
-              Reject Request
+              Reject
             </Button>
+
+            <Button
+            sx={{ ...buttonStyle }}
+            color="primary"
+            onClick={() => acceptRequest()}
+            >
+            Accept
+            </Button>
+            </div>
           )}
           {requestStatus === "pending contract acceptance" && <SendContract />}
           <List>

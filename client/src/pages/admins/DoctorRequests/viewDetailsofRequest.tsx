@@ -26,9 +26,7 @@ export interface DoctorRequest {
     | "pending contract acceptance"
     | "rejected";
 }
-async function rejectRequest() {
-  //axios reject
-}
+
 function ViewDoctorRegistrationRequest() {
   const [doctorRequest, setDoctorRequest] = useState<DoctorRequest>(null!);
   const [files, setFiles] = useState<any>(null!);
@@ -70,7 +68,7 @@ function ViewDoctorRegistrationRequest() {
             <Typography color="red">Rejected</Typography>
           )}
           {doctorRequest.status === "pending documents upload" && (
-            <Typography color="gray">InComplete</Typography>
+            <Typography color="gray">Incomplete</Typography>
           )}
           {doctorRequest.status === "pending contract acceptance" && (
             <Typography color="blue">Submission Completed</Typography>

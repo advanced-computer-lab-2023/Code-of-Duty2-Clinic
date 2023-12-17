@@ -31,7 +31,6 @@ import {
   patientAppointmentsRoute,
   createPatientWalletRoute,
   patientWalletRoute,
-  patientFamilyMembersRoute,
   viewAllDoctorsRoute,
   patientPrescriptions,
   patientMedicalHistoryRoute,
@@ -46,7 +45,6 @@ import {
   patientDoctorsRoute,
   followUpRequestsRoute
 } from "../routes/patientRoutes";
-
 export const patientSidebarItems = [
   {
     title: "Home",
@@ -60,9 +58,9 @@ export const patientSidebarItems = [
       {
         title: "My Prescriptions",
         href: patientPrescriptions.path,
-        icon: <LocalPharmacyIcon />
-      }
-    ]
+        icon: <HomeIcon />,
+      },
+    ],
   },
   {
     title: "My Family",
@@ -77,11 +75,6 @@ export const patientSidebarItems = [
         title: "Add a Family Member",
         href: addFamilyMemberRoute.path,
         icon: <PersonAddIcon />
-      },
-      {
-        title: "View My Registered Family Members",
-        href: patientFamilyMembersRoute.path,
-        icon: <PeopleOutlineIcon />
       },
       {
         title: "Add a Registered Family Member",

@@ -16,7 +16,7 @@ const AddFamilyMember = () => {
   type FormType = {
     nationalId: string;
     name: string;
-    birthdate: string;
+    dateOfBirth: string;
     gender: string;
     relation: string;
     [key: string]: string; // This line is the index signature
@@ -25,7 +25,7 @@ const AddFamilyMember = () => {
   const [form, setForm] = useState<FormType>({
     nationalId: "",
     name: "",
-    birthdate: "",
+    dateOfBirth: "",
     gender: "",
     relation: "",
   });
@@ -82,7 +82,7 @@ const AddFamilyMember = () => {
           required
         />
         <TextField
-          name="birthdate"
+          name="dateOfBirth"
           label="Birthdate"
           type="date"
           InputLabelProps={{ shrink: true }}

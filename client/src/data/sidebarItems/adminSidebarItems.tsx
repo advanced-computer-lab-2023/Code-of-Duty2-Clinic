@@ -1,27 +1,49 @@
 import {
   adminAddRoute,
-  userlistRoute,
   viewDoctorRequestsRoute,
 } from "../routes/adminRoutes";
 import { HealthPackagesRoute } from "../routes/adminRoutes";
 import PeopleIcon from "@mui/icons-material/People";
 import PackageIcon from "@mui/icons-material/AddBox";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AdminIcon from "@mui/icons-material/AdminPanelSettings";
 import { adminUpdatePasswordRoute } from "../routes/adminRoutes";
 
+
 export const adminSidebarItems = [
+  {
+    title: "Dashboard",
+    items: [
+      {
+        title: "Dashboard",
+        href: "/admin/dashboard",
+        icon: <AdminPanelSettingsIcon />
+      },
+    ],
+  },
   {
     title: "System Users",
     items: [
       {
+        title: "View Patients",
+        href: "/admin/users/patients",
+        icon: <PeopleIcon />
+      },
+      {
+        title: "View Doctors",
+        href: "/admin/users/doctors",
+        icon: <PeopleIcon />
+      },
+      {
+        title: "View Admins",
+        href: "/admin/users/admins",
+        icon: <PeopleIcon />
+      },
+      {
         title: "Add Admin",
         href: adminAddRoute.path,
         icon: <AdminIcon />,
-      },
-      {
-        title: "Show Users and Remove",
-        href: userlistRoute.path,
-        icon: <PeopleIcon />,
       },
     ],
   },
@@ -31,6 +53,7 @@ export const adminSidebarItems = [
       {
         title: "View Doctor Requests",
         href: viewDoctorRequestsRoute.path,
+        icon: <ViewListIcon />
       },
     ],
   },
