@@ -9,7 +9,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  InputAdornment
+  InputAdornment,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -48,11 +48,13 @@ const DoctorRegistrationRequestForm: React.FC = () => {
     educationalBackground: "",
     medicalDegree: "",
     speciality: "",
-    status: "pending documents upload"
+    status: "pending documents upload",
   });
 
-  const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  const strongPasswordRegex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
   const navigate = useNavigate();
+
 
   const handleChange = (field: keyof IFormData, value: string) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
@@ -89,17 +91,8 @@ const DoctorRegistrationRequestForm: React.FC = () => {
   }, []);
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
-      style={{
-        height: "80vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-    >
-      <Paper elevation={3} style={{ padding: 20, width: "100%" }}>
+     <Container component="main" maxWidth="md" style={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
         <Typography variant="h5" align="center" fontSize="1.9rem" fontWeight="bold" gutterBottom>
           Doctor Registration Request
         </Typography>
@@ -148,7 +141,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
               type="date"
               fullWidth
               InputLabelProps={{
-                shrink: true
+                shrink: true,
               }}
               value={formData.dateOfBirth}
               onChange={(e) => handleChange("dateOfBirth", e.target.value)}
@@ -181,7 +174,9 @@ const DoctorRegistrationRequestForm: React.FC = () => {
               fullWidth
               type="number"
               InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
               }}
               value={formData.hourlyRate}
               onChange={(e) => handleChange("hourlyRate", e.target.value)}
@@ -200,7 +195,9 @@ const DoctorRegistrationRequestForm: React.FC = () => {
               label="Educational Background"
               fullWidth
               value={formData.educationalBackground}
-              onChange={(e) => handleChange("educationalBackground", e.target.value)}
+              onChange={(e) =>
+                handleChange("educationalBackground", e.target.value)
+              }
             />
           </Grid>
           <Grid item xs={12}>
@@ -227,9 +224,11 @@ const DoctorRegistrationRequestForm: React.FC = () => {
           </Typography>
         )}
 
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+<div
+          style={{ display: "flex", justifyContent: "center", marginTop: 20 }}
+        >
           <Button
-            style={{ width: "30%" }}
+            style={{ width: '30%' }}
             variant="contained"
             color="primary"
             onClick={handleSubmit}

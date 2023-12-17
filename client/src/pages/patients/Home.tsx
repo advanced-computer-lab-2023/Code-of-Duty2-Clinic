@@ -1,6 +1,11 @@
 import { useContext, useEffect } from "react";
 import socket from "../../services/Socket";
 import { UserContext } from "../../contexts/UserContext";
+import LatestHealthRecordCard from "../../components/healthRecordDash";
+import LatestPrescriptionCard from "../../components/latestPrescriptionDash";
+import PatientInfoCard from "../../components/patientInfoDash";
+import UpcomingAppointmentsCard from "../../components/upcomingAppointmentsDash";
+import { Box, Grid, Typography } from "@mui/material";
 
 export default function Home() {
   const { user } = useContext(UserContext);
@@ -19,8 +24,28 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      <h1>Home</h1>
+    <>
+     <Box ml={"3%"} marginBottom='3%'>
+      <Typography variant="h4" gutterBottom component="div" color="primary">
+        Patient Dashboard
+      </Typography>
+    </Box>
+    <div style={{ display: "flex", flexDirection: "row"}}>
+      <div style={{ flex: "1",marginLeft:'20%' }}>
+        <PatientInfoCard />
+      </div>
+      <div style={{ flex: "1"}}>
+        <LatestHealthRecordCard />
+      </div>
     </div>
-  );
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ flex: "1", marginLeft:'20%',marginTop:'1%' }}>
+        <LatestPrescriptionCard />
+      </div>
+      <div style={{ flex: "1"}}>
+        <UpcomingAppointmentsCard isPatient={true} />
+      </div>
+    </div>
+  </>
+);
 }

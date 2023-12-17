@@ -15,6 +15,7 @@ import { getDependentFamilyMembers } from "../../controllers/patients/viewDepend
 import { getPatientDependentFamilyMembers } from "../../controllers/patients/getPatientDependentFamilyMembers";
 import { getPatientDependentFamilyMemberById } from "../../controllers/patients/getPatientDependentFamilyMemberById";
 import { getPatientDependentFamilyMemberPrescriptions } from "../../controllers/prescriptions/getPatientDependentFamilyMemberPrescriptions";
+import { getPatientPrescriptionsRegistered } from "../../controllers/prescriptions/getPatientPrescriptions";
 
 const router = Router();
 
@@ -53,5 +54,7 @@ router
   .get("family-members/dependent/prescriptions", getPatientDependentFamilyMemberPrescriptions)
 
   .get("/family-members/:familyMemberId", getPatientRegisteredFamilyMemberById)
+
+  .get("/family-members/registered/prescriptions/:memberId", getPatientPrescriptionsRegistered)
 
 export default router;

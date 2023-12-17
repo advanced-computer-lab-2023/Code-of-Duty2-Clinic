@@ -277,16 +277,17 @@ export const viewDependentFamilyMembersService = async (patientId: string) => {
 export const viewSubscribedHealthPackageAllDetailsServiceR = async (patientId: string) => {
   const patient = await Patient.findById(patientId).select("+subscribedPackage");
   const subscribedPackage = patient?.subscribedPackage;
+  if (!subscribedPackage) {
+    throw new Error("Patient has no subscribed package");
+  }
   const healthPackage = await HealthPackage.findById(patient?.subscribedPackage?.packageId);
   if (!patient) {
     throw new Error("Patient not found");
   }
-  if (!healthPackage) {
-    throw new Error("Health package not found");
-  }
   return {
     subscribedPackage,
-    healthPackage
+    healthPackage,
+    patient
   };
 };
 
@@ -314,14 +315,15 @@ export const viewSubscribedHealthPackageAllDetailsServiceD = async (
 
   return {
     subscribedPackage,
-    healthPackage
+    healthPackage,
+    dependent
   };
 };
 
 export const getPatientDoctors = async (patientId: string, doctorName: string) => {
   const patient = await findPatientById(patientId);
   if (!patient) throw new Error(entityIdDoesNotExistError("patient", patientId));
-
+  
   const doctors = await Appointment.aggregate([
     {
       $match: {

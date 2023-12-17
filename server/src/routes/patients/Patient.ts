@@ -1,5 +1,6 @@
 import express from "express";
 import { getPatientById } from "../../controllers/patients/getPatientById";
+import { getPatientInfoDashController } from "../../controllers/patients/getPatientInfo";
 import { getPatientRegisteredFamilyMembers } from "../../controllers/patients/getPatientRegisteredFamilyMembers";
 import { getPatientDependentFamilyMembers } from "../../controllers/patients/getPatientDependentFamilyMembers";
 import { getPatientInfo } from "../../controllers/patients/getPatientInfo";
@@ -80,6 +81,7 @@ patientRouter
 
   .get("/patient-info", getPatientInfo)
 
+  .get("/patient-info-dash", getPatientInfoDashController)
   .get("/patient-doctors", getPatientDoctorsHandler)
 
   .post("/family-members", addFamilyMembers)

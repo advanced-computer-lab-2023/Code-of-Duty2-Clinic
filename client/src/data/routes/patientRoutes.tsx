@@ -27,16 +27,21 @@ import UserRole from "../../types/enums/UserRole";
 import FollowUpRequestsPage from "../../pages/patients/appointments/FollowUpRequests";
 import AppointmentsSchedule from "../../features/appointments/AppointmentsSchedule";
 import FamilyMemberInfo from "../../pages/patients/family-members/FamilyMemberInfo";
+import PrescriptionInfo from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptionInfo";
+import PrescriptionList from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptions";
+import MedicineInfo from "../../pages/patients/prescriptions/MedicineInfo";
+import RegisteredPrescriptionsComponent from "../../pages/patients/prescriptions/RegisteredFamilyMemberPrescription";
 import PatientRegisteredFamilyMemberRequests from "../../pages/patients/family-members/PatientRegisteredFamilyMemberRequests";
 
+
 export const patientDashboardRoute: Route = {
-   path: "/patient/dashboard",
-   element: <Home />,
+  path: "/patient/dashboard",
+  element: <Home/>
 };
 
 export const familyMemberPageRoute: Route = {
-   path: "/patient/family-member-page",
-   element: <FamilyMemberPage />,
+  path: "/patient/family-member-page",
+  element: <FamilyMemberPage  />
 };
 
 export const familyMembersRoute: Route = {
@@ -78,6 +83,7 @@ export const patientFamilyMembersRoute: Route = {
    path: "/patient/family-members",
    element: <PatientRegisteredFamilyMemberRequests />,
 };
+
 export const patientAppointmentsRoute: Route = {
    path: "/patient/appointments",
    element: <ViewAppointments />,
@@ -117,27 +123,10 @@ export const patientFamilyMemberInfoRoute: Route = {
 };
 
 
-// export const patientPrescriptionInfo: Route = {
-//   path: "/patient/prescriptions/info",
-//   element: <PrescriptionInfo />
-// };
-
-// export const patientPrescriptionMedicineInfo: Route = {
-//   path: "/patient/prescriptions/info/medicine",
-//   element: <MedicineInfo />
-// };
-
-// export const patientDependentFamilyMemberPrescriptions: Route = {
-//   path: "/patient/family-members/dependent/prescriptions",
-//   element: <DependentFamilyMemberPrescriptions />
-// };
-
-// export const patientDependentFamilyMemberPrescriptionInfo: Route = {
-//   path: "/patient/family-members/dependent/prescriptions/info",
-//   element: <DependentFamilyMemberPrescriptionInfo />
-// };
-
-
+export const RegisteredPrescriptionsRoute: Route = {
+  path: "/patient/all-family-members/family-members/registered/prescriptions/:memberId",
+  element: <RegisteredPrescriptionsComponent />
+};
 
 export const createPatientWalletRoute: Route = {
   path: "/patient/wallet/create",
@@ -257,7 +246,8 @@ const routes: Route[] = [
   patientDoctorsRoute,
   chatsRoute,
   followUpRequestsRoute,
-  patientAppointmentSchedulingRoute
+  patientAppointmentSchedulingRoute,
+  RegisteredPrescriptionsRoute
 ];
 
 export default routes;

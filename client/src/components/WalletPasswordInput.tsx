@@ -20,24 +20,6 @@ const WalletPasswordInput: React.FC<WalletPasswordInputProps> = ({
     .fill(0)
     .map((_, index) => `input-${uuidv4()}-${index}`);
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const value = event.target.value;
-    if (value.length <= 1) {
-      setPinCodeDigits((prevPassword) => {
-        const newPassword = [...prevPassword];
-        newPassword[index] = value;
-        return newPassword;
-      });
-      if (value.length === 1 && index < 4) {
-        const nextInput = document.getElementById(inputsIds[index + 1]);
-        nextInput?.focus();
-      }
-    }
-  };
-
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -52,13 +34,38 @@ const WalletPasswordInput: React.FC<WalletPasswordInputProps> = ({
           id={inputsIds[index]}
           type={showPassword ? "text" : "password"}
           value={digit}
-          onChange={(event) => handleChange(event, index)}
+          onKeyDown={(event) => {
+            if (event.key === 'Backspace' && digit === '' && index > 0) {
+              // Move focus to the previous input when deleting the last digit
+              const prevInput = document.getElementById(inputsIds[index - 1]);
+              prevInput?.focus();
+            }
+          }}
+          onInput={(event) => {
+            const value = (event.target as HTMLInputElement).value;
+            const sanitizedValue = value.replace(/\D/g, ''); // Remove non-numeric characters
+
+            if (sanitizedValue !== digit) {
+              // Only update state if the value has changed (excluding Backspace key)
+              setPinCodeDigits((prevPassword) => {
+                const newPassword = [...prevPassword];
+                newPassword[index] = sanitizedValue.slice(0, 1); // Limit to one digit
+                return newPassword;
+              });
+            }
+
+            if (sanitizedValue.length === 1 && index < 4) {
+              // Move focus to the next input when entering a digit
+              const nextInput = document.getElementById(inputsIds[index + 1]);
+              nextInput?.focus();
+            }
+          }}
           inputProps={{
             inputMode: "numeric",
-            pattern: "[0-9]",
+            pattern: "[0-9]*", // Allow only numeric characters
             style: { WebkitTextSecurity: showPassword ? "none" : "disc" },
           }}
-          sx={{ width: 80 }}
+          sx={{ minWidth: '40px', width: 'auto', marginRight: '8px' }}
         />
       ))}
       <IconButton onClick={handleClickShowPassword}>

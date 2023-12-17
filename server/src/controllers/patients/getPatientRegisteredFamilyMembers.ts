@@ -29,7 +29,7 @@ export const getPatientRegisteredFamilyMembers = async (req: AuthorizedRequest, 
       }
     }
 
-    return res.status(StatusCodes.OK).json({ members });
+    return res.status(StatusCodes.OK).json(members);
   } catch (error) {
     console.error(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
