@@ -175,10 +175,10 @@ const AppointmentsSchedule = () => {
   }
 
   function isADoctorAction() {
-    return !isADependentPatientAction() && !isARegisteredPatientAction && !doctorId;
+    return !isADependentPatientAction() && !isARegisteredPatientAction() && !doctorId;
   }
   function isASelfPatientAction() {
-    return !isADependentPatientAction() && !isARegisteredPatientAction && !!doctorId;
+    return !isADependentPatientAction() && !isARegisteredPatientAction() && !!doctorId;
   }
   function isAFollowUpAppointment() {
     return !!isFollowUpAppointment;

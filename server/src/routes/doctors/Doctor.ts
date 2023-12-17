@@ -30,6 +30,10 @@ import {
 } from "../../controllers/payments/credit-cards";
 import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/notifications";
 import { scheduleFollowUpAppointmentForDependentHandler } from "../../controllers/appointments/follow-ups/for-dependent-patients";
+import {
+  getSoonestAppointmentHandler,
+  storeVideoLinkInPatient
+} from "../../controllers/doctors/videoCall";
 
 const doctorRouter = express.Router();
 
@@ -83,6 +87,10 @@ doctorRouter
 
   .post("/credit-card-payment", makeCreditCardPaymentHandler)
 
-  .get("/notifications", getAllNotificationsForDoctorHandler);
+  .get("/notifications", getAllNotificationsForDoctorHandler)
+
+  .get("/soonest-appointment", getSoonestAppointmentHandler)
+
+  .post("/video-call-url", storeVideoLinkInPatient);
 
 export default doctorRouter;

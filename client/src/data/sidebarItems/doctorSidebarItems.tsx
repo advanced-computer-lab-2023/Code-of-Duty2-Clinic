@@ -9,12 +9,15 @@ import {
   addDoctorAvailableTimeSlotsRoute,
   doctorWalletRoute,
   doctorWalletCreationRoute,
-  followUpRequestsRoute
+  followUpRequestsRoute,
+  videoCallRoute,
+  doctorScheduleRoute
 } from "../routes/doctorRoutes";
 import PeopleIcon from "@mui/icons-material/People";
 import PlusIcon from "@mui/icons-material/AddBox";
 import RequestIcon from "@mui/icons-material/Reviews";
 import WalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import { VideoCall } from "@mui/icons-material";
 
 export const doctorSidebarItems = [
   {
@@ -39,7 +42,8 @@ export const doctorSidebarItems = [
         title: "Update my password",
         href: `${doctorUpdatePasswordRoute.path}?type=doctor`,
         icon: <PersonIcon />
-      }
+      },
+      { title: "My Schedule", href: doctorScheduleRoute.path, icon: <PersonIcon /> }
     ]
   },
   {
@@ -79,6 +83,11 @@ export const doctorSidebarItems = [
         title: "Add Available Time Slots",
         href: addDoctorAvailableTimeSlotsRoute.path,
         icon: <PlusIcon />
+      },
+      {
+        title: "Video meeting",
+        href: videoCallRoute.path,
+        icon: <VideoCall />
       }
     ]
   }
