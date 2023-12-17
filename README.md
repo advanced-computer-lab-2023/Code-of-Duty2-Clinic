@@ -171,6 +171,20 @@ Jira was used as our main issue tracking and project management tool for creatin
 </details>
 
 <details>
+<summary>View doctor's patients</summary>
+
+![View doctor's patients](docs/screenshots/demo/View_Doctor's_Patients.png)
+
+</details>
+
+<details>
+<summary>Add available time slots</summary>
+
+![Add available time slots](docs/screenshots/demo/Add_Available_Time_Slots.png)
+
+</details>
+
+<details>
 <summary>Admin dashboard</summary>
 
 ![Admin dashboard](docs/screenshots/demo/Admin_Dashboard.png)
@@ -1014,7 +1028,19 @@ Please refer to the `api-reference.md` file under the `docs` directory for a com
 
 Testing was done for this software using Postman.
 
-![Postman](docs/screenshots/test/postman.png)
+![Postman](docs/screenshots/test/Test_1.png)
+![Postman](docs/screenshots/test/Test_2.png)
+![Postman](docs/screenshots/test/Test_3.png)
+![Postman](docs/screenshots/test/Test_4.png)
+![Postman](docs/screenshots/test/Test_5.png)
+![Postman](docs/screenshots/test/Test_6.png)
+![Postman](docs/screenshots/test/Test_7.png)
+![Postman](docs/screenshots/test/Test_8.png)
+![Postman](docs/screenshots/test/Test_9.png)
+![Postman](docs/screenshots/test/Test_10.png)
+![Postman](docs/screenshots/test/Test_11.png)
+![Postman](docs/screenshots/test/Test_12.png)
+![Postman](docs/screenshots/test/Test_13.png)
 
 ## How to Use
 
