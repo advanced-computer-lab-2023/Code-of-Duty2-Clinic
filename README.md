@@ -80,9 +80,9 @@ Jira was used as our main issue tracking and project management tool for creatin
 </details>
 
 <details>
-<summary>Patient login</summary>
+<summary>Patient & admin login</summary>
 
-![Patient login](docs/screenshots/demo/Patient_Login.png)
+![Patient & admin login](docs/screenshots/demo/Patient_Login.png)
 
 </details>
 
@@ -167,6 +167,27 @@ Jira was used as our main issue tracking and project management tool for creatin
 <summary>Doctor login</summary>
 
 ![Doctor login](docs/screenshots/demo/Doctor_Login.png)
+
+</details>
+
+<details>
+<summary>Admin dashboard</summary>
+
+![Admin dashboard](docs/screenshots/demo/Admin_Dashboard.png)
+
+</details>
+
+<details>
+<summary>View all admins</summary>
+
+![View all admins](docs/screenshots/demo/View_All_Admins.png)
+
+</details>
+
+<details>
+<summary>View all patients</summary>
+
+![View all patients](docs/screenshots/demo/View_All_Patients.png)
 
 </details>
 
