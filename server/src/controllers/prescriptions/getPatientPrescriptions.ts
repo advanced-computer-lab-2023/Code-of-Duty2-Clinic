@@ -80,7 +80,7 @@ export const getPatientPrescriptionsRegistered = async (
 
     //check params
     let updateParams: any = { ...req.query };
-    if (!checkUpdateParams(Object.keys(updateParams), allowedUpdateParams))
+    if (!updateParams(Object.keys(updateParams), allowedUpdateParams))
       return res.status(400).json({ error: "Invalid Params" });
     delete updateParams["doctorName"];
 
