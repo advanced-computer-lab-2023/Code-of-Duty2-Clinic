@@ -23,7 +23,7 @@ export const AppointmentSchema = new Schema<IAppointmentModel>({
     index: true,
   },
   patientId: {
-    type: Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId||String,
     ref: "Patient",
     required: true,
     index: true,

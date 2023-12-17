@@ -6,6 +6,7 @@ export interface IPrescription {
    patientId: Schema.Types.ObjectId;
    status: "filled" | "unfilled";
    isSubmitted: boolean;
+   isPaid:boolean;
    medicines: Array<{
       medicineId: string;
       name: string;

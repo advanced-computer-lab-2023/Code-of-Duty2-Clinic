@@ -66,7 +66,7 @@ export const updateMedicineAndDosage = async (
 };
 export const updatePrescriptionToPaid = async (prescriptionId: string) => {
    try {
-      await Prescription.updateOne({ _id: prescriptionId }, { $set: { paid: true } });
+      await Prescription.updateOne({ _id: prescriptionId }, { $set: { isPaid: true } });
    } catch (err) {
       throw new Error("Cannot update Prescription to Paid ");
    }

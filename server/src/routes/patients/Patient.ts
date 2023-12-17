@@ -21,8 +21,10 @@ import {
 import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 
 import { getPatientPrescription } from "../../controllers/prescriptions/getPatientPrescription";
-import {createOrderFromPrescription } from "../../controllers/orders/createOrder";
+import { createOrderFromPrescription } from "../../controllers/orders/createOrder";
 import { getAllNotificationsForPatientHandler } from "../../controllers/patients/notifications";
+import { getDoctorPatientGeneralInfo } from "../../controllers/doctors/getDoctorAndPatientGeneralInfo";
+import { getPatientDoctorGeneralInfo } from "../../controllers/patients/getPatientAndDoctorGeneralInfo";
 
 const patientRouter = express.Router();
 
@@ -55,9 +57,6 @@ patientRouter
 
   .get("/health-packages/:packageId", getHealthPackage)
 
-  .get( '/prescription/:prescriptionId',getPatientPrescription)
-
-  .post( '/prescription/:prescriptionId/pay',createOrderFromPrescription)
-  .get("/:patientId", getPatientById);
+  .get("/general-info", getPatientDoctorGeneralInfo);
 
 export default patientRouter;

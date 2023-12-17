@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardMedia, Grid, Typography, styled } from "@mui/material";
+import { Box, Button, Card, CardContent, CardMedia, Grid, Typography, styled } from "@mui/material";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import UserData from "../../types/UserData";
@@ -10,16 +10,19 @@ const PatientItem = styled(Card)({
    padding: 16,
    cursor: "pointer",
    textDecoration: "none",
+   height:200,
+   background: "linear-gradient(to bottom, #ffffff, #f0f0f0)", 
 }) as typeof Card;
 const PatientImage = styled(CardMedia)({
    width: 120,
-   height: 120,
+   height: 0,
    borderRadius: "50%",
 }) as typeof CardMedia;
 
 const PatientInfo = styled(Typography)({
    fontWeight: "bold",
    textAlign: "center",
+   marginBottom:20,
 }) as typeof Typography;
 
 const RedirectButton = styled(Button)({
@@ -50,11 +53,14 @@ const PatientComponent: FC<PatientComponentProps> = ({ patient }) => {
         }`}
       >
         <PatientImage image={patient.photoUrl || ""} content={getInitials()} />
-        <CardContent>
+        <CardContent sx={{display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
+          <Box>
           <PatientInfo variant="body1">Name: {patient.name}</PatientInfo>
           <PatientInfo variant="subtitle2">
             Gender: {patient.gender}
           </PatientInfo>
+          </Box>
+         
           {!patient.supervisingPatientId && (
             <RedirectButton
               variant="contained"

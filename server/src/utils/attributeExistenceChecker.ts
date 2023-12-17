@@ -5,6 +5,6 @@ export default function allAttributesExist(subSet:string[] , superSet:string[]):
 }
 
 export function someAttributesExist(subSet:string[] , superSet:string[]):boolean{
-    if(!subSet) return true
+    if(!subSet||subSet.length===0) return true
     return subSet.some((attribute)=> superSet.includes(attribute))        
 }

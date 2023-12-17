@@ -47,8 +47,7 @@ export const createOrderFromPrescription = async (req: AuthorizedRequest, res: R
          }
       }
 
-      amount *= medcineDiscount;
-
+      
       if (exceedingAvailableQuantityMedicines.length > 0) {
          return res.status(StatusCodes.BAD_REQUEST).json({
             message: `The following medicines are out of stock or do not have enough available quantity: ${exceedingAvailableQuantityMedicines.join(
@@ -63,6 +62,8 @@ export const createOrderFromPrescription = async (req: AuthorizedRequest, res: R
          await dbMedicine.save();
          amount += medicine.quantity * dbMedicine.price;
       }
+      amount *= medcineDiscount;
+
 
       if (paymentMethod === "wallet") updatePatientWalletBalance(patientId!, amount);
 

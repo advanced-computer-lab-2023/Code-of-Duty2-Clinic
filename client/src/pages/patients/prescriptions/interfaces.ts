@@ -21,6 +21,7 @@ export interface IPrescription {
       _id: string;
       name: string;
    };
+   isPaid?:boolean
    status: string;
    medicines: [IMedicine] | [];
    updatedAt: Date;

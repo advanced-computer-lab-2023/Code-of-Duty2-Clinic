@@ -2,6 +2,8 @@ import React, { ReactNode, createContext, useState } from "react";
 import { IPrescription, IOrder, PrescriptionNullifier, OrderNullifier } from "../interfaces";
 import { Stripe, StripeElements } from "@stripe/stripe-js";
 import { useCreateOrderMutation } from "./checkoutStepperService";
+import axios from "axios";
+import { config } from "../../../../configuration";
 
 interface contextType {
    step: number;
@@ -66,9 +68,12 @@ const PrescriptionPaymentContextProvider: React.FC<{ children: ReactNode }> = ({
             return "Card doesnt exist";
          }
       }
-      createOrdermutation.mutate({ order, prescriptionId: prescription?._id! });
-      console.log(createOrdermutation.error)
-      if (createOrdermutation.status!=='success') {
+      //createOrdermutation.mutate({ order, prescriptionId: prescription?._id! });
+      const res = await axios.post(`${config.serverUri}/patients/prescription/${prescription?._id}/pay`, {
+         ...order,
+      });
+      console.log(res.status)
+      if (res.status!==201) {
          setError("cannot issue order please try again later")
          return "cannot issue order please try again later";
       }

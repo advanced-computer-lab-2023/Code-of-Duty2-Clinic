@@ -1,10 +1,10 @@
 import { Response } from "express";
 import Prescription from "../../models/prescriptions/Prescription";
-import checkUpdateParams from "../../utils/attributeExistanceChecker";
 import { StatusCodes } from "http-status-codes";
 import { AuthorizedRequest } from "../../types/AuthorizedRequest";
 import { findPatientById } from "../../services/patients";
 import Medicine from "../../models/medicines/Medicine";
+import { someAttributesExist } from "../../utils/attributeExistenceChecker";
 
 export const getPatientPrescriptions = async (req: AuthorizedRequest, res: Response) => {
    try {
@@ -20,7 +20,7 @@ export const getPatientPrescriptions = async (req: AuthorizedRequest, res: Respo
 
       //check params
       let updateParams: any = { ...req.query };
-      if (!checkUpdateParams(Object.keys(updateParams), allowedUpdateParams))
+      if (!someAttributesExist(Object.keys(updateParams), allowedUpdateParams))
          return res.status(400).json({ error: "Invalid Params" });
       delete updateParams["doctorName"];
 
@@ -37,7 +37,7 @@ export const getPatientPrescriptions = async (req: AuthorizedRequest, res: Respo
          .populate({
             path: "doctorId",
             match: { name: new RegExp(req.query.doctorName as string, "i") },
-            select: "name -_id",
+            select: "name _id",
          })
          .populate({
             path: "medicines.medicineId",
