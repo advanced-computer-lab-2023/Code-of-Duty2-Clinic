@@ -38,6 +38,10 @@ import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/n
 import { getPatientHealthRecordsByDoctor } from "../../controllers/doctors/getPatientHealthRecord";
 import { getDoctorPatientGeneralInfo } from "../../controllers/doctors/getDoctorAndPatientGeneralInfo";
 import { scheduleFollowUpAppointmentForDependentHandler } from "../../controllers/appointments/follow-ups/for-dependent-patients";
+import {
+  getSoonestAppointmentHandler,
+  storeVideoLinkInPatient
+} from "../../controllers/doctors/videoCall";
 
 const doctorRouter = express.Router();
 
@@ -109,6 +113,11 @@ doctorRouter
 
   .post("/patients/:patientId/health-record", doctorAddPatientHealthRecord)
 
-  .get("/general-info", getDoctorPatientGeneralInfo);
+  .get("/general-info", getDoctorPatientGeneralInfo)
+  .get("/notifications", getAllNotificationsForDoctorHandler)
+
+  .get("/soonest-appointment", getSoonestAppointmentHandler)
+
+  .post("/video-call-url", storeVideoLinkInPatient);
 
 export default doctorRouter;

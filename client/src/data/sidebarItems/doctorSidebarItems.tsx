@@ -9,13 +9,19 @@ import {
   addDoctorAvailableTimeSlotsRoute,
   doctorWalletRoute,
   doctorWalletCreationRoute,
-  followUpRequestsRoute
+  followUpRequestsRoute,
+  videoCallRoute,
+  doctorScheduleRoute
 } from "../routes/doctorRoutes";
 import PeopleIcon from "@mui/icons-material/People";
 import PlusIcon from "@mui/icons-material/AddBox";
 import RequestIcon from "@mui/icons-material/Reviews";
 import WalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import { VideoCall } from "@mui/icons-material";
 
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import PasswordIcon from "@mui/icons-material/Password";
 export const doctorSidebarItems = [
   {
     title: "Home",
@@ -25,22 +31,25 @@ export const doctorSidebarItems = [
         href: doctorDashboardRoute.path,
         icon: <HomeIcon />
       }
-    ]
+    ],
+    icon: <HomeIcon />
   },
   {
     title: "My Account",
     items: [
       {
-        title: "Update my account info",
+        title: "Update Account Info",
         href: updateAccountInfoRoute.path,
         icon: <PersonIcon />
       },
       {
-        title: "Update my password",
+        title: "Change Password",
         href: `${doctorUpdatePasswordRoute.path}?type=doctor`,
         icon: <PersonIcon />
-      }
-    ]
+      },
+      { title: "My Schedule", href: doctorScheduleRoute.path, icon: <PersonIcon /> }
+    ],
+    icon: <ManageAccountsIcon />
   },
   {
     title: "Wallets",
@@ -55,7 +64,8 @@ export const doctorSidebarItems = [
         href: doctorWalletCreationRoute.path,
         icon: <WalletIcon />
       }
-    ]
+    ],
+    icon: <WalletIcon />
   },
   {
     title: "Patients",
@@ -79,7 +89,13 @@ export const doctorSidebarItems = [
         title: "Add Available Time Slots",
         href: addDoctorAvailableTimeSlotsRoute.path,
         icon: <PlusIcon />
+      },
+      {
+        title: "Video meeting",
+        href: videoCallRoute.path,
+        icon: <VideoCall />
       }
-    ]
+    ],
+    icon: <ContactsIcon />
   }
 ];

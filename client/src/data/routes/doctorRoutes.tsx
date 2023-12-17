@@ -27,6 +27,7 @@ import ChatsView from "../../features/chats/ChatsView";
 import PrescriptionList from "../../pages/patients/prescriptions/PrescriptionList";
 import DoctorSchedule from "../../features/appointments/AppointmentsSchedule";
 import FollowUpRequestsPage from "../../pages/doctors/FollowUpRequests";
+import VideoCall from "../../pages/doctors/VideoCall";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
   element: <Home />
@@ -44,7 +45,7 @@ export const doctorAppointmentsRoute: Route = {
 
 export const doctorPrescriptionList: Route = {
   path: "/doctor/prescriptions/view",
-  element: <PrescriptionList />,
+  element: <PrescriptionList />
 };
 
 export const doctorAppointmentDetailsRoute: Route = {
@@ -107,6 +108,11 @@ export const followUpRequestsRoute: Route = {
   element: <FollowUpRequestsPage />
 };
 
+export const videoCallRoute: Route = {
+  path: "/doctor/meeting",
+  element: <VideoCall />
+};
+
 const routes: Route[] = [
   doctorDashboardRoute,
   updateAccountInfoRoute,
@@ -123,7 +129,8 @@ const routes: Route[] = [
   doctorWalletCreationRoute,
   doctorChatsRoute,
   doctorScheduleRoute,
-  followUpRequestsRoute
+  followUpRequestsRoute,
+  videoCallRoute
 ];
 
 export default routes;
