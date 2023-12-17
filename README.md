@@ -170,6 +170,27 @@ Jira was used as our main issue tracking and project management tool for creatin
 
 </details>
 
+<details>
+<summary>Accepted doctor registration request</summary>
+
+![Accepted doctor registration request](docs/screenshots/demo/Accepted_Doctor_Registration_Request.png)
+
+</details>
+
+<details>
+<summary>Add, edit, or delete health packages</summary>
+
+![Add, edit, or delete health packages](docs/screenshots/demo/Health_Packages.png)
+
+</details>
+
+<details>
+<summary>Update password</summary>
+
+![Update password](docs/screenshots/demo/Update_Password.png)
+
+</details>
+
 ## Tech/Framework used
 
 This software uses the `MERN` technology stack. Here is a more comprehensive list of used technologies in this software:
@@ -302,7 +323,7 @@ The system has four user types: **_Guest_**, **_Patient_**, **_Doctor_** and **_
   - Manage health packages: add, update, or delete with different price ranges (silver, gold, platinum).
 
 - **Doctor Join Requests:**
-  - Accept or reject doctor join requests to join the platform.
+  - Accept or reject doctor requests to join the platform.
 
 </details>
 
