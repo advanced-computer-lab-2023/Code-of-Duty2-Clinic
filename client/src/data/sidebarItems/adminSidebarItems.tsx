@@ -9,7 +9,9 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AdminIcon from "@mui/icons-material/AdminPanelSettings";
 import { adminUpdatePasswordRoute } from "../routes/adminRoutes";
-
+import TocIcon from "@mui/icons-material/Toc";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ContactsIcon from "@mui/icons-material/Contacts";
 
 export const adminSidebarItems = [
   {
@@ -21,6 +23,7 @@ export const adminSidebarItems = [
         icon: <AdminPanelSettingsIcon />
       },
     ],
+    icon: <AdminPanelSettingsIcon />
   },
   {
     title: "System Users",
@@ -46,6 +49,7 @@ export const adminSidebarItems = [
         icon: <AdminIcon />,
       },
     ],
+    icon: <PeopleIcon />
   },
   {
     title: "Registration Requests",
@@ -56,6 +60,7 @@ export const adminSidebarItems = [
         icon: <ViewListIcon />
       },
     ],
+    icon: <TocIcon />
   },
   {
     title: "System Services",
@@ -66,15 +71,17 @@ export const adminSidebarItems = [
         icon: <PackageIcon />,
       },
     ],
+    icon: <SettingsIcon />
   },
   {
     title: "My Account",
     items: [
       {
-        title: "Update Password",
+        title: "Change Password",
         href: `${adminUpdatePasswordRoute.path}?type=admin`,
         icon: <PeopleIcon />,
       },
     ],
+    icon: <ContactsIcon />
   },
 ];

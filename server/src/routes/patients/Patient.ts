@@ -32,22 +32,33 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler
 } from "../../controllers/payments/credit-cards";
+import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
+
+import { getPatientPrescription } from "../../controllers/prescriptions/getPatientPrescription";
+import { createOrderFromPrescription } from "../../controllers/orders/createOrder";
 import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsD";
 import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsR";
 import { cancelSubscriptionR } from "../../controllers/healthPackages/cancelSubscriptionForR";
 import { subscribeToHealthPackageR } from "../../controllers/healthPackages/subscribeForR";
-import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 import {
   bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
   bookAnAppointmentForARegisteredFamilyMemberHandler as bookAppointmentForARegisteredFamilyMemberHandler,
   bookAnAppointmentHandler as bookAppointmentHandler,
   getAppointmentsWithAllDoctors,
-  getDoctorAppointmentFeesHandler,
+  getDoctorAppointmentFeesHandler
 } from "../../controllers/appointments/patients";
 import { getPatientDoctorsHandler } from "../../controllers/patients/getPatientDoctors";
 import { getPatientDependentFamilyMemberById } from "../../controllers/patients/getPatientDependentFamilyMemberById";
-import { addPatientHealthRecord, deletePatientHealthRecord, getPatientHealthRecords } from "../../controllers/patients/healthRecords";
-import { addPatientRegisteredFamilyMember, deletePatientRegisteredFamilyMember, rejectPatientRegisteredFamilyMember } from "../../controllers/patients/patientRegisteredFamilyMemberController";
+import {
+  addPatientHealthRecord,
+  deletePatientHealthRecord,
+  getPatientHealthRecords
+} from "../../controllers/patients/healthRecords";
+import {
+  addPatientRegisteredFamilyMember,
+  deletePatientRegisteredFamilyMember,
+  rejectPatientRegisteredFamilyMember
+} from "../../controllers/patients/patientRegisteredFamilyMemberController";
 import { getPatientRegisteredFamilyMemberById } from "../../controllers/patients/getPatientRegisteredFamilyMemberById";
 import { getPatientRegisteredFamilyMemberRequests } from "../../controllers/patients/getPatientRegisteredFamilyMemberRequests";
 import { getAllPrescriptions } from "../../controllers/prescriptions/getAllPatientPrescriptions";
@@ -55,6 +66,9 @@ import { getPatientPrescriptions } from "../../controllers/prescriptions/getPati
 import { addFamilyMembers } from "../../controllers/patients/addFamilyMembers";
 import { getPatientDependentFamilyMemberPrescriptions } from "../../controllers/prescriptions/getPatientDependentFamilyMemberPrescriptions";
 import { getAllNotificationsForPatientHandler } from "../../controllers/patients/notifications";
+import { getDoctorPatientGeneralInfo } from "../../controllers/doctors/getDoctorAndPatientGeneralInfo";
+import { getPatientDoctorGeneralInfo } from "../../controllers/patients/getPatientAndDoctorGeneralInfo";
+import { getPatientVideoLink } from "../../controllers/doctors/videoCall";
 
 const patientRouter = express.Router();
 
@@ -90,10 +104,7 @@ patientRouter
 
   .delete("/family-members/registered", deletePatientRegisteredFamilyMember)
 
-  .post(
-    "/family-members/requests/:familyMemberId/reject",
-    rejectPatientRegisteredFamilyMember
-  )
+  .post("/family-members/requests/:familyMemberId/reject", rejectPatientRegisteredFamilyMember)
 
   .get("/appointments", getAppointmentsWithAllDoctors)
 
@@ -123,15 +134,9 @@ patientRouter
 
   .post("/subscribe/:packageId", subscribeToHealthPackage)
 
-  .post(
-    "/registered-members/:patientId/subscribe/:packageId",
-    subscribeToHealthPackageR
-  )
+  .post("/registered-members/:patientId/subscribe/:packageId", subscribeToHealthPackageR)
 
-  .post(
-    "/dependent-members/:dependentNid/subscribe/:packageId",
-    setSubscribedPackageForDependent
-  )
+  .post("/dependent-members/:dependentNid/subscribe/:packageId", setSubscribedPackageForDependent)
 
   .get("/patient-health-package", viewSubscribedHealthPackage)
 
@@ -153,19 +158,13 @@ patientRouter
 
   .patch("/cancel-subscription/:patientId", cancelSubscriptionR)
 
-  .patch(
-    "/cancel-subscription-dependent/:dependentNid",
-    cancelSubscribedForDependent
-  )
+  .patch("/cancel-subscription-dependent/:dependentNid", cancelSubscribedForDependent)
 
   .get("/package-benefits", viewSubscribedHealthPackageBenefits)
 
   .get("/dependent-family-members", getDependentFamilyMembers)
 
-  .patch(
-    "/registered-family/cancel-subscription",
-    cancelSubscriptionForRegistered
-  )
+  .patch("/registered-family/cancel-subscription", cancelSubscriptionForRegistered)
 
   .patch("/change-password", updatePatientPassword)
 
@@ -187,6 +186,11 @@ patientRouter
 
   .get("/notifications", getAllNotificationsForPatientHandler)
 
-  //.get("/:patientId", getPatientById);
+  .get("/health-packages/:packageId", getHealthPackage)
+
+  .get("/general-info", getPatientDoctorGeneralInfo)
+  .get("/video-call-url", getPatientVideoLink)
+
+  .get("/:patientId", getPatientById);
 
 export default patientRouter;

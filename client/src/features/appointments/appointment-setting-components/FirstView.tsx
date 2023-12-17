@@ -82,11 +82,13 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
     const pagePathname =
       userRole === UserRole.PATIENT
         ? `/patient/appointment-scheduling?doctorId=${doctorId}&${
-            registeredMemberId ? `regId=${registeredMemberId}` : `depId=${dependentMemberId}`
+            registeredMemberId
+              ? `regId=${registeredMemberId}`
+              : `depId=${dependentMemberId}&isFollowUp=true`
           }`
         : `/doctor/schedule?patientId=${
             registeredMemberId ? registeredMemberId : dependentMemberId
-          }${dependentMemberId ? `&spId=${userId}` : ""}`;
+          }${dependentMemberId ? `&spId=${userId}` : ""}&isFollowUp=true`;
 
     navigate(pagePathname);
     context.setOpen(false);
@@ -97,7 +99,7 @@ const FirstView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
   return (
     <Box>
       <div style={{ fontWeight: "bold", padding: "1%" }}>{titles.firstViewTitle}</div>
-      {viewOptionIndex === 4 || viewOptionIndex === 5 ? (
+      {viewOptionIndex === null ? (
         <div>
           {context.currentView === 2 && <BackIcon onClick={() => context.setCurrentView(1)} />}
           <Button

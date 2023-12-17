@@ -3,6 +3,8 @@ import axios from "axios";
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { config } from "../../../configuration";
+import AppointmentSettingContextProvider from "../../../features/appointments/AppointmentSettingContext";
+import AppointmentSettingModal from "../../../features/appointments/AppointmentSettingModal";
 
 type FollowUpRequest = {
   id: string;
@@ -28,6 +30,8 @@ const FollowUpRequestsPage: FC = () => {
   );
 
   const [filter, setFilter] = useState<string>("");
+
+  const [showModal, setShowModal] = useState(false);
 
   const handleFilterNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.value;
@@ -82,14 +86,30 @@ const FollowUpRequestsPage: FC = () => {
       .catch((error) => console.error(error));
   };
 
+  const handleMakingARequest = () => {
+    setShowModal(true);
+  };
+
   return (
     <div style={{ padding: "2.0rem" }}>
+      {showModal && (
+        <AppointmentSettingContextProvider>
+          <AppointmentSettingModal
+            dependentNationalId={null}
+            doctorId={null}
+            option="follow-up-request"
+            registeredPatientId={null}
+            viewIndex={null}
+          />
+        </AppointmentSettingContextProvider>
+      )}
+
       <Typography variant="h4" gutterBottom component="div" color="primary">
         Follow up Appointment Requests
       </Typography>
 
       <Box mb={2} sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button onClick={() => {}}>Add a follow up appointment request</Button>
+        <Button onClick={handleMakingARequest}>Add a follow up appointment request</Button>
         <TextField
           margin="normal"
           label="Filter by requestId"
@@ -103,68 +123,76 @@ const FollowUpRequestsPage: FC = () => {
         <Typography variant="h6" gutterBottom component="div" color="primary">
           My follow up appointment requests
         </Typography>
-        {myFilteredRequests.map((request) => (
-          <Box sx={{ display: "flex", justifyContent: "space-between", justifyItems: "center" }}>
-            <Paper
-              key={request.id}
-              sx={{
-                mb: 2,
-                p: 2,
-                borderRadius: "5px"
-              }}
-            >
-              <Box mb={0.9} />
+        {!myFilteredRequests.length ? (
+          <div>No requests</div>
+        ) : (
+          myFilteredRequests.map((request) => (
+            <Box sx={{ display: "flex", justifyContent: "space-between", justifyItems: "center" }}>
+              <Paper
+                key={request.id}
+                sx={{
+                  mb: 2,
+                  p: 2,
+                  borderRadius: "5px"
+                }}
+              >
+                <Box mb={0.9} />
 
-              <Typography>
-                <strong>Name: </strong> {request.user.name}
-              </Typography>
+                <Typography>
+                  <strong>Name: </strong> {request.user.name}
+                </Typography>
 
-              <Typography>
-                <strong>Status:</strong> {request.status}
-              </Typography>
-            </Paper>
-            <Button
-              sx={{ backgroundColor: "red", padding: "1%" }}
-              onClick={() => handleDeleteMyRequest(request.id)}
-            >
-              Delete request
-            </Button>
-          </Box>
-        ))}
+                <Typography>
+                  <strong>Status:</strong> {request.status}
+                </Typography>
+              </Paper>
+              <Button
+                sx={{ backgroundColor: "red", padding: "1%" }}
+                onClick={() => handleDeleteMyRequest(request.id)}
+              >
+                Delete request
+              </Button>
+            </Box>
+          ))
+        )}
       </Box>
 
-      <Box>
+      <Box sx={{ marginTop: "7%" }}>
         <Typography variant="h6" gutterBottom component="div" color="primary">
           My dependent family members follow up appointment requests
         </Typography>
-        {myDependentFilteredRequests.map((request) => (
-          <Box sx={{ display: "flex", justifyContent: "space-between", justifyItems: "center" }}>
-            <Paper
-              key={request.id}
-              sx={{
-                mb: 2,
-                p: 2,
-                borderRadius: "5px"
-              }}
-            >
-              <Box mb={0.9} />
+        {!myDependentFilteredRequests.length ? (
+          <div>No Requests</div>
+        ) : (
+          myDependentFilteredRequests.map((request) => (
+            <Box sx={{ display: "flex", justifyContent: "space-between", justifyItems: "center" }}>
+              <Paper
+                key={request.id}
+                sx={{
+                  mb: 2,
+                  p: 2,
+                  borderRadius: "5px"
+                }}
+              >
+                <Box mb={0.9} />
 
-              <Typography>
-                <strong>Name: </strong> {request.user.name}
-              </Typography>
+                <Typography>
+                  <strong>Name: </strong> {request.user.name}
+                </Typography>
 
-              <Typography>
-                <strong>Status:</strong> {request.status}
-              </Typography>
-            </Paper>
-            <Button
-              sx={{ backgroundColor: "red", padding: "1%" }}
-              onClick={() => handleDeleteDependentRequest(request.id)}
-            >
-              Delete request
-            </Button>
-          </Box>
-        ))}
+                <Typography>
+                  <strong>Status:</strong> {request.status}
+                </Typography>
+              </Paper>
+              <Button
+                sx={{ backgroundColor: "red", padding: "1%" }}
+                onClick={() => handleDeleteDependentRequest(request.id)}
+              >
+                Delete request
+              </Button>
+            </Box>
+          ))
+        )}
       </Box>
     </div>
   );

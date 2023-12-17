@@ -1,19 +1,20 @@
+import { ObjectId } from "mongoose";
 import HealthPackage, { IHealthPackageModel } from "../../models/health_packages/HealthPackage";
 import { IHealthPackage } from "../../models/health_packages/interfaces/IHealthPackage";
 import { IPatientModel } from "../../models/patients/Patient";
 import { findPatientById } from "../patients";
 
 export const createHealthPackage = async (newHealthPackage: IHealthPackage) => {
-  const healthPackage = new HealthPackage(newHealthPackage);
-  await healthPackage.save();
+   const healthPackage = new HealthPackage(newHealthPackage);
+   await healthPackage.save();
 };
 
 export const deleteHealthPackage = async (healthPackageId: string) => {
-  return await HealthPackage.deleteOne({ _id: healthPackageId });
+   return await HealthPackage.deleteOne({ _id: healthPackageId });
 };
 
 export const findHealthPackageById = async (healthPackageId: string) => {
-  return await HealthPackage.findById(healthPackageId).lean();
+   return await HealthPackage.findById(healthPackageId).lean();
 };
 
 export const findAllHealthPackages = async () => {
@@ -21,8 +22,8 @@ export const findAllHealthPackages = async () => {
 };
 
 export const findHealthPackageDetailsAfterDiscount = async (
-  patientId: string,
-  packageId: string
+   patientId: string,
+   packageId: string
 ) => {
   const allHealthPackagesAfterDiscount = await findAllHealthPackagesAfterDiscount(patientId);
   const healthPackage = allHealthPackagesAfterDiscount.find(
@@ -42,7 +43,7 @@ export const findAllHealthPackagesAfterDiscount = async (patientId: string) => {
 
   const maxHealthPackagesDiscountPossible = getMaxDiscount(registeredFamilyMembersHealthPackages);
 
-  const allHealthPackages = await findAllHealthPackages();
+   const allHealthPackages = await findAllHealthPackages();
 
   const result = getHealthPackagesDetailsAfterDiscount(
     allHealthPackages,
@@ -112,4 +113,35 @@ const getRegisteredFamilyMembersHealthPackages = async (patient: IPatientModel) 
   );
   const result = await Promise.all(registeredFamilyMemberDiscountsPromise);
   return result.filter((package_) => package_ !== null) as IHealthPackage[];
+};
+
+export const findHealhPackagePharmacyDiscountAndName = async (
+   healthPackageId: ObjectId
+): Promise<{ name: string; discount: number }> => {
+   try {
+      const healthPackage = await HealthPackage.findById(healthPackageId).select({
+         "discounts.gainedPharmacyMedicinesDiscount": 1,
+         name: 1,
+      });
+      const discount = healthPackage?.discounts.gainedPharmacyMedicinesDiscount || 1;
+      const name = healthPackage?.name!;
+      return Promise.resolve({ name, discount });
+   } catch (err) {
+      return Promise.reject(err);
+   }
+};
+
+export const findHealhPackageMedicinesDiscount = async (
+   healthPackageId: ObjectId
+)=> {
+   try {
+      const healthPackage = await HealthPackage.findById(healthPackageId).select({
+         "discounts.gainedPharmacyMedicinesDiscount": 1,
+         name: 1,
+      });
+      const discount = healthPackage?.discounts.gainedPharmacyMedicinesDiscount || 1;
+      return discount;
+   } catch (err) {
+      throw new Error("Cannot get health Package info");
+   }
 };

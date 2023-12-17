@@ -10,7 +10,7 @@ import NotificationSchema from "../notifications/Notification";
 enum Relation {
   WIFE = "wife",
   HUSBAND = "husband",
-  CHILD = "children",
+  CHILD = "children"
 }
 
 export interface IPatientModel extends IPatient, Document {}
@@ -23,7 +23,7 @@ export const PatientSchema = new Schema<IPatientModel>(
       type: String,
       validate: [isEmail, "invalid email"],
       unique: true,
-      index: true,
+      index: true
     },
     name: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
@@ -34,9 +34,9 @@ export const PatientSchema = new Schema<IPatientModel>(
       mobileNumber: {
         type: String,
         required: true,
-        validate: [isMobileNumber, "invalid mobile number"],
+        validate: [isMobileNumber, "invalid mobile number"]
       },
-      relationToPatient: { type: String, required: true },
+      relationToPatient: { type: String, required: true }
     },
 
     deliveryAddresses: { type: Array<{ type: String }>, select: false },
@@ -51,25 +51,25 @@ export const PatientSchema = new Schema<IPatientModel>(
           createdAt: { type: Date; immutable: true };
         };
       }>,
-      required: false,
+      required: false
     },
     subscribedPackage: {
       type: {
         packageId: {
           type: Schema.Types.ObjectId,
           ref: "HealthPackage",
-          required: true,
+          required: true
         },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
         status: {
           type: String,
           enum: ["subscribed", "unsubscribed", "cancelled"],
-          required: true,
-        },
+          required: true
+        }
       },
       required: false,
-      select: false,
+      select: false
     },
     dependentFamilyMembers: {
       type: [
@@ -81,23 +81,23 @@ export const PatientSchema = new Schema<IPatientModel>(
           relation: {
             type: String,
             enum: Relation,
-            required: true,
+            required: true
           },
           subscribedPackage: {
             type: {
               packageId: {
                 type: Schema.Types.ObjectId,
                 ref: "HealthPackage",
-                required: true,
+                required: true
               },
               startDate: { type: Date, required: true },
               endDate: { type: Date, required: true },
               status: {
                 type: ["subscribed", "unsubscribed", "cancelled"],
-                required: true,
-              },
+                required: true
+              }
             },
-            required: false,
+            required: false
           },
           healthRecords: {
             type: Array<{
@@ -109,12 +109,12 @@ export const PatientSchema = new Schema<IPatientModel>(
                 createdAt: { type: Date; immutable: true };
               };
             }>,
-            required: false,
-          },
-        },
+            required: false
+          }
+        }
       ],
       required: false,
-      select: false,
+      select: false
     },
     registeredFamilyMembers: {
       type: [
@@ -123,13 +123,13 @@ export const PatientSchema = new Schema<IPatientModel>(
             type: Schema.Types.ObjectId,
             ref: "Patient",
             required: true,
-            unique: true,
+            unique: true
           },
-          relation: { type: String, enum: Relation, required: true },
-        },
+          relation: { type: String, enum: Relation, required: true }
+        }
       ],
       required: false,
-      select: false,
+      select: false
     },
     registeredFamilyMemberRequests: {
       type: [
@@ -138,28 +138,33 @@ export const PatientSchema = new Schema<IPatientModel>(
             type: Schema.Types.ObjectId,
             ref: "Patient",
             required: true,
-            unique: true,
+            unique: true
           },
-          relation: { type: String, enum: Relation, required: true },
-        },
+          relation: { type: String, enum: Relation, required: true }
+        }
       ],
       required: false,
-      select: false,
+      select: false
     },
     wallet: {
       type: WalletSchema,
       select: false,
-      required: false,
+      required: false
     },
     passwordReset: {
       type: PasswordResetSchema,
-      select: false,
+      select: false
     },
     receivedNotifications: {
       type: Array<typeof NotificationSchema>,
       select: false,
-      required: false,
+      required: false
     },
+    currentVideoMeetingLink: {
+      type: String,
+      required: false,
+      select: false
+    }
   },
   { timestamps: true }
 );
@@ -179,10 +184,7 @@ PatientSchema.virtual("age").get(function () {
   let age = today.getFullYear() - birthDate.getFullYear();
   let monthDifference = today.getMonth() - birthDate.getMonth();
 
-  if (
-    monthDifference < 0 ||
-    (monthDifference === 0 && today.getDate() < birthDate.getDate())
-  ) {
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
   return age;

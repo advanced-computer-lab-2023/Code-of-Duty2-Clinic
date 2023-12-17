@@ -4,8 +4,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import WalletIcon from "@mui/icons-material/Wallet";
 import ChatIcon from "@mui/icons-material/Chat";
-import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
-import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonAddOutlined from "@mui/icons-material/PersonAddOutlined";
@@ -58,28 +56,7 @@ export const patientSidebarItems = [
       {
         title: "My Prescriptions",
         href: patientPrescriptions.path,
-        icon: <HomeIcon />,
-      },
-    ],
-  },
-  {
-    title: "My Family",
-    icon: <FamilyRestroomIcon />,
-    items: [
-      {
-        title: "View My Family Members",
-        href: familyMembersRoute.path,
-        icon: <PeopleIcon />
-      },
-      {
-        title: "Add a Family Member",
-        href: addFamilyMemberRoute.path,
-        icon: <PersonAddIcon />
-      },
-      {
-        title: "Add a Registered Family Member",
-        href: addRegisteredFamilyMemberRoute.path,
-        icon: <PersonAddOutlined />
+        icon: <HomeIcon />
       }
     ]
   },
@@ -116,6 +93,27 @@ export const patientSidebarItems = [
         title: "Book an Appointment",
         href: appointmentBookingRoute.path,
         icon: <MoreTimeIcon />
+      }
+    ]
+  },
+  {
+    title: "My Family",
+    icon: <FamilyRestroomIcon />,
+    items: [
+      {
+        title: "View My Family Members",
+        href: familyMembersRoute.path,
+        icon: <PeopleIcon />
+      },
+      {
+        title: "Add a Family Member",
+        href: addFamilyMemberRoute.path,
+        icon: <PersonAddIcon />
+      },
+      {
+        title: "Add a Registered Family Member",
+        href: addRegisteredFamilyMemberRoute.path,
+        icon: <PersonAddOutlined />
       }
     ]
   },

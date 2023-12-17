@@ -78,6 +78,7 @@ const AppointmentsSchedule = () => {
       handleConfirm: () => {
         if (isAFollowUpAppointment()) {
           executeProperApiFollowUpAction(selectInfo.startStr, selectInfo.endStr);
+          navigate("/patient/follow-up-requests");
         } else {
           if (isASelfPatientAction()) {
             navigate(
@@ -174,10 +175,10 @@ const AppointmentsSchedule = () => {
   }
 
   function isADoctorAction() {
-    return !isADependentPatientAction() && !isARegisteredPatientAction && !doctorId;
+    return !isADependentPatientAction() && !isARegisteredPatientAction() && !doctorId;
   }
   function isASelfPatientAction() {
-    return !isADependentPatientAction() && !isARegisteredPatientAction && !!doctorId;
+    return !isADependentPatientAction() && !isARegisteredPatientAction() && !!doctorId;
   }
   function isAFollowUpAppointment() {
     return !!isFollowUpAppointment;
@@ -258,7 +259,7 @@ const AppointmentsSchedule = () => {
   };
 
   useEffect(() => {
-    getAllAppointments().then((appointments) => {
+    getAllAppointments(doctorId).then((appointments) => {
       setEvents(
         appointments.map((appointment: Appointment) => {
           return {

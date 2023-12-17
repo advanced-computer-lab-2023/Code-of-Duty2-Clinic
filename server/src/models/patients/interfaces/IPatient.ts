@@ -20,6 +20,7 @@ export interface IPatient extends IUserBaseInfo {
   wallet?: IWallet;
   passwordReset?: IPasswordResetInfo;
   receivedNotifications?: INotification[];
+  currentVideoMeetingLink?: string;
   verifyPasswordResetOtp?: (otp: string) => Promise<boolean>;
   verifyWalletPinCode?: (pinCode: string) => Promise<boolean>;
   verifyPassword?: (password: string) => Promise<boolean>;

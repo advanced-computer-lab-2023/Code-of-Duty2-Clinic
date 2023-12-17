@@ -44,11 +44,14 @@ const BoxStyle = {
 };
 
 const SecondView: FC<ViewProps> = ({ viewOptionIndex, option }) => {
-  const getAllAvailableDoctorsQuery = useQuery(["doctors"], getAllAvailableDoctors, {
-    enabled: option === "set-up-appointment" && (viewOptionIndex === 4 || viewOptionIndex === 5)
-  });
-
   const context = useContext(AppointmentSettingContext);
+
+  const getAllAvailableDoctorsQuery = useQuery(["doctors"], getAllAvailableDoctors, {
+    enabled:
+      option === "set-up-appointment" &&
+      (viewOptionIndex === 4 || viewOptionIndex === 5) &&
+      context.doctorId === null
+  });
 
   const getPatientDoctorsQuery = useQuery(
     ["patientDoctors"],

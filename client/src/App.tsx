@@ -12,7 +12,8 @@ axios.defaults.withCredentials = true;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3
+      retry: 3,
+      refetchOnWindowFocus: false,
     }
   }
 });
