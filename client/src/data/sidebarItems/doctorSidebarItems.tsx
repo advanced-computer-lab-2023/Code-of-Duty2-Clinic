@@ -15,7 +15,9 @@ import PeopleIcon from "@mui/icons-material/People";
 import PlusIcon from "@mui/icons-material/AddBox";
 import RequestIcon from "@mui/icons-material/Reviews";
 import WalletIcon from "@mui/icons-material/AccountBalanceWallet";
-
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import PasswordIcon from "@mui/icons-material/Password";
 export const doctorSidebarItems = [
   {
     title: "Home",
@@ -25,22 +27,24 @@ export const doctorSidebarItems = [
         href: doctorDashboardRoute.path,
         icon: <HomeIcon />
       }
-    ]
+    ],
+    icon: <HomeIcon />
   },
   {
     title: "My Account",
     items: [
       {
-        title: "Update my account info",
+        title: "Update Account Info",
         href: updateAccountInfoRoute.path,
         icon: <PersonIcon />
       },
       {
-        title: "Update my password",
+        title: "Change Password",
         href: `${doctorUpdatePasswordRoute.path}?type=doctor`,
-        icon: <PersonIcon />
+        icon: <PasswordIcon />
       }
-    ]
+    ],
+    icon: <ManageAccountsIcon />
   },
   {
     title: "Wallets",
@@ -55,7 +59,8 @@ export const doctorSidebarItems = [
         href: doctorWalletCreationRoute.path,
         icon: <WalletIcon />
       }
-    ]
+    ],
+    icon: <WalletIcon />
   },
   {
     title: "Patients",
@@ -80,6 +85,7 @@ export const doctorSidebarItems = [
         href: addDoctorAvailableTimeSlotsRoute.path,
         icon: <PlusIcon />
       }
-    ]
+    ],
+    icon: <ContactsIcon />
   }
 ];
