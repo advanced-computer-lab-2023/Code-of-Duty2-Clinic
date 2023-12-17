@@ -29,6 +29,7 @@ import FamilyMemberInfo from "../../pages/patients/family-members/FamilyMemberIn
 import PrescriptionInfo from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptionInfo";
 import PrescriptionList from "../../pages/patients/prescriptions/DependentFamilyMemberPrescriptions";
 import MedicineInfo from "../../pages/patients/prescriptions/MedicineInfo";
+import RegisteredPrescriptionsComponent from "../../pages/patients/prescriptions/RegisteredFamilyMemberPrescription";
 
 
 export const patientDashboardRoute: Route = {
@@ -38,7 +39,7 @@ export const patientDashboardRoute: Route = {
 
 export const familyMemberPageRoute: Route = {
   path: "/patient/family-member-page",
-  element: <FamilyMemberPage />
+  element: <FamilyMemberPage  />
 };
 
 export const familyMembersRoute: Route = {
@@ -110,6 +111,10 @@ export const patientDependentFamilyMemberPrescriptions: Route = {
   element: <DependentFamilyMemberPrescriptions />
 };
 
+export const RegisteredPrescriptionsRoute: Route = {
+  path: "/patient/all-family-members/family-members/registered/prescriptions/:memberId",
+  element: <RegisteredPrescriptionsComponent />
+};
 export const patientDependentFamilyMemberPrescriptionInfo: Route = {
   path: "/patient/family-members/dependent/prescriptions/info",
   element: <DependentFamilyMemberPrescriptionInfo />
@@ -216,7 +221,8 @@ const routes: Route[] = [
   patientDoctorsRoute,
   chatsRoute,
   followUpRequestsRoute,
-  patientAppointmentSchedulingRoute
+  patientAppointmentSchedulingRoute,
+  RegisteredPrescriptionsRoute
 ];
 
 export default routes;
