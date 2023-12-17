@@ -17,15 +17,27 @@ import { useEffect, useState } from "react";
 import ModalOptions from "../../types/ModalOptions";
 import { getFormattedDate, getFormattedTime } from "../../utils/formatter";
 import socket from "../../services/Socket";
+import { useQueryParams } from "../../hooks/useQueryParams";
+import {
+  AppointmentBookingOption,
+  getNavigationLinkToPayment
+} from "../../pages/patients/appointments/AppointmentBooking";
+import { useNavigate } from "react-router-dom";
 
-const getAllAppointments = async () => {
+const getAllAppointments = async (doctorId?: string) => {
+  if (doctorId) {
+    const response = await axios.get(
+      `${config.serverUri}/patients/doctors/${doctorId}/appointments`
+    );
+    return response.data;
+  }
   const response = await axios.get(`${config.serverUri}/doctors/appointments`);
   return response.data;
 };
 
 const noOperationFunction = () => {};
 
-const DoctorSchedule = () => {
+const AppointmentsSchedule = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalDescription, setModalDescription] = useState("");
   const [modalTitle, setModalTitle] = useState("");
@@ -33,6 +45,12 @@ const DoctorSchedule = () => {
   const [handleModalCancel, setHandleModalCancel] = useState<() => void>(handleHideModal);
 
   const [events, setEvents] = useState<EventInput[] | undefined>([]);
+
+  const doctorId = useQueryParams().get("doctorId")!;
+  const registeredPatientId = useQueryParams().get("regId");
+  const dependentNationalId = useQueryParams().get("depId");
+  const supervisingPatientId = useQueryParams().get("spId");
+  const isFollowUpAppointment = useQueryParams().get("isFollowUp");
 
   const handleShowModal = (modalOptions: ModalOptions) => {
     setModalTitle(modalOptions.title);
@@ -46,27 +64,131 @@ const DoctorSchedule = () => {
     setModalOpen(false);
   }
 
+  const navigate = useNavigate();
+
   const handleAddingAppointment = (selectInfo: DateSelectArg) => {
     let calendarApi = selectInfo.view.calendar;
     calendarApi.unselect(); // clear date selection
 
     handleShowModal({
-      title: "Add new Appointment",
-      description: `Would you like to add an appointment on ${getFormattedDate(
+      title: getAddingNewItemTitle(),
+      description: `Would you like to ${getAddingNewItemTitle()} on ${getFormattedDate(
         selectInfo.startStr
       )} from ${getFormattedTime(selectInfo.startStr)} to ${getFormattedTime(selectInfo.endStr)}?`,
       handleConfirm: () => {
-        calendarApi.addEvent({
-          id: "1",
-          title: "appointment",
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        });
+        if (isAFollowUpAppointment()) {
+          executeProperApiFollowUpAction(selectInfo.startStr, selectInfo.endStr);
+          navigate("/patient/follow-up-requests");
+        } else {
+          if (isASelfPatientAction()) {
+            navigate(
+              getNavigationLinkToPayment({
+                bookingOption: AppointmentBookingOption.SELF,
+                doctorId,
+                startTime: new Date(selectInfo.startStr),
+                endTime: new Date(selectInfo.endStr)
+              })
+            );
+          } else if (isARegisteredPatientAction()) {
+            navigate(
+              getNavigationLinkToPayment({
+                bookingOption: AppointmentBookingOption.REGISTERED_FAMILY_MEMBER,
+                doctorId,
+                patientId: registeredPatientId!,
+                startTime: new Date(selectInfo.startStr),
+                endTime: new Date(selectInfo.endStr)
+              })
+            );
+          } else if (isADependentPatientAction()) {
+            navigate(
+              getNavigationLinkToPayment({
+                bookingOption: AppointmentBookingOption.DEPENDENT_FAMILY_MEMBER,
+                doctorId,
+                patientId: dependentNationalId!,
+                startTime: new Date(selectInfo.startStr),
+                endTime: new Date(selectInfo.endStr)
+              })
+            );
+          }
+        }
+        if (isADoctorAction()) {
+          calendarApi.addEvent({
+            id: "1",
+            title: "appointment",
+            start: selectInfo.startStr,
+            end: selectInfo.endStr,
+            allDay: selectInfo.allDay
+          });
+        }
         handleHideModal();
       }
     });
   };
+
+  async function executeProperApiFollowUpAction(startStr: string, endStr: string) {
+    if (isASelfPatientAction()) {
+      return await axios.post(`${config.serverUri}/patients/follow-up-requests-for-registered`, {
+        doctorId,
+        timePeriod: {
+          startTime: new Date(startStr).toISOString(),
+          endTime: new Date(endStr).toISOString()
+        }
+      });
+    }
+
+    if (isARegisteredPatientAction()) {
+      return await axios.post(
+        `${config.serverUri}/patients/follow-up-requests-for-registered?registeredPatientId${registeredPatientId}`,
+        {
+          doctorId,
+          timePeriod: {
+            startTime: new Date(startStr).toISOString(),
+            endTime: new Date(endStr).toISOString()
+          }
+        }
+      );
+    }
+    if (isADependentPatientAction()) {
+      return await axios.post(`${config.serverUri}/patients/follow-up-requests-for-dependent`, {
+        dependentNationalId,
+        doctorId,
+        timePeriod: {
+          startTime: new Date(startStr).toISOString(),
+          endTime: new Date(endStr).toISOString()
+        }
+      });
+    }
+  }
+
+  function getAddingNewItemTitle() {
+    if (isAFollowUpAppointment()) {
+      if (isADoctorAction()) return "Schedule a follow up appointment";
+      if (isADependentPatientAction())
+        return "Request a follow up appointment for your dependent patient";
+      if (isARegisteredPatientAction())
+        return "Request a follow up appointment for your registered patient";
+      return "Request a follow up appointment";
+    }
+    if (isADependentPatientAction()) return "Add a new appointment for your dependent patient";
+    if (isARegisteredPatientAction()) return "Add a new appointment for your registered patient";
+    return "Add a new appointment";
+  }
+
+  function isADoctorAction() {
+    return !isADependentPatientAction() && !isARegisteredPatientAction && !doctorId;
+  }
+  function isASelfPatientAction() {
+    return !isADependentPatientAction() && !isARegisteredPatientAction && !!doctorId;
+  }
+  function isAFollowUpAppointment() {
+    return !!isFollowUpAppointment;
+  }
+  function isADependentPatientAction() {
+    return !!dependentNationalId && !!supervisingPatientId;
+  }
+  function isARegisteredPatientAction() {
+    return !!registeredPatientId;
+  }
 
   const handleCancellingAppointment = (clickInfo: EventClickArg) => {
     handleShowModal({
@@ -137,7 +259,7 @@ const DoctorSchedule = () => {
   };
 
   useEffect(() => {
-    getAllAppointments().then((appointments) => {
+    getAllAppointments(doctorId).then((appointments) => {
       setEvents(
         appointments.map((appointment: Appointment) => {
           return {
@@ -153,7 +275,6 @@ const DoctorSchedule = () => {
         })
       );
     });
-    socket.emit("doctor_connected");
   }, []);
 
   if (!events) {
@@ -168,6 +289,7 @@ const DoctorSchedule = () => {
         open={isModalOpen}
         title={modalTitle}
       />
+      <h5>{isADoctorAction() ? "" : "Choose a time slot"}</h5>
 
       <div style={{ padding: "2.5%" }}>
         <FullCalendar
@@ -215,6 +337,17 @@ const DoctorSchedule = () => {
       </div>
     </>
   );
+  function renderEventContent(eventContent: EventContentArg) {
+    if (isADoctorAction()) {
+      return (
+        <div style={{ backgroundColor: "green", color: "white", padding: "4%" }}>
+          <b>{eventContent.timeText}</b>
+          <i>{eventContent.event.title}</i>
+        </div>
+      );
+    }
+    return <div style={{ backgroundColor: "gray", padding: "4%" }}>Busy Slot</div>;
+  }
 };
 
 type Period = {
@@ -228,13 +361,4 @@ function areOverlapping(period1: Period, period2: Period): boolean {
   );
 }
 
-function renderEventContent(eventContent: EventContentArg) {
-  return (
-    <div style={{ backgroundColor: "green", color: "white", padding: "4%" }}>
-      <b>{eventContent.timeText}</b>
-      <i>{eventContent.event.title}</i>
-    </div>
-  );
-}
-
-export default DoctorSchedule;
+export default AppointmentsSchedule;

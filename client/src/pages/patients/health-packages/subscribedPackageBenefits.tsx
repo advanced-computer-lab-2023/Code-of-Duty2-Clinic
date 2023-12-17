@@ -1,7 +1,7 @@
 // SubscribedPackageBenefits.tsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import HealthPackageDetails from "../../../components/healthPackageCard";
+
 
 const SubscribedPackageBenefits: React.FC = () => {
   const [healthPackageDetails, setHealthPackageDetails] = useState<any | null>(

@@ -35,7 +35,7 @@ const NotificationContextProvider: React.FC<ProviderProps> = ({ children }) => {
   const { authState } = useContext(AuthContext);
 
   useEffect(() => {
-    if (authState.role) {
+    if (authState.role === UserRole.DOCTOR || authState.role === UserRole.PATIENT) {
       getAllNotifications(authState.role).then((data) => {
         setNotifications(data);
       });

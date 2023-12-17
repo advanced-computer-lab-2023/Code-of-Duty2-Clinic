@@ -7,6 +7,8 @@ import { findHealthPackageDetailsAfterDiscount } from "../health-packages";
 import { performWalletTransaction } from "../payments/wallets/patients";
 import mongoose from "mongoose";
 import Appointment from "../../models/appointments/Appointment";
+import DependentFamilyMemberAppointment from "../../models/appointments/DependentFamilyMemberAppointment";
+import { findDoctorById } from "../doctors";
 
 export const findAllPatients = async () => await Patient.find();
 export const findPatientById = async (id: string, elementsToSelect?: any) => {
@@ -372,3 +374,33 @@ export const getPatientNameMobilePackage= async (patientId:string)=>{
   const patientInfo  = await Patient.findById(patientId).select({name:1,mobileNumber:1,'subscribedPackage':1})
   return patientInfo
 }
+export const getDependentPatientDoctors = async (
+  patientId: string,
+  dependentNid: string,
+  doctorName: string
+) => {
+  const completedAppointments = await DependentFamilyMemberAppointment.find({
+    payerId: patientId,
+    dependentNationalId: dependentNid,
+    status: "completed"
+  });
+
+  const doctors = await Promise.all(
+    completedAppointments.map(async (appointment) => {
+      const doctor = await findDoctorById(appointment.doctorId.toString(), "name");
+      if (!doctor) throw new Error("Doctor not found");
+      return {
+        id: doctor.id,
+        name: doctor.name
+      };
+    })
+  );
+
+  const uniqueDoctors = Array.from(new Set(doctors.map((a) => a.id))).map((id) => {
+    return doctors.find((a) => a.id === id);
+  });
+
+  return uniqueDoctors.filter(
+    (doctor) => doctor?.name.toLowerCase().includes(doctorName.toLowerCase())
+  );
+};

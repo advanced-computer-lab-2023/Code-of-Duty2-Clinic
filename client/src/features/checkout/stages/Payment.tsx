@@ -4,11 +4,12 @@ import Tab from "@mui/material/Tab";
 import WalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import React, { useState, useContext } from "react";
-import { Box, Card, CardMedia, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Card, CardMedia, Tooltip, Typography } from "@mui/material";
 
 import Wallet from "./payment/Wallet";
 import CreditCard from "./payment/CreditCard";
 import { PaymentContext } from "../PaymentConfirmationComponent";
+import { useNavigate } from "react-router-dom";
 
 type PaymentProps = {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ type PaymentProps = {
 const Payment: React.FC<PaymentProps> = ({ children }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const { totalPriceToPay } = useContext(PaymentContext);
+  const navigate = useNavigate();
 
   const handleTabChange = (
     _event: React.ChangeEvent<{}>,
@@ -63,6 +65,13 @@ const Payment: React.FC<PaymentProps> = ({ children }) => {
             {tabIndex === 0 && <Wallet />}
             {tabIndex === 1 && <CreditCard />}
           </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate(-1)}
+          >
+              Cancel
+          </Button>
         </Grid>
       </Grid>
     </>

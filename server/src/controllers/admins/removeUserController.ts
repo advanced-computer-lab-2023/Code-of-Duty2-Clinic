@@ -5,20 +5,20 @@ import { removeUser } from "../../services/users";
 
 async function removeUserHandler(req: Request, res: Response) {
   try {
-    const { username, Type } = req.body;
+    const { username, type } = req.body;
 
-    const removedUser = await removeUser(username, Type);
+    const removedUser = await removeUser(username, type);
 
     res
       .status(StatusCodes.OK)
       .json({
-        message: `User with id ${removedUser._id} removed successfully`,
+        message: `User has been succesfully deleted`,
       });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Server error" });
+      .json({ message: error.message });
   }
 }
 

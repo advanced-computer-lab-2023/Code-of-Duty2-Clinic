@@ -17,7 +17,6 @@ import {
   Typography,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import TableLoadingSkeleton from "./tableLoadingSkeleton";
 
 export const FileViewModalStyle = {
   position: "absolute" as "absolute",

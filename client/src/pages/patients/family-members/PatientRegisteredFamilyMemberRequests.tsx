@@ -87,9 +87,13 @@ export default function PatientRegisteredFamilyMemberRequests() {
       rejectMutation.mutate(id);
     };
 
+if (requestsData.length === 0) {
+  return null;
+}
+
 return (
-    <Box>
-        <Typography variant="h4" component="div" sx={{textAlign: 'center'}}>
+    <Box sx={{margin: '2vh'}}>
+        <Typography variant="h4" component="div">
             Family Member Requests
         </Typography>
         <Grid container spacing={2}>

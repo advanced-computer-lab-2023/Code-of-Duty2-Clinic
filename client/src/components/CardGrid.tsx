@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 import '../css/CardGrid.css';
 
 
-export default function CardGrid ({title, list, primaryAttribute, secondaryAttribute, showButton, buttonText}: {title: string, primaryAttribute: string, secondaryAttribute: string, list: never[], showButton: boolean, buttonText: string}) {
+export default function CardGrid ({title, list, primaryAttribute, secondaryAttribute, showButton, buttonText}: {title: string, primaryAttribute: string, secondaryAttribute: string, list: any[], showButton: boolean, buttonText: string}) {
     return (
         <>
             <Typography variant="h4" sx={[{margin: '2vw'}, {textAlign: 'center'}]}>

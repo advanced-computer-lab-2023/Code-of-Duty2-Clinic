@@ -5,7 +5,7 @@ import Patient from '../../models/patients/Patient';
 
 export const getPatientRegisteredFamilyMemberById = async (req: AuthorizedRequest, res: Response) => {
     const patientId = req.user?.id;
-    const familyMemberId = req.params.familyMemberId;
+    const familyMemberId = req.params.id;
     try {
         const patient = await Patient.findById(patientId).populate('registeredFamilyMembers');
         const registeredFamilyMembers = patient!.registeredFamilyMembers;

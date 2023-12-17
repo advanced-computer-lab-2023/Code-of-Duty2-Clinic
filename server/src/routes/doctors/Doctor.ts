@@ -37,6 +37,7 @@ import { submitPrescriptionHandler } from "../../controllers/doctors/submitPresc
 import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/notifications";
 import { getPatientHealthRecordsByDoctor } from "../../controllers/doctors/getPatientHealthRecord";
 import { getDoctorPatientGeneralInfo } from "../../controllers/doctors/getDoctorAndPatientGeneralInfo";
+import { scheduleFollowUpAppointmentForDependentHandler } from "../../controllers/appointments/follow-ups/for-dependent-patients";
 
 const doctorRouter = express.Router();
 
@@ -50,6 +51,8 @@ doctorRouter
 
   .get("/patients", getDoctorPatientsHandler)
 
+  // .get("/prescriptions", getDoctorPrescriptions)
+
   .get("/patients/:patientId", getRegisteredPatientDetails)
 
   .get("", getDoctorById)
@@ -60,6 +63,7 @@ doctorRouter
   .patch("/change-password", updateDoctorPassword)
 
   .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
+  .post("/appointments/dependent-follow-up", scheduleFollowUpAppointmentForDependentHandler)
 
   .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
 

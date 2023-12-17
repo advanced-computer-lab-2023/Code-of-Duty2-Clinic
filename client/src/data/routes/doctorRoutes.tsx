@@ -12,88 +12,99 @@ import PatientInfo from "../../pages/doctors/PatientInfo";
 
 export const allPatientsRoute: Route = {
   path: "/doctor/patients",
-  element: <PatientList />,
+  element: <PatientList />
 };
 
 export const patientInfoRoute: Route = {
   path: "/patient/info",
-  element: <PatientInfo />,
+  element: <PatientInfo />
 };
 
 import ViewWallet from "../../pages/doctors/wallet/ViewWallet";
 import ViewRegisteredPatientData from "../../pages/doctors/RegistredPatientData/ViewRegisteredPatientData";
 import CreateWallet from "../../pages/doctors/wallet/CreateWallet";
 import ChatsView from "../../features/chats/ChatsView";
-import DoctorSchedule from "../../pages/doctors/DoctorSchedule";
-import UserRole from "../../types/enums/UserRole";
+import PrescriptionList from "../../pages/patients/prescriptions/PrescriptionList";
+import DoctorSchedule from "../../features/appointments/AppointmentsSchedule";
+import FollowUpRequestsPage from "../../pages/doctors/FollowUpRequests";
 export const doctorDashboardRoute: Route = {
   path: "/doctor/dashboard",
-  element: <Home />,
+  element: <Home />
 };
 
 export const updateAccountInfoRoute: Route = {
   path: "/doctor/account/update",
-  element: <UpdateAccountInfo />,
+  element: <UpdateAccountInfo />
 };
 
 export const doctorAppointmentsRoute: Route = {
   path: "/doctor/appointments",
-  element: <ViewAppointments />,
+  element: <ViewAppointments />
+};
+
+export const doctorPrescriptionList: Route = {
+  path: "/doctor/prescriptions/view",
+  element: <PrescriptionList />,
 };
 
 export const doctorAppointmentDetailsRoute: Route = {
   path: "/doctor/appointment/:appointmentId",
-  element: <ViewAppointments />,
+  element: <ViewAppointments />
 };
 
 export const doctorRegisteredPatientsRoute: Route = {
   path: "/doctor/patients",
-  element: <ViewDoctorPatients />,
+  element: <ViewDoctorPatients />
 };
 
 export const doctorRegisteredPatientDetailsRoute: Route = {
   path: "/doctor/patient/:patientId",
-  element: <ViewRegisteredPatientData />,
+  element: <ViewRegisteredPatientData />
 };
 
 export const patientSearchRoute: Route = {
   path: "/doctor/patient/search",
-  element: <PatientSearch />,
+  element: <PatientSearch />
 };
 
 export const doctorAvailableTimeSlotsRoute: Route = {
   path: "/doctor/available-time-slots",
-  element: <ViewAvailableTimeSlots />,
+  element: <ViewAvailableTimeSlots />
 };
 
 export const addDoctorAvailableTimeSlotsRoute: Route = {
   path: "/doctor/add-available-time-slots",
-  element: <AddAvailableTimeSlots />,
+  element: <AddAvailableTimeSlots />
 };
 
 export const doctorUpdatePasswordRoute: Route = {
   path: "/doctor/update-password",
-  element: <UpdatePassword />,
+  element: <UpdatePassword />
 };
 
 export const doctorWalletRoute: Route = {
   path: "/doctor/wallet",
-  element: <ViewWallet />,
+  element: <ViewWallet />
 };
 
 export const doctorWalletCreationRoute: Route = {
   path: "/doctor/wallet/create",
-  element: <CreateWallet />,
+  element: <CreateWallet />
 };
 
 export const doctorChatsRoute: Route = {
   path: "/doctor/chat",
-  element: <ChatsView role={UserRole.DOCTOR} />,
+  element: <ChatsView />
 };
 
-export const doctorSchedule: Route = {
+export const doctorScheduleRoute: Route = {
   path: "/doctor/schedule",
-  element: <DoctorSchedule />,
+  element: <DoctorSchedule />
+};
+
+export const followUpRequestsRoute: Route = {
+  path: "/doctor/follow-up-requests",
+  element: <FollowUpRequestsPage />
 };
 
 const routes: Route[] = [
@@ -101,6 +112,7 @@ const routes: Route[] = [
   updateAccountInfoRoute,
   doctorAppointmentsRoute,
   doctorAppointmentDetailsRoute,
+  doctorPrescriptionList,
   doctorRegisteredPatientsRoute,
   doctorRegisteredPatientDetailsRoute,
   patientSearchRoute,
@@ -110,7 +122,8 @@ const routes: Route[] = [
   doctorWalletRoute,
   doctorWalletCreationRoute,
   doctorChatsRoute,
-  doctorSchedule,
+  doctorScheduleRoute,
+  followUpRequestsRoute
 ];
 
 export default routes;

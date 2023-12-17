@@ -17,6 +17,9 @@ import {
 import TimePeriod from "../../../types/TimePeriod";
 import DependentFamilyMemberAppointment from "../../../models/appointments/DependentFamilyMemberAppointment";
 import { findPatientById } from "../../patients";
+import { sendEmail } from "../../../utils/email";
+import { storeNotificationSentToPatient } from "../../notifications/patients";
+import { storeNotificationSentToDoctor } from "../../notifications/doctors";
 
 export const findAppointmentDetailsForDoctor = async (doctorId: string, appointmentId: string) => {
   const doctor = await findDoctorById(doctorId);
@@ -136,6 +139,36 @@ export const scheduleAFollowUpAppointment = async (
     throw new Error("No recent completed appointment found between the doctor and patient");
   }
   await saveAppointment(doctorId, patientId, startTime, endTime, true);
+
+  const patient = await findPatientById(patientId, "name email receivedNotifications");
+  const doctor = await findDoctorById(doctorId, "name email receivedNotifications");
+
+  await sendEmail({
+    to: patient!.email,
+    subject: `Follow-up appointment scheduled`,
+    text: `Your follow-up appointment with Dr. ${
+      doctor!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
+  await sendEmail({
+    to: doctor!.email,
+    subject: `Follow-up appointment scheduled`,
+    text: `Your follow-up appointment with ${
+      patient!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
+  await storeNotificationSentToPatient(patient!, {
+    subject: "Follow-up appointment scheduled",
+    description: `Your follow-up appointment with Dr. ${
+      doctor!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
+  await storeNotificationSentToDoctor(doctor!, {
+    subject: "Follow-up appointment scheduled",
+    description: `Your follow-up appointment with ${
+      patient!.name
+    } has been scheduled from ${startTime} to ${endTime}`
+  });
 };
 
 export const rescheduleAppointmentAsDoctorForRegisteredPatientAndNotifyUsers = async (
