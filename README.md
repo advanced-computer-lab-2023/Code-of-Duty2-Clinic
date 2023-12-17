@@ -73,7 +73,156 @@ Jira was used as our main issue tracking and project management tool for creatin
 <details>
 <summary>Welcome page</summary>
 
-![Welcome page]()
+![Welcome page](docs/screenshots/demo/Welcome_Page_1.png)
+![Welcome page](docs/screenshots/demo/Welcome_Page_2.png)
+![Welcome page](docs/screenshots/demo/Welcome_Page_3.png)
+
+</details>
+
+<details>
+<summary>Patient & admin login</summary>
+
+![Patient & admin login](docs/screenshots/demo/Patient_Login.png)
+
+</details>
+
+<details>
+<summary>Patient dashboard</summary>
+
+![Patient dashboard](docs/screenshots/demo/Patient_Dashboard.png)
+
+</details>
+
+<details>
+<summary>Book an appointment</summary>
+
+![Book an appointment](docs/screenshots/demo/Book_An_Appointment.png)
+
+</details>
+
+<details>
+<summary>View the appointment</summary>
+
+![View the appointment](docs/screenshots/demo/View_Appointments.png)
+
+</details>
+
+<details>
+<summary>Request a follow up</summary>
+
+![Request a follow up](docs/screenshots/demo/Request_An_Appointment_Follow_Up.png)
+
+</details>
+
+<details>
+<summary>View all doctors</summary>
+
+![PView all doctors](docs/screenshots/demo/View_Doctors.png)
+
+</details>
+
+<details>
+<summary>My doctors</summary>
+
+![My doctors](docs/screenshots/demo/My_Doctors.png)
+
+</details>
+
+<details>
+<summary>Chat with doctor</summary>
+
+![Chat with doctor](docs/screenshots/demo/Chat_with_Doctor.png)
+
+</details>
+
+<details>
+<summary>Family members</summary>
+
+![Family members](docs/screenshots/demo/Family_Members.png)
+
+</details>
+
+<details>
+<summary>Family members details</summary>
+
+![Family members details](docs/screenshots/demo/Family_Member_Details.png)
+
+</details>
+
+<details>
+<summary>Add register family member</summary>
+
+![Add register family member](docs/screenshots/demo/Add_Registered_Family_Member.png)
+
+</details>
+
+<details>
+<summary>Wallet</summary>
+
+![Wallet](docs/screenshots/demo/Wallet.png)
+
+</details>
+
+<details>
+<summary>Doctor login</summary>
+
+![Doctor login](docs/screenshots/demo/Doctor_Login.png)
+
+</details>
+
+<details>
+<summary>View doctor's patients</summary>
+
+![View doctor's patients](docs/screenshots/demo/View_Doctor's_Patients.png)
+
+</details>
+
+<details>
+<summary>Add available time slots</summary>
+
+![Add available time slots](docs/screenshots/demo/Add_Available_Time_Slots.png)
+
+</details>
+
+<details>
+<summary>Admin dashboard</summary>
+
+![Admin dashboard](docs/screenshots/demo/Admin_Dashboard.png)
+
+</details>
+
+<details>
+<summary>View all admins</summary>
+
+![View all admins](docs/screenshots/demo/View_All_Admins.png)
+
+</details>
+
+<details>
+<summary>View all patients</summary>
+
+![View all patients](docs/screenshots/demo/View_All_Patients.png)
+
+</details>
+
+<details>
+<summary>Accepted doctor registration request</summary>
+
+![Accepted doctor registration request](docs/screenshots/demo/Accepted_Doctor_Registration_Request.png)
+
+</details>
+
+<details>
+<summary>Add, edit, or delete health packages</summary>
+
+![Add, edit, or delete health packages](docs/screenshots/demo/Health_Packages.png)
+
+</details>
+
+<details>
+<summary>Update password</summary>
+
+![Update password](docs/screenshots/demo/Update_Password.png)
 
 </details>
 
@@ -108,13 +257,82 @@ The system has four user types: **_Guest_**, **_Patient_**, **_Doctor_** and **_
 
  <summary> Patient features </summary>
 
-- </details>
+- **Account Management:**
+
+  - Login, logout, change password, and reset forgotten password via email OTP.
+
+- **Family Management:**
+
+  - Link, view, add family members with details.
+
+- **Doctor Interaction:**
+
+  - View and interact with doctors (list, search, filter, select).
+  - View doctor details.
+
+- **Prescription Handling:**
+
+  - View, filter, and select prescriptions.
+  - Upload/remove medical documents.
+  - Pay for appointments and health packages.
+
+- **Appointment Management:**
+
+  - View, filter, and select appointments.
+  - Pay for appointments and health packages.
+
+- **Health Records:**
+
+  - View uploaded health records.
+
+- **Health Package Subscription:**
+
+  - Subscribe, view details, view status, and cancel subscriptions.
+
+- **Wallet Management:**
+
+  - View wallet balance.
+  - Receive refunds.
+
+- **Communication:**
+  - Initiate/end video calls.
+  - Engage in a chat with doctors.
+
+</details>
 
 <details>
 
  <summary> Doctors features </summary>
 
--
+- **Account Management:**
+
+  - Login, logout, change password, and reset forgotten password via email OTP.
+
+- **Profile Management:**
+
+  - Edit/update profile details.
+
+- **Patient Interaction:**
+
+  - View patient information, patient list, and search/filter patients.
+  - Select and manage patients.
+
+- **Appointment Handling:**
+
+  - View, receive notifications, reschedule, and cancel appointments.
+  - Filter and manage appointments.
+
+- **Time Slot Management:**
+
+  - Add, view, and delete available time slots.
+
+- **Health Records:**
+
+  - Access uploaded health records.
+
+- **Wallet and Prescription Management:**
+  - View wallet balance, prescriptions, and manage prescriptions.
+  - Initiate/end video calls and chat with patients.
 
 </details>
 
@@ -122,7 +340,25 @@ The system has four user types: **_Guest_**, **_Patient_**, **_Doctor_** and **_
 
  <summary> Admin features </summary>
 
--
+- **Account Management:**
+
+  - Login, logout, change password, and reset forgotten password via email OTP.
+
+- **Admin Management:**
+
+  - Add another admin with a set username and password.
+  - Remove user accounts (doctor, patient, or admin) from the system.
+
+- **Information Handling:**
+
+  - View uploaded information submitted by doctors for platform entry.
+
+- **Health Package Management:**
+
+  - Manage health packages: add, update, or delete with different price ranges (silver, gold, platinum).
+
+- **Doctor Join Requests:**
+  - Accept or reject doctor requests to join the platform.
 
 </details>
 
@@ -792,7 +1028,19 @@ Please refer to the `api-reference.md` file under the `docs` directory for a com
 
 Testing was done for this software using Postman.
 
-![Postman](docs/screenshots/test/postman.png)
+![Postman](docs/screenshots/test/Test_1.png)
+![Postman](docs/screenshots/test/Test_2.png)
+![Postman](docs/screenshots/test/Test_3.png)
+![Postman](docs/screenshots/test/Test_4.png)
+![Postman](docs/screenshots/test/Test_5.png)
+![Postman](docs/screenshots/test/Test_6.png)
+![Postman](docs/screenshots/test/Test_7.png)
+![Postman](docs/screenshots/test/Test_8.png)
+![Postman](docs/screenshots/test/Test_9.png)
+![Postman](docs/screenshots/test/Test_10.png)
+![Postman](docs/screenshots/test/Test_11.png)
+![Postman](docs/screenshots/test/Test_12.png)
+![Postman](docs/screenshots/test/Test_13.png)
 
 ## How to Use
 

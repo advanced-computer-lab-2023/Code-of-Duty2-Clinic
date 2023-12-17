@@ -79,10 +79,7 @@ const DoctorRegistrationRequestForm: React.FC = () => {
     console.log("Submit Request:", formData);
 
     try {
-      await axios.post(
-        `${config.serverUri}/auth/doctor-registration`,
-        formData
-      );
+      await axios.post(`${config.serverUri}/auth/doctor-registration`, formData);
       navigate("/login/doctor");
     } catch (error: any) {
       setErrorMessage(getErrorMessage(error));
