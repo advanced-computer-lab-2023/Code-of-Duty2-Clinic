@@ -5,7 +5,14 @@ interface IDependentPrescription {
   doctorId: Schema.Types.ObjectId;
   patientNationalId: string;
   status: "filled" | "unfilled";
-  medicines: { medicineId: Schema.Types.ObjectId; dosage: string }[];
+  isSubmitted: boolean;
+  isPaid: boolean;
+  medicines: Array<{
+    medicineId: string;
+    name: string;
+    dosage: string;
+    quantity: number;
+  }>;
   supervisingPatientId: Schema.Types.ObjectId;
 }
 

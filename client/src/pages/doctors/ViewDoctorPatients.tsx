@@ -49,22 +49,21 @@ const ViewDoctorPatients = () => {
   };
   return (
     <Box sx={{ padding: 4 }}>
-      <Typography variant="h4" sx={{ textAlign: "center", marginBottom: 2 }}>
+      <Typography variant="h4" sx={{ textAlign: "center", marginBottom: 5 }}>
         View My Patients
       </Typography>
-      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "end", marginBottom: 10 }}>
         <TextField
           label="Patient Name"
           value={patientName}
           name="name"
           onChange={handleChangePatientName}
-          sx={{ marginRight: 2 }}
+          
         />
         <Button
           variant="contained"
           color="primary"
           onClick={handleFilterChange}
-          sx={{ marginLeft: "30px" }}
         >
           Search
         </Button>

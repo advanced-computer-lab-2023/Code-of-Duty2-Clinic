@@ -64,12 +64,12 @@ function getMatchingAppointmentsFields(urlQuery: any) {
   const { appointmentTime, status, targetName } = urlQuery;
   const isTimeSet = urlQuery.isTimeSet === "true";
 
-  let searchQuery: {
-    status?: string;
-    "user.name"?: { $regex: string; $options: string };
-    "timePeriod.startTime"?: any;
-    "timePeriod.endTime"?: any;
-  } = {};
+   let searchQuery: {
+      status?: string;
+      "user.name"?: { $regex: string; $options: string };
+      "timePeriod.startTime"?: any;
+      "timePeriod.endTime"?: any;
+   } = {};
 
   if (status && status !== "") {
     searchQuery.status = status;
@@ -78,15 +78,15 @@ function getMatchingAppointmentsFields(urlQuery: any) {
     searchQuery["user.name"] = { $regex: `^${targetName}`, $options: "i" };
   }
 
-  if (appointmentTime && appointmentTime !== "") {
-    const { requestedStartTime, requestedEndTime } = getRequestedTimePeriod(
-      appointmentTime,
-      isTimeSet
-    );
-    searchQuery["timePeriod.startTime"] = { $lte: requestedStartTime };
-    searchQuery["timePeriod.endTime"] = { $gte: requestedEndTime };
-  }
-  return searchQuery;
+   if (appointmentTime && appointmentTime !== "") {
+      const { requestedStartTime, requestedEndTime } = getRequestedTimePeriod(
+         appointmentTime,
+         isTimeSet
+      );
+      searchQuery["timePeriod.startTime"] = { $lte: requestedStartTime };
+      searchQuery["timePeriod.endTime"] = { $gte: requestedEndTime };
+   }
+   return searchQuery;
 }
 
 export const saveAppointment = async (
@@ -97,8 +97,8 @@ export const saveAppointment = async (
   isAFollowUpAppointment: boolean = false,
   payerId?: string
 ) => {
-  const selectedStartTime = new Date(startTime);
-  const selectedEndTime = new Date(endTime);
+   const selectedStartTime = new Date(startTime);
+   const selectedEndTime = new Date(endTime);
 
   const appointment: IAppointmentModel = new Appointment({
     timePeriod: { startTime: selectedStartTime, endTime: selectedEndTime },
@@ -120,11 +120,11 @@ export const findMostRecentCompletedAppointment = async (doctorId: string, patie
 };
 
 export async function validateAppointmentCreation(
-  patientId: string,
-  doctorId: string,
-  startTime: string,
-  endTime: string,
-  requestingUser: UserRole
+   patientId: string,
+   doctorId: string,
+   startTime: string,
+   endTime: string,
+   requestingUser: UserRole
 ) {
   const selectedStartTime = new Date(startTime);
   const selectedEndTime = new Date(endTime);
@@ -143,26 +143,26 @@ export async function validateAppointmentCreation(
     endTime
   );
 
-  if (conflictingPatientAppointments > 0) {
-    throw new Error(
-      requestingUser === UserRole.DOCTOR
-        ? "The patient is busy during the requested time period"
-        : "You already have another appointment during the requested time period"
-    );
-  }
+   if (conflictingPatientAppointments > 0) {
+      throw new Error(
+         requestingUser === UserRole.DOCTOR
+            ? "The patient is busy during the requested time period"
+            : "You already have another appointment during the requested time period"
+      );
+   }
 
-  const conflictingDoctorAppointments = await findConflictingDoctorAppointments(
-    doctorId,
-    startTime,
-    endTime
-  );
-  if (conflictingDoctorAppointments > 0) {
-    throw new Error(
-      requestingUser === UserRole.PATIENT
-        ? "You already have another appointment during the requested time period"
-        : "This doctor has another appointment during the requested time period"
-    );
-  }
+   const conflictingDoctorAppointments = await findConflictingDoctorAppointments(
+      doctorId,
+      startTime,
+      endTime
+   );
+   if (conflictingDoctorAppointments > 0) {
+      throw new Error(
+         requestingUser === UserRole.PATIENT
+            ? "You already have another appointment during the requested time period"
+            : "This doctor has another appointment during the requested time period"
+      );
+   }
 }
 
 export function validateChosenTimePeriod(selectedStartTime: Date, selectedEndTime: Date) {
@@ -173,9 +173,9 @@ export function validateChosenTimePeriod(selectedStartTime: Date, selectedEndTim
 }
 
 export const findConflictingPatientAppointments = async (
-  patientId: string,
-  startTime: string | Date,
-  endTime: string | Date
+   patientId: string,
+   startTime: string | Date,
+   endTime: string | Date
 ) => {
   const chosenStartTime = new Date(startTime);
   const chosenEndTime = new Date(endTime);
@@ -200,9 +200,9 @@ export const findConflictingPatientAppointments = async (
 };
 
 export const findConflictingDoctorAppointments = async (
-  doctorId: string,
-  startTime: string | Date,
-  endTime: string | Date
+   doctorId: string,
+   startTime: string | Date,
+   endTime: string | Date
 ) => {
   const chosenStartTime = new Date(startTime);
   const chosenEndTime = new Date(endTime);

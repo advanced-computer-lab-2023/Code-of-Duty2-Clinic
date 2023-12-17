@@ -364,6 +364,16 @@ export const getPatientDoctors = async (patientId: string, doctorName: string) =
   return doctors;
 };
 
+
+export const getPatientNameMobile= async (patientId:string)=>{
+  const patientInfo  = await Patient.findById(patientId).select({name:1,mobileNumber:1})
+  return patientInfo
+}
+
+export const getPatientNameMobilePackage= async (patientId:string)=>{
+  const patientInfo  = await Patient.findById(patientId).select({name:1,mobileNumber:1,'subscribedPackage':1})
+  return patientInfo
+}
 export const getDependentPatientDoctors = async (
   patientId: string,
   dependentNid: string,

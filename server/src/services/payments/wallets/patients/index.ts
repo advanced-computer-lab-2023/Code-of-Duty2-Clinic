@@ -38,7 +38,7 @@ export const rechargePatientWallet = async (
   await updatePatientWalletBalance(patientId, transactionAmount);
 };
 
-const updatePatientWalletBalance = async (
+export const updatePatientWalletBalance = async (
   patientId: string,
   transactionAmount: number
 ) => {

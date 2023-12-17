@@ -31,11 +31,14 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler
 } from "../../controllers/payments/credit-cards";
+import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
+
+import { getPatientPrescription } from "../../controllers/prescriptions/getPatientPrescription";
+import { createOrderFromPrescription } from "../../controllers/orders/createOrder";
 import { viewSubscribedHealthPackageAllDetailsD } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsD";
 import { viewSubscribedHealthPackageAllDetailsR } from "../../controllers/healthPackages/viewSubscribedHealthPackageAllDetailsR";
 import { cancelSubscriptionR } from "../../controllers/healthPackages/cancelSubscriptionForR";
 import { subscribeToHealthPackageR } from "../../controllers/healthPackages/subscribeForR";
-import { getHealthPackage } from "../../controllers/healthPackages/getHealthPackage";
 import {
   bookAnAppointmentForADependentFamilyMemberHandler as bookAppointmentForADependentFamilyMemberHandler,
   bookAnAppointmentForARegisteredFamilyMemberHandler as bookAppointmentForARegisteredFamilyMemberHandler,
@@ -62,6 +65,8 @@ import { getPatientPrescriptions } from "../../controllers/prescriptions/getPati
 import { addFamilyMembers } from "../../controllers/patients/addFamilyMembers";
 import { getPatientDependentFamilyMemberPrescriptions } from "../../controllers/prescriptions/getPatientDependentFamilyMemberPrescriptions";
 import { getAllNotificationsForPatientHandler } from "../../controllers/patients/notifications";
+import { getDoctorPatientGeneralInfo } from "../../controllers/doctors/getDoctorAndPatientGeneralInfo";
+import { getPatientDoctorGeneralInfo } from "../../controllers/patients/getPatientAndDoctorGeneralInfo";
 import { getPatientVideoLink } from "../../controllers/doctors/videoCall";
 
 const patientRouter = express.Router();
@@ -179,6 +184,9 @@ patientRouter
 
   .get("/notifications", getAllNotificationsForPatientHandler)
 
+  .get("/health-packages/:packageId", getHealthPackage)
+
+  .get("/general-info", getPatientDoctorGeneralInfo)
   .get("/video-call-url", getPatientVideoLink)
 
   .get("/:patientId", getPatientById);

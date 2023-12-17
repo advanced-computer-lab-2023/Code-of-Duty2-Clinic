@@ -314,7 +314,15 @@ const getRegisteredDoctorPatients = async (
     },
   ]);
 };
+export const findCompletedDependentPatientAppointment = async (doctorId:string ,dependentNationalId:string)=>{
+  const appointment = await DependentFamilyMemberAppointment.findOne({
+    doctorId,
+    dependentNationalId,
+    status:'completed'
+  });
+  return !!appointment
 
+}
 const getDependentDoctorPatients = async (
   doctorId: string,
   patientName: string

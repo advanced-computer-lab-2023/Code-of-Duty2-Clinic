@@ -28,7 +28,15 @@ import {
   configureCreditCardPaymentHandler,
   makeCreditCardPaymentHandler
 } from "../../controllers/payments/credit-cards";
+import { createPatientPrescriptionHandler } from "../../controllers/doctors/createPatientPrescription";
+import { updateMedicineAndDosageHandler } from "../../controllers/doctors/updateDosageInPatentPrescription";
+import { addMedicineToPatientPrescriptionHandler } from "../../controllers/doctors/addMedicineToPatientPrescription";
+import { getPatientPrescriptionsHandler } from "../../controllers/doctors/getPatientPrescriptionsHandler";
+import { submitPrescriptionHandler } from "../../controllers/doctors/submitPrescription";
+
 import { getAllNotificationsForDoctorHandler } from "../../controllers/doctors/notifications";
+import { getPatientHealthRecordsByDoctor } from "../../controllers/doctors/getPatientHealthRecord";
+import { getDoctorPatientGeneralInfo } from "../../controllers/doctors/getDoctorAndPatientGeneralInfo";
 import { scheduleFollowUpAppointmentForDependentHandler } from "../../controllers/appointments/follow-ups/for-dependent-patients";
 import {
   getSoonestAppointmentHandler,
@@ -61,6 +69,8 @@ doctorRouter
   .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
   .post("/appointments/dependent-follow-up", scheduleFollowUpAppointmentForDependentHandler)
 
+  .post("/appointments/:patientId/follow-up", scheduleFollowUpAppointmentHandler)
+
   .delete("/available-time-slots/:startTime", deleteDoctorWorkingSlot)
 
   .put("/patients/:patientId/health-records", doctorAddPatientHealthRecord)
@@ -87,6 +97,23 @@ doctorRouter
 
   .post("/credit-card-payment", makeCreditCardPaymentHandler)
 
+  .get("/patient/:patientId/prescription", getPatientPrescriptionsHandler)
+
+  .post("/patient/:patientId/prescription", createPatientPrescriptionHandler)
+
+  .put("/prescriptions/:prescriptionId/medicine/:medicineId", updateMedicineAndDosageHandler)
+
+  .put("/prescriptions/:prescriptionId/", addMedicineToPatientPrescriptionHandler)
+
+  .put("/prescriptions/:prescriptionId/submit", submitPrescriptionHandler)
+
+  .get("/notifications", getAllNotificationsForDoctorHandler)
+
+  .get("/patients/:patientId/health-records", getPatientHealthRecordsByDoctor)
+
+  .post("/patients/:patientId/health-record", doctorAddPatientHealthRecord)
+
+  .get("/general-info", getDoctorPatientGeneralInfo)
   .get("/notifications", getAllNotificationsForDoctorHandler)
 
   .get("/soonest-appointment", getSoonestAppointmentHandler)
